@@ -54,51 +54,51 @@ Super_Admin สร้างผ่าน environment variable ตอน bootstrap
 
 ### User
 
-| Field        | Type    | Note                       |
-| ------------ | ------- | -------------------------- |
-| user_id      | PK      |                            |
-| user_name    | TEXT NN |                            |
-| password     | TEXT    | hashed (bcrypt)            |
-| email        | TEXT NN |                            |
-| phone        | TEXT NN |                            |
-| profile_img  | TEXT    | URL path                   |
-| total_booked | NUM     |                            |
-| role         | ENUM    | User / Admin / Super_Admin |
-| create_at    | TEXT NN | Y/M/D H:M:S                |
-| last_update  | TEXT NN | Y/M/D H:M:S                |
+| Field        | Type       | Note                                                       |
+| ------------ | ---------- | ---------------------------------------------------------- |
+| user_id      | INTEGER PK | AUTOINCREMENT                                              |
+| user_name    | TEXT NN    |                                                            |
+| password     | TEXT NN    | hashed (bcrypt)                                            |
+| email        | TEXT NN    | UNIQUE                                                     |
+| phone        | TEXT NN    |                                                            |
+| profile_img  | TEXT       | URL path                                                   |
+| total_booked | INTEGER NN | default: 0                                                 |
+| role         | TEXT NN    | default: 'User' (User / Admin / Super_Admin)               |
+| create_at    | TEXT NN    | default: CURRENT_TIMESTAMP (YYYY-MM-DD HH:MM:SS)           |
+| last_update  | TEXT NN    | default: CURRENT_TIMESTAMP (YYYY-MM-DD HH:MM:SS)           |
 
 ### Vehicle
 
-| Field            | Type    | Note                              |
-| ---------------- | ------- | --------------------------------- |
-| vehicle_id       | PK      |                                   |
-| vehicle_name     | TEXT NN |                                   |
-| type             | ENUM NN | Sedan / Pickup / Van / SUV / etc. |
-| capacity         | NUM NN  |                                   |
-| re_fuel          | TEXT NN |                                   |
-| total_mile       | NUM     |                                   |
-| last_maintenance | TEXT NN | Y/M/D H:M:S                       |
-| status           | ENUM NN | available / unavailable           |
-| vehicle_img      | TEXT    | URL path                          |
-| last_update      | TEXT NN | Y/M/D H:M:S                       |
-| total_bookby     | NUM     |                                   |
+| Field            | Type       | Note                                                       |
+| ---------------- | ---------- | ---------------------------------------------------------- |
+| vehicle_id       | INTEGER PK | AUTOINCREMENT                                              |
+| vehicle_name     | TEXT NN    |                                                            |
+| type             | TEXT NN    | Sedan / Pickup / Van / SUV / Other                         |
+| capacity         | INTEGER NN |                                                            |
+| re_fuel          | TEXT NN    |                                                            |
+| total_mile       | INTEGER NN | default: 0                                                 |
+| last_maintenance | TEXT NN    | default: CURRENT_TIMESTAMP (YYYY-MM-DD HH:MM:SS)           |
+| status           | TEXT NN    | default: 'available' (available / unavailable)             |
+| vehicle_img      | TEXT       | URL path                                                   |
+| total_bookby     | INTEGER NN | default: 0                                                 |
+| last_update      | TEXT NN    | default: CURRENT_TIMESTAMP (YYYY-MM-DD HH:MM:SS)           |
 
 ### Booking
 
-| Field         | Type         | Note                       |
-| ------------- | ------------ | -------------------------- |
-| book_id       | PK           |                            |
-| booked_by     | FK → User    | ผู้จอง                     |
-| passenger     | FK → User    | ผู้โดยสาร                  |
-| vehicle_id    | FK → Vehicle |                            |
-| depart        | TEXT NN      | Y/M/D H:M:S                |
-| return        | TEXT         | Y/M/D H:M:S                |
-| destination   | TEXT         |                            |
-| use_for       | TEXT         |                            |
-| mile_distance | NUM          |                            |
-| status        | ENUM NN      | booked / complete / cancel |
-| create_at     | TEXT NN      | Y/M/D H:M:S                |
-| last_update   | TEXT NN      | Y/M/D H:M:S                |
+| Field         | Type       | Note                                                       |
+| ------------- | ---------- | ---------------------------------------------------------- |
+| book_id       | INTEGER PK | AUTOINCREMENT                                              |
+| booked_by     | INTEGER NN | FK → users(user_id)                                        |
+| passenger     | INTEGER    | FK → users(user_id)                                        |
+| vehicle_id    | INTEGER NN | FK → vehicles(vehicle_id)                                  |
+| depart        | TEXT NN    | YYYY-MM-DD HH:MM:SS                                        |
+| return        | TEXT       | YYYY-MM-DD HH:MM:SS                                        |
+| destination   | TEXT       |                                                            |
+| use_for       | TEXT       |                                                            |
+| mile_distance | INTEGER    |                                                            |
+| status        | TEXT NN    | default: 'booked' (booked / complete / cancel)             |
+| create_at     | TEXT NN    | default: CURRENT_TIMESTAMP (YYYY-MM-DD HH:MM:SS)           |
+| last_update   | TEXT NN    | default: CURRENT_TIMESTAMP (YYYY-MM-DD HH:MM:SS)           |
 
 ---
 
