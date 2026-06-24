@@ -1,0 +1,174 @@
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Booking } from './booking.entity';
+import { Vehicle } from '../vehicles/vehicles.entity';
+import { User } from '../users/user.entity';
+import { CreateBookingDto, BookingFilterDto } from './dto/booking.dto';
+
+@Injectable()
+export class BookingService {
+  constructor(
+    @InjectRepository(Booking)
+    private readonly bookingRepo: Repository<Booking>,
+    @InjectRepository(Vehicle)
+    private readonly vehicleRepo: Repository<Vehicle>,
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
+  ) {}
+
+  async findAll(filter: BookingFilterDto): Promise<Booking[]> {
+    const query = this.bookingRepo.createQueryBuilder('b')
+      .leftJoinAndSelect('b.user', 'u')
+      .leftJoinAndSelect('b.passengerUser', 'p')
+      .leftJoinAndSelect('b.vehicle', 'v');
+
+    if (filter.status) {
+      query.andWhere('b.status = :status', { status: filter.status });
+    }
+    if (filter.vehicle_id) {
+      query.andWhere('b.vehicle_id = :vehicleId', { vehicleId: filter.vehicle_id });
+    }
+    if (filter.booked_by) {
+      query.andWhere('b.booked_by = :bookedBy', { bookedBy: filter.booked_by });
+    }
+    if (filter.passenger) {
+      query.andWhere('b.passenger = :passenger', { passenger: filter.passenger });
+    }
+    if (filter.depart_start) {
+      query.andWhere('b.depart >= :departStart', { departStart: filter.depart_start });
+    }
+    if (filter.depart_end) {
+      query.andWhere('b.depart <= :departEnd', { departEnd: filter.depart_end });
+    }
+
+    const bookings = await query.getMany();
+    bookings.forEach((b) => {
+      if (b.user) delete b.user.password;
+      if (b.passengerUser) delete b.passengerUser.password;
+    });
+    return bookings;
+  }
+
+  async findMyBookings(userId: number): Promise<Booking[]> {
+    const bookings = await this.bookingRepo.createQueryBuilder('b')
+      .leftJoinAndSelect('b.user', 'u')
+      .leftJoinAndSelect('b.passengerUser', 'p')
+      .leftJoinAndSelect('b.vehicle', 'v')
+      .where('b.booked_by = :userId OR b.passenger = :userId', { userId })
+      .getMany();
+
+    bookings.forEach((b) => {
+      if (b.user) delete b.user.password;
+      if (b.passengerUser) delete b.passengerUser.password;
+    });
+    return bookings;
+  }
+
+  async findById(book_id: number): Promise<Booking | null> {
+    const booking = await this.bookingRepo.findOne({
+      where: { book_id },
+      relations: {
+        user: true,
+        passengerUser: true,
+        vehicle: true,
+      },
+    });
+    if (booking) {
+      if (booking.user) delete booking.user.password;
+      if (booking.passengerUser) delete booking.passengerUser.password;
+    }
+    return booking;
+  }
+
+  async create(userId: number, dto: CreateBookingDto): Promise<Booking> {
+    // 1. Check vehicle existence and status
+    const vehicle = await this.vehicleRepo.findOne({ where: { vehicle_id: dto.vehicle_id } });
+    if (!vehicle) {
+      throw new NotFoundException('ไม่พบข้อมูลรถที่ต้องการจอง');
+    }
+    if (vehicle.status !== 'available') {
+      throw new BadRequestException('รถคันนี้ไม่พร้อมใช้งาน');
+    }
+
+    // 2. Prevent Double Booking
+    const overlapping = await this.bookingRepo.createQueryBuilder('b')
+      .where('b.vehicle_id = :vehicleId', { vehicleId: dto.vehicle_id })
+      .andWhere('b.status != :cancelStatus', { cancelStatus: 'cancel' })
+      .andWhere('b.depart < :returnTime AND b.return > :depart', {
+        depart: dto.depart,
+        returnTime: dto.return,
+      })
+      .getOne();
+
+    if (overlapping) {
+      throw new BadRequestException('รถคันนี้ถูกจองในช่วงเวลาดังกล่าวแล้ว');
+    }
+
+    // 3. Create booking
+    const booking = this.bookingRepo.create({
+      ...dto,
+      booked_by: userId,
+      status: 'booked',
+      create_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      last_update: new Date().toISOString().replace('T', ' ').substring(0, 19),
+    });
+
+    const saved = await this.bookingRepo.save(booking);
+
+    // 4. Increment total_booked on User and total_bookby on Vehicle
+    await this.userRepo.increment({ user_id: userId }, 'total_booked', 1);
+    await this.vehicleRepo.increment({ vehicle_id: dto.vehicle_id }, 'total_bookby', 1);
+
+    return (await this.findById(saved.book_id))!;
+  }
+
+  async cancel(book_id: number, currentUser: any): Promise<Booking> {
+    const booking = await this.findById(book_id);
+    if (!booking) {
+      throw new NotFoundException('ไม่พบข้อมูลการจองนี้');
+    }
+
+    // Authorization: Admin/Super_Admin or Owner of the booking
+    if (
+      currentUser.role !== 'Admin' &&
+      currentUser.role !== 'Super_Admin' &&
+      booking.booked_by !== currentUser.user_id
+    ) {
+      throw new ForbiddenException('ไม่มีสิทธิ์ยกเลิกการจองนี้');
+    }
+
+    if (booking.status === 'cancel') {
+      return booking;
+    }
+
+    await this.bookingRepo.update(book_id, {
+      status: 'cancel',
+      last_update: new Date().toISOString().replace('T', ' ').substring(0, 19),
+    });
+
+    return (await this.findById(book_id))!;
+  }
+
+  async complete(book_id: number, mileDistance?: number): Promise<Booking> {
+    const booking = await this.findById(book_id);
+    if (!booking) {
+      throw new NotFoundException('ไม่พบข้อมูลการจองนี้');
+    }
+
+    const updateData: any = {
+      status: 'complete',
+      last_update: new Date().toISOString().replace('T', ' ').substring(0, 19),
+    };
+
+    if (mileDistance !== undefined) {
+      updateData.mile_distance = mileDistance;
+      // Add mileage to vehicle
+      await this.vehicleRepo.increment({ vehicle_id: booking.vehicle_id }, 'total_mile', mileDistance);
+    }
+
+    await this.bookingRepo.update(book_id, updateData);
+
+    return (await this.findById(book_id))!;
+  }
+}

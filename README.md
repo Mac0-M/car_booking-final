@@ -29,7 +29,7 @@
 ### Admin
 
 - จัดการรถ (เพิ่ม / แก้ไข / ลบ / เปลี่ยน status)
-- ดู Booking ทั้งหมด, Cancel / Complete booking
+- ยกเลิก / เสร็จสิ้นการจองใด ๆ (Cancel / Complete booking)
 - จัดการ User (แก้ไข / ลบ / เปลี่ยน role)
 
 ### Super Admin
@@ -126,27 +126,27 @@ Base URL: `http://localhost:3000/api/v1`
 
 ### Vehicles
 
-| Method | Route                  | Role  |
-| ------ | ---------------------- | ----- |
-| GET    | `/vehicles`            | Auth  |
-| GET    | `/vehicles/:id`        | Auth  |
-| GET    | `/vehicles/available`  | Auth  |
-| POST   | `/vehicles`            | Admin |
-| PATCH  | `/vehicles/:id`        | Admin |
-| DELETE | `/vehicles/:id`        | Admin |
-| PATCH  | `/vehicles/:id/status` | Admin |
-| POST   | `/vehicles/:id/image`  | Admin |
+| Method | Route                  | Role  | Note                                                    |
+| ------ | ---------------------- | ----- | ------------------------------------------------------- |
+| GET    | `/vehicles`            | Auth  | ดูทั้งหมด (กรองตาม type, status, capacity, search)        |
+| GET    | `/vehicles/:id`        | Auth  | ดูรายละเอียดรถ                                          |
+| GET    | `/vehicles/available`  | Auth  | ดูรถว่าง (กรองตาม depart, return)                         |
+| POST   | `/vehicles`            | Admin | เพิ่มรถใหม่                                             |
+| PATCH  | `/vehicles/:id`        | Admin | แก้ไขข้อมูลรถ                                           |
+| DELETE | `/vehicles/:id`        | Admin | ลบรถ                                                   |
+| PATCH  | `/vehicles/:id/status` | Admin | เปลี่ยนสถานะความพร้อมใช้งาน (available/unavailable)       |
+| POST   | `/vehicles/:id/image`  | Admin | อัปโหลดรูปภาพรถ                                         |
 
 ### Bookings
 
-| Method | Route                    | Role            |
-| ------ | ------------------------ | --------------- |
-| GET    | `/bookings`              | Admin           |
-| GET    | `/bookings/my`           | Auth            |
-| GET    | `/bookings/:id`          | Admin / เจ้าของ |
-| POST   | `/bookings`              | Auth            |
-| PATCH  | `/bookings/:id/cancel`   | Auth / Admin    |
-| PATCH  | `/bookings/:id/complete` | Admin           |
+| Method | Route                    | Role         | Note                                               |
+| ------ | ------------------------ | ------------ | -------------------------------------------------- |
+| GET    | `/bookings`              | Auth         | ดูทั้งหมด (กรองตาม status, vehicle_id, booked_by, passenger, depart_start, depart_end) |
+| GET    | `/bookings/my`           | Auth         | ดูการจองของตนเองและที่มีรายชื่อเป็นผู้โดยสาร        |
+| GET    | `/bookings/:id`          | Auth         | ดูรายละเอียดการจอง                                 |
+| POST   | `/bookings`              | Auth         | สร้างการจองใหม่ (ป้องกัน double booking)           |
+| PATCH  | `/bookings/:id/cancel`   | Auth / Admin | ยกเลิกการจอง (เจ้าของ/ผู้โดยสาร หรือ Admin เท่านั้น)|
+| PATCH  | `/bookings/:id/complete` | Admin        | เสร็จสิ้นการจองและอัปเดตระยะทางรถ                  |
 
 ### Response Format
 
