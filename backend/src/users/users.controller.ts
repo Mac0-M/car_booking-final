@@ -30,7 +30,6 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @Roles('Admin')
   async findAll() {
     return this.usersService.findAll();
   }

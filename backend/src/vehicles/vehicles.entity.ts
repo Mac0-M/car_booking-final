@@ -14,8 +14,8 @@ export class Vehicle {
   @Column()
   capacity: number;
 
-  @Column()
-  re_fuel: string;
+  @Column({ type: 'boolean', default: false })
+  re_fuel: boolean;
 
   @Column({ default: 0 })
   total_mile: number;

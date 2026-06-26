@@ -1,0 +1,93 @@
+<div class="profile-edit-page max-w-xl mx-auto p-4 md:p-6 space-y-6">
+
+  <!-- Header -->
+  <div>
+    <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
+      <span class="material-icons text-gray-700 font-bold">person_outline</span>
+      แก้ไขข้อมูลส่วนตัว
+    </h1>
+    <p class="text-sm text-gray-500 mt-1">จัดการข้อมูลส่วนตัว เบอร์โทรศัพท์ และรูปภาพโปรไฟล์ของคุณ</p>
+  </div>
+
+  <component-card variant="default" size="base">
+    <form (submit)="onSubmit(); $event.preventDefault()" class="space-y-6">
+      
+      <!-- Avatar Section -->
+      <div class="flex flex-col items-center justify-center space-y-3 pb-2">
+        <div class="relative w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden group cursor-pointer bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-3xl font-bold">
+          <input type="file" 
+                 accept="image/*" 
+                 (change)="onFileSelected($event)" 
+                 class="absolute inset-0 opacity-0 cursor-pointer z-10" />
+          
+          @if (imagePreviewUrl || existingImgUrl) {
+            <img [src]="imagePreviewUrl || existingImgUrl" 
+                 alt="Profile" 
+                 class="w-full h-full object-cover" />
+          } @else {
+            <span>{{ (user_name[0] || 'U') | uppercase }}</span>
+          }
+
+          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-20">
+            <span class="material-icons text-white text-base">photo_camera</span>
+          </div>
+        </div>
+        <div class="text-xs text-gray-400 font-medium">คลิกที่รูปภาพเพื่อเปลี่ยนรูปโปรไฟล์</div>
+      </div>
+
+      <!-- User Name Input -->
+      <div class="space-y-2">
+        <label for="user_name" class="text-sm font-bold text-gray-700 block">ชื่อ-นามสกุล</label>
+        <input type="text"
+               id="user_name"
+               name="user_name"
+               [(ngModel)]="user_name"
+               required
+               placeholder="กรอกชื่อ-นามสกุลของคุณ"
+               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors" />
+      </div>
+
+      <!-- Email Input -->
+      <div class="space-y-2">
+        <label for="email" class="text-sm font-bold text-gray-700 block">อีเมล (ใช้ในการเข้าสู่ระบบ)</label>
+        <input type="email"
+               id="email"
+               name="email"
+               [(ngModel)]="email"
+               required
+               placeholder="กรอกอีเมลของคุณ"
+               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors" />
+      </div>
+
+      <!-- Phone Input -->
+      <div class="space-y-2">
+        <label for="phone" class="text-sm font-bold text-gray-700 block">เบอร์โทรศัพท์มือถือ</label>
+        <input type="tel"
+               id="phone"
+               name="phone"
+               [(ngModel)]="phone"
+               placeholder="กรอกเบอร์โทรศัพท์ เช่น 0891234567"
+               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors" />
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+        <a routerLink="/bookings" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer">
+          ยกเลิก
+        </a>
+        <component-button type="submit" variant="submit" size="lg" [disabled]="!isFormValid || isLoading()" class="w-full sm:w-auto">
+          @if (isLoading()) {
+            <span class="flex items-center gap-2 justify-center">
+              <component-loading size="xs"></component-loading>
+              กำลังบันทึก...
+            </span>
+          } @else {
+            บันทึกข้อมูลส่วนตัว
+          }
+        </component-button>
+      </div>
+
+    </form>
+  </component-card>
+
+</div>

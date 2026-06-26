@@ -1,0 +1,97 @@
+<header class="sticky top-0 z-40 w-full border-b border-gray-150/80 bg-white/80 backdrop-blur-md transition-all duration-300">
+  <div class="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 h-16 flex items-center justify-between">
+    
+    <!-- Logo and Brand -->
+    <a [routerLink]="logoLink" class="flex items-center gap-1.5 sm:gap-2 group text-decoration-none shrink-0">
+      <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gray-800 text-white shadow-md shadow-gray-700/30 group-hover:scale-105 transition-transform duration-200 shrink-0">
+        <span class="material-icons text-lg sm:text-xl">directions_car</span>
+      </div>
+      <div class="shrink-0">
+        <span class="text-sm sm:text-base md:text-lg font-black tracking-tight text-gray-800 group-hover:text-gray-900 transition-colors">CarBooking</span>
+      </div>
+    </a>
+
+    <!-- Navigation Links (hidden on auth pages) -->
+    @if (!isAuthPage()) {
+      <nav class="hidden md:flex items-center gap-2">
+        <a routerLink="/booking/form" 
+           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
+           [routerLinkActiveOptions]="{exact: false}"
+           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+          จองรถ
+        </a>
+        <a routerLink="/bookings" 
+           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
+           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+          รายการจอง
+        </a>
+        <a routerLink="/vehicles" 
+           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
+           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+          รถยนต์ทั้งหมด
+        </a>
+        @if (isAdmin) {
+          <a routerLink="/admin/users" 
+             routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
+             class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+            จัดการผู้ใช้
+          </a>
+        }
+      </nav>
+
+      <!-- User Section (hidden on auth pages) -->
+      <div class="flex items-center gap-2 sm:gap-4">
+        <!-- Mobile Nav Buttons -->
+        <div class="flex md:hidden items-center gap-1">
+          <a routerLink="/booking/form" 
+             routerLinkActive="bg-gray-100 text-gray-900"
+             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             title="Book Vehicle">
+            <span class="material-icons block text-lg">add_circle_outline</span>
+          </a>
+          <a routerLink="/bookings" 
+             routerLinkActive="bg-gray-100 text-gray-900"
+             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             title="All Bookings">
+            <span class="material-icons block text-lg">history</span>
+          </a>
+          <a routerLink="/vehicles" 
+             routerLinkActive="bg-gray-100 text-gray-900"
+             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             title="Vehicles">
+            <span class="material-icons block text-lg">directions_car</span>
+          </a>
+          @if (isAdmin) {
+            <a routerLink="/admin/users" 
+               routerLinkActive="bg-gray-100 text-gray-900"
+               class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+               title="Users">
+              <span class="material-icons block text-lg">people</span>
+            </a>
+          }
+        </div>
+
+        <!-- Divider -->
+        <span class="w-[1px] h-6 bg-gray-100 hidden md:block"></span>
+
+        <!-- User Info Badge -->
+        <a routerLink="/profile" class="flex items-center gap-1.5 sm:gap-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none">
+          <div class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-[10px] sm:text-xs uppercase shadow-sm shrink-0">
+            {{ userName.charAt(0) }}
+          </div>
+          <div class="hidden sm:block text-left">
+            <div class="text-xs font-bold text-gray-800 line-clamp-1 leading-none">{{ userName }}</div>
+          </div>
+        </a>
+
+        <!-- Logout Button -->
+        <button (click)="onLogout()" 
+                class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200 transition-all active:scale-95 cursor-pointer bg-white shrink-0"
+                title="Logout">
+          <span class="material-icons text-base sm:text-lg">logout</span>
+        </button>
+      </div>
+    }
+
+  </div>
+</header>

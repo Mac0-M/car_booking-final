@@ -1,0 +1,18 @@
+<div [ngClass]="[baseClasses, variantClasses[variant], sizeClasses[size]]">
+  <ng-content>
+    @switch (variant) {
+      @case ("available") {
+        available
+      }
+      @case ("booked") {
+        booked
+      }
+      @case ("unavailable") {
+        unavailable
+      }
+      @case ("pending") {
+        pending
+      }
+    }
+  </ng-content>
+</div>

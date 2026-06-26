@@ -1,0 +1,12 @@
+<button
+  [type]="type"
+  [disabled]="disabled"
+  [ngClass]="[
+    baseClasses, 
+    variantClasses[variant], 
+    sizeClasses[size],
+    disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+  ]"
+>
+  <ng-content></ng-content>
+</button>

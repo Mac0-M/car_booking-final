@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS vehicles (
     vehicle_name     TEXT    NOT NULL,
     type             TEXT    NOT NULL,
     capacity         INTEGER NOT NULL,
-    re_fuel          TEXT    NOT NULL,
+    re_fuel          INTEGER NOT NULL DEFAULT 0, -- 0 = false, 1 = true
     total_mile       INTEGER NOT NULL DEFAULT 0,
     last_maintenance TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime')),
     status           TEXT    NOT NULL DEFAULT 'available',
@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     book_id       INTEGER PRIMARY KEY AUTOINCREMENT,
     booked_by     INTEGER NOT NULL REFERENCES users(user_id),
     passenger     INTEGER          REFERENCES users(user_id),
+    booked_for    INTEGER          REFERENCES users(user_id), -- Proxy Booking (ฝากจองให้คนอื่น)
     vehicle_id    INTEGER NOT NULL REFERENCES vehicles(vehicle_id),
     depart        TEXT    NOT NULL,
     return        TEXT,

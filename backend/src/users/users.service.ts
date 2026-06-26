@@ -25,9 +25,9 @@ export class UsersService implements OnApplicationBootstrap {
     const name = process.env.SUPER_ADMIN_NAME || "Super Admin";
     const phone = process.env.SUPER_ADMIN_PHONE || "0000000000";
 
-    const existingAdmin = await this.findByEmail(email);
+    const existingAdmin = await this.userRepository.findOne({ where: { role: "Super_Admin" } });
+    const hashedPassword = await bcrypt.hash(password, 10);
     if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash(password, 10);
       const superAdmin = this.userRepository.create({
         user_name: name,
         email,
@@ -39,7 +39,13 @@ export class UsersService implements OnApplicationBootstrap {
       await this.userRepository.save(superAdmin);
       console.log(`[Seed] Super Admin user created with email: ${email}`);
     } else {
-      console.log(`[Seed] Super Admin user already exists.`);
+      console.log(`[Seed] Super Admin user already exists. Updating details to match .env configuration...`);
+      existingAdmin.user_name = name;
+      existingAdmin.email = email;
+      existingAdmin.password = hashedPassword;
+      existingAdmin.phone = phone;
+      await this.userRepository.save(existingAdmin);
+      console.log(`[Seed] Super Admin updated with email: ${email}`);
     }
   }
 

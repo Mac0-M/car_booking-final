@@ -10,8 +10,13 @@ export class Booking {
   @Column()
   booked_by: number;
 
+  @Column({ type: 'varchar', nullable: true })
+  passenger: string;
+
+  passengerUsers?: User[];
+
   @Column({ nullable: true })
-  passenger: number;
+  booked_for: number;
 
   @Column()
   vehicle_id: number;
@@ -44,9 +49,11 @@ export class Booking {
   @JoinColumn({ name: 'booked_by' })
   user: User;
 
+
+
   @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'passenger' })
-  passengerUser: User;
+  @JoinColumn({ name: 'booked_for' })
+  bookedForUser: User;
 
   @ManyToOne(() => Vehicle)
   @JoinColumn({ name: 'vehicle_id' })

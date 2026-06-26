@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, Min, IsOptional, IsIn } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, Min, IsOptional, IsIn, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateVehicleDto {
@@ -17,9 +17,10 @@ export class CreateVehicleDto {
   @Type(() => Number)
   capacity: number;
 
-  @IsNotEmpty({ message: 'กรุณาระบุประเภทเชื้อเพลิง/การชาร์จ' })
-  @IsString()
-  re_fuel: string;
+  @IsNotEmpty({ message: 'กรุณาระบุสถานะการเติมน้ำมัน' })
+  @IsBoolean()
+  @Type(() => Boolean)
+  re_fuel: boolean;
 
   @IsOptional()
   @IsNumber({}, { message: 'ระยะทางต้องเป็นตัวเลข' })
@@ -58,8 +59,9 @@ export class UpdateVehicleDto {
   capacity?: number;
 
   @IsOptional()
-  @IsString()
-  re_fuel?: string;
+  @IsBoolean()
+  @Type(() => Boolean)
+  re_fuel?: boolean;
 
   @IsOptional()
   @IsNumber({}, { message: 'ระยะทางต้องเป็นตัวเลข' })
@@ -108,4 +110,9 @@ export class VehicleListFilterDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  re_fuel?: boolean;
 }

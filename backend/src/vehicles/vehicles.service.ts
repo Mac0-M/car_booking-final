@@ -29,6 +29,9 @@ export class VehiclesService {
     if (filter.search) {
       query.andWhere('v.vehicle_name LIKE :search', { search: `%${filter.search}%` });
     }
+    if (filter.re_fuel !== undefined) {
+      query.andWhere('v.re_fuel = :reFuel', { reFuel: filter.re_fuel });
+    }
 
     return query.getMany();
   }

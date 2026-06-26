@@ -1,0 +1,190 @@
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AllSharedUi } from '../../../../shared/shared';
+import { BookingStore } from '../../state/booking.store';
+import { AvailabilityService } from '../../../../core/services/availability.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { UserService } from '../../../../core/services/user.service';
+import { User } from '../../../../core/models/user.model';
+
+@Component({
+  selector: 'app-booking-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ...AllSharedUi
+  ],
+  templateUrl: './booking-form.html'
+})
+export class BookingFormComponent implements OnInit {
+  private readonly store = inject(BookingStore);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly availabilityService = inject(AvailabilityService);
+  private readonly authService = inject(AuthService);
+  private readonly userService = inject(UserService);
+
+  // Form Fields
+  depart = '';
+  returnTime = '';
+  destination = '';
+  purpose = '';
+  
+  booked_by: number | null = null;
+  selectedPassengerIds: number[] = [];
+
+  readonly usersList = signal<User[]>([]);
+  readonly isLoading = signal(false);
+  readonly errorMessage = signal('');
+
+  // Phone overlay variables
+  readonly showPhoneOverlay = signal(false);
+  phoneInput = '';
+  phoneError = '';
+
+  ngOnInit(): void {
+    // Load users list for selectors
+    this.userService.findAll().subscribe({
+      next: (users) => this.usersList.set(users),
+      error: (err) => console.error('Error loading users:', err)
+    });
+
+    this.initializeFormFromStore();
+
+    this.route.queryParams.subscribe(params => {
+      if (params['start']) {
+        // start datetime parameter from calendar click/drag (format: YYYY-MM-DDTHH:mm)
+        this.depart = params['start'].substring(0, 16);
+      }
+      if (params['end']) {
+        this.returnTime = params['end'].substring(0, 16);
+      }
+      if (params['requirePhone'] === 'true') {
+        this.showPhoneOverlay.set(true);
+      }
+    });
+  }
+
+  private initializeFormFromStore(): void {
+    const storeDepart = this.store.depart();
+    const storeReturn = this.store.returnTime();
+    const storeDest = this.store.destination();
+    const storePurp = this.store.purpose();
+    const storeBookedBy = this.store.booked_by();
+    const storePassenger = this.store.passenger();
+
+    // Default dates
+    const today = new Date();
+    const cleanDateTimeStr = (dt: Date) => {
+      const yyyy = dt.getFullYear();
+      const mm = String(dt.getMonth() + 1).padStart(2, '0');
+      const dd = String(dt.getDate()).padStart(2, '0');
+      const hh = String(dt.getHours()).padStart(2, '0');
+      const min = String(dt.getMinutes()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+    };
+
+    this.depart = storeDepart || cleanDateTimeStr(today);
+    
+    // Default return to +2 hours
+    const returnDate = new Date(today.getTime() + 2 * 60 * 60 * 1000);
+    this.returnTime = storeReturn || cleanDateTimeStr(returnDate);
+
+    this.destination = storeDest || '';
+    this.purpose = storePurp || '';
+
+    // Default booker to current user
+    const currentUserId = this.authService.currentUser()?.userId || this.authService.currentUser()?.user_id || null;
+    this.booked_by = storeBookedBy || currentUserId;
+    
+    if (storePassenger) {
+      this.selectedPassengerIds = storePassenger.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
+    } else {
+      this.selectedPassengerIds = [];
+    }
+  }
+
+  get isFormValid(): boolean {
+    if (!this.depart || !this.returnTime) {
+      return false;
+    }
+    const startMs = new Date(this.depart).getTime();
+    const endMs = new Date(this.returnTime).getTime();
+    return endMs > startMs;
+  }
+
+  onSubmit(): void {
+    if (!this.isFormValid || this.isLoading()) return;
+
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
+    this.availabilityService.search(this.depart, this.returnTime).subscribe({
+      next: (res: any) => {
+        this.isLoading.set(false);
+        const vehicles = res.data || res;
+        const passengerStr = this.selectedPassengerIds.length > 0 ? this.selectedPassengerIds.join(',') : null;
+        this.store.setStep1({
+          depart: this.depart,
+          returnTime: this.returnTime,
+          destination: this.destination,
+          purpose: this.purpose,
+          booked_by: this.booked_by,
+          booked_for: null,
+          passenger: passengerStr
+        });
+        this.store.setVehicles(vehicles);
+        this.router.navigate(['/booking/select-vehicle']);
+      },
+      error: (err: any) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.message || 'เกิดข้อผิดพลาดในการตรวจสอบรถว่าง กรุณาลองใหม่อีกครั้ง');
+        alert(this.errorMessage());
+      }
+    });
+  }
+
+  togglePassenger(userId: number, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      if (!this.selectedPassengerIds.includes(userId)) {
+        this.selectedPassengerIds.push(userId);
+      }
+    } else {
+      this.selectedPassengerIds = this.selectedPassengerIds.filter(id => id !== userId);
+    }
+  }
+
+  isPassengerSelected(userId: number): boolean {
+    return this.selectedPassengerIds.includes(userId);
+  }
+
+  submitPhone(): void {
+    if (!this.phoneInput) {
+      this.phoneError = 'เบอร์โทรศัพท์จำเป็นต้องกรอก';
+      return;
+    }
+    if (this.phoneInput.length !== 10 || !/^\d+$/.test(this.phoneInput)) {
+      this.phoneError = 'เบอร์โทรศัพท์ต้องมี 10 หลัก';
+      return;
+    }
+    this.phoneError = '';
+    
+    this.authService.updatePhone(this.phoneInput).subscribe({
+      next: () => {
+        this.showPhoneOverlay.set(false);
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { requirePhone: null },
+          queryParamsHandling: 'merge'
+        });
+      },
+      error: (err: any) => {
+        alert(err.error?.message || 'เกิดข้อผิดพลาดในการบันทึกเบอร์โทรศัพท์');
+      }
+    });
+  }
+}

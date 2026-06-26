@@ -1,0 +1,51 @@
+<div class="flex flex-col w-full text-left">
+  <!-- Label -->
+  @if (label) {
+    <label 
+      [attr.for]="inputId" 
+      class="mb-1.5 text-sm font-medium text-gray-700"
+    >
+      {{ label }}
+    </label>
+  }
+
+  <!-- Input Container -->
+  <div class="relative w-full">
+    <!-- Icon Left (Optional) -->
+    @if (icon) {
+      <span 
+        class="material-icons absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none text-xl"
+      >
+        {{ icon }}
+      </span>
+    }
+
+    <!-- Input Tag -->
+    <input
+      [attr.id]="inputId"
+      [type]="type"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [value]="value"
+      [attr.maxlength]="type === 'tel' ? 10 : null"
+      [attr.min]="min || null"
+      [attr.max]="max || null"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      [ngClass]="[
+        baseClasses,
+        sizeClasses[size],
+        hasError ? stateClasses.error : (disabled ? stateClasses.disabled : stateClasses.normal),
+        icon ? 'pl-11' : ''
+      ]"
+    />
+  </div>
+
+  <!-- Error Message -->
+  @if (errorMessage) {
+    <p class="mt-1.5 text-sm text-red-500 font-medium flex items-center gap-1">
+      <span class="material-icons text-sm">error</span>
+      {{ errorMessage }}
+    </p>
+  }
+</div>

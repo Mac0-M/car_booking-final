@@ -1,0 +1,186 @@
+<!-- Booking Form Step 1 Template -->
+<div class="booking-form-page max-w-lg mx-auto p-6 space-y-6">
+  
+  <!-- Stepper Indicator -->
+  <component-process [currentStep]="1" size="base"></component-process>
+
+  <form (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Main Card containing Date, Time and Destination Selection -->
+    <component-card>
+      <div class="space-y-5">
+        <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-3">
+          <span class="material-icons text-gray-800">directions_car</span>
+          รายละเอียดการจองรถ
+        </h2>
+
+        <!-- DateTime Picker Section -->
+        <div class="grid grid-cols-1 gap-4">
+          <!-- Start Datetime -->
+          <div class="space-y-2">
+            <label for="depart" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">วันเดินทางไปและเวลา</label>
+            <div class="relative">
+              <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">event</span>
+              <input type="datetime-local"
+                     id="depart"
+                     name="depart"
+                     [(ngModel)]="depart"
+                     required
+                     class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-white" />
+            </div>
+          </div>
+
+          <!-- End Datetime -->
+          <div class="space-y-2">
+            <label for="returnTime" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">วันเดินทางกลับและเวลา</label>
+            <div class="relative">
+              <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">event</span>
+              <input type="datetime-local"
+                     id="returnTime"
+                     name="returnTime"
+                     [(ngModel)]="returnTime"
+                     required
+                     class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-white" />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4 w-full pt-2">
+          <!-- Destination (Optional) -->
+          <div class="space-y-2">
+            <label for="destination" class="text-xs font-bold text-gray-500 uppercase tracking-wider block font-sans">สถานที่ปลายทาง (ไม่บังคับ)</label>
+            <component-input-ui
+              type="text"
+              icon="place"
+              placeholder="เช่น บริษัท สาขาย่อย หรือสถานที่ประชุม..."
+              [(ngModel)]="destination"
+              name="destination"
+            ></component-input-ui>
+          </div>
+
+          <!-- Purpose of Use (Optional) -->
+          <div class="space-y-2">
+            <label for="purpose" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">จุดประสงค์การใช้งาน (ไม่บังคับ)</label>
+            <component-input-ui
+              type="text"
+              icon="assignment"
+              placeholder="เช่น ติดต่อประสานงานลูกค้า หรือ รับส่งผู้บริหาร..."
+              [(ngModel)]="purpose"
+              name="purpose"
+            ></component-input-ui>
+          </div>
+        </div>
+
+        <!-- User Selections Section -->
+        <div class="border-t border-gray-100 pt-4 space-y-4">
+          <!-- Booker Dropdown -->
+          <div class="space-y-2">
+            <label for="booked_by" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">คนที่จอง</label>
+            <div class="relative">
+              <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
+              <select id="booked_by"
+                      name="booked_by"
+                      [(ngModel)]="booked_by"
+                      required
+                      class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors">
+                @for (u of usersList(); track u.userId) {
+                  <option [value]="u.userId">{{ u.userName }} ({{ u.email }})</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <!-- Passenger Checklist -->
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block">คนที่ไปด้วย (ผู้โดยสาร - เลือกได้หลายคน)</label>
+            <div class="border border-gray-200 rounded-xl p-3 bg-white max-h-48 overflow-y-auto space-y-2">
+              @for (u of usersList(); track u.userId) {
+                @if (u.userId !== booked_by) {
+                  <label class="flex items-center gap-3 cursor-pointer py-1 px-1.5 hover:bg-gray-50 rounded-lg transition-colors select-none">
+                    <input type="checkbox"
+                           [checked]="isPassengerSelected(u.userId)"
+                           (change)="togglePassenger(u.userId, $event)"
+                           class="h-4 w-4 rounded border-gray-300 text-black focus:ring-black cursor-pointer accent-black" />
+                    <div class="text-sm">
+                      <span class="font-semibold text-gray-800">{{ u.userName }}</span>
+                      <span class="text-gray-400 text-xs ml-1">({{ u.email }})</span>
+                    </div>
+                  </label>
+                }
+              } @empty {
+                <div class="text-xs text-gray-400 text-center py-4">ไม่มีรายชื่อผู้ใช้งานอื่น</div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </component-card>
+
+    <!-- Navigation / Submission Actions -->
+    <div class="pt-2">
+      <component-button
+        type="submit"
+        variant="submit"
+        size="xxl"
+        class="w-full block"
+        [disabled]="!isFormValid || isLoading()"
+        [class.opacity-50]="!isFormValid || isLoading()"
+        [class.cursor-not-allowed]="!isFormValid || isLoading()"
+      >
+        <span class="flex items-center justify-center gap-2 text-lg font-semibold py-1">
+          @if (isLoading()) {
+            กำลังตรวจสอบรถว่าง...
+            <span class="material-icons text-xl animate-spin">sync</span>
+          } @else {
+            ค้นหารถยนต์ที่ว่าง
+            <span class="material-icons text-xl">arrow_forward</span>
+          }
+        </span>
+      </component-button>
+    </div>
+  </form>
+
+  <!-- Phone Number Collection Overlay Modal -->
+  @if (showPhoneOverlay()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">
+      <component-card variant="default" size="base" class="w-full max-w-md shadow-xl flex flex-col gap-4 animate-in fade-in zoom-in duration-200">
+        <div class="flex items-center gap-3 text-red-500 border-b border-gray-100 pb-3">
+          <span class="material-icons text-3xl">phone_iphone</span>
+          <h2 class="text-xl font-bold text-gray-900">กรุณากรอกเบอร์โทรศัพท์</h2>
+        </div>
+        
+        <p class="text-sm text-gray-500 mb-4">
+          กรุณากรอกเบอร์โทรศัพท์เคลื่อนที่ของคุณ เพื่อให้ผู้ประสานงานรถยนต์สามารถติดต่อคุณเกี่ยวกับทริปการเดินทางนี้ได้
+        </p> 
+
+        <div class="space-y-3">
+          <component-input-ui
+            type="tel"
+            icon="phone"
+            placeholder="เช่น 0812345678"
+            [(ngModel)]="phoneInput"
+            name="phoneInput"
+          ></component-input-ui>
+          
+          @if (phoneError) {
+            <p class="text-xs text-red-500 flex items-center gap-1">
+              <span class="material-icons text-xs">error</span>
+              {{ phoneError }}
+            </p>
+          }
+        </div>
+
+        <div class="flex justify-end gap-3 mt-2 border-t border-gray-100 pt-4">
+          <component-button
+            variant="submit"
+            size="sm"
+            class="px-6"
+            (click)="submitPhone()"
+          >
+            บันทึกเบอร์โทรศัพท์
+          </component-button>
+        </div>
+      </component-card>
+    </div>
+  }
+
+</div>

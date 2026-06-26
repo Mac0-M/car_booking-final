@@ -1,0 +1,283 @@
+<div class="booking-history-page max-w-5xl mx-auto p-4 md:p-6 space-y-6">
+  
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
+        <span class="material-icons text-gray-700">history</span>
+        ประวัติการจองทั้งหมด
+      </h1>
+      <p class="text-sm text-gray-500 mt-1">ตรวจสอบประวัติการจอง การยกเลิก และการเดินทางทั้งหมดที่เคยเกิดขึ้นในระบบ</p>
+    </div>
+  </div>
+
+  <!-- Search, Filters and View Toggle Bar -->
+  <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-3 rounded-2xl border border-gray-100 shadow-sm">
+    <!-- Search Bar + Toggle -->
+    <div class="flex items-center gap-2 w-full md:w-auto flex-1">
+      <div class="relative flex-1 max-w-md">
+        <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+        <input type="text"
+               [value]="searchQuery()"
+               (input)="searchQuery.set($any($event.target).value)"
+               placeholder="ค้นหาจุดหมาย, ผู้จอง, รถยนต์..."
+               class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50" />
+      </div>
+      <button (click)="showAdvancedFilters.set(!showAdvancedFilters())"
+              [class.bg-gray-800]="showAdvancedFilters()"
+              [class.text-white]="showAdvancedFilters()"
+              [class.bg-gray-50]="!showAdvancedFilters()"
+              [class.text-gray-700]="!showAdvancedFilters()"
+              class="px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 select-none">
+        <span class="material-icons text-base">filter_list</span>
+        ตัวกรอง
+      </button>
+    </div>
+
+    <!-- View Mode Toggle (Block vs List) -->
+    <div class="flex items-center bg-gray-100 p-1 rounded-xl shrink-0">
+      <button (click)="viewMode.set('block')"
+              [class.bg-white]="viewMode() === 'block'"
+              [class.shadow-sm]="viewMode() === 'block'"
+              [class.text-gray-800]="viewMode() === 'block'"
+              [class.text-gray-500]="viewMode() !== 'block'"
+              class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0">
+        <span class="material-icons text-base">grid_view</span>
+        บล็อก (Blocks)
+      </button>
+      <button (click)="viewMode.set('list')"
+              [class.bg-white]="viewMode() === 'list'"
+              [class.shadow-sm]="viewMode() === 'list'"
+              [class.text-gray-800]="viewMode() === 'list'"
+              [class.text-gray-500]="viewMode() !== 'list'"
+              class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0">
+        <span class="material-icons text-base">format_list_bulleted</span>
+        ตาราง (List)
+      </button>
+    </div>
+  </div>
+
+  <!-- Advanced Filters Panel -->
+  @if (showAdvancedFilters()) {
+    <div class="bg-white p-4 rounded-2xl border border-gray-150 shadow-sm grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-1 duration-150">
+      <!-- Vehicle Filter -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block">กรองตามรถยนต์</label>
+        <select [value]="selectedVehicleId()"
+                (change)="selectedVehicleId.set($any($event.target).value); onFilterChange()"
+                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400">
+          <option value="">รถยนต์ทั้งหมด</option>
+          @for (vehicle of vehiclesList(); track vehicle.id) {
+            <option [value]="vehicle.id">{{ vehicle.model }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- User Filter -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block">กรองตามผู้ใช้</label>
+        <select [value]="selectedUserId()"
+                (change)="selectedUserId.set($any($event.target).value); onFilterChange()"
+                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400">
+          <option value="">ผู้ใช้ทุกคน</option>
+          @for (user of usersList(); track user.userId) {
+            <option [value]="user.userId">{{ user.userName }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Start Date Picker (datetime-local) -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block">ตั้งแต่วันและเวลา</label>
+        <input type="datetime-local"
+               [value]="startDate()"
+               (input)="startDate.set($any($event.target).value); onFilterChange()"
+               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400" />
+      </div>
+
+      <!-- End Date Picker (datetime-local) -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block">ถึงวันและเวลา</label>
+        <input type="datetime-local"
+               [value]="endDate()"
+               (input)="endDate.set($any($event.target).value); onFilterChange()"
+               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400" />
+      </div>
+
+      <!-- Status Filter -->
+      <div class="space-y-1.5 sm:col-span-2 md:col-span-2">
+        <label class="text-xs font-bold text-gray-400 block">สถานะการจอง</label>
+        <select [value]="selectedStatusFilter()"
+                (change)="selectedStatusFilter.set($any($event.target).value); onFilterChange()"
+                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400">
+          <option value="">สถานะการจองทั้งหมด</option>
+          <option value="CONFIRMED">CONFIRMED (จองแล้ว/ยังไม่เดินทาง)</option>
+          <option value="COMPLETED">COMPLETED (เสร็จสิ้นการเดินทาง)</option>
+          <option value="CANCELLED">CANCELLED (ยกเลิกแล้ว)</option>
+        </select>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="sm:col-span-2 md:col-span-2 flex items-end justify-end gap-2">
+        <button (click)="resetFilters()"
+                class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-xs font-semibold cursor-pointer">
+          ล้างตัวกรอง
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- View Area -->
+  @if (filteredBookings().length > 0) {
+    @if (viewMode() === 'block') {
+      <!-- Block View -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
+        @for (booking of filteredBookings(); track booking.id) {
+          <component-card variant="default"
+                          class="group overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer block"
+                          (click)="openDetail(booking)">
+            <div>
+              <div class="relative w-full h-40 rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-100">
+                @if (getVehicleImgUrl(booking.vehicle); as url) {
+                  <img [src]="url" [alt]="booking.vehicle?.model" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                } @else {
+                  <span class="material-icons text-5xl text-gray-300">directions_car</span>
+                }
+                
+                <!-- Status Badge overlay -->
+                <div class="absolute top-3 right-3">
+                  @if (getBookingStatusVariant(booking) === 'available') {
+                    <component-badge variant="available" size="xs">Upcoming</component-badge>
+                  } @else if (getBookingStatusVariant(booking) === 'pending') {
+                    <component-badge variant="pending" size="xs">Ongoing</component-badge>
+                  } @else if (getBookingStatusVariant(booking) === 'booked') {
+                    <component-badge variant="booked" size="xs">Completed</component-badge>
+                  } @else {
+                    <component-badge variant="unavailable" size="xs">Cancelled</component-badge>
+                  }
+                </div>
+
+                <!-- ID overlay -->
+                <div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-mono">
+                  #{{ booking.id }}
+                </div>
+              </div>
+
+              <!-- Booking Details -->
+              <div class="p-1 pt-4 space-y-3">
+                <div>
+                  <h3 class="text-base font-bold text-gray-800 flex items-center gap-1">
+                    <span class="material-icons text-gray-400 text-base">location_on</span>
+                    <span class="line-clamp-1">{{ booking.destination || 'ไม่ได้ระบุสถานที่' }}</span>
+                  </h3>
+                  <p class="text-xs text-gray-500 mt-1 line-clamp-2 pl-5">{{ booking.purpose || 'ไม่ได้ระบุจุดประสงค์' }}</p>
+                </div>
+
+                <div class="pl-5 pt-1 space-y-1">
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">รถยนต์ที่จอง</div>
+                  <div class="text-xs font-bold text-gray-700">{{ booking.vehicle?.model || 'ไม่ระบุรถ' }}</div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2 pt-3 text-xs text-gray-500 border-t border-gray-50 pl-1">
+                  <div class="flex items-center gap-1.5 font-semibold text-gray-700 bg-gray-50/50 px-2 py-1 rounded">
+                    <span class="material-icons text-gray-400 text-sm">person</span>
+                    <span class="line-clamp-1">{{ booking.userName }}</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="material-icons text-gray-400 text-sm">calendar_today</span>
+                    <span>เดินทาง: {{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="material-icons text-gray-400 text-sm">schedule</span>
+                    <span>กลับ: {{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </component-card>
+        }
+      </div>
+    } @else {
+      <!-- List View (Table Layout) -->
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-200">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-4">ID</th>
+                <th class="px-6 py-4">ผู้ทำรายการ</th>
+                <th class="px-6 py-4">รถยนต์</th>
+                <th class="px-6 py-4">ปลายทาง</th>
+                <th class="px-6 py-4">วันเดินทางไป</th>
+                <th class="px-6 py-4">วันเดินทางกลับ</th>
+                <th class="px-6 py-4">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+              @for (booking of filteredBookings(); track booking.id) {
+                <tr class="hover:bg-gray-50/50 transition-colors cursor-pointer" (click)="openDetail(booking)">
+                  <td class="px-6 py-4 font-mono text-xs font-bold text-gray-400">#{{ booking.id }}</td>
+                  <td class="px-6 py-4 font-bold text-gray-800">{{ booking.userName }}</td>
+                  <td class="px-6 py-4 font-semibold text-gray-600">{{ booking.vehicle?.model || 'N/A' }}</td>
+                  <td class="px-6 py-4 text-gray-600 line-clamp-1 max-w-xs">{{ booking.destination || 'N/A' }}</td>
+                  <td class="px-6 py-4 text-xs font-mono text-gray-600">{{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</td>
+                  <td class="px-6 py-4 text-xs font-mono text-gray-600">{{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</td>
+                  <td class="px-6 py-4">
+                    @if (booking.status === 'CONFIRMED') {
+                      @if (getBookingStatusVariant(booking) === 'pending') {
+                        <component-badge variant="pending" size="xs">Ongoing</component-badge>
+                      } @else {
+                        <component-badge variant="available" size="xs">Confirmed</component-badge>
+                      }
+                    } @else if (booking.status === 'COMPLETED') {
+                      <component-badge variant="booked" size="xs">Completed</component-badge>
+                    } @else {
+                      <component-badge variant="unavailable" size="xs">Cancelled</component-badge>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  } @else {
+    <!-- Empty State -->
+    <div class="py-8 flex flex-col items-center">
+      <div class="w-full">
+        <component-empty-state
+          title="ไม่พบประวัติการจอง"
+          description="ไม่มีรายการจองรถยนต์ในประวัติระบบในขณะนี้"
+          icon="search"
+          variant="card">
+        </component-empty-state>
+      </div>
+    </div>
+  }
+
+  <!-- Detail Modal Dialog popup -->
+  <app-booking-detail-modal
+    [title]="'รายละเอียดประวัติการจองรถยนต์'"
+    [description]="'ข้อมูลอย่างละเอียดของรายการจองรถยนต์ในอดีตและปัจจุบัน'"
+    [bookingDate]="selectedBooking()?.bookingDate || ''"
+    [startTime]="selectedBooking()?.startTime || ''"
+    [endTime]="selectedBooking()?.endTime || ''"
+    [destination]="selectedBooking()?.destination || ''"
+    [purpose]="selectedBooking()?.purpose || ''"
+    [userName]="selectedBooking()?.userName || ''"
+    [userPhone]="selectedBooking()?.userPhone || ''"
+    [vehicle]="selectedBooking()?.vehicle || null"
+    [status]="selectedBooking()?.status || 'CONFIRMED'"
+    [depart]="selectedBooking()?.depart || ''"
+    [returnTime]="selectedBooking()?.return || ''"
+    [bookedByUser]="selectedBooking()?.bookedByUser || null"
+    [bookedForUser]="selectedBooking()?.bookedForUser || null"
+    [passengerUsers]="selectedBooking()?.passengerUsers || null"
+    [isModal]="true"
+    [isOpen]="isModalOpen()"
+    (close)="closeDetail()"
+    (cancel)="onCancelBooking(selectedBooking()?.id || '')"
+    (complete)="onCompleteBooking(selectedBooking()?.id || '', $event)"
+  />
+</div>
