@@ -27,7 +27,7 @@ const mapBooking = (b: any): Booking => {
   // Format userName to show booking details clearly
   let userNameStr = b.bookedForUser?.user_name || b.user?.user_name || 'N/A';
   if (b.bookedForUser && b.user && b.bookedForUser.user_id !== b.user.user_id) {
-    userNameStr = `${b.bookedForUser.user_name} (ฝากโดย ${b.user.user_name})`;
+    userNameStr = `${b.bookedForUser.user_name} (จองโดย ${b.user.user_name})`;
   }
 
   return {
@@ -41,12 +41,12 @@ const mapBooking = (b: any): Booking => {
     return: b.return ? b.return.replace(' ', 'T') : '',
     booked_by: b.booked_by,
     booked_for: b.booked_for,
-    passenger: b.passenger,
+
     userName: userNameStr,
     userPhone: b.bookedForUser?.phone || b.user?.phone || 'N/A',
     bookedByUser: b.user,
     bookedForUser: b.bookedForUser,
-    passengerUsers: b.passengerUsers,
+
     vehicle: b.vehicle ? {
       id: String(b.vehicle.vehicle_id),
       plateNumber: b.vehicle.type || 'ไม่มี',
@@ -120,7 +120,7 @@ export class BookingService {
     purpose?: string;
     booked_by?: number;
     booked_for?: number;
-    passenger?: string;
+
   }): Observable<any> {
     const { purpose, ...rest } = bookingData;
     const payload = {

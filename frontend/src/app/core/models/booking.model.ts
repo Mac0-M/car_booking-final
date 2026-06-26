@@ -19,10 +19,10 @@ export interface Booking {
   return: string;
   booked_by?: number;
   booked_for?: number;
-  passenger?: string;
+
   bookedByUser?: any;
   bookedForUser?: any;
-  passengerUsers?: any[];
+
 }
 // cache trigger to force Angular watcher to reload Booking type
 

@@ -90,8 +90,7 @@ export class BookingConfirmComponent {
       depart: this.store.depart().replace('T', ' ') + ':00',
       return: this.store.returnTime().replace('T', ' ') + ':00',
       booked_by: this.store.booked_by() || undefined,
-      booked_for: this.store.booked_for() || undefined,
-      passenger: this.store.passenger() || undefined
+      booked_for: this.store.booked_for() || undefined
     };
 
     this.bookingService.addBooking(bookingData).subscribe({

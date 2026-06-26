@@ -285,7 +285,7 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
         defaultView: 'month',
         useFormPopup: false,
         useDetailPopup: false,
-        isReadOnly: false,
+        isReadOnly: true,
         gridSelection: {
           enableClick: true,
         },
@@ -319,33 +319,30 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
   private renderCalendarEvents(): void {
     if (!this.calendarInstance) return;
 
-    const events = this.filteredBookings().map(b => {
+    const events = this.filteredBookings()
+      .filter(b => b.status !== 'COMPLETED')
+      .map(b => {
       let color = '#3b82f6'; // Blue for Sedan
       let borderColor = '#2563eb';
       let icon = 'directions_car';
 
       const type = b.vehicle?.vehicleTypeId;
-      if (b.status === 'COMPLETED') {
-        color = '#1f2937'; // Black
-        borderColor = '#111827';
-      } else {
-        if (type === 'Pickup') {
-          color = '#10b981'; // Green
-          borderColor = '#059669';
-          icon = 'local_shipping';
-        } else if (type === 'Van') {
-          color = '#8b5cf6'; // Purple
-          borderColor = '#7c3aed';
-          icon = 'airport_shuttle';
-        } else if (type === 'SUV') {
-          color = '#f97316'; // Orange
-          borderColor = '#ea580c';
-          icon = 'time_to_leave';
-        } else if (type === 'Other') {
-          color = '#ec4899'; // Pink
-          borderColor = '#db2777';
-          icon = 'commute';
-        }
+      if (type === 'Pickup') {
+        color = '#10b981'; // Green
+        borderColor = '#059669';
+        icon = 'local_shipping';
+      } else if (type === 'Van') {
+        color = '#8b5cf6'; // Purple
+        borderColor = '#7c3aed';
+        icon = 'airport_shuttle';
+      } else if (type === 'SUV') {
+        color = '#f97316'; // Orange
+        borderColor = '#ea580c';
+        icon = 'time_to_leave';
+      } else if (type === 'Other') {
+        color = '#ec4899'; // Pink
+        borderColor = '#db2777';
+        icon = 'commute';
       }
 
       return {

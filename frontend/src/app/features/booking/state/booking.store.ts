@@ -8,7 +8,7 @@ export interface Step1Data {
   purpose?: string;
   booked_by?: number | null;
   booked_for?: number | null;
-  passenger?: string | null;
+
 }
 
 @Injectable({
@@ -22,7 +22,7 @@ export class BookingStore {
   readonly purpose = signal<string>('');
   readonly booked_by = signal<number | null>(null);
   readonly booked_for = signal<number | null>(null);
-  readonly passenger = signal<string | null>(null);
+
   
   // Step 2 & 3 State Signals
   readonly vehicles = signal<Vehicle[]>([]);
@@ -55,7 +55,7 @@ export class BookingStore {
     this.purpose.set(data.purpose || '');
     this.booked_by.set(data.booked_by || null);
     this.booked_for.set(data.booked_for || null);
-    this.passenger.set(data.passenger || null);
+
   }
 
   setVehicles(vehicles: Vehicle[]): void {
@@ -73,7 +73,7 @@ export class BookingStore {
     this.purpose.set('');
     this.booked_by.set(null);
     this.booked_for.set(null);
-    this.passenger.set(null);
+
     this.vehicles.set([]);
     this.selectedVehicle.set(null);
   }

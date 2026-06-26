@@ -17,47 +17,7 @@ export class BookingService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  private async populatePassengerUsers(bookings: Booking[]): Promise<Booking[]> {
-    const userIds = new Set<number>();
-    bookings.forEach((b) => {
-      if (b.passenger) {
-        const ids = b.passenger
-          .split(',')
-          .map((id) => parseInt(id.trim(), 10))
-          .filter((id) => !isNaN(id));
-        ids.forEach((id) => userIds.add(id));
-      }
-    });
 
-    if (userIds.size === 0) {
-      bookings.forEach((b) => (b.passengerUsers = []));
-      return bookings;
-    }
-
-    const users = await this.userRepo.createQueryBuilder('u')
-      .where('u.user_id IN (:...ids)', { ids: Array.from(userIds) })
-      .getMany();
-
-    const userMap = new Map<number, User>();
-    users.forEach((u) => {
-      delete u.password;
-      userMap.set(u.user_id, u);
-    });
-
-    bookings.forEach((b) => {
-      if (b.passenger) {
-        const ids = b.passenger
-          .split(',')
-          .map((id) => parseInt(id.trim(), 10))
-          .filter((id) => !isNaN(id));
-        b.passengerUsers = ids.map((id) => userMap.get(id)).filter((u): u is User => !!u);
-      } else {
-        b.passengerUsers = [];
-      }
-    });
-
-    return bookings;
-  }
 
   async findAll(filter: BookingFilterDto): Promise<Booking[]> {
     const query = this.bookingRepo.createQueryBuilder('b')
@@ -77,27 +37,11 @@ export class BookingService {
     if (filter.booked_for) {
       query.andWhere('b.booked_for = :bookedFor', { bookedFor: filter.booked_for });
     }
-    if (filter.passenger) {
-      query.andWhere(
-        '(b.passenger = :passId OR b.passenger LIKE :passIdStart OR b.passenger LIKE :passIdMid OR b.passenger LIKE :passIdEnd)',
-        {
-          passId: filter.passenger,
-          passIdStart: `${filter.passenger},%`,
-          passIdMid: `%,${filter.passenger},%`,
-          passIdEnd: `%,${filter.passenger}`,
-        }
-      );
-    }
+
     if (filter.user_id) {
       query.andWhere(
-        '(b.booked_by = :uid OR b.booked_for = :uid OR b.passenger = :uidStr OR b.passenger LIKE :uidStart OR b.passenger LIKE :uidMid OR b.passenger LIKE :uidEnd)',
-        {
-          uid: filter.user_id,
-          uidStr: String(filter.user_id),
-          uidStart: `${filter.user_id},%`,
-          uidMid: `%,${filter.user_id},%`,
-          uidEnd: `%,${filter.user_id}`,
-        }
+        '(b.booked_by = :uid OR b.booked_for = :uid)',
+        { uid: filter.user_id }
       );
     }
     if (filter.depart_start) {
@@ -112,7 +56,7 @@ export class BookingService {
       if (b.user) delete b.user.password;
       if (b.bookedForUser) delete b.bookedForUser.password;
     });
-    return this.populatePassengerUsers(bookings);
+    return bookings;
   }
 
   async findMyBookings(userId: number): Promise<Booking[]> {
@@ -121,14 +65,8 @@ export class BookingService {
       .leftJoinAndSelect('b.bookedForUser', 'bf')
       .leftJoinAndSelect('b.vehicle', 'v')
       .where(
-        '(b.booked_by = :userId OR b.booked_for = :userId OR b.passenger = :userIdStr OR b.passenger LIKE :userIdStart OR b.passenger LIKE :userIdMid OR b.passenger LIKE :userIdEnd)',
-        {
-          userId,
-          userIdStr: String(userId),
-          userIdStart: `${userId},%`,
-          userIdMid: `%,${userId},%`,
-          userIdEnd: `%,${userId}`,
-        }
+        '(b.booked_by = :userId OR b.booked_for = :userId)',
+        { userId }
       )
       .getMany();
 
@@ -136,7 +74,7 @@ export class BookingService {
       if (b.user) delete b.user.password;
       if (b.bookedForUser) delete b.bookedForUser.password;
     });
-    return this.populatePassengerUsers(bookings);
+    return bookings;
   }
 
   async findById(book_id: number): Promise<Booking | null> {
@@ -151,8 +89,7 @@ export class BookingService {
     if (booking) {
       if (booking.user) delete booking.user.password;
       if (booking.bookedForUser) delete booking.bookedForUser.password;
-      const [populated] = await this.populatePassengerUsers([booking]);
-      return populated;
+      return booking;
     }
     return null;
   }
@@ -206,14 +143,12 @@ export class BookingService {
       throw new NotFoundException('ไม่พบข้อมูลการจองนี้');
     }
 
-    // Authorization: Owner or passenger
-    const passengerIds = booking.passenger ? booking.passenger.split(',').map(id => parseInt(id.trim(), 10)) : [];
+    // Authorization: Owner only
     if (
       currentUser.role !== 'Admin' &&
       currentUser.role !== 'Super_Admin' &&
       booking.booked_by !== currentUser.user_id &&
-      booking.booked_for !== currentUser.user_id &&
-      !passengerIds.includes(currentUser.user_id)
+      booking.booked_for !== currentUser.user_id
     ) {
       throw new ForbiddenException('ไม่มีสิทธิ์ยกเลิกการจองนี้');
     }
@@ -230,10 +165,20 @@ export class BookingService {
     return (await this.findById(book_id))!;
   }
 
-  async complete(book_id: number, mileDistance?: number): Promise<Booking> {
+  async complete(book_id: number, currentUser: any, mileDistance?: number): Promise<Booking> {
     const booking = await this.findById(book_id);
     if (!booking) {
       throw new NotFoundException('ไม่พบข้อมูลการจองนี้');
+    }
+
+    // Authorization: Owner only
+    if (
+      currentUser.role !== 'Admin' &&
+      currentUser.role !== 'Super_Admin' &&
+      booking.booked_by !== currentUser.user_id &&
+      booking.booked_for !== currentUser.user_id
+    ) {
+      throw new ForbiddenException('ไม่มีสิทธิ์ดำเนินการจองนี้');
     }
 
     const updateData: any = {

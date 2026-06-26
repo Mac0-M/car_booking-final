@@ -53,12 +53,12 @@ export class BookingController {
   }
 
   @Patch(':id/complete')
-  @Roles('Admin', 'Super_Admin')
   async complete(
     @Param('id') id: string,
+    @CurrentUser() currentUser: any,
     @Body('mile_distance') mileDistance?: number,
   ) {
     const bookId = parseInt(id, 10);
-    return this.bookingService.complete(bookId, mileDistance);
+    return this.bookingService.complete(bookId, currentUser, mileDistance);
   }
 }

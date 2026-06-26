@@ -10,10 +10,7 @@ export class Booking {
   @Column()
   booked_by: number;
 
-  @Column({ type: 'varchar', nullable: true })
-  passenger: string;
 
-  passengerUsers?: User[];
 
   @Column({ nullable: true })
   booked_for: number;

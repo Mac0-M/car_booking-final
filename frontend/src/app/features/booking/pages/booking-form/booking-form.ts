@@ -33,8 +33,8 @@ export class BookingFormComponent implements OnInit {
   destination = '';
   purpose = '';
   
-  booked_by: number | null = null;
-  selectedPassengerIds: number[] = [];
+  booked_for: number | null = null;
+
 
   readonly usersList = signal<User[]>([]);
   readonly isLoading = signal(false);
@@ -74,7 +74,7 @@ export class BookingFormComponent implements OnInit {
     const storeDest = this.store.destination();
     const storePurp = this.store.purpose();
     const storeBookedBy = this.store.booked_by();
-    const storePassenger = this.store.passenger();
+
 
     // Default dates
     const today = new Date();
@@ -96,15 +96,12 @@ export class BookingFormComponent implements OnInit {
     this.destination = storeDest || '';
     this.purpose = storePurp || '';
 
-    // Default booker to current user
+    // Default user (who will use the car) to current user
     const currentUserId = this.authService.currentUser()?.userId || this.authService.currentUser()?.user_id || null;
-    this.booked_by = storeBookedBy || currentUserId;
+    const storeBookedFor = this.store.booked_for();
+    this.booked_for = storeBookedFor || storeBookedBy || currentUserId;
     
-    if (storePassenger) {
-      this.selectedPassengerIds = storePassenger.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
-    } else {
-      this.selectedPassengerIds = [];
-    }
+
   }
 
   get isFormValid(): boolean {
@@ -126,15 +123,14 @@ export class BookingFormComponent implements OnInit {
       next: (res: any) => {
         this.isLoading.set(false);
         const vehicles = res.data || res;
-        const passengerStr = this.selectedPassengerIds.length > 0 ? this.selectedPassengerIds.join(',') : null;
+        const currentUserId = this.authService.currentUser()?.userId || this.authService.currentUser()?.user_id || null;
         this.store.setStep1({
           depart: this.depart,
           returnTime: this.returnTime,
           destination: this.destination,
           purpose: this.purpose,
-          booked_by: this.booked_by,
-          booked_for: null,
-          passenger: passengerStr
+          booked_by: currentUserId,
+          booked_for: this.booked_for
         });
         this.store.setVehicles(vehicles);
         this.router.navigate(['/booking/select-vehicle']);
@@ -147,20 +143,7 @@ export class BookingFormComponent implements OnInit {
     });
   }
 
-  togglePassenger(userId: number, event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      if (!this.selectedPassengerIds.includes(userId)) {
-        this.selectedPassengerIds.push(userId);
-      }
-    } else {
-      this.selectedPassengerIds = this.selectedPassengerIds.filter(id => id !== userId);
-    }
-  }
 
-  isPassengerSelected(userId: number): boolean {
-    return this.selectedPassengerIds.includes(userId);
-  }
 
   submitPhone(): void {
     if (!this.phoneInput) {

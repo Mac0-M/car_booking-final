@@ -25,6 +25,11 @@
            class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
           รายการจอง
         </a>
+        <a routerLink="/bookings/history" 
+           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
+           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+          ประวัติการจอง
+        </a>
         <a routerLink="/vehicles" 
            routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
            class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
@@ -53,6 +58,12 @@
              routerLinkActive="bg-gray-100 text-gray-900"
              class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
              title="All Bookings">
+            <span class="material-icons block text-lg">list_alt</span>
+          </a>
+          <a routerLink="/bookings/history" 
+             routerLinkActive="bg-gray-100 text-gray-900"
+             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             title="Booking History">
             <span class="material-icons block text-lg">history</span>
           </a>
           <a routerLink="/vehicles" 

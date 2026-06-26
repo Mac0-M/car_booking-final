@@ -91,7 +91,7 @@
                 <div class="flex items-start gap-3">
                   <span class="material-icons text-gray-400 mt-0.5">person</span>
                   <div>
-                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">ผู้ทำรายการจอง</div>
+                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">ผู้จอง (ผู้ทำรายการ)</div>
                     <div class="text-base font-semibold text-gray-800 mt-0.5">{{ bookedByUser?.user_name || userName }}</div>
                   </div>
                 </div>
@@ -114,7 +114,7 @@
                   <div class="flex items-start gap-3">
                     <span class="material-icons text-indigo-500 mt-0.5">badge</span>
                     <div>
-                      <div class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">ฝากจองให้ (ผู้รับประโยชน์)</div>
+                      <div class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">ผู้ใช้รถ</div>
                       <div class="text-base font-bold text-indigo-900 mt-0.5">{{ bookedForUser.user_name }}</div>
                       <div class="text-[10px] text-indigo-500 font-mono">โทร: {{ bookedForUser.phone || 'N/A' }}</div>
                     </div>
@@ -122,21 +122,8 @@
                 </component-card>
               }
 
-              <!-- Passenger Users (if any) -->
-              @if (passengerUsers && passengerUsers.length > 0) {
-                @for (p of passengerUsers; track p.user_id) {
-                  <component-card variant="flat" size="sm" class="border-emerald-100 bg-emerald-50/20">
-                    <div class="flex items-start gap-3">
-                      <span class="material-icons text-emerald-500 mt-0.5">person</span>
-                      <div>
-                        <div class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">ผู้โดยสารร่วมทาง</div>
-                        <div class="text-base font-bold text-emerald-900 mt-0.5">{{ p.user_name }}</div>
-                        <div class="text-[10px] text-emerald-500 font-mono">โทร: {{ p.phone || 'ไม่มี' }}</div>
-                      </div>
-                    </div>
-                  </component-card>
-                }
-              }
+
+
             </div>
           </div>
         </component-card>
@@ -172,7 +159,7 @@
             </div>
           } @else {
             <div class="flex justify-end gap-3 w-full">
-              @if (status === 'CONFIRMED') {
+              @if (status === 'CONFIRMED' && canManage) {
                 @if (isAdmin) {
                   <button class="px-5 py-2.5 rounded-xl border border-green-200 text-green-600 bg-white hover:bg-green-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer" (click)="onCompleteClick()">
                     Complete Booking

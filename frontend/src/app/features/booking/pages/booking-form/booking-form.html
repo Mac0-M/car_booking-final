@@ -72,14 +72,14 @@
 
         <!-- User Selections Section -->
         <div class="border-t border-gray-100 pt-4 space-y-4">
-          <!-- Booker Dropdown -->
+          <!-- User Selector (person who will use the car) -->
           <div class="space-y-2">
-            <label for="booked_by" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">คนที่จอง</label>
+            <label for="booked_for" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">คนที่ใช้รถ</label>
             <div class="relative">
               <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
-              <select id="booked_by"
-                      name="booked_by"
-                      [(ngModel)]="booked_by"
+              <select id="booked_for"
+                      name="booked_for"
+                      [(ngModel)]="booked_for"
                       required
                       class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors">
                 @for (u of usersList(); track u.userId) {
@@ -89,28 +89,6 @@
             </div>
           </div>
 
-          <!-- Passenger Checklist -->
-          <div class="space-y-2">
-            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block">คนที่ไปด้วย (ผู้โดยสาร - เลือกได้หลายคน)</label>
-            <div class="border border-gray-200 rounded-xl p-3 bg-white max-h-48 overflow-y-auto space-y-2">
-              @for (u of usersList(); track u.userId) {
-                @if (u.userId !== booked_by) {
-                  <label class="flex items-center gap-3 cursor-pointer py-1 px-1.5 hover:bg-gray-50 rounded-lg transition-colors select-none">
-                    <input type="checkbox"
-                           [checked]="isPassengerSelected(u.userId)"
-                           (change)="togglePassenger(u.userId, $event)"
-                           class="h-4 w-4 rounded border-gray-300 text-black focus:ring-black cursor-pointer accent-black" />
-                    <div class="text-sm">
-                      <span class="font-semibold text-gray-800">{{ u.userName }}</span>
-                      <span class="text-gray-400 text-xs ml-1">({{ u.email }})</span>
-                    </div>
-                  </label>
-                }
-              } @empty {
-                <div class="text-xs text-gray-400 text-center py-4">ไม่มีรายชื่อผู้ใช้งานอื่น</div>
-              }
-            </div>
-          </div>
         </div>
       </div>
     </component-card>

@@ -28,7 +28,7 @@ export class BookingDetailModal {
   @Input() returnTime = '';
   @Input() bookedByUser: any = null;
   @Input() bookedForUser: any = null;
-  @Input() passengerUsers: any[] | null = null;
+
 
   // Modal Configuration
   @Input() title = '';
@@ -46,6 +46,13 @@ export class BookingDetailModal {
   get isAdmin(): boolean {
     const role = this.authService.currentUser()?.role;
     return role === 'Admin' || role === 'Super_Admin';
+  }
+
+  get canManage(): boolean {
+    if (this.isAdmin) return true;
+    const currentUserId = this.authService.currentUser()?.userId || this.authService.currentUser()?.user_id;
+    if (!currentUserId) return false;
+    return this.bookedByUser?.user_id === currentUserId || this.bookedForUser?.user_id === currentUserId;
   }
 
   onCompleteClick(): void {

@@ -8,9 +8,6 @@ export class CreateBookingDto {
   @Type(() => Number)
   vehicle_id: number;
 
-  @IsOptional()
-  @IsString()
-  passenger?: string;
 
   @IsOptional()
   @IsNumber({}, { message: 'ID ผู้จองต้องเป็นตัวเลข' })
@@ -19,7 +16,7 @@ export class CreateBookingDto {
   booked_by?: number;
 
   @IsOptional()
-  @IsNumber({}, { message: 'ID ผู้ฝากจองต้องเป็นตัวเลข' })
+  @IsNumber({}, { message: 'ID ผู้ใช้รถต้องเป็นตัวเลข' })
   @Min(1)
   @Type(() => Number)
   booked_for?: number;
@@ -61,9 +58,6 @@ export class BookingFilterDto {
   @Type(() => Number)
   booked_for?: number;
 
-  @IsOptional()
-  @IsString()
-  passenger?: string;
 
   @IsOptional()
   @IsNumber()

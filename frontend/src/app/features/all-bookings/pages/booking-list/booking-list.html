@@ -134,10 +134,6 @@
         <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-violet-500"></span> Van</span>
         <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-orange-500"></span> SUV</span>
         <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-pink-500"></span> Other</span>
-        <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-gray-800"></span> คืนรถแล้ว (Completed)</span>
-        <span class="ml-auto text-[10px] text-gray-400 font-medium font-sans flex items-center gap-1">
-          <span class="material-icons text-sm">info_outline</span> คลิกที่รายการเพื่อดูรายละเอียดเพิ่มเติม
-        </span>
       </div>
 
       <!-- Calendar Controls -->
@@ -300,7 +296,7 @@
     [returnTime]="selectedBooking()?.return || ''"
     [bookedByUser]="selectedBooking()?.bookedByUser || null"
     [bookedForUser]="selectedBooking()?.bookedForUser || null"
-    [passengerUsers]="selectedBooking()?.passengerUsers || null"
+
     [isModal]="true"
     [isOpen]="isModalOpen()"
     (close)="closeDetail()"
