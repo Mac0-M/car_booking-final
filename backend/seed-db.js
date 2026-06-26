@@ -117,7 +117,7 @@ async function seed() {
     `);
 
     for (const u of users) {
-      const hash = await bcrypt.hash('password123', 10);
+      const hash = await bcrypt.hash('password', 10);
       insertUser.run(u.name, hash, u.email, u.phone, u.role);
       console.log(`Inserted user: ${u.email}`);
     }

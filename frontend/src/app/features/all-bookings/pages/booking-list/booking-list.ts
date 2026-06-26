@@ -283,9 +283,6 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
 
       this.calendarInstance = new tuiCalendar(container, {
         defaultView: 'month',
-        month: {
-    visibleEventCount: 6
-  },
         useFormPopup: false,
         useDetailPopup: false,
         isReadOnly: true,
