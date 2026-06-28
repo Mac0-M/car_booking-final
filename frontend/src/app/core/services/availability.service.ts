@@ -36,7 +36,13 @@ export class AvailabilityService {
           vehicleTypeId: vehicle.type || 'Other',
           driverId: '',
           capacity: vehicle.capacity || 4,
-          status: vehicle.status || 'available'
+          status: vehicle.status || 'available',
+          reFuel: !!vehicle.re_fuel,
+          totalMile: vehicle.total_mile || 0,
+          lastMaintenance: vehicle.last_maintenance ? vehicle.last_maintenance.replace(' ', 'T') : '',
+          vehicleImg: vehicle.vehicle_img,
+          totalBookBy: vehicle.total_bookby || 0,
+          lastUpdate: vehicle.last_update ? vehicle.last_update.replace(' ', 'T') : ''
         }));
       })
     );

@@ -79,12 +79,7 @@ export class ProfileEditComponent implements OnInit {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       this.selectedFile = file;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreviewUrl = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      this.imagePreviewUrl = URL.createObjectURL(file);
     }
   }
 
@@ -136,7 +131,8 @@ export class ProfileEditComponent implements OnInit {
 
   private refreshSession(): void {
     this.authService.getProfile().subscribe({
-      next: () => {
+      next: (latestUser) => {
+        this.populateForm(latestUser);
         this.isLoading.set(false);
         alert('บันทึกข้อมูลส่วนตัวสำเร็จเรียบร้อยแล้ว');
       },

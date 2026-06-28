@@ -1,10 +1,10 @@
 import {
+  withHttpTransferCache
+} from "./chunk-XOQ4KOXX.js";
+import {
   CommonModule,
   PLATFORM_BROWSER_ID
 } from "./chunk-ROUKLZM3.js";
-import {
-  withHttpTransferCache
-} from "./chunk-XOQ4KOXX.js";
 import {
   DomAdapter,
   getDOM,
@@ -1559,4 +1559,4 @@ export {
   DomSanitizerImpl,
   VERSION
 };
-//# sourceMappingURL=chunk-3WGWS326.js.map
+//# sourceMappingURL=chunk-HV3QPDBA.js.map

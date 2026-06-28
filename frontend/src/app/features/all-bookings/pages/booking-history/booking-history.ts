@@ -8,14 +8,15 @@ import { Vehicle } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { BookingDetailModal } from '../booking-list/components/booking-detail-modal/booking-detail-modal';
-import { environment } from '../../../../../environments/environment';
+import { BookingCard } from '../../components/booking-card/booking-card';
+import { BookingFilters } from '../../components/booking-filters/booking-filters';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-booking-history',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal],
+  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingCard, BookingFilters],
   templateUrl: './booking-history.html',
 })
 export class BookingHistoryComponent implements OnInit {
@@ -32,7 +33,6 @@ export class BookingHistoryComponent implements OnInit {
 
   // Filters State
   readonly searchQuery = signal('');
-  readonly showAdvancedFilters = signal(false);
   readonly selectedVehicleId = signal('');
   readonly selectedUserId = signal('');
   readonly startDate = signal('');
@@ -168,7 +168,6 @@ export class BookingHistoryComponent implements OnInit {
   }
 
   getBookingStatusVariant(booking: Booking): 'available' | 'pending' | 'booked' | 'unavailable' {
-    // Check status
     if (booking.status === 'CANCELLED') return 'unavailable';
     if (booking.status === 'COMPLETED') return 'booked';
 
@@ -187,25 +186,5 @@ export class BookingHistoryComponent implements OnInit {
     } else {
       return 'pending';
     }
-  }
-
-  getBookingStatusLabel(booking: Booking): string {
-    const state = this.getBookingStatusVariant(booking);
-    if (state === 'available') return 'Upcoming (ยังไม่เดินทาง)';
-    if (state === 'pending') return 'Ongoing (กำลังเดินทาง)';
-    if (state === 'booked') return 'Completed (เสร็จสิ้น)';
-    return 'Cancelled (ยกเลิกแล้ว)';
-  }
-
-  getVehicleImgUrl(vehicle: any): string {
-    if (!vehicle || !vehicle.vehicleImg) {
-      return '';
-    }
-    if (vehicle.vehicleImg.startsWith('http') || vehicle.vehicleImg.startsWith('blob:')) {
-      return vehicle.vehicleImg;
-    }
-    const baseUrl = environment.apiUrl.replace('/api/v1', '');
-    const imgPath = vehicle.vehicleImg.startsWith('/') ? vehicle.vehicleImg : `/${vehicle.vehicleImg}`;
-    return `${baseUrl}${imgPath}`;
   }
 }

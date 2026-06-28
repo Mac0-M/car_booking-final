@@ -81,12 +81,7 @@ export class VehicleFormComponent implements OnInit {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       this.selectedFile = file;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreviewUrl = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      this.imagePreviewUrl = URL.createObjectURL(file);
     }
   }
 

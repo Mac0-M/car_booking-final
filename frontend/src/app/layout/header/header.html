@@ -15,30 +15,44 @@
     @if (!isAuthPage()) {
       <nav class="hidden md:flex items-center gap-2">
         <a routerLink="/booking/form" 
-           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
-           [routerLinkActiveOptions]="{exact: false}"
-           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           [class.bg-gray-100/80]="isRouteActive('/booking/form')"
+           [class.text-gray-900]="isRouteActive('/booking/form')"
+           [class.shadow-sm]="isRouteActive('/booking/form')"
+           [class.text-gray-600]="!isRouteActive('/booking/form')"
+           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
           จองรถ
         </a>
         <a routerLink="/bookings" 
-           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
-           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           [class.bg-gray-100/80]="isRouteActive('/bookings')"
+           [class.text-gray-900]="isRouteActive('/bookings')"
+           [class.shadow-sm]="isRouteActive('/bookings')"
+           [class.text-gray-600]="!isRouteActive('/bookings')"
+           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
           รายการจอง
         </a>
         <a routerLink="/bookings/history" 
-           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
-           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           [class.bg-gray-100/80]="isRouteActive('/bookings/history')"
+           [class.text-gray-900]="isRouteActive('/bookings/history')"
+           [class.shadow-sm]="isRouteActive('/bookings/history')"
+           [class.text-gray-600]="!isRouteActive('/bookings/history')"
+           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
           ประวัติการจอง
         </a>
         <a routerLink="/vehicles" 
-           routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
-           class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           [class.bg-gray-100/80]="isRouteActive('/vehicles')"
+           [class.text-gray-900]="isRouteActive('/vehicles')"
+           [class.shadow-sm]="isRouteActive('/vehicles')"
+           [class.text-gray-600]="!isRouteActive('/vehicles')"
+           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
           รถยนต์ทั้งหมด
         </a>
         @if (isAdmin) {
           <a routerLink="/admin/users" 
-             routerLinkActive="bg-gray-100/80 text-gray-900 shadow-sm"
-             class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+             [class.bg-gray-100/80]="isRouteActive('/admin/users')"
+             [class.text-gray-900]="isRouteActive('/admin/users')"
+             [class.shadow-sm]="isRouteActive('/admin/users')"
+             [class.text-gray-600]="!isRouteActive('/admin/users')"
+             class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
             จัดการผู้ใช้
           </a>
         }
@@ -49,33 +63,43 @@
         <!-- Mobile Nav Buttons -->
         <div class="flex md:hidden items-center gap-1">
           <a routerLink="/booking/form" 
-             routerLinkActive="bg-gray-100 text-gray-900"
-             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             [class.bg-gray-100]="isRouteActive('/booking/form')"
+             [class.text-gray-900]="isRouteActive('/booking/form')"
+             [class.text-gray-500]="!isRouteActive('/booking/form')"
+             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
              title="Book Vehicle">
             <span class="material-icons block text-lg">add_circle_outline</span>
           </a>
           <a routerLink="/bookings" 
-             routerLinkActive="bg-gray-100 text-gray-900"
-             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             [class.bg-gray-100]="isRouteActive('/bookings')"
+             [class.text-gray-900]="isRouteActive('/bookings')"
+             [class.text-gray-500]="!isRouteActive('/bookings')"
+             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
              title="All Bookings">
             <span class="material-icons block text-lg">list_alt</span>
           </a>
           <a routerLink="/bookings/history" 
-             routerLinkActive="bg-gray-100 text-gray-900"
-             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             [class.bg-gray-100]="isRouteActive('/bookings/history')"
+             [class.text-gray-900]="isRouteActive('/bookings/history')"
+             [class.text-gray-500]="!isRouteActive('/bookings/history')"
+             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
              title="Booking History">
             <span class="material-icons block text-lg">history</span>
           </a>
           <a routerLink="/vehicles" 
-             routerLinkActive="bg-gray-100 text-gray-900"
-             class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+             [class.bg-gray-100]="isRouteActive('/vehicles')"
+             [class.text-gray-900]="isRouteActive('/vehicles')"
+             [class.text-gray-500]="!isRouteActive('/vehicles')"
+             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
              title="Vehicles">
             <span class="material-icons block text-lg">directions_car</span>
           </a>
           @if (isAdmin) {
             <a routerLink="/admin/users" 
-               routerLinkActive="bg-gray-100 text-gray-900"
-               class="p-1.5 sm:p-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all"
+               [class.bg-gray-100]="isRouteActive('/admin/users')"
+               [class.text-gray-900]="isRouteActive('/admin/users')"
+               [class.text-gray-500]="!isRouteActive('/admin/users')"
+               class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
                title="Users">
               <span class="material-icons block text-lg">people</span>
             </a>
@@ -87,8 +111,12 @@
 
         <!-- User Info Badge -->
         <a routerLink="/profile" class="flex items-center gap-1.5 sm:gap-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none">
-          <div class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-[10px] sm:text-xs uppercase shadow-sm shrink-0">
-            {{ userName.charAt(0) }}
+          <div class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-[10px] sm:text-xs uppercase shadow-sm shrink-0">
+            @if (profileImage) {
+              <img [src]="profileImage" [alt]="userName" class="w-full h-full object-cover" />
+            } @else {
+              {{ userName.charAt(0) }}
+            }
           </div>
           <div class="hidden sm:block text-left">
             <div class="text-xs font-bold text-gray-800 line-clamp-1 leading-none">{{ userName }}</div>

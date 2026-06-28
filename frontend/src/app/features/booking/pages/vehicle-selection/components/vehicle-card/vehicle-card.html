@@ -11,8 +11,12 @@
       [class.pointer-events-none]="isDisabled && !readonly">
 
       <!-- Vehicle Image -->
-      <div class="flex items-center justify-center w-full md:w-36 h-28 rounded-xl bg-gray-100 overflow-hidden shrink-0">
-        <span class="material-icons text-5xl text-gray-300">directions_car</span>
+      <div class="flex items-center justify-center w-full md:w-36 h-28 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
+        @if (vehicleImgUrl) {
+          <img [src]="vehicleImgUrl" [alt]="vehicle.model" class="w-full h-full object-cover" />
+        } @else {
+          <span class="material-icons text-5xl text-gray-300">directions_car</span>
+        }
       </div>
 
       <!-- Vehicle Details -->

@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { TokenService } from './token.service';
 
@@ -34,8 +34,8 @@ export class AuthService {
   /** ดึงข้อมูลผู้ใช้ปัจจุบัน */
   getProfile(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/auth/me`).pipe(
-      tap(res => {
-        const user = res.data || res;
+      map(res => res.data || res),
+      tap(user => {
         user.name = user.user_name || user.name || 'User';
         user.profile_image = user.profile_img || user.profile_image;
         this.currentUser.set(user);

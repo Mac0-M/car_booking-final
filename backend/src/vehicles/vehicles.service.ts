@@ -52,12 +52,12 @@ export class VehiclesService {
           .subQuery()
           .select('b.vehicle_id')
           .from(Booking, 'b')
-          .where('b.status != :cancelStatus')
+          .where('b.status = :activeStatus')
           .andWhere('b.depart < :returnTime AND b.return > :depart')
           .getQuery();
         return 'v.vehicle_id NOT IN ' + subQuery;
       })
-      .setParameter('cancelStatus', 'cancel')
+      .setParameter('activeStatus', 'booked')
       .setParameter('depart', depart)
       .setParameter('returnTime', returnTime)
       .getMany();

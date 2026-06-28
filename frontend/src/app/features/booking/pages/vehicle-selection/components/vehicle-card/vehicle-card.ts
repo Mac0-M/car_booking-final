@@ -4,6 +4,7 @@ import { Vehicle } from '../../../../../../core/models/vehicle.model';
 import { ComponentCard } from '../../../../../../shared/components/card/card';
 import { ComponentBadge } from '../../../../../../shared/components/badge/badge';
 import { ComponentButton } from '../../../../../../shared/components/button/button';
+import { environment } from '../../../../../../../environments/environment';
 
 /**
  * VehicleCardComponent: การ์ดแสดงข้อมูลรถยนต์ที่ให้เลือก
@@ -22,6 +23,18 @@ export class VehicleCardComponent {
   @Input() isAvailable = true;
   @Input() readonly = false;
   @Output() selectVehicle = new EventEmitter<Vehicle>();
+
+  get vehicleImgUrl(): string {
+    if (!this.vehicle || !this.vehicle.vehicleImg) {
+      return '';
+    }
+    if (this.vehicle.vehicleImg.startsWith('http') || this.vehicle.vehicleImg.startsWith('blob:')) {
+      return this.vehicle.vehicleImg;
+    }
+    const baseUrl = environment.apiUrl.replace('/api/v1', '');
+    const imgPath = this.vehicle.vehicleImg.startsWith('/') ? this.vehicle.vehicleImg : `/${this.vehicle.vehicleImg}`;
+    return `${baseUrl}${imgPath}`;
+  }
 
   get isDisabled(): boolean {
     return !this.isAvailable;

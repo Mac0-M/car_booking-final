@@ -107,7 +107,7 @@ export class BookingService {
     // 2. Prevent Double Booking
     const overlapping = await this.bookingRepo.createQueryBuilder('b')
       .where('b.vehicle_id = :vehicleId', { vehicleId: dto.vehicle_id })
-      .andWhere('b.status != :cancelStatus', { cancelStatus: 'cancel' })
+      .andWhere('b.status = :activeStatus', { activeStatus: 'booked' })
       .andWhere('b.depart < :returnTime AND b.return > :depart', {
         depart: dto.depart,
         returnTime: dto.return,

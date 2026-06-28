@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { BookingService } from '../../../../core/services/booking.service';
@@ -9,17 +9,19 @@ import { Vehicle } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { BookingDetailModal } from './components/booking-detail-modal/booking-detail-modal';
-import { environment } from '../../../../../environments/environment';
+import { BookingCalendar } from './components/booking-calendar/booking-calendar';
+import { BookingCard } from '../../components/booking-card/booking-card';
+import { BookingFilters } from '../../components/booking-filters/booking-filters';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ...AllSharedUi, BookingDetailModal],
+  imports: [CommonModule, RouterLink, FormsModule, ...AllSharedUi, BookingDetailModal, BookingCalendar, BookingCard, BookingFilters],
   templateUrl: './booking-list.html',
 })
-export class BookingList implements OnInit, OnDestroy, AfterViewInit {
+export class BookingList implements OnInit {
   private readonly bookingService = inject(BookingService);
   private readonly vehicleService = inject(VehicleService);
   private readonly userService = inject(UserService);
@@ -34,7 +36,6 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
 
   // Filters State
   readonly searchQuery = signal('');
-  readonly showAdvancedFilters = signal(false);
   readonly selectedVehicleId = signal('');
   readonly selectedUserId = signal('');
   readonly startDate = signal('');
@@ -43,35 +44,6 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
   // Dropdown Lists
   readonly vehiclesList = signal<Vehicle[]>([]);
   readonly usersList = signal<User[]>([]);
-
-  // TUI Calendar Instance
-  private calendarInstance: any = null;
-  calendarView: 'month' | 'week' | 'day' = 'month';
-
-  changeView(viewName: 'month' | 'week' | 'day'): void {
-    this.calendarView = viewName;
-    if (this.calendarInstance) {
-      this.calendarInstance.changeView(viewName);
-    }
-  }
-
-  prev(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.prev();
-    }
-  }
-
-  next(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.next();
-    }
-  }
-
-  today(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.today();
-    }
-  }
 
   get isAdmin(): boolean {
     const role = this.authService.currentUser()?.role;
@@ -87,28 +59,8 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     this.loadBookings();
   }
 
-  ngAfterViewInit(): void {
-    if (this.viewMode() === 'calendar') {
-      this.initCalendar();
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.destroy();
-    }
-  }
-
   setViewMode(mode: 'calendar' | 'block'): void {
     this.viewMode.set(mode);
-    if (mode === 'calendar') {
-      this.initCalendar();
-    } else {
-      if (this.calendarInstance) {
-        this.calendarInstance.destroy();
-        this.calendarInstance = null;
-      }
-    }
   }
 
   loadBookings(): void {
@@ -130,11 +82,6 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.bookingService.fetchBookings(filters).subscribe({
-      next: () => {
-        if (this.viewMode() === 'calendar') {
-          this.renderCalendarEvents();
-        }
-      },
       error: (err) => console.error('Error fetching bookings:', err)
     });
   }
@@ -222,146 +169,4 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  getBookingStatusVariant(booking: Booking): 'available' | 'pending' | 'booked' | 'unavailable' {
-    // Check status
-    if (booking.status === 'CANCELLED') return 'unavailable';
-    if (booking.status === 'COMPLETED') return 'booked';
-
-    const now = new Date();
-    const cleanTime = (t: string) => {
-      // e.g. "2026-06-26 13:00:00"
-      return new Date(t.replace(' ', 'T'));
-    };
-
-    const departTime = cleanTime(booking.depart || '');
-    const returnTime = cleanTime(booking.return || '');
-
-    if (now < departTime) {
-      return 'available'; // Upcoming
-    } else if (now > returnTime) {
-      return 'booked'; // Past but not complete yet
-    } else {
-      return 'pending'; // Ongoing
-    }
-  }
-
-  getBookingStatusLabel(booking: Booking): string {
-    const state = this.getBookingStatusVariant(booking);
-    if (state === 'available') return 'Upcoming (ยังไม่เดินทาง)';
-    if (state === 'pending') return 'Ongoing (กำลังเดินทาง)';
-    if (state === 'booked') return 'Completed (เสร็จสิ้น)';
-    return 'Cancelled (ยกเลิก)';
-  }
-
-  getVehicleImgUrl(vehicle: any): string {
-    if (!vehicle || !vehicle.vehicleImg) {
-      return '';
-    }
-    if (vehicle.vehicleImg.startsWith('http') || vehicle.vehicleImg.startsWith('blob:')) {
-      return vehicle.vehicleImg;
-    }
-    const baseUrl = environment.apiUrl.replace('/api/v1', '');
-    const imgPath = vehicle.vehicleImg.startsWith('/') ? vehicle.vehicleImg : `/${vehicle.vehicleImg}`;
-    return `${baseUrl}${imgPath}`;
-  }
-
-  // --- Toast UI Calendar Integration ---
-  private initCalendar(): void {
-    setTimeout(() => {
-      const container = document.getElementById('calendar-container');
-      if (!container) return;
-
-      if (this.calendarInstance) {
-        this.calendarInstance.destroy();
-      }
-
-      const tuiCalendar = (window as any).tui?.Calendar;
-      if (!tuiCalendar) {
-        console.error('TUI Calendar script not loaded');
-        return;
-      }
-
-      this.calendarInstance = new tuiCalendar(container, {
-        defaultView: 'month',
-        useFormPopup: false,
-        useDetailPopup: false,
-        isReadOnly: true,
-        gridSelection: {
-          enableClick: true,
-        },
-        template: {
-          time(event: any) {
-            const icon = event.raw?.icon || 'directions_car';
-            return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
-          },
-          allday(event: any) {
-            const icon = event.raw?.icon || 'directions_car';
-            return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
-          }
-        }
-      });
-
-
-
-      // Handle event click to view details
-      this.calendarInstance.on('clickEvent', (eventInfo: any) => {
-        const bookingId = eventInfo.event.id;
-        const booking = this.bookingService.bookings().find(b => b.id === bookingId);
-        if (booking) {
-          this.openDetail(booking);
-        }
-      });
-
-      this.renderCalendarEvents();
-    }, 50);
-  }
-
-  private renderCalendarEvents(): void {
-    if (!this.calendarInstance) return;
-
-    const events = this.filteredBookings()
-      .filter(b => b.status !== 'COMPLETED')
-      .map(b => {
-      let color = '#3b82f6'; // Blue for Sedan
-      let borderColor = '#2563eb';
-      let icon = 'directions_car';
-
-      const type = b.vehicle?.vehicleTypeId;
-      if (type === 'Pickup') {
-        color = '#10b981'; // Green
-        borderColor = '#059669';
-        icon = 'local_shipping';
-      } else if (type === 'Van') {
-        color = '#8b5cf6'; // Purple
-        borderColor = '#7c3aed';
-        icon = 'airport_shuttle';
-      } else if (type === 'SUV') {
-        color = '#f97316'; // Orange
-        borderColor = '#ea580c';
-        icon = 'time_to_leave';
-      } else if (type === 'Other') {
-        color = '#ec4899'; // Pink
-        borderColor = '#db2777';
-        icon = 'commute';
-      }
-
-      return {
-        id: b.id,
-        calendarId: 'cal1',
-        title: `${b.vehicle?.model || 'จองรถ'} - ${b.userName.split(' ')[0]}`,
-        start: (b.depart || '').replace(' ', 'T'),
-        end: (b.return || '').replace(' ', 'T'),
-        category: 'time',
-        backgroundColor: color,
-        borderColor: borderColor,
-        color: '#ffffff',
-        raw: {
-          icon: icon
-        }
-      };
-    });
-
-    this.calendarInstance.clear();
-    this.calendarInstance.createEvents(events);
-  }
 }
