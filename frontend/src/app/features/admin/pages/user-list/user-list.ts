@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../../core/services/user.service';
@@ -6,22 +6,26 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { environment } from '../../../../../environments/environment';
+import { DialogModule, Dialog, DialogRef } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi],
+  imports: [CommonModule, FormsModule, DialogModule, ...AllSharedUi],
   templateUrl: './user-list.html',
 })
 export class UserListComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
+  private readonly dialog = inject(Dialog);
+
+  @ViewChild('addDialogTemplate') addDialogTemplate!: TemplateRef<any>;
+  private dialogRef: DialogRef<any> | null = null;
 
   readonly users = signal<User[]>([]);
   readonly isLoading = signal(false);
 
   // Add User Modal State
-  readonly isAddModalOpen = signal(false);
   readonly isSaving = signal(false);
 
   // Form Fields
@@ -106,11 +110,20 @@ export class UserListComponent implements OnInit {
     this.emailError = '';
     this.passwordError = '';
     this.phoneError = '';
-    this.isAddModalOpen.set(true);
+    
+    this.dialogRef = this.dialog.open(this.addDialogTemplate, {
+      width: '448px',
+      maxWidth: '95vw',
+      backdropClass: ['bg-gray-900/60', 'backdrop-blur-sm'],
+      panelClass: ['w-full', 'max-w-md', 'shadow-xl', 'animate-in', 'zoom-in', 'duration-200']
+    });
   }
 
   closeAddModal(): void {
-    this.isAddModalOpen.set(false);
+    if (this.dialogRef) {
+      this.dialogRef.close();
+      this.dialogRef = null;
+    }
   }
 
   private isValidEmail(email: string): boolean {
@@ -180,7 +193,7 @@ export class UserListComponent implements OnInit {
     this.userService.create(payload).subscribe({
       next: (createdUser) => {
         this.isSaving.set(false);
-        this.isAddModalOpen.set(false);
+        this.closeAddModal();
         this.users.update(current => [createdUser, ...current]);
         alert('User registered successfully.');
       },

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@angular/cdk/overlay-prebuilt.css";
 
 /* TUI Calendar: Adjust font size and styling of week/day header numbers */
 .toastui-calendar-day-name__date {

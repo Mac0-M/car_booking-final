@@ -8,6 +8,7 @@ import { Booking } from '../../../../core/models/booking.model';
 import { Vehicle } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
+import { BookingDialogService } from '../../../booking/booking-dialog.service';
 import { BookingDetailModal } from './components/booking-detail-modal/booking-detail-modal';
 import { BookingCalendar } from './components/booking-calendar/booking-calendar';
 import { BookingCard } from '../../components/booking-card/booking-card';
@@ -27,6 +28,11 @@ export class BookingList implements OnInit {
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly bookingDialogService = inject(BookingDialogService);
+
+  openBooking(): void {
+    this.bookingDialogService.open();
+  }
 
   readonly selectedBooking = signal<Booking | null>(null);
   readonly isModalOpen = signal(false);

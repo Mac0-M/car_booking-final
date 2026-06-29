@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { bookingStepGuard } from './core/guards/booking-step.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
 /**
@@ -18,38 +17,6 @@ export const routes: Routes = [
         loadComponent: () =>  
           import('./features/auth/pages/login/login').then(
             (m) => m.LoginComponent
-          ),
-      },
-    ],
-  },
-  {
-    path: 'booking',
-    canActivate: [authGuard],
-    children: [
-      {
-        path: 'form',
-        title: 'Booking',
-        loadComponent: () =>
-          import('./features/booking/pages/booking-form/booking-form').then(
-            (m) => m.BookingFormComponent
-          ),
-      },
-      {
-        path: 'select-vehicle',
-        title: 'Booking',
-        canActivate: [bookingStepGuard],
-        loadComponent: () =>
-          import('./features/booking/pages/vehicle-selection/vehicle-selection').then(
-            (m) => m.VehicleSelectionComponent
-          ),
-      },
-      {
-        path: 'confirm',
-        title: 'Confirm-Booking',
-        canActivate: [bookingStepGuard],
-        loadComponent: () =>
-          import('./features/booking/pages/booking-confirm/booking-confirm').then(
-            (m) => m.BookingConfirmComponent
           ),
       },
     ],
