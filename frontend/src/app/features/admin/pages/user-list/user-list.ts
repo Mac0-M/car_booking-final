@@ -30,6 +30,12 @@ export class UserListComponent implements OnInit {
   newUserPassword = '';
   newUserPhone = '';
 
+  // Validation Errors
+  nameError = '';
+  emailError = '';
+  passwordError = '';
+  phoneError = '';
+
   get currentUserRole(): string {
     return this.authService.currentUser()?.role || 'User';
   }
@@ -96,6 +102,10 @@ export class UserListComponent implements OnInit {
     this.newUserEmail = '';
     this.newUserPassword = '';
     this.newUserPhone = '';
+    this.nameError = '';
+    this.emailError = '';
+    this.passwordError = '';
+    this.phoneError = '';
     this.isAddModalOpen.set(true);
   }
 
@@ -103,16 +113,61 @@ export class UserListComponent implements OnInit {
     this.isAddModalOpen.set(false);
   }
 
-  get isAddFormValid(): boolean {
-    return !!this.newUserName.trim() && 
-           !!this.newUserEmail.trim() && 
-           !!this.newUserPassword.trim() && 
-           !!this.newUserPhone.trim() && 
-           this.newUserPhone.trim().length === 10;
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  /** Validate form — same rules as login page */
+  validateAddForm(): boolean {
+    let isValid = true;
+
+    // Name
+    if (!this.newUserName.trim()) {
+      this.nameError = 'Name is required';
+      isValid = false;
+    } else {
+      this.nameError = '';
+    }
+
+    // Email — same as login
+    if (!this.newUserEmail.trim()) {
+      this.emailError = 'Email is required';
+      isValid = false;
+    } else if (!this.isValidEmail(this.newUserEmail.trim())) {
+      this.emailError = 'Please enter a valid email address';
+      isValid = false;
+    } else {
+      this.emailError = '';
+    }
+
+    // Password — same as login (min 6 chars)
+    if (!this.newUserPassword.trim()) {
+      this.passwordError = 'Password is required';
+      isValid = false;
+    } else if (this.newUserPassword.trim().length < 6) {
+      this.passwordError = 'Password must be at least 6 characters long';
+      isValid = false;
+    } else {
+      this.passwordError = '';
+    }
+
+    // Phone
+    if (!this.newUserPhone.trim()) {
+      this.phoneError = 'Phone number is required';
+      isValid = false;
+    } else if (this.newUserPhone.trim().length !== 10) {
+      this.phoneError = 'Phone number must be 10 digits';
+      isValid = false;
+    } else {
+      this.phoneError = '';
+    }
+
+    return isValid;
   }
 
   createUserSubmit(): void {
-    if (!this.isAddFormValid || this.isSaving()) return;
+    if (!this.validateAddForm() || this.isSaving()) return;
 
     this.isSaving.set(true);
     const payload = {
