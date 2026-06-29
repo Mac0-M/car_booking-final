@@ -2,28 +2,28 @@ import { IsNotEmpty, IsString, IsNumber, Min, IsOptional, IsIn, IsBoolean } from
 import { Type } from 'class-transformer';
 
 export class CreateVehicleDto {
-  @IsNotEmpty({ message: 'กรุณาระบุชื่อรถ' })
+  @IsNotEmpty({ message: 'Vehicle name is required.' })
   @IsString()
   vehicle_name: string;
 
-  @IsNotEmpty({ message: 'กรุณาระบุประเภทรถ' })
+  @IsNotEmpty({ message: 'Vehicle type is required.' })
   @IsString()
-  @IsIn(['Sedan', 'Pickup', 'Van', 'SUV', 'Other'], { message: 'ประเภทรถไม่ถูกต้อง' })
+  @IsIn(['Sedan', 'Pickup', 'Van', 'SUV', 'Other'], { message: 'Invalid vehicle type.' })
   type: string;
 
-  @IsNotEmpty({ message: 'กรุณาระบุความจุผู้โดยสาร' })
-  @IsNumber({}, { message: 'ความจุผู้โดยสารต้องเป็นตัวเลข' })
-  @Min(1, { message: 'ความจุผู้โดยสารต้องมากกว่า 0' })
+  @IsNotEmpty({ message: 'Capacity is required.' })
+  @IsNumber({}, { message: 'Capacity must be a number.' })
+  @Min(1, { message: 'Capacity must be greater than 0.' })
   @Type(() => Number)
   capacity: number;
 
-  @IsNotEmpty({ message: 'กรุณาระบุสถานะการเติมน้ำมัน' })
+  @IsNotEmpty({ message: 'Refuel status is required.' })
   @IsBoolean()
   @Type(() => Boolean)
   re_fuel: boolean;
 
   @IsOptional()
-  @IsNumber({}, { message: 'ระยะทางต้องเป็นตัวเลข' })
+  @IsNumber({}, { message: 'Total mileage must be a number.' })
   @Min(0)
   @Type(() => Number)
   total_mile?: number;
@@ -34,7 +34,7 @@ export class CreateVehicleDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['available', 'unavailable'], { message: 'สถานะไม่ถูกต้อง' })
+  @IsIn(['available', 'unavailable'], { message: 'Invalid status.' })
   status?: string;
 
   @IsOptional()
@@ -49,12 +49,12 @@ export class UpdateVehicleDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['Sedan', 'Pickup', 'Van', 'SUV', 'Other'], { message: 'ประเภทรถไม่ถูกต้อง' })
+  @IsIn(['Sedan', 'Pickup', 'Van', 'SUV', 'Other'], { message: 'Invalid vehicle type.' })
   type?: string;
 
   @IsOptional()
-  @IsNumber({}, { message: 'ความจุผู้โดยสารต้องเป็นตัวเลข' })
-  @Min(1, { message: 'ความจุผู้โดยสารต้องมากกว่า 0' })
+  @IsNumber({}, { message: 'Capacity must be a number.' })
+  @Min(1, { message: 'Capacity must be greater than 0.' })
   @Type(() => Number)
   capacity?: number;
 
@@ -64,7 +64,7 @@ export class UpdateVehicleDto {
   re_fuel?: boolean;
 
   @IsOptional()
-  @IsNumber({}, { message: 'ระยะทางต้องเป็นตัวเลข' })
+  @IsNumber({}, { message: 'Total mileage must be a number.' })
   @Min(0)
   @Type(() => Number)
   total_mile?: number;
@@ -75,7 +75,7 @@ export class UpdateVehicleDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['available', 'unavailable'], { message: 'สถานะไม่ถูกต้อง' })
+  @IsIn(['available', 'unavailable'], { message: 'Invalid status.' })
   status?: string;
 
   @IsOptional()
@@ -84,11 +84,11 @@ export class UpdateVehicleDto {
 }
 
 export class VehicleFilterDto {
-  @IsNotEmpty({ message: 'กรุณาระบุเวลาออกเดินทาง' })
+  @IsNotEmpty({ message: 'Departure time is required.' })
   @IsString()
   depart: string;
 
-  @IsNotEmpty({ message: 'กรุณาระบุเวลากลับ' })
+  @IsNotEmpty({ message: 'Return time is required.' })
   @IsString()
   return: string;
 }

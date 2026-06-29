@@ -7,8 +7,8 @@ import { environment } from '../../../environments/environment';
 
 const mapVehicle = (v: any): Vehicle => ({
   id: String(v.vehicle_id),
-  plateNumber: v.type || 'ไม่มี',
-  model: v.vehicle_name || 'รถยนต์ส่วนกลาง',
+  plateNumber: v.type || 'None',
+  model: v.vehicle_name || 'Company Car',
   vehicleTypeId: v.type || 'Other',
   driverId: '',
   capacity: v.capacity || 4,

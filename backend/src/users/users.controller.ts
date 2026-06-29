@@ -39,11 +39,11 @@ export class UsersController {
     const userId = parseInt(id, 10);
     // Admin or Self
     if (currentUser.role !== 'Admin' && currentUser.role !== 'Super_Admin' && currentUser.user_id !== userId) {
-      throw new ForbiddenException('ไม่มีสิทธิ์เข้าถึงข้อมูลนี้');
+      throw new ForbiddenException('Access denied.');
     }
     const user = await this.usersService.findById(userId);
     if (!user) {
-      throw new NotFoundException('ไม่พบผู้ใช้งานนี้');
+      throw new NotFoundException('User not found.');
     }
     return user;
   }
@@ -57,11 +57,11 @@ export class UsersController {
     const userId = parseInt(id, 10);
     // Admin or Self
     if (currentUser.role !== 'Admin' && currentUser.role !== 'Super_Admin' && currentUser.user_id !== userId) {
-      throw new ForbiddenException('ไม่มีสิทธิ์เข้าถึงข้อมูลนี้');
+      throw new ForbiddenException('Access denied.');
     }
     const user = await this.usersService.update(userId, updateData);
     if (!user) {
-      throw new NotFoundException('ไม่พบผู้ใช้งานนี้');
+      throw new NotFoundException('User not found.');
     }
     return user;
   }
@@ -72,9 +72,9 @@ export class UsersController {
     const userId = parseInt(id, 10);
     const deleted = await this.usersService.delete(userId);
     if (!deleted) {
-      throw new NotFoundException('ไม่พบผู้ใช้งานนี้');
+      throw new NotFoundException('User not found.');
     }
-    return { message: 'ลบผู้ใช้งานสำเร็จ' };
+    return { message: 'User deleted successfully.' };
   }
 
   @Patch(':id/role')
@@ -82,11 +82,11 @@ export class UsersController {
   async updateRole(@Param('id') id: string, @Body('role') role: string) {
     const userId = parseInt(id, 10);
     if (!role || !['User', 'Admin', 'Super_Admin'].includes(role)) {
-      throw new BadRequestException('บทบาทไม่ถูกต้อง');
+      throw new BadRequestException('Invalid role.');
     }
     const user = await this.usersService.updateRole(userId, role);
     if (!user) {
-      throw new NotFoundException('ไม่พบผู้ใช้งานนี้');
+      throw new NotFoundException('User not found.');
     }
     return user;
   }
@@ -109,7 +109,7 @@ export class UsersController {
       }),
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-          return cb(new BadRequestException('อนุญาตเฉพาะไฟล์รูปภาพ (jpg, jpeg, png) เท่านั้น'), false);
+          return cb(new BadRequestException('Only image files (jpg, jpeg, png) are allowed.'), false);
         }
         cb(null, true);
       },
@@ -123,15 +123,15 @@ export class UsersController {
     const userId = parseInt(id, 10);
     // Allow updating own profile image or Admin/Super_Admin
     if (currentUser.role !== 'Admin' && currentUser.role !== 'Super_Admin' && currentUser.user_id !== userId) {
-      throw new ForbiddenException('ไม่มีสิทธิ์เข้าถึงข้อมูลนี้');
+      throw new ForbiddenException('Access denied.');
     }
     if (!file) {
-      throw new BadRequestException('ไม่พบไฟล์อัปโหลด');
+      throw new BadRequestException('No upload file found.');
     }
     const imageUrl = `/uploads/profiles/${file.filename}`;
     const user = await this.usersService.updateProfileImage(userId, imageUrl);
     if (!user) {
-      throw new NotFoundException('ไม่พบผู้ใช้งานนี้');
+      throw new NotFoundException('User not found.');
     }
     return user;
   }

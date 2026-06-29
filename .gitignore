@@ -6,3 +6,5 @@ backend/database/car_booking.sqlite
 
 frontend/node_modules
 frontend/dist
+frontend/.angular
+.angular

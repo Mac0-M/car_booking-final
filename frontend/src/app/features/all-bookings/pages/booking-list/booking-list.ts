@@ -143,7 +143,7 @@ export class BookingList implements OnInit {
   }
 
   onCancelBooking(id: string): void {
-    const isConfirmed = confirm('คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้?');
+    const isConfirmed = confirm('Are you sure you want to cancel this booking?');
     if (isConfirmed) {
       this.bookingService.cancelBooking(id).subscribe({
         next: () => {
@@ -151,7 +151,7 @@ export class BookingList implements OnInit {
           this.loadBookings();
         },
         error: (err: any) => {
-          alert(err.error?.message || 'เกิดข้อผิดพลาดในการยกเลิกการจอง กรุณาลองใหม่อีกครั้ง');
+          alert(err.error?.message || 'An error occurred while cancelling the booking. Please try again.');
         }
       });
     }
@@ -164,7 +164,7 @@ export class BookingList implements OnInit {
         this.loadBookings();
       },
       error: (err: any) => {
-        alert(err.error?.message || 'เกิดข้อผิดพลาดในการเสร็จสิ้นการจอง กรุณาลองใหม่อีกครั้ง');
+        alert(err.error?.message || 'An error occurred while completing the booking. Please try again.');
       }
     });
   }

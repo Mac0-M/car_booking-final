@@ -16,14 +16,20 @@ export class HeaderComponent {
   private readonly router = inject(Router);
 
   currentUrl = signal<string>('');
+  isMobileMenuOpen = signal<boolean>(false);
 
   constructor() {
     this.currentUrl.set(this.router.url);
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentUrl.set(event.urlAfterRedirects || event.url);
+        this.isMobileMenuOpen.set(false);
       }
     });
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update((open) => !open);
   }
 
   get userName(): string {

@@ -20,10 +20,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: any) {
     const user = await this.usersService.findById(payload.sub);
     if (!user) {
-      throw new UnauthorizedException('สิทธิ์การเข้าใช้งานไม่ถูกต้องหรือหมดอายุ');
+      throw new UnauthorizedException('Invalid or expired authorization.');
     }
     if (user.role === 'Super_Admin' && this.configService.get<string>('ENABLE_SUPER_ADMIN') === 'false') {
-      throw new UnauthorizedException('สิทธิ์การเข้าใช้งาน Super Admin ถูกปิดการใช้งาน');
+      throw new UnauthorizedException('Super Admin access is disabled.');
     }
     return user; // req.user will be populated with this user object
   }

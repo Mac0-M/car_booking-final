@@ -7,10 +7,10 @@
     </a>
     <div>
       <h1 class="text-2xl font-black text-gray-800">
-        {{ isEditMode ? 'แก้ไขข้อมูลรถยนต์' : 'เพิ่มรถยนต์ใหม่' }}
+        {{ isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle' }}
       </h1>
       <p class="text-sm text-gray-500 mt-1">
-        {{ isEditMode ? 'แก้ไขรายละเอียดของรถยนต์ในระบบ' : 'กรอกรายละเอียดเพื่อลงทะเบียนรถยนต์ใหม่ในระบบ' }}
+        {{ isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the details to register a new vehicle.' }}
       </p>
     </div>
   </div>
@@ -25,7 +25,7 @@
         
         <!-- Image Upload Field -->
         <div class="space-y-2">
-          <label class="text-sm font-bold text-gray-700 block">รูปภาพรถยนต์</label>
+          <label class="text-sm font-bold text-gray-700 block">Vehicle Image</label>
           
           <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-gray-400 rounded-2xl p-6 bg-gray-50/50 cursor-pointer relative transition-colors overflow-hidden group min-h-48">
             <input type="file" 
@@ -40,14 +40,14 @@
               <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-20 pointer-events-none">
                 <span class="text-white text-xs font-bold flex items-center gap-1">
                   <span class="material-icons text-base">photo_camera</span>
-                  เปลี่ยนรูปภาพ
+                  Change Image
                 </span>
               </div>
             } @else {
               <div class="text-center space-y-2">
                 <span class="material-icons text-5xl text-gray-300">add_photo_alternate</span>
-                <div class="text-sm text-gray-500 font-medium">คลิกเพื่ออัปโหลดรูปภาพรถ</div>
-                <div class="text-xs text-gray-400">รองรับไฟล์รูปภาพ PNG, JPG ขนาดไม่เกิน 5MB</div>
+                <div class="text-sm text-gray-500 font-medium">Click to upload vehicle photo</div>
+                <div class="text-xs text-gray-400">Supports PNG, JPG images up to 5MB</div>
               </div>
             }
           </div>
@@ -55,42 +55,42 @@
 
         <!-- Vehicle Name Input -->
         <div class="space-y-2">
-          <label for="vehicle_name" class="text-sm font-bold text-gray-700 block">ชื่อรถยนต์ (รุ่น / ทะเบียน)</label>
+          <label for="vehicle_name" class="text-sm font-bold text-gray-700 block">Vehicle Model (Model / Plate Number)</label>
           <input type="text"
                  id="vehicle_name"
                  name="vehicle_name"
                  [(ngModel)]="vehicle_name"
                  required
-                 placeholder="ตัวอย่าง: Toyota Hilux Revo (กข-1234)"
+                 placeholder="e.g. Toyota Hilux Revo (AB-1234)"
                  class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors" />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Type Select -->
           <div class="space-y-2">
-            <label for="type" class="text-sm font-bold text-gray-700 block">ประเภทรถยนต์</label>
+            <label for="type" class="text-sm font-bold text-gray-700 block">Vehicle Type</label>
             <select id="type"
                     name="type"
                     [(ngModel)]="type"
                     class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors">
-              <option value="Sedan">Sedan (รถเก๋ง)</option>
-              <option value="Pickup">Pickup (รถกระบะ)</option>
-              <option value="Van">Van (รถตู้)</option>
-              <option value="SUV">SUV (รถครอบครัว)</option>
-              <option value="Other">Other (อื่นๆ)</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Pickup">Pickup</option>
+              <option value="Van">Van</option>
+              <option value="SUV">SUV</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
           <!-- Capacity Input -->
           <div class="space-y-2">
-            <label for="capacity" class="text-sm font-bold text-gray-700 block">จำนวนที่นั่ง (ความจุผู้โดยสาร)</label>
+            <label for="capacity" class="text-sm font-bold text-gray-700 block">Number of Seats (Capacity)</label>
             <input type="number"
                    id="capacity"
                    name="capacity"
                    [(ngModel)]="capacity"
                    required
                    min="1"
-                   placeholder="ตัวอย่าง: 4"
+                   placeholder="e.g. 4"
                    class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
         </div>
@@ -98,27 +98,27 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Total Mileage Input -->
           <div class="space-y-2">
-            <label for="total_mile" class="text-sm font-bold text-gray-700 block">ระยะทางวิ่งรวม (กิโลเมตร)</label>
+            <label for="total_mile" class="text-sm font-bold text-gray-700 block">Total Mileage (km)</label>
             <input type="number"
                    id="total_mile"
                    name="total_mile"
                    [(ngModel)]="total_mile"
                    required
                    min="0"
-                   placeholder="ตัวอย่าง: 1500"
+                   placeholder="e.g. 1500"
                    class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
 
           <!-- Status Select -->
           @if (isEditMode) {
             <div class="space-y-2">
-              <label for="status" class="text-sm font-bold text-gray-700 block">สถานะความพร้อม</label>
+              <label for="status" class="text-sm font-bold text-gray-700 block">Availability Status</label>
               <select id="status"
                       name="status"
                       [(ngModel)]="status"
                       class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors">
-                <option value="available">พร้อมใช้งาน (Available)</option>
-                <option value="unavailable">ไม่พร้อมใช้งาน (Unavailable)</option>
+                <option value="available">Available</option>
+                <option value="unavailable">Unavailable</option>
               </select>
             </div>
           }
@@ -132,23 +132,23 @@
                  [(ngModel)]="re_fuel"
                  class="h-4 w-4 rounded border-gray-300 focus:ring-black cursor-pointer" />
           <label for="re_fuel" class="text-sm font-bold text-gray-700 cursor-pointer select-none">
-            เติมน้ำมันพร้อมใช้งานแล้ว
+            Fuel is fully loaded / Ready
           </label>
         </div>
 
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
           <a routerLink="/vehicles" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer">
-            ยกเลิก
+            Cancel
           </a>
-          <component-button type="submit" variant="submit" size="lg" [disabled]="!isFormValid || isLoading()">
+          <component-button type="submit" variant="submit" size="sm" [disabled]="!isFormValid || isLoading()" class="w-full sm:w-auto">
             @if (isLoading()) {
-              <span class="flex items-center gap-2">
-                <component-loading size="xs"></component-loading>
-                กำลังบันทึก...
+              <span class="flex items-center gap-2 justify-center">
+                <span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                Saving...
               </span>
             } @else {
-              บันทึกข้อมูล
+              Save Vehicle
             }
           </component-button>
         </div>

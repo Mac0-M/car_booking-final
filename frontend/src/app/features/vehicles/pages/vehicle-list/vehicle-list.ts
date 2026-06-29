@@ -73,13 +73,13 @@ export class VehicleListComponent implements OnInit {
 
 
   deleteVehicle(id: string): void {
-    if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรถคันนี้ออกจากระบบ?')) {
+    if (confirm('Are you sure you want to delete this vehicle from the system?')) {
       this.vehicleService.delete(id).subscribe({
         next: () => {
           this.vehicles.update(current => current.filter(v => v.id !== id));
         },
         error: (err) => {
-          alert(err.error?.message || 'เกิดข้อผิดพลาดในการลบรถ');
+          alert(err.error?.message || 'An error occurred while deleting the vehicle.');
         }
       });
     }

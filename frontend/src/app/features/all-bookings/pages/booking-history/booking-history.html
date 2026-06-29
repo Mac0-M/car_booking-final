@@ -5,9 +5,9 @@
     <div>
       <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
         <span class="material-icons text-gray-700">history</span>
-        ประวัติการจองทั้งหมด
+        Booking History
       </h1>
-      <p class="text-sm text-gray-500 mt-1">ตรวจสอบประวัติการจอง การยกเลิก และการเดินทางทั้งหมดที่เคยเกิดขึ้นในระบบ</p>
+      <p class="text-sm text-gray-500 mt-1">Review all booking history, cancellations, and past trips in the system.</p>
     </div>
   </div>
 
@@ -23,7 +23,7 @@
     [endDate]="endDate()"
     [selectedStatusFilter]="selectedStatusFilter()"
     [showStatusFilter]="true"
-    [placeholder]="'ค้นหาจุดหมาย, ผู้จอง, รถยนต์...'"
+    [placeholder]="'Search destination, booker, vehicle...'"
     (searchQueryChange)="searchQuery.set($event)"
     (selectedVehicleIdChange)="selectedVehicleId.set($event); onFilterChange()"
     (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
@@ -44,51 +44,123 @@
             [booking]="booking"
             [showPlateNumber]="false"
             (click)="openDetail(booking)"
+            class="pt-10"
           />
         }
       </div>
     } @else {
-      <!-- List View (Table Layout) -->
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-200">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                <th class="px-6 py-4">ID</th>
-                <th class="px-6 py-4">ผู้ทำรายการ</th>
-                <th class="px-6 py-4">รถยนต์</th>
-                <th class="px-6 py-4">ปลายทาง</th>
-                <th class="px-6 py-4">วันเดินทางไป</th>
-                <th class="px-6 py-4">วันเดินทางกลับ</th>
-                <th class="px-6 py-4">สถานะ</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
-              @for (booking of filteredBookings(); track booking.id) {
-                <tr class="hover:bg-gray-50/50 transition-colors cursor-pointer" (click)="openDetail(booking)">
-                  <td class="px-6 py-4 font-mono text-xs font-bold text-gray-400">#{{ booking.id }}</td>
-                  <td class="px-6 py-4 font-bold text-gray-800">{{ booking.userName }}</td>
-                  <td class="px-6 py-4 font-semibold text-gray-600">{{ booking.vehicle?.model || 'N/A' }}</td>
-                  <td class="px-6 py-4 text-gray-600 line-clamp-1 max-w-xs">{{ booking.destination || 'N/A' }}</td>
-                  <td class="px-6 py-4 text-xs font-mono text-gray-600">{{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</td>
-                  <td class="px-6 py-4 text-xs font-mono text-gray-600">{{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</td>
-                  <td class="px-6 py-4">
-                    @if (booking.status === 'CONFIRMED') {
-                      @if (getBookingStatusVariant(booking) === 'pending') {
-                        <component-badge variant="pending" size="xs">Ongoing</component-badge>
-                      } @else {
-                        <component-badge variant="available" size="xs">Confirmed</component-badge>
-                      }
-                    } @else if (booking.status === 'COMPLETED') {
-                      <component-badge variant="booked" size="xs">Completed</component-badge>
-                    } @else {
-                      <component-badge variant="unavailable" size="xs">Cancelled</component-badge>
-                    }
-                  </td>
+      <!-- List View (Responsive Layout) -->
+      <div class="space-y-4 md:space-y-0 pt-10">
+        <!-- Desktop Table View (Hidden on Mobile) -->
+        <div class="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-200">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-4">ID</th>
+                  <th class="px-6 py-4">Booker</th>
+                  <th class="px-6 py-4">Vehicle</th>
+                  <th class="px-6 py-4">Destination</th>
+                  <th class="px-6 py-4">Depart Date</th>
+                  <th class="px-6 py-4">Return Date</th>
+                  <th class="px-6 py-4">Status</th>
                 </tr>
-              }
-            </tbody>
-          </table>
+              </thead>
+              <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                @for (booking of filteredBookings(); track booking.id) {
+                  <tr class="hover:bg-gray-50/50 transition-colors cursor-pointer" (click)="openDetail(booking)">
+                    <td class="px-6 py-4 font-mono text-xs font-bold text-gray-400">#{{ booking.id }}</td>
+                    <td class="px-6 py-4 font-bold text-gray-800">{{ booking.userName }}</td>
+                    <td class="px-6 py-4 font-semibold text-gray-600">
+                      <div>{{ booking.vehicle?.model || 'N/A' }}</div>
+                      @if (booking.vehicle?.plateNumber) {
+                        <div class="text-[10px] text-gray-400 font-normal font-mono">{{ booking.vehicle?.plateNumber }}</div>
+                      }
+                    </td>
+                    <td class="px-6 py-4 text-gray-600 line-clamp-1 max-w-xs">{{ booking.destination || 'N/A' }}</td>
+                    <td class="px-6 py-4 text-xs font-mono text-gray-600">{{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</td>
+                    <td class="px-6 py-4 text-xs font-mono text-gray-600">{{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</td>
+                    <td class="px-6 py-4">
+                      @if (booking.status === 'CONFIRMED') {
+                        @if (getBookingStatusVariant(booking) === 'pending') {
+                          <component-badge variant="pending" size="xs">Ongoing</component-badge>
+                        } @else {
+                          <component-badge variant="available" size="xs">Confirmed</component-badge>
+                        }
+                      } @else if (booking.status === 'COMPLETED') {
+                        <component-badge variant="booked" size="xs">Completed</component-badge>
+                      } @else {
+                        <component-badge variant="unavailable" size="xs">Cancelled</component-badge>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mobile Card View (Hidden on Desktop) -->
+        <div class="block md:hidden space-y-3 animate-in fade-in duration-200">
+          @for (booking of filteredBookings(); track booking.id) {
+            <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm space-y-3 hover:border-gray-200 transition-colors cursor-pointer" (click)="openDetail(booking)">
+              <!-- Header: ID & Status -->
+              <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                <span class="font-mono text-xs font-bold text-gray-400">#{{ booking.id }}</span>
+                <div>
+                  @if (booking.status === 'CONFIRMED') {
+                    @if (getBookingStatusVariant(booking) === 'pending') {
+                      <component-badge variant="pending" size="xs">Ongoing</component-badge>
+                    } @else {
+                      <component-badge variant="available" size="xs">Confirmed</component-badge>
+                    }
+                  } @else if (booking.status === 'COMPLETED') {
+                    <component-badge variant="booked" size="xs">Completed</component-badge>
+                  } @else {
+                    <component-badge variant="unavailable" size="xs">Cancelled</component-badge>
+                  }
+                </div>
+              </div>
+
+              <!-- Main Details Info -->
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="space-y-1">
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Booker</div>
+                  <div class="font-bold text-gray-800">{{ booking.userName }}</div>
+                </div>
+                <div class="space-y-1">
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Vehicle</div>
+                  <div class="font-semibold text-gray-700">
+                    <div>{{ booking.vehicle?.model || 'N/A' }}</div>
+                    @if (booking.vehicle?.plateNumber) {
+                      <div class="text-[10px] text-gray-400 font-normal font-mono">({{ booking.vehicle?.plateNumber }})</div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Destination info -->
+              <div class="space-y-1 text-xs">
+                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Destination</div>
+                <div class="text-gray-700 flex items-center gap-1">
+                  <span class="material-icons text-gray-400 text-sm">location_on</span>
+                  <span class="font-medium line-clamp-1">{{ booking.destination || 'N/A' }}</span>
+                </div>
+              </div>
+
+              <!-- Date Schedule -->
+              <div class="pt-2.5 grid grid-cols-2 gap-3 text-[11px] text-gray-500 border-t border-gray-100">
+                <div>
+                  <span class="block text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Depart Date</span>
+                  <div class="font-mono text-gray-700 font-medium">{{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</div>
+                </div>
+                <div>
+                  <span class="block text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Return Date</span>
+                  <div class="font-mono text-gray-700 font-medium">{{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</div>
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </div>
     }
@@ -97,8 +169,8 @@
     <div class="py-8 flex flex-col items-center">
       <div class="w-full">
         <component-empty-state
-          title="ไม่พบประวัติการจอง"
-          description="ไม่มีรายการจองรถยนต์ในประวัติระบบในขณะนี้"
+          title="No booking history found"
+          description="There is currently no booking history in the system."
           icon="search"
           variant="card">
         </component-empty-state>
@@ -108,8 +180,8 @@
 
   <!-- Detail Modal Dialog popup -->
   <app-booking-detail-modal
-    [title]="'รายละเอียดประวัติการจองรถยนต์'"
-    [description]="'ข้อมูลอย่างละเอียดของรายการจองรถยนต์ในอดีตและปัจจุบัน'"
+    [title]="'Booking History Details'"
+    [description]="'Detailed information of past and current vehicle bookings'"
     [bookingDate]="selectedBooking()?.bookingDate || ''"
     [startTime]="selectedBooking()?.startTime || ''"
     [endTime]="selectedBooking()?.endTime || ''"

@@ -17,7 +17,7 @@
             [class.text-gray-700]="!showAdvancedFilters()"
             class="px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 select-none">
       <span class="material-icons text-base">filter_list</span>
-      ตัวกรอง
+      Filters
     </button>
   </div>
 
@@ -44,11 +44,11 @@
   <div class="bg-white p-4 rounded-2xl border border-gray-150 shadow-sm grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-1 duration-150 w-full mt-4">
     <!-- Vehicle Filter -->
     <div class="space-y-1.5">
-      <label class="text-xs font-bold text-gray-400 block">กรองตามรถยนต์</label>
+      <label class="text-xs font-bold text-gray-400 block">Filter by Vehicle</label>
       <select [value]="selectedVehicleId"
               (change)="selectedVehicleIdChange.emit($any($event.target).value)"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">รถยนต์ทั้งหมด</option>
+        <option value="">All Vehicles</option>
         @for (vehicle of vehicles; track vehicle.id) {
           <option [value]="vehicle.id">{{ vehicle.model }}</option>
         }
@@ -57,11 +57,11 @@
 
     <!-- User Filter -->
     <div class="space-y-1.5">
-      <label class="text-xs font-bold text-gray-400 block">กรองตามผู้ใช้ / ผู้ร่วมเดินทาง</label>
+      <label class="text-xs font-bold text-gray-400 block">Filter by User / Passenger</label>
       <select [value]="selectedUserId"
               (change)="selectedUserIdChange.emit($any($event.target).value)"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">ผู้ใช้ทุกคน</option>
+        <option value="">All Users</option>
         @for (user of users; track user.userId) {
           <option [value]="user.userId">{{ user.userName }}</option>
         }
@@ -70,7 +70,7 @@
 
     <!-- Start Date Picker (datetime-local) -->
     <div class="space-y-1.5">
-      <label class="text-xs font-bold text-gray-400 block">ตั้งแต่วันและเวลา</label>
+      <label class="text-xs font-bold text-gray-400 block">From Date/Time</label>
       <input type="datetime-local"
              [value]="startDate"
              (input)="startDateChange.emit($any($event.target).value)"
@@ -79,7 +79,7 @@
 
     <!-- End Date Picker (datetime-local) -->
     <div class="space-y-1.5">
-      <label class="text-xs font-bold text-gray-400 block">ถึงวันและเวลา</label>
+      <label class="text-xs font-bold text-gray-400 block">To Date/Time</label>
       <input type="datetime-local"
              [value]="endDate"
              (input)="endDateChange.emit($any($event.target).value)"
@@ -89,14 +89,14 @@
     <!-- Optional Status Filter (History Page only) -->
     @if (showStatusFilter) {
       <div class="space-y-1.5 sm:col-span-2 md:col-span-2">
-        <label class="text-xs font-bold text-gray-400 block">สถานะการจอง</label>
+        <label class="text-xs font-bold text-gray-400 block">Booking Status</label>
         <select [value]="selectedStatusFilter"
                 (change)="selectedStatusFilterChange.emit($any($event.target).value)"
                 class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400">
-          <option value="">สถานะการจองทั้งหมด</option>
-          <option value="CONFIRMED">CONFIRMED (จองแล้ว/ยังไม่เดินทาง)</option>
-          <option value="COMPLETED">COMPLETED (เสร็จสิ้นการเดินทาง)</option>
-          <option value="CANCELLED">CANCELLED (ยกเลิกแล้ว)</option>
+          <option value="">All Statuses</option>
+          <option value="CONFIRMED">CONFIRMED (Upcoming)</option>
+          <option value="COMPLETED">COMPLETED (Completed)</option>
+          <option value="CANCELLED">CANCELLED (Cancelled)</option>
         </select>
       </div>
     }
@@ -105,7 +105,7 @@
     <div [class]="showStatusFilter ? 'sm:col-span-2 md:col-span-2 flex items-end justify-end gap-2' : 'col-span-1 sm:col-span-2 md:col-span-4 flex items-end justify-end gap-2 pt-2 border-t border-gray-50'" >
       <button (click)="reset.emit()"
               class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-xs font-semibold cursor-pointer">
-        ล้างตัวกรอง
+        Clear Filters
       </button>
     </div>
   </div>

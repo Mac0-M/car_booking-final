@@ -37,10 +37,10 @@ export class BookingCard {
 
   getBookingStatusLabel(booking: Booking): string {
     const state = this.getBookingStatusVariant(booking);
-    if (state === 'available') return 'Upcoming (ยังไม่เดินทาง)';
-    if (state === 'pending') return 'Ongoing (กำลังเดินทาง)';
-    if (state === 'booked') return 'Completed (เสร็จสิ้น)';
-    return 'Cancelled (ยกเลิกแล้ว)';
+    if (state === 'available') return 'Upcoming';
+    if (state === 'pending') return 'Ongoing';
+    if (state === 'booked') return 'Completed';
+    return 'Cancelled';
   }
 
   getVehicleImgUrl(vehicle: any): string {

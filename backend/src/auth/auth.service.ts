@@ -14,14 +14,14 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.usersService.findByEmail(dto.email);
     if (!user) {
-      throw new UnauthorizedException('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      throw new UnauthorizedException('Invalid email or password.');
     }
     if (user.role === 'Super_Admin' && process.env.ENABLE_SUPER_ADMIN === 'false') {
-      throw new UnauthorizedException('สิทธิ์การเข้าใช้งาน Super Admin ถูกปิดการใช้งาน');
+      throw new UnauthorizedException('Super Admin access is disabled.');
     }
     const ok = await bcrypt.compare(dto.password, user.password);
     if (!ok) {
-      throw new UnauthorizedException('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      throw new UnauthorizedException('Invalid email or password.');
     }
     return {
       access_token: this.jwtService.sign({ sub: user.user_id, email: user.email, role: user.role }),

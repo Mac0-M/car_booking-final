@@ -36,7 +36,7 @@ export class BookingController {
     const bookId = parseInt(id, 10);
     const booking = await this.bookingService.findById(bookId);
     if (!booking) {
-      throw new NotFoundException('ไม่พบข้อมูลการจองนี้');
+      throw new NotFoundException('Booking not found');
     }
     return booking;
   }

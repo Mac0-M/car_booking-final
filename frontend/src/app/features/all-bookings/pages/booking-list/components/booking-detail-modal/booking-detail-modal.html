@@ -62,7 +62,7 @@
                 <div class="flex items-start gap-3">
                   <span class="material-icons text-gray-400 mt-0.5">calendar_today</span>
                   <div>
-                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">วันและเวลาเดินทางไป</div>
+                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Departure Date/Time</div>
                     <div class="text-base font-semibold text-gray-800 mt-0.5">
                       {{ depart ? (depart | thaiDate) + ' ' + (depart | thaiTime) : (bookingDate | thaiDate) }}
                     </div>
@@ -75,7 +75,7 @@
                 <div class="flex items-start gap-3">
                   <span class="material-icons text-gray-400 mt-0.5">schedule</span>
                   <div>
-                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">วันและเวลาเดินทางกลับ</div>
+                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Return Date/Time</div>
                     <div class="text-base font-semibold text-gray-800 mt-0.5">
                       {{ returnTime ? (returnTime | thaiDate) + ' ' + (returnTime | thaiTime) : (endTime | thaiTime) }}
                       @if (totalDuration) {
@@ -91,7 +91,7 @@
                 <div class="flex items-start gap-3">
                   <span class="material-icons text-gray-400 mt-0.5">person</span>
                   <div>
-                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">ผู้จอง (ผู้ทำรายการ)</div>
+                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Booker</div>
                     <div class="text-base font-semibold text-gray-800 mt-0.5">{{ bookedByUser?.user_name || userName }}</div>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
                 <div class="flex items-start gap-3">
                   <span class="material-icons text-gray-400 mt-0.5">phone</span>
                   <div>
-                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">เบอร์โทรศัพท์ผู้จอง</div>
+                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Booker's Phone</div>
                     <div class="text-base font-semibold text-gray-800 mt-0.5">{{ bookedByUser?.phone || userPhone }}</div>
                   </div>
                 </div>
@@ -114,9 +114,9 @@
                   <div class="flex items-start gap-3">
                     <span class="material-icons text-indigo-500 mt-0.5">badge</span>
                     <div>
-                      <div class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">ผู้ใช้รถ</div>
+                      <div class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">Passenger</div>
                       <div class="text-base font-bold text-indigo-900 mt-0.5">{{ bookedForUser.user_name }}</div>
-                      <div class="text-[10px] text-indigo-500 font-mono">โทร: {{ bookedForUser.phone || 'N/A' }}</div>
+                      <div class="text-[10px] text-indigo-500 font-mono">Tel: {{ bookedForUser.phone || 'N/A' }}</div>
                     </div>
                   </div>
                 </component-card>
@@ -144,16 +144,16 @@
                 <input type="number" 
                        [value]="mileDistanceValue()"
                        (input)="mileDistanceValue.set($any($event.target).value)"
-                       placeholder="ระยะทางที่วิ่งจริง (กิโลเมตร)"
+                       placeholder="Actual distance traveled (km)"
                        class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors" />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">กม.</span>
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">km</span>
               </div>
               <div class="flex gap-2 justify-end">
                 <button class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-sm font-semibold cursor-pointer" (click)="cancelComplete()">
-                  ยกเลิก
+                  Cancel
                 </button>
                 <component-button variant="submit" size="sm" (click)="confirmComplete()">
-                  ยืนยันเสร็จสิ้น
+                  Confirm Complete
                 </component-button>
               </div>
             </div>

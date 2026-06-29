@@ -28,7 +28,7 @@ export class ResponseInterceptor<T>
         return {
           success: true,
           data: data !== undefined ? data : {},
-          message: 'สำเร็จ',
+          message: 'Success',
         };
       }),
     );

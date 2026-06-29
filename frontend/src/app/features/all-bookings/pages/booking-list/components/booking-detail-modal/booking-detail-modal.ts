@@ -69,7 +69,7 @@ export class BookingDetailModal {
     }
     const val = Number(rawVal);
     if (isNaN(val) || val < 0) {
-      alert('กรุณากรอกระยะทางเป็นตัวเลขที่มีค่ามากกว่าหรือเท่ากับ 0');
+      alert('Please enter a distance value greater than or equal to 0.');
       return;
     }
     this.complete.emit(val);

@@ -104,7 +104,7 @@ export class BookingConfirmComponent {
       error: (err: any) => {
         this.isSubmitting.set(false);
         if (err.status === 409) {
-          alert('รถคันนี้ถูกจองแล้ว กรุณาเลือกรถใหม่');
+          alert('This vehicle is already booked. Please select another vehicle.');
           
           // Re-fetch availability and update store to reflect correct status
           this.availabilityService.search(
@@ -121,7 +121,7 @@ export class BookingConfirmComponent {
             }
           });
         } else {
-          alert(err.error?.message || 'เกิดข้อผิดพลาดในการจองรถ กรุณาลองใหม่อีกครั้ง');
+          alert(err.error?.message || 'An error occurred while booking the vehicle. Please try again.');
         }
       }
     });

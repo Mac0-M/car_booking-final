@@ -27,7 +27,7 @@ const mapBooking = (b: any): Booking => {
   // Format userName to show booking details clearly
   let userNameStr = b.bookedForUser?.user_name || b.user?.user_name || 'N/A';
   if (b.bookedForUser && b.user && b.bookedForUser.user_id !== b.user.user_id) {
-    userNameStr = `${b.bookedForUser.user_name} (จองโดย ${b.user.user_name})`;
+    userNameStr = `${b.bookedForUser.user_name} (booked by ${b.user.user_name})`;
   }
 
   return {
@@ -49,8 +49,8 @@ const mapBooking = (b: any): Booking => {
 
     vehicle: b.vehicle ? {
       id: String(b.vehicle.vehicle_id),
-      plateNumber: b.vehicle.type || 'ไม่มี',
-      model: b.vehicle.vehicle_name || 'รถยนต์ส่วนกลาง',
+      plateNumber: b.vehicle.type || 'None',
+      model: b.vehicle.vehicle_name || 'Company Car',
       vehicleTypeId: b.vehicle.type || 'Other',
       driverId: '',
       capacity: b.vehicle.capacity || 4,

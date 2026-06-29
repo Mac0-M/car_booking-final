@@ -31,8 +31,8 @@ export class AvailabilityService {
         const list = res.data || res || [];
         return list.map((vehicle: any) => ({
           id: String(vehicle.vehicle_id),
-          plateNumber: vehicle.type || 'ไม่มี',
-          model: vehicle.vehicle_name || 'รถยนต์ส่วนกลาง',
+          plateNumber: vehicle.type || 'None',
+          model: vehicle.vehicle_name || 'Company Car',
           vehicleTypeId: vehicle.type || 'Other',
           driverId: '',
           capacity: vehicle.capacity || 4,

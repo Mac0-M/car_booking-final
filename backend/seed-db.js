@@ -92,20 +92,20 @@ async function seed() {
     console.log('Seeding mock users...');
     const users = [
       {
-        name: 'Mock Admin User',
+        name: 'Admin',
         email: 'admin@test.com',
         phone: '0812345678',
         role: 'Admin'
       },
       {
-        name: 'สมชาย รักดี',
-        email: 'somchai@test.com',
+        name: 'test1',
+        email: 'test1@test.com',
         phone: '0823456789',
         role: 'User'
       },
       {
-        name: 'นางสาววิภา ใจดี',
-        email: 'wipa@test.com',
+        name: 'test2',
+        email: 'test2@test.com',
         phone: '0834567890',
         role: 'User'
       }
@@ -131,7 +131,7 @@ async function seed() {
     console.log('Seeding mock vehicles...');
     const vehicles = [
       {
-        name: 'Toyota Camry (กข-1234)',
+        name: 'Toyota Camry (AB-1234)',
         type: 'Sedan',
         capacity: 4,
         re_fuel: 1,
@@ -139,7 +139,7 @@ async function seed() {
         status: 'available'
       },
       {
-        name: 'Isuzu D-Max (ขค-5678)',
+        name: 'Isuzu D-Max (CD-5678)',
         type: 'Pickup',
         capacity: 5,
         re_fuel: 1,
@@ -147,7 +147,7 @@ async function seed() {
         status: 'available'
       },
       {
-        name: 'Toyota Commuter (คฆ-9012)',
+        name: 'Toyota Commuter (EF-9012)',
         type: 'Van',
         capacity: 12,
         re_fuel: 0,
@@ -155,7 +155,7 @@ async function seed() {
         status: 'unavailable'
       },
       {
-        name: 'Honda CR-V (งจ-3456)',
+        name: 'Honda CR-V (GH-3456)',
         type: 'SUV',
         capacity: 7,
         re_fuel: 1,

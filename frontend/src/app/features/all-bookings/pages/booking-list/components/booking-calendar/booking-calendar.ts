@@ -83,6 +83,9 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
         gridSelection: {
           enableClick: true,
         },
+        week: {
+          taskView: false,
+        },
         template: {
           time(event: any) {
             const icon = event.raw?.icon || 'directions_car';
@@ -140,7 +143,7 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
         return {
           id: b.id,
           calendarId: 'cal1',
-          title: `${b.vehicle?.model || 'จองรถ'} - ${b.userName.split(' ')[0]}`,
+          title: `${b.vehicle?.model || 'Booked'} - ${b.userName.split(' ')[0]}`,
           start: (b.depart || '').replace(' ', 'T'),
           end: (b.return || '').replace(' ', 'T'),
           category: 'time',

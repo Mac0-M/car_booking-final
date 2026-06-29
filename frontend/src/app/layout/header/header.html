@@ -20,7 +20,7 @@
            [class.shadow-sm]="isRouteActive('/booking/form')"
            [class.text-gray-600]="!isRouteActive('/booking/form')"
            class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
-          จองรถ
+          Book Car
         </a>
         <a routerLink="/bookings" 
            [class.bg-gray-100/80]="isRouteActive('/bookings')"
@@ -28,7 +28,7 @@
            [class.shadow-sm]="isRouteActive('/bookings')"
            [class.text-gray-600]="!isRouteActive('/bookings')"
            class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
-          รายการจอง
+          Bookings
         </a>
         <a routerLink="/bookings/history" 
            [class.bg-gray-100/80]="isRouteActive('/bookings/history')"
@@ -36,7 +36,7 @@
            [class.shadow-sm]="isRouteActive('/bookings/history')"
            [class.text-gray-600]="!isRouteActive('/bookings/history')"
            class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
-          ประวัติการจอง
+          Booking History
         </a>
         <a routerLink="/vehicles" 
            [class.bg-gray-100/80]="isRouteActive('/vehicles')"
@@ -44,7 +44,7 @@
            [class.shadow-sm]="isRouteActive('/vehicles')"
            [class.text-gray-600]="!isRouteActive('/vehicles')"
            class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
-          รถยนต์ทั้งหมด
+          Vehicles
         </a>
         @if (isAdmin) {
           <a routerLink="/admin/users" 
@@ -53,62 +53,13 @@
              [class.shadow-sm]="isRouteActive('/admin/users')"
              [class.text-gray-600]="!isRouteActive('/admin/users')"
              class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
-            จัดการผู้ใช้
+            Manage Users
           </a>
         }
       </nav>
 
       <!-- User Section (hidden on auth pages) -->
       <div class="flex items-center gap-2 sm:gap-4">
-        <!-- Mobile Nav Buttons -->
-        <div class="flex md:hidden items-center gap-1">
-          <a routerLink="/booking/form" 
-             [class.bg-gray-100]="isRouteActive('/booking/form')"
-             [class.text-gray-900]="isRouteActive('/booking/form')"
-             [class.text-gray-500]="!isRouteActive('/booking/form')"
-             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
-             title="Book Vehicle">
-            <span class="material-icons block text-lg">add_circle_outline</span>
-          </a>
-          <a routerLink="/bookings" 
-             [class.bg-gray-100]="isRouteActive('/bookings')"
-             [class.text-gray-900]="isRouteActive('/bookings')"
-             [class.text-gray-500]="!isRouteActive('/bookings')"
-             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
-             title="All Bookings">
-            <span class="material-icons block text-lg">list_alt</span>
-          </a>
-          <a routerLink="/bookings/history" 
-             [class.bg-gray-100]="isRouteActive('/bookings/history')"
-             [class.text-gray-900]="isRouteActive('/bookings/history')"
-             [class.text-gray-500]="!isRouteActive('/bookings/history')"
-             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
-             title="Booking History">
-            <span class="material-icons block text-lg">history</span>
-          </a>
-          <a routerLink="/vehicles" 
-             [class.bg-gray-100]="isRouteActive('/vehicles')"
-             [class.text-gray-900]="isRouteActive('/vehicles')"
-             [class.text-gray-500]="!isRouteActive('/vehicles')"
-             class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
-             title="Vehicles">
-            <span class="material-icons block text-lg">directions_car</span>
-          </a>
-          @if (isAdmin) {
-            <a routerLink="/admin/users" 
-               [class.bg-gray-100]="isRouteActive('/admin/users')"
-               [class.text-gray-900]="isRouteActive('/admin/users')"
-               [class.text-gray-500]="!isRouteActive('/admin/users')"
-               class="p-1.5 sm:p-2 rounded-xl hover:bg-gray-50 transition-all"
-               title="Users">
-              <span class="material-icons block text-lg">people</span>
-            </a>
-          }
-        </div>
-
-        <!-- Divider -->
-        <span class="w-[1px] h-6 bg-gray-100 hidden md:block"></span>
-
         <!-- User Info Badge -->
         <a routerLink="/profile" class="flex items-center gap-1.5 sm:gap-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none">
           <div class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-[10px] sm:text-xs uppercase shadow-sm shrink-0">
@@ -123,14 +74,84 @@
           </div>
         </a>
 
-        <!-- Logout Button -->
+        <!-- Divider (desktop only) -->
+        <span class="w-[1px] h-6 bg-gray-100 hidden md:block"></span>
+
+        <!-- Logout Button (desktop only) -->
         <button (click)="onLogout()" 
-                class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200 transition-all active:scale-95 cursor-pointer bg-white shrink-0"
+                class="hidden md:flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200 transition-all active:scale-95 cursor-pointer bg-white shrink-0"
                 title="Logout">
           <span class="material-icons text-base sm:text-lg">logout</span>
+        </button>
+
+        <!-- Hamburger Menu Button (mobile only) -->
+        <button (click)="toggleMobileMenu()" 
+                class="flex md:hidden items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 transition-all active:scale-95 cursor-pointer bg-white shrink-0"
+                [title]="isMobileMenuOpen() ? 'Close Menu' : 'Open Menu'">
+          <span class="material-icons text-base sm:text-lg">
+            {{ isMobileMenuOpen() ? 'close' : 'menu' }}
+          </span>
         </button>
       </div>
     }
 
   </div>
+
+  <!-- Mobile Dropdown Menu -->
+  @if (!isAuthPage() && isMobileMenuOpen()) {
+    <div class="md:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md px-4 py-3 space-y-1 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <a routerLink="/booking/form" 
+         [class.bg-gray-100]="isRouteActive('/booking/form')"
+         [class.text-gray-900]="isRouteActive('/booking/form')"
+         [class.text-gray-600]="!isRouteActive('/booking/form')"
+         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-lg">add_circle_outline</span>
+        Book Car
+      </a>
+      <a routerLink="/bookings" 
+         [class.bg-gray-100]="isRouteActive('/bookings')"
+         [class.text-gray-900]="isRouteActive('/bookings')"
+         [class.text-gray-600]="!isRouteActive('/bookings')"
+         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-lg">list_alt</span>
+        Bookings
+      </a>
+      <a routerLink="/bookings/history" 
+         [class.bg-gray-100]="isRouteActive('/bookings/history')"
+         [class.text-gray-900]="isRouteActive('/bookings/history')"
+         [class.text-gray-600]="!isRouteActive('/bookings/history')"
+         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-lg">history</span>
+        Booking History
+      </a>
+      <a routerLink="/vehicles" 
+         [class.bg-gray-100]="isRouteActive('/vehicles')"
+         [class.text-gray-900]="isRouteActive('/vehicles')"
+         [class.text-gray-600]="!isRouteActive('/vehicles')"
+         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-lg">directions_car</span>
+        Vehicles
+      </a>
+      @if (isAdmin) {
+        <a routerLink="/admin/users" 
+           [class.bg-gray-100]="isRouteActive('/admin/users')"
+           [class.text-gray-900]="isRouteActive('/admin/users')"
+           [class.text-gray-600]="!isRouteActive('/admin/users')"
+           class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
+          <span class="material-icons text-lg">people</span>
+          Manage Users
+        </a>
+      }
+      
+      <!-- Divider -->
+      <div class="h-[1px] bg-gray-100 my-2"></div>
+
+      <!-- Logout Action in Mobile Menu -->
+      <button (click)="onLogout()" 
+              class="flex w-full items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all border-0 bg-transparent text-left cursor-pointer">
+        <span class="material-icons text-lg">logout</span>
+        Logout
+      </button>
+    </div>
+  }
 </header>

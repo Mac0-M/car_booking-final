@@ -70,7 +70,7 @@ export class VehicleFormComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert('ไม่พบข้อมูลรถยนต์ที่ต้องการแก้ไข');
+        alert('Requested vehicle not found.');
         this.router.navigate(['/vehicles']);
       }
     });
@@ -114,7 +114,7 @@ export class VehicleFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(err.error?.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+          alert(err.error?.message || 'An error occurred while saving the vehicle data.');
         }
       });
     } else {
@@ -129,7 +129,7 @@ export class VehicleFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(err.error?.message || 'เกิดข้อผิดพลาดในการสร้างรถยนต์ใหม่');
+          alert(err.error?.message || 'An error occurred while registering the new vehicle.');
         }
       });
     }
@@ -145,7 +145,7 @@ export class VehicleFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(err.error?.message || 'บันทึกข้อมูลสำเร็จ แต่อัปโหลดรูปภาพไม่สำเร็จ');
+        alert(err.error?.message || 'Vehicle details saved successfully, but image upload failed.');
         this.router.navigate(['/vehicles']);
       }
     });

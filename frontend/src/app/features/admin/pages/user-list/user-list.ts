@@ -48,11 +48,11 @@ export class UserListComponent implements OnInit {
 
   changeRole(user: User, newRole: string): void {
     if (!this.isSuperAdmin) {
-      alert('เฉพาะ Super Admin เท่านั้นที่สามารถเปลี่ยนบทบาทผู้ใช้ได้');
+      alert('Only Super Admin can change user roles.');
       return;
     }
 
-    if (confirm(`คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนบทบาทของ ${user.userName} เป็น ${newRole}?`)) {
+    if (confirm(`Are you sure you want to change the role of ${user.userName} to ${newRole}?`)) {
       this.userService.updateRole(user.userId, newRole).subscribe({
         next: (updated) => {
           this.users.update(current =>
@@ -60,7 +60,7 @@ export class UserListComponent implements OnInit {
           );
         },
         error: (err) => {
-          alert(err.error?.message || 'เกิดข้อผิดพลาดในการเปลี่ยนบทบาท');
+          alert(err.error?.message || 'An error occurred while changing the user role.');
           // Reload users to revert select state
           this.loadUsers();
         }
@@ -73,17 +73,17 @@ export class UserListComponent implements OnInit {
 
   deleteUser(userId: number): void {
     if (!this.isSuperAdmin) {
-      alert('เฉพาะ Super Admin เท่านั้นที่สามารถลบผู้ใช้งานได้');
+      alert('Only Super Admin can delete users.');
       return;
     }
 
-    if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้งานรายนี้ออกจากระบบ?')) {
+    if (confirm('Are you sure you want to delete this user from the system?')) {
       this.userService.delete(userId).subscribe({
         next: () => {
           this.users.update(current => current.filter(u => u.userId !== userId));
         },
         error: (err) => {
-          alert(err.error?.message || 'เกิดข้อผิดพลาดในการลบผู้ใช้งาน');
+          alert(err.error?.message || 'An error occurred while deleting the user.');
         }
       });
     }

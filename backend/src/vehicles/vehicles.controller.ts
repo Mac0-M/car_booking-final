@@ -43,7 +43,7 @@ export class VehiclesController {
     const vehicleId = parseInt(id, 10);
     const vehicle = await this.vehiclesService.findById(vehicleId);
     if (!vehicle) {
-      throw new NotFoundException('ไม่พบข้อมูลรถคันนี้');
+      throw new NotFoundException('Vehicle not found');
     }
     return vehicle;
   }
@@ -60,7 +60,7 @@ export class VehiclesController {
     const vehicleId = parseInt(id, 10);
     const vehicle = await this.vehiclesService.update(vehicleId, dto);
     if (!vehicle) {
-      throw new NotFoundException('ไม่พบข้อมูลรถคันนี้');
+      throw new NotFoundException('Vehicle not found');
     }
     return vehicle;
   }
@@ -71,9 +71,9 @@ export class VehiclesController {
     const vehicleId = parseInt(id, 10);
     const deleted = await this.vehiclesService.delete(vehicleId);
     if (!deleted) {
-      throw new NotFoundException('ไม่พบข้อมูลรถคันนี้');
+      throw new NotFoundException('Vehicle not found');
     }
-    return { message: 'ลบข้อมูลรถสำเร็จ' };
+    return { message: 'Vehicle deleted successfully' };
   }
 
   @Patch(':id/status')
@@ -81,11 +81,11 @@ export class VehiclesController {
   async updateStatus(@Param('id') id: string, @Body('status') status: string) {
     const vehicleId = parseInt(id, 10);
     if (!status || !['available', 'unavailable'].includes(status)) {
-      throw new BadRequestException('สถานะรถไม่ถูกต้อง');
+      throw new BadRequestException('Invalid vehicle status');
     }
     const vehicle = await this.vehiclesService.updateStatus(vehicleId, status);
     if (!vehicle) {
-      throw new NotFoundException('ไม่พบข้อมูลรถคันนี้');
+      throw new NotFoundException('Vehicle not found');
     }
     return vehicle;
   }
@@ -109,7 +109,7 @@ export class VehiclesController {
       }),
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-          return cb(new BadRequestException('อนุญาตเฉพาะไฟล์รูปภาพ (jpg, jpeg, png) เท่านั้น'), false);
+          return cb(new BadRequestException('Only image files (jpg, jpeg, png) are allowed.'), false);
         }
         cb(null, true);
       },
@@ -121,12 +121,12 @@ export class VehiclesController {
   ) {
     const vehicleId = parseInt(id, 10);
     if (!file) {
-      throw new BadRequestException('ไม่พบไฟล์อัปโหลด');
+      throw new BadRequestException('No upload file found');
     }
     const imageUrl = `/uploads/vehicles/${file.filename}`;
     const vehicle = await this.vehiclesService.updateImage(vehicleId, imageUrl);
     if (!vehicle) {
-      throw new NotFoundException('ไม่พบข้อมูลรถคันนี้');
+      throw new NotFoundException('Vehicle not found');
     }
     return vehicle;
   }

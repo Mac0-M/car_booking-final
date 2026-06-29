@@ -68,7 +68,7 @@ export class LoginComponent {
         this.router.navigate(['/booking/form']);
       },
       error: (err) => {
-        alert(err.error?.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+        alert(err.error?.message || 'Invalid email or password');
       }
     });
   }

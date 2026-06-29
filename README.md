@@ -1,6 +1,6 @@
-# 🚗 ระบบจองรถภายใน (Internal Car Booking System)
+# 🚗 ระบบจองรถ (Car Booking System)
 
-ระบบจองรถสำหรับใช้งานภายในองค์กร พัฒนาด้วย **NestJS + Angular + SQLite** เข้าถึงผ่าน **LINE** และ Web Browser
+พัฒนาด้วย **NestJS + Angular + SQLite** เข้าถึงผ่าน **LINE** และ Web Browser
 
 ---
 
@@ -19,9 +19,10 @@
 ## Features
 
 ### User / Booker
+
 - Login ด้วย email/password
 - หน้ารายการจองรถยนต์:
-  - **ตารางปฏิทิน (Toast UI Calendar v2)** เป็นหน้าแรกหลัก แสดงแยกสีตามประเภทรถ (Sedan=น้ำเงิน, Pickup=เขียว, Van=ม่วง, SUV=ส้ม, อื่นๆ=ชมพู) และงานที่คืนรถแล้วเสร็จสิ้นแสดงเป็น **สีดำ**
+  - **ตารางปฏิทิน (Toast UI Calendar v2)** เป็นหน้าแรกหลัก แสดงแยกสีตามประเภทรถ (Sedan=น้ำเงิน, Pickup=เขียว, Van=ม่วง, SUV=ส้ม, อื่นๆ=ชมพู)
   - รองรับการลากคลุมหรือกดเพื่อเริ่มการจองจากปฏิทิน และกดเพื่อเปิดดูรายละเอียดทริปผ่าน Modal
   - สลับการดูเป็นแบบ **บล็อก (Blocks)** ปรับปรุงตัวกรองอย่างละเอียด (ตามรถ, วันเวลาแบบ datetime-local, และกรองผู้ที่เกี่ยวข้องทั้งหมด)
 - **ระบบฝากจอง (Proxy Booking)**: จองรถยนต์ให้ผู้อื่นได้ โดยผู้จอง ผู้ฝากจอง และผู้ร่วมเดินทาง (Passenger) มีสิทธิ์ร่วมจัดการและยกเลิกทริป และจำนวนสะสมการจองจะไปเพิ่มที่ผู้ฝากจองโดยตรง
@@ -29,6 +30,7 @@
 - **แก้ไขข้อมูลส่วนตัว**: รองรับการอัปโหลดและแสดง Preview รูปภาพโปรไฟล์ พร้อมปุ่มยกเลิกดึงกลับหน้าหลัก
 
 ### Admin
+
 - **จัดการรถยนต์**:
   - เพิ่ม/แก้ไขรถยนต์ กำหนดสถานะ Available / Unavailable และแก้ไขเลขไมล์สะสม (`total_mile`) ได้โดยตรง
   - อัปโหลดรูปภาพรถยนต์พร้อมแสดง Preview ได้ทันที
@@ -37,6 +39,7 @@
 - จัดการ User: ดูรายละเอียดข้อมูลผู้ใช้ได้ (แต่ไม่อนุญาตให้แก้ไข Role)
 
 ### Super Admin
+
 - ได้รับสิทธิ์ในการลบผู้ใช้งาน และ **เปลี่ยนบทบาท (Role)** ของผู้ใช้รายอื่นได้เท่านั้น (Admin และ User ปกติไม่สามารถแก้ไขได้)
 - เปิด-ปิดการ seeding ไอดี Super Admin เริ่มต้นผ่าน `.env` (จะตรวจสอบก่อนเสมอเพื่อไม่ให้สร้างไอดีซ้ำซ้อน)
 
@@ -77,7 +80,7 @@ Super_Admin สร้างผ่าน environment variable ตอน bootstrap
 | vehicle_name     | TEXT NN    |                                                  |
 | type             | TEXT NN    | Sedan / Pickup / Van / SUV / Other               |
 | capacity         | INTEGER NN |                                                  |
-| re_fuel          | BOOLEAN NN | default: false (เติมน้ำมันแล้วยัง)                |
+| re_fuel          | BOOLEAN NN | default: false (เติมน้ำมันแล้วยัง)               |
 | total_mile       | INTEGER NN | default: 0                                       |
 | last_maintenance | TEXT NN    | default: CURRENT_TIMESTAMP (YYYY-MM-DD HH:MM:SS) |
 | status           | TEXT NN    | default: 'available' (available / unavailable)   |

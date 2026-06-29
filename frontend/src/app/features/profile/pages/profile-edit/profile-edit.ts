@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../../core/services/user.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -16,6 +16,7 @@ import { environment } from '../../../../../environments/environment';
 export class ProfileEditComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
+  private readonly location = inject(Location);
 
   readonly isLoading = signal(false);
 
@@ -107,7 +108,7 @@ export class ProfileEditComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(err.error?.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูลส่วนตัว');
+        alert(err.error?.message || 'An error occurred while saving profile data.');
       }
     });
   }
@@ -123,7 +124,7 @@ export class ProfileEditComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(err.error?.message || 'บันทึกข้อมูลสำเร็จ แต่ไม่สามารถอัปโหลดรูปภาพโปรไฟล์ได้');
+        alert(err.error?.message || 'Profile saved successfully, but avatar image upload failed.');
         this.refreshSession();
       }
     });
@@ -134,12 +135,17 @@ export class ProfileEditComponent implements OnInit {
       next: (latestUser) => {
         this.populateForm(latestUser);
         this.isLoading.set(false);
-        alert('บันทึกข้อมูลส่วนตัวสำเร็จเรียบร้อยแล้ว');
+        alert('Profile saved successfully.');
+        this.goBack();
       },
       error: (err) => {
         this.isLoading.set(false);
         console.error(err);
       }
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

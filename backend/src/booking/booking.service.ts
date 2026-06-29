@@ -98,10 +98,10 @@ export class BookingService {
     // 1. Check vehicle existence and status
     const vehicle = await this.vehicleRepo.findOne({ where: { vehicle_id: dto.vehicle_id } });
     if (!vehicle) {
-      throw new NotFoundException('ไม่พบข้อมูลรถที่ต้องการจอง');
+      throw new NotFoundException('Requested vehicle not found.');
     }
     if (vehicle.status !== 'available') {
-      throw new BadRequestException('รถคันนี้ไม่พร้อมใช้งาน');
+      throw new BadRequestException('This vehicle is currently unavailable.');
     }
 
     // 2. Prevent Double Booking
@@ -115,7 +115,7 @@ export class BookingService {
       .getOne();
 
     if (overlapping) {
-      throw new BadRequestException('รถคันนี้ถูกจองในช่วงเวลาดังกล่าวแล้ว');
+      throw new BadRequestException('This vehicle is already booked for the selected time range.');
     }
 
     // 3. Create booking
@@ -140,7 +140,7 @@ export class BookingService {
   async cancel(book_id: number, currentUser: any): Promise<Booking> {
     const booking = await this.findById(book_id);
     if (!booking) {
-      throw new NotFoundException('ไม่พบข้อมูลการจองนี้');
+      throw new NotFoundException('Booking not found.');
     }
 
     // Authorization: Owner only
@@ -150,7 +150,7 @@ export class BookingService {
       booking.booked_by !== currentUser.user_id &&
       booking.booked_for !== currentUser.user_id
     ) {
-      throw new ForbiddenException('ไม่มีสิทธิ์ยกเลิกการจองนี้');
+      throw new ForbiddenException('You do not have permission to cancel this booking.');
     }
 
     if (booking.status === 'cancel') {
@@ -168,7 +168,7 @@ export class BookingService {
   async complete(book_id: number, currentUser: any, mileDistance?: number): Promise<Booking> {
     const booking = await this.findById(book_id);
     if (!booking) {
-      throw new NotFoundException('ไม่พบข้อมูลการจองนี้');
+      throw new NotFoundException('Booking not found.');
     }
 
     // Authorization: Owner only
@@ -178,7 +178,7 @@ export class BookingService {
       booking.booked_by !== currentUser.user_id &&
       booking.booked_for !== currentUser.user_id
     ) {
-      throw new ForbiddenException('ไม่มีสิทธิ์ดำเนินการจองนี้');
+      throw new ForbiddenException('You do not have permission to complete this booking.');
     }
 
     const updateData: any = {

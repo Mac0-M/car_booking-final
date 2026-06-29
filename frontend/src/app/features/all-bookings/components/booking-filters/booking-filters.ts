@@ -24,7 +24,7 @@ export class BookingFilters {
   @Input() selectedStatusFilter = '';
 
   @Input() showStatusFilter = false;
-  @Input() placeholder = 'ค้นหา...';
+  @Input() placeholder = 'Search...';
 
   // Outputs to sync state back to parent
   @Output() searchQueryChange = new EventEmitter<string>();
@@ -50,9 +50,9 @@ export class BookingFilters {
 
   getModeLabel(mode: string): string {
     switch (mode) {
-      case 'calendar': return 'ปฏิทิน (Calendar)';
-      case 'block': return 'บล็อก (Blocks)';
-      case 'list': return 'ตาราง (List)';
+      case 'calendar': return 'Calendar';
+      case 'block': return 'Blocks';
+      case 'list': return 'List';
       default: return mode;
     }
   }

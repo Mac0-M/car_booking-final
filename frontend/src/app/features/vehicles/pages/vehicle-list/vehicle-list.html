@@ -5,16 +5,16 @@
     <div>
       <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
         <span class="material-icons text-gray-700 font-bold">directions_car</span>
-        รายการรถยนต์ทั้งหมด
+        All Vehicles
       </h1>
-      <p class="text-sm text-gray-500 mt-1">ดูรายการรถยนต์ และสถานะการเปิดใช้งานในระบบ</p>
+      <p class="text-sm text-gray-500 mt-1">View vehicle lists and activation status in the system.</p>
     </div>
     
     @if (isAdmin) {
       <component-button variant="submit" size="sm" class="sm:w-auto" [routerLink]="['/vehicles/new']">
         <span class="flex items-center gap-2 text-sm font-semibold">
           <span class="material-icons text-base">add</span>
-          เพิ่มรถยนต์ใหม่
+          Add New Vehicle
         </span>
       </component-button>
     }
@@ -28,7 +28,7 @@
       <input type="text"
              [value]="searchQuery()"
              (input)="searchQuery.set($any($event.target).value); onFilterChange()"
-             placeholder="ค้นหาชื่อรถยนต์..."
+             placeholder="Search vehicle model..."
              class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50" />
     </div>
 
@@ -37,7 +37,7 @@
       <select [value]="selectedType()"
               (change)="selectedType.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">ประเภทรถทั้งหมด</option>
+        <option value="">All Vehicle Types</option>
         <option value="Sedan">Sedan</option>
         <option value="Pickup">Pickup</option>
         <option value="Van">Van</option>
@@ -51,9 +51,9 @@
       <select [value]="selectedStatus()"
               (change)="selectedStatus.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">สถานะทั้งหมด</option>
-        <option value="available">พร้อมใช้งาน (Available)</option>
-        <option value="unavailable">ไม่พร้อมใช้งาน (Unavailable)</option>
+        <option value="">All Statuses</option>
+        <option value="available">Available</option>
+        <option value="unavailable">Unavailable</option>
       </select>
     </div>
 
@@ -62,9 +62,9 @@
       <select [value]="selectedReFuel()"
               (change)="selectedReFuel.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">การเติมน้ำมันทั้งหมด</option>
-        <option value="true">เติมน้ำมันแล้ว (Refueled)</option>
-        <option value="false">ยังไม่ได้เติมน้ำมัน (Needs Refuel)</option>
+        <option value="">All Fuel Statuses</option>
+        <option value="true">Refueled</option>
+        <option value="false">Needs Refuel</option>
       </select>
     </div>
   </div>
@@ -112,19 +112,19 @@
                 <div class="grid grid-cols-2 gap-3 pt-2 text-xs text-gray-500 border-t border-gray-50">
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">people</span>
-                    <span>{{ vehicle.capacity }} ที่นั่ง</span>
+                    <span>{{ vehicle.capacity }} seats</span>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">local_gas_station</span>
-                    <span>{{ vehicle.reFuel ? 'เติมน้ำมันแล้ว' : 'น้ำมันหมด/รอเติม' }}</span>
+                    <span>{{ vehicle.reFuel ? 'Refueled' : 'Needs Refuel' }}</span>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">speed</span>
-                    <span>{{ vehicle.totalMile | number }} กม.</span>
+                    <span>{{ vehicle.totalMile | number }} km</span>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">calendar_today</span>
-                    <span>จองแล้ว {{ vehicle.totalBookBy || 0 }} ครั้ง</span>
+                    <span>Booked {{ vehicle.totalBookBy || 0 }} times</span>
                   </div>
                 </div>
               </div>
@@ -153,8 +153,8 @@
       <div class="py-8 flex flex-col items-center">
         <div class="w-full">
           <component-empty-state
-            title="ไม่พบรถยนต์"
-            description="ไม่มีรายการรถยนต์ที่ตรงกับตัวกรองที่เลือกในขณะนี้"
+            title="No vehicles found"
+            description="There are currently no vehicles matching the selected filters."
             icon="search"
             variant="card">
           </component-empty-state>

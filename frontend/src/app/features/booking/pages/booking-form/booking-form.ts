@@ -137,7 +137,7 @@ export class BookingFormComponent implements OnInit {
       },
       error: (err: any) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message || 'เกิดข้อผิดพลาดในการตรวจสอบรถว่าง กรุณาลองใหม่อีกครั้ง');
+        this.errorMessage.set(err.error?.message || 'An error occurred while checking vehicle availability. Please try again.');
         alert(this.errorMessage());
       }
     });
@@ -147,11 +147,11 @@ export class BookingFormComponent implements OnInit {
 
   submitPhone(): void {
     if (!this.phoneInput) {
-      this.phoneError = 'เบอร์โทรศัพท์จำเป็นต้องกรอก';
+      this.phoneError = 'Phone number is required.';
       return;
     }
     if (this.phoneInput.length !== 10 || !/^\d+$/.test(this.phoneInput)) {
-      this.phoneError = 'เบอร์โทรศัพท์ต้องมี 10 หลัก';
+      this.phoneError = 'Phone number must be 10 digits.';
       return;
     }
     this.phoneError = '';
@@ -166,7 +166,7 @@ export class BookingFormComponent implements OnInit {
         });
       },
       error: (err: any) => {
-        alert(err.error?.message || 'เกิดข้อผิดพลาดในการบันทึกเบอร์โทรศัพท์');
+        alert(err.error?.message || 'An error occurred while saving phone number.');
       }
     });
   }

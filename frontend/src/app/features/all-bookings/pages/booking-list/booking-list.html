@@ -5,16 +5,16 @@
     <div>
       <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
         <span class="material-icons text-gray-700">bookmark_border</span>
-        รายการจองรถยนต์
+        Vehicle Bookings
       </h1>
-      <p class="text-sm text-gray-500 mt-1">ดูรายการจองและสถานะการใช้รถยนต์ทั้งหมดของผู้ใช้ทุกคน</p>
+      <p class="text-sm text-gray-500 mt-1">View all vehicle bookings and usage status of all users.</p>
     </div>
     
     <div class="flex items-center gap-2">
       <component-button variant="submit" size="sm" class="sm:w-auto" routerLink="/booking/form">
         <span class="flex items-center gap-2 text-sm font-semibold">
           <span class="material-icons text-base">add</span>
-          จองรถยนต์ใหม่
+          Book New Vehicle
         </span>
       </component-button>
     </div>
@@ -29,7 +29,7 @@
     [selectedUserId]="selectedUserId()"
     [startDate]="startDate()"
     [endDate]="endDate()"
-    [placeholder]="'ค้นหาจุดหมายปลายทาง, ผู้จอง, วัตถุประสงค์...'"
+    [placeholder]="'Search destination, booker, purpose...'"
     (searchQueryChange)="searchQuery.set($event)"
     (selectedVehicleIdChange)="selectedVehicleId.set($event); onFilterChange()"
     (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
@@ -40,10 +40,12 @@
   />
   <!-- View Area -->
   @if (viewMode() === 'calendar') {
-    <app-booking-calendar
-      [bookings]="filteredBookings()"
-      (bookingClick)="openDetail($event)"
-    />
+    <div class="pt-10">
+      <app-booking-calendar
+        [bookings]="filteredBookings()"
+        (bookingClick)="openDetail($event)"
+      />
+    </div>
   } @else {
     <!-- Bookings List Grid (Block View) -->
     @if (filteredBookings().length > 0) {
@@ -52,6 +54,7 @@
           <app-booking-card
             [booking]="booking"
             (click)="openDetail(booking)"
+            class="pt-10"
           />
         }
       </div>
@@ -60,8 +63,8 @@
       <div class="py-8 flex flex-col items-center">
         <div class="w-full">
           <component-empty-state
-            title="ไม่พบรายการจอง"
-            description="ไม่มีรายการจองรถยนต์ที่ตรงกับตัวกรองที่เลือกในขณะนี้"
+            title="No bookings found"
+            description="There are currently no vehicle bookings matching the selected filters."
             icon="search"
             variant="card">
           </component-empty-state>
@@ -72,8 +75,8 @@
 
   <!-- Detail Modal Dialog popup -->
   <app-booking-detail-modal
-    [title]="'รายละเอียดการจองรถยนต์'"
-    [description]="'ข้อมูลสรุปการจองและใช้รถยนต์ส่วนกลางในระบบ'"
+    [title]="'Booking Details'"
+    [description]="'Summary of vehicle bookings and usage in the system'"
     [bookingDate]="selectedBooking()?.bookingDate || ''"
     [startTime]="selectedBooking()?.startTime || ''"
     [endTime]="selectedBooking()?.endTime || ''"
