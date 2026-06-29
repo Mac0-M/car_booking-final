@@ -14,7 +14,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () =>
+        title: 'Login',
+        loadComponent: () =>  
           import('./features/auth/pages/login/login').then(
             (m) => m.LoginComponent
           ),
@@ -27,6 +28,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'form',
+        title: 'Booking',
         loadComponent: () =>
           import('./features/booking/pages/booking-form/booking-form').then(
             (m) => m.BookingFormComponent
@@ -34,6 +36,7 @@ export const routes: Routes = [
       },
       {
         path: 'select-vehicle',
+        title: 'Booking',
         canActivate: [bookingStepGuard],
         loadComponent: () =>
           import('./features/booking/pages/vehicle-selection/vehicle-selection').then(
@@ -42,6 +45,7 @@ export const routes: Routes = [
       },
       {
         path: 'confirm',
+        title: 'Confirm-Booking',
         canActivate: [bookingStepGuard],
         loadComponent: () =>
           import('./features/booking/pages/booking-confirm/booking-confirm').then(
@@ -56,6 +60,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        title: 'All-Bookings',
         loadComponent: () =>
           import('./features/all-bookings/pages/booking-list/booking-list').then(
             (m) => m.BookingList
@@ -63,6 +68,7 @@ export const routes: Routes = [
       },
       {
         path: 'history',
+        title: 'Booking History',
         loadComponent: () =>
           import('./features/all-bookings/pages/booking-history/booking-history').then(
             (m) => m.BookingHistoryComponent
@@ -76,6 +82,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        title: 'All Vehicles',
         loadComponent: () =>
           import('./features/vehicles/pages/vehicle-list/vehicle-list').then(
             (m) => m.VehicleListComponent
@@ -83,6 +90,7 @@ export const routes: Routes = [
       },
       {
         path: 'new',
+        title: 'New Vehicle',
         canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/vehicles/pages/vehicle-form/vehicle-form').then(
@@ -91,6 +99,7 @@ export const routes: Routes = [
       },
       {
         path: ':id/edit',
+        title: 'Edit Vehicle',
         canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/vehicles/pages/vehicle-form/vehicle-form').then(
@@ -105,6 +114,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'users',
+        title: 'All-Users',
         loadComponent: () =>
           import('./features/admin/pages/user-list/user-list').then(
             (m) => m.UserListComponent
@@ -114,6 +124,7 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
+    title: 'Profile',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/profile/pages/profile-edit/profile-edit').then(

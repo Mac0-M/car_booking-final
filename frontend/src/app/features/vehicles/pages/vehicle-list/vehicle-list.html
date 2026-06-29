@@ -37,7 +37,7 @@
       <select [value]="selectedType()"
               (change)="selectedType.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">All Vehicle Types / ประเภทรถยนต์ทั้งหมด</option>
+        <option value="">All Vehicle Types</option>
         <option value="Sedan">Sedan / เก๋ง</option>
         <option value="Pickup">Pickup / กระบะ</option>
         <option value="Van">Van / ตู้</option>
@@ -62,7 +62,7 @@
       <select [value]="selectedReFuel()"
               (change)="selectedReFuel.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">All Fuel Statuses / สถานะน้ำมันทั้งหมด</option>
+        <option value="">All Fuel Statuses</option>
         <option value="true">Refueled / เติมน้ำมันแล้ว</option>
         <option value="false">Needs Refuel / ต้องเติมน้ำมัน</option>
       </select>
@@ -124,7 +124,7 @@
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">calendar_today</span>
-                    <span>Booked {{ vehicle.totalBookBy || 0 }} times / ถูกจอง {{ vehicle.totalBookBy || 0 }} ครั้ง</span>
+                    <span>Booked {{ vehicle.totalBookBy || 0 }} times</span>
                   </div>
                 </div>
               </div>
