@@ -80,6 +80,9 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
         useFormPopup: false,
         useDetailPopup: false,
         isReadOnly: true,
+        month: {  
+          visibleEventCount: 3,
+        },
         gridSelection: {
           enableClick: true,
         },

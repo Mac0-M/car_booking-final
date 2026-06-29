@@ -3,7 +3,7 @@
     
     <!-- Logo and Brand -->
     <a [routerLink]="logoLink" class="flex items-center gap-1.5 sm:gap-2 group text-decoration-none shrink-0">
-      <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gray-800 text-white shadow-md shadow-gray-700/30 group-hover:scale-105 transition-transform duration-200 shrink-0">
+      <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gray-800 text-white shadow-md shadow-gray-700/30 shrink-0">
         <span class="material-icons text-lg sm:text-xl">directions_car</span>
       </div>
       <div class="shrink-0">
@@ -15,53 +15,51 @@
     @if (!isAuthPage()) {
       <nav class="hidden md:flex items-center gap-2">
         <a routerLink="/booking/form" 
-           [class.bg-gray-100/80]="isRouteActive('/booking/form')"
-           [class.text-gray-900]="isRouteActive('/booking/form')"
-           [class.shadow-sm]="isRouteActive('/booking/form')"
+           [class.bg-gray-900]="isRouteActive('/booking/form')"
+           [class.text-white]="isRouteActive('/booking/form')"
+           [class.shadow-md]="isRouteActive('/booking/form')"
            [class.text-gray-600]="!isRouteActive('/booking/form')"
-           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           class="px-4.5 py-2.5 rounded-xl text-base font-bold hover:text-gray-900 hover:bg-gray-200 transition-all duration-200 text-decoration-none">
           Book Car
         </a>
         <a routerLink="/bookings" 
-           [class.bg-gray-100/80]="isRouteActive('/bookings')"
-           [class.text-gray-900]="isRouteActive('/bookings')"
-           [class.shadow-sm]="isRouteActive('/bookings')"
+           [class.bg-gray-900]="isRouteActive('/bookings')"
+           [class.text-white]="isRouteActive('/bookings')"
+           [class.shadow-md]="isRouteActive('/bookings')"
            [class.text-gray-600]="!isRouteActive('/bookings')"
-           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           class="px-4.5 py-2.5 rounded-xl text-base font-bold hover:text-gray-900 hover:bg-gray-200 transition-all duration-200 text-decoration-none">
           Bookings
         </a>
         <a routerLink="/bookings/history" 
-           [class.bg-gray-100/80]="isRouteActive('/bookings/history')"
-           [class.text-gray-900]="isRouteActive('/bookings/history')"
-           [class.shadow-sm]="isRouteActive('/bookings/history')"
+           [class.bg-gray-900]="isRouteActive('/bookings/history')"
+           [class.text-white]="isRouteActive('/bookings/history')"
+           [class.shadow-md]="isRouteActive('/bookings/history')"
            [class.text-gray-600]="!isRouteActive('/bookings/history')"
-           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           class="px-4.5 py-2.5 rounded-xl text-base font-bold hover:text-gray-900 hover:bg-gray-200 transition-all duration-200 text-decoration-none">
           Booking History
         </a>
         <a routerLink="/vehicles" 
-           [class.bg-gray-100/80]="isRouteActive('/vehicles')"
-           [class.text-gray-900]="isRouteActive('/vehicles')"
-           [class.shadow-sm]="isRouteActive('/vehicles')"
+           [class.bg-gray-900]="isRouteActive('/vehicles')"
+           [class.text-white]="isRouteActive('/vehicles')"
+           [class.shadow-md]="isRouteActive('/vehicles')"
            [class.text-gray-600]="!isRouteActive('/vehicles')"
-           class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
+           class="px-4.5 py-2.5 rounded-xl text-base font-bold hover:text-gray-900 hover:bg-gray-200 transition-all duration-200 text-decoration-none">
           Vehicles
         </a>
-        @if (isAdmin) {
-          <a routerLink="/admin/users" 
-             [class.bg-gray-100/80]="isRouteActive('/admin/users')"
-             [class.text-gray-900]="isRouteActive('/admin/users')"
-             [class.shadow-sm]="isRouteActive('/admin/users')"
-             [class.text-gray-600]="!isRouteActive('/admin/users')"
-             class="px-4 py-2 rounded-xl text-sm font-semibold hover:text-gray-800 hover:bg-gray-50 transition-all duration-200">
-            Manage Users
-          </a>
-        }
+        <a routerLink="/admin/users" 
+           [class.bg-gray-900]="isRouteActive('/admin/users')"
+           [class.text-white]="isRouteActive('/admin/users')"
+           [class.shadow-md]="isRouteActive('/admin/users')"
+           [class.text-gray-600]="!isRouteActive('/admin/users')"
+           class="px-4.5 py-2.5 rounded-xl text-base font-bold hover:text-gray-900 hover:bg-gray-200 transition-all duration-200 text-decoration-none">
+          {{ isAdmin ? 'Manage Users' : 'Users List' }}
+        </a>
       </nav>
 
       <!-- User Section (hidden on auth pages) -->
       <div class="flex items-center gap-2 sm:gap-4">
-        <!-- User Info Badge -->
-        <a routerLink="/profile" class="flex items-center gap-1.5 sm:gap-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none">
+        <!-- User Info Badge (mobile only) -->
+        <a routerLink="/profile" class="flex md:hidden items-center gap-1.5 sm:gap-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none">
           <div class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-[10px] sm:text-xs uppercase shadow-sm shrink-0">
             @if (profileImage) {
               <img [src]="profileImage" [alt]="userName" class="w-full h-full object-cover" />
@@ -74,15 +72,47 @@
           </div>
         </a>
 
-        <!-- Divider (desktop only) -->
-        <span class="w-[1px] h-6 bg-gray-100 hidden md:block"></span>
+        <!-- User Info Badge Container with Dropdown (desktop only) -->
+        <div class="relative hidden md:block">
+          <button (click)="toggleProfileDropdown(); $event.stopPropagation()" 
+                  class="flex items-center gap-1.5 sm:gap-2 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none bg-transparent">
+            <div class="flex items-center justify-center w-7 h-7 rounded-full overflow-hidden bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-xs uppercase shadow-sm shrink-0">
+              @if (profileImage) {
+                <img [src]="profileImage" [alt]="userName" class="w-full h-full object-cover" />
+              } @else {
+                {{ userName.charAt(0) }}
+              }
+            </div>
+            <div class="text-left select-none">
+              <div class="text-xs font-bold text-gray-800 line-clamp-1 leading-none">{{ userName }}</div>
+            </div>
+            <span class="material-icons text-xs text-gray-500 transition-transform duration-200"
+                  [class.rotate-180]="isProfileDropdownOpen()">keyboard_arrow_down</span>
+          </button>
 
-        <!-- Logout Button (desktop only) -->
-        <button (click)="onLogout()" 
-                class="hidden md:flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200 transition-all active:scale-95 cursor-pointer bg-white shrink-0"
-                title="Logout">
-          <span class="material-icons text-base sm:text-lg">logout</span>
-        </button>
+          <!-- Dropdown Menu overlay -->
+          @if (isProfileDropdownOpen()) {
+            <div class="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-gray-150/80 shadow-lg py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+              <!-- View Profile Link -->
+              <a routerLink="/profile" 
+                 (click)="closeProfileDropdown()"
+                 class="flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors text-decoration-none">
+                <span class="material-icons text-lg text-gray-400">person</span>
+                View Profile
+              </a>
+              
+              <!-- Divider -->
+              <hr class="border-gray-100 my-1" />
+
+              <!-- Logout Button -->
+              <button (click)="onLogout(); closeProfileDropdown()" 
+                      class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 transition-colors border-0 bg-transparent text-left cursor-pointer">
+                <span class="material-icons text-lg text-red-400">logout</span>
+                Logout
+              </button>
+            </div>
+          }
+        </div>
 
         <!-- Hamburger Menu Button (mobile only) -->
         <button (click)="toggleMobileMenu()" 
@@ -101,55 +131,53 @@
   @if (!isAuthPage() && isMobileMenuOpen()) {
     <div class="md:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md px-4 py-3 space-y-1 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
       <a routerLink="/booking/form" 
-         [class.bg-gray-100]="isRouteActive('/booking/form')"
-         [class.text-gray-900]="isRouteActive('/booking/form')"
+         [class.bg-gray-900]="isRouteActive('/booking/form')"
+         [class.text-white]="isRouteActive('/booking/form')"
          [class.text-gray-600]="!isRouteActive('/booking/form')"
-         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
-        <span class="material-icons text-lg">add_circle_outline</span>
+         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-xl">add_circle_outline</span>
         Book Car
       </a>
       <a routerLink="/bookings" 
-         [class.bg-gray-100]="isRouteActive('/bookings')"
-         [class.text-gray-900]="isRouteActive('/bookings')"
+         [class.bg-gray-900]="isRouteActive('/bookings')"
+         [class.text-white]="isRouteActive('/bookings')"
          [class.text-gray-600]="!isRouteActive('/bookings')"
-         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
-        <span class="material-icons text-lg">list_alt</span>
+         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-xl">list_alt</span>
         Bookings
       </a>
       <a routerLink="/bookings/history" 
-         [class.bg-gray-100]="isRouteActive('/bookings/history')"
-         [class.text-gray-900]="isRouteActive('/bookings/history')"
+         [class.bg-gray-900]="isRouteActive('/bookings/history')"
+         [class.text-white]="isRouteActive('/bookings/history')"
          [class.text-gray-600]="!isRouteActive('/bookings/history')"
-         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
-        <span class="material-icons text-lg">history</span>
+         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-xl">history</span>
         Booking History
       </a>
       <a routerLink="/vehicles" 
-         [class.bg-gray-100]="isRouteActive('/vehicles')"
-         [class.text-gray-900]="isRouteActive('/vehicles')"
+         [class.bg-gray-900]="isRouteActive('/vehicles')"
+         [class.text-white]="isRouteActive('/vehicles')"
          [class.text-gray-600]="!isRouteActive('/vehicles')"
-         class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
-        <span class="material-icons text-lg">directions_car</span>
+         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-xl">directions_car</span>
         Vehicles
       </a>
-      @if (isAdmin) {
-        <a routerLink="/admin/users" 
-           [class.bg-gray-100]="isRouteActive('/admin/users')"
-           [class.text-gray-900]="isRouteActive('/admin/users')"
-           [class.text-gray-600]="!isRouteActive('/admin/users')"
-           class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all text-decoration-none">
-          <span class="material-icons text-lg">people</span>
-          Manage Users
-        </a>
-      }
+      <a routerLink="/admin/users" 
+         [class.bg-gray-900]="isRouteActive('/admin/users')"
+         [class.text-white]="isRouteActive('/admin/users')"
+         [class.text-gray-600]="!isRouteActive('/admin/users')"
+         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold hover:bg-gray-50 transition-all text-decoration-none">
+        <span class="material-icons text-xl">people</span>
+        {{ isAdmin ? 'Manage Users' : 'Users List' }}
+      </a>
       
       <!-- Divider -->
       <div class="h-[1px] bg-gray-100 my-2"></div>
 
       <!-- Logout Action in Mobile Menu -->
       <button (click)="onLogout()" 
-              class="flex w-full items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all border-0 bg-transparent text-left cursor-pointer">
-        <span class="material-icons text-lg">logout</span>
+              class="flex w-full items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all border-0 bg-transparent text-left cursor-pointer">
+        <span class="material-icons text-xl">logout</span>
         Logout
       </button>
     </div>

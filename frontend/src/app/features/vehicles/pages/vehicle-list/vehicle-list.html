@@ -37,12 +37,12 @@
       <select [value]="selectedType()"
               (change)="selectedType.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">All Vehicle Types</option>
-        <option value="Sedan">Sedan</option>
-        <option value="Pickup">Pickup</option>
-        <option value="Van">Van</option>
-        <option value="SUV">SUV</option>
-        <option value="Other">Other</option>
+        <option value="">All Vehicle Types / ประเภทรถยนต์ทั้งหมด</option>
+        <option value="Sedan">Sedan / เก๋ง</option>
+        <option value="Pickup">Pickup / กระบะ</option>
+        <option value="Van">Van / ตู้</option>
+        <option value="SUV">SUV / อเนกประสงค์</option>
+        <option value="Other">Other / อื่นๆ</option>
       </select>
     </div>
 
@@ -51,7 +51,7 @@
       <select [value]="selectedStatus()"
               (change)="selectedStatus.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">All Statuses</option>
+        <option value="">All Status</option>
         <option value="available">Available</option>
         <option value="unavailable">Unavailable</option>
       </select>
@@ -62,9 +62,9 @@
       <select [value]="selectedReFuel()"
               (change)="selectedReFuel.set($any($event.target).value); onFilterChange()"
               class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400">
-        <option value="">All Fuel Statuses</option>
-        <option value="true">Refueled</option>
-        <option value="false">Needs Refuel</option>
+        <option value="">All Fuel Statuses / สถานะน้ำมันทั้งหมด</option>
+        <option value="true">Refueled / เติมน้ำมันแล้ว</option>
+        <option value="false">Needs Refuel / ต้องเติมน้ำมัน</option>
       </select>
     </div>
   </div>
@@ -112,11 +112,11 @@
                 <div class="grid grid-cols-2 gap-3 pt-2 text-xs text-gray-500 border-t border-gray-50">
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">people</span>
-                    <span>{{ vehicle.capacity }} seats</span>
+                    <span>{{ vehicle.capacity }} seats / {{ vehicle.capacity }} ที่นั่ง</span>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">local_gas_station</span>
-                    <span>{{ vehicle.reFuel ? 'Refueled' : 'Needs Refuel' }}</span>
+                    <span>{{ vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม' }}</span>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">speed</span>
@@ -124,7 +124,7 @@
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="material-icons text-base text-gray-400">calendar_today</span>
-                    <span>Booked {{ vehicle.totalBookBy || 0 }} times</span>
+                    <span>Booked {{ vehicle.totalBookBy || 0 }} times / ถูกจอง {{ vehicle.totalBookBy || 0 }} ครั้ง</span>
                   </div>
                 </div>
               </div>
@@ -133,16 +133,11 @@
             <!-- Admin Actions Footer -->
             @if (isAdmin) {
               <div class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-gray-100">
-                <div class="flex gap-2">
-                  <a [routerLink]="['/vehicles', vehicle.id, 'edit']"
-                     class="p-2 rounded-xl border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 active:scale-95 transition-all cursor-pointer flex items-center justify-center">
-                    <span class="material-icons text-sm">edit</span>
-                  </a>
-                  <button (click)="deleteVehicle(vehicle.id)"
-                          class="p-2 rounded-xl border border-red-150 text-red-600 bg-white hover:bg-red-50 active:scale-95 transition-all cursor-pointer">
-                    <span class="material-icons text-sm flex items-center justify-center">delete_outline</span>
-                  </button>
-                </div>
+                <a [routerLink]="['/vehicles', vehicle.id, 'edit']"
+                   class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-semibold">
+                  <span class="material-icons text-sm">edit</span>
+                  Edit Vehicle
+                </a>
               </div>
             }
           </component-card>

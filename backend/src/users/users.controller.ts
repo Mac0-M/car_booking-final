@@ -66,10 +66,54 @@ export class UsersController {
     return user;
   }
 
+  @Post()
+  async create(@Body() userData: any, @CurrentUser() currentUser: any) {
+    // Role restrictions:
+    // - Super Admin can only create Admin (role = 'Admin')
+    // - Admin can only create regular User (role = 'User')
+    if (currentUser.role === 'Super_Admin') {
+      userData.role = 'Admin';
+    } else if (currentUser.role === 'Admin') {
+      userData.role = 'User';
+    } else {
+      throw new ForbiddenException('Only Admin or Super Admin can register new users.');
+    }
+
+    if (!userData.user_name || !userData.email || !userData.password || !userData.phone) {
+      throw new BadRequestException('Required fields: user_name, email, password, phone.');
+    }
+
+    const existing = await this.usersService.findByEmail(userData.email);
+    if (existing) {
+      throw new BadRequestException('Email address already registered.');
+    }
+
+    return this.usersService.create(userData);
+  }
+
   @Delete(':id')
-  @Roles('Super_Admin')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string, @CurrentUser() currentUser: any) {
     const userId = parseInt(id, 10);
+    const targetUser = await this.usersService.findById(userId);
+    if (!targetUser) {
+      throw new NotFoundException('User not found.');
+    }
+
+    // Role restrictions:
+    // - Super Admin can delete Admin and User
+    // - Admin can delete User
+    if (currentUser.role === 'Super_Admin') {
+      if (targetUser.role === 'Super_Admin') {
+        throw new ForbiddenException('Cannot delete a Super Admin.');
+      }
+    } else if (currentUser.role === 'Admin') {
+      if (targetUser.role !== 'User') {
+        throw new ForbiddenException('Admins can only delete regular users.');
+      }
+    } else {
+      throw new ForbiddenException('You do not have permission to delete users.');
+    }
+
     const deleted = await this.usersService.delete(userId);
     if (!deleted) {
       throw new NotFoundException('User not found.');
@@ -81,13 +125,18 @@ export class UsersController {
   @Roles('Super_Admin')
   async updateRole(@Param('id') id: string, @Body('role') role: string) {
     const userId = parseInt(id, 10);
+    const targetUser = await this.usersService.findById(userId);
+    if (!targetUser) {
+      throw new NotFoundException('User not found.');
+    }
+    if (targetUser.role === 'Super_Admin') {
+      throw new ForbiddenException('Cannot modify the role of a Super Admin.');
+    }
+
     if (!role || !['User', 'Admin', 'Super_Admin'].includes(role)) {
       throw new BadRequestException('Invalid role.');
     }
     const user = await this.usersService.updateRole(userId, role);
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
     return user;
   }
 

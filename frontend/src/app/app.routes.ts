@@ -101,7 +101,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    canActivate: [adminGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: 'users',

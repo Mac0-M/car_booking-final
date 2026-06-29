@@ -81,7 +81,7 @@
             <!-- Booking Summary Card / Receipt -->
             <div class="w-full max-w-md bg-gray-50 rounded-2xl border border-gray-100 p-5 space-y-4 text-left shadow-sm">
               <div class="flex items-center justify-between border-b border-gray-200 pb-3">
-                <span class="text-sm text-gray-400 font-semibold uppercase tracking-wider">Booking Number</span>
+                <span class="text-sm text-gray-400 font-semibold uppercase tracking-wider">Booking Number / หมายเลขการจอง</span>
                 <span class="text-base font-mono font-bold text-gray-800">{{ bookingId() }}</span>
               </div>
 
@@ -89,24 +89,24 @@
               <div class="space-y-3 text-sm">
                 @if (store.selectedVehicle(); as vehicle) {
                   <div class="flex justify-between items-start gap-4">
-                    <span class="text-gray-400 shrink-0">Reserved Vehicle:</span>
+                    <span class="text-gray-400 shrink-0">Reserved Vehicle / ยานพาหนะที่จอง:</span>
                     <span class="font-bold text-gray-800 text-right">
                       {{ vehicle.model }} ({{ vehicle.plateNumber }})
                     </span>
                   </div>
                 }
                 <div class="flex justify-between items-start gap-4">
-                  <span class="text-gray-400 shrink-0">Destination:</span>
+                  <span class="text-gray-400 shrink-0">Destination / จุดหมาย:</span>
                   <span class="font-semibold text-gray-800 text-right">{{ store.destination() }}</span>
                 </div>
                 <div class="flex justify-between items-start gap-4">
-                  <span class="text-gray-400 shrink-0">Travel Date:</span>
+                  <span class="text-gray-400 shrink-0">Travel Date / วันเดินทาง:</span>
                   <span class="font-semibold text-gray-800 text-right">
                     {{ store.bookingDate() | thaiDate }}
                   </span>
                 </div>
                 <div class="flex justify-between items-start gap-4">
-                  <span class="text-gray-400 shrink-0">Travel Time:</span>
+                  <span class="text-gray-400 shrink-0">Travel Time / เวลาเดินทาง:</span>
                   <span class="font-semibold text-gray-800 text-right">
                     {{ store.startTime() | thaiTime }} - {{ store.endTime() | thaiTime }}
                     @if (totalDuration()) {
@@ -115,11 +115,11 @@
                   </span>
                 </div>
                 <div class="flex justify-between items-start gap-4">
-                  <span class="text-gray-400 shrink-0">User Name:</span>
+                  <span class="text-gray-400 shrink-0">User Name / ชื่อผู้ใช้งาน:</span>
                   <span class="font-semibold text-gray-800 text-right">{{ currentUser()?.name }}</span>
                 </div>
                 <div class="flex justify-between items-start gap-4">
-                  <span class="text-gray-400 shrink-0">Contact Number:</span>
+                  <span class="text-gray-400 shrink-0">Contact Number / เบอร์ติดต่อ:</span>
                   <span class="font-semibold text-gray-800 text-right">{{ currentUser()?.phone }}</span>
                 </div>
               </div>

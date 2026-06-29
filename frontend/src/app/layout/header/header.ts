@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { AllSharedUi } from '../../shared/shared';
@@ -17,6 +17,20 @@ export class HeaderComponent {
 
   currentUrl = signal<string>('');
   isMobileMenuOpen = signal<boolean>(false);
+  isProfileDropdownOpen = signal<boolean>(false);
+
+  @HostListener('window:click')
+  closeDropdowns(): void {
+    this.isProfileDropdownOpen.set(false);
+  }
+
+  toggleProfileDropdown(): void {
+    this.isProfileDropdownOpen.update((open) => !open);
+  }
+
+  closeProfileDropdown(): void {
+    this.isProfileDropdownOpen.set(false);
+  }
 
   constructor() {
     this.currentUrl.set(this.router.url);

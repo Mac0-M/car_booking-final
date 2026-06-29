@@ -1,12 +1,27 @@
 <div class="user-list-page max-w-5xl mx-auto p-4 md:p-6 space-y-6">
 
   <!-- Page Header -->
-  <div>
-    <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
-      <span class="material-icons text-gray-700 font-bold">people_outline</span>
-      User Management
-    </h1>
-    <p class="text-sm text-gray-500 mt-1">View all registered users, manage roles, and system access.</p>
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
+        <span class="material-icons text-gray-700 font-bold">people_outline</span>
+        {{ isSuperAdmin ? 'User Management' : 'Users' }}
+      </h1>
+      <p class="text-sm text-gray-500 mt-1">
+        {{ isSuperAdmin ? 'View all registered users, manage roles, and system access.' : 'View all registered users and roles in the system.' }}
+      </p>
+    </div>
+    
+    @if (isAdmin) {
+      <div class="flex items-center gap-2 shrink-0">
+        <component-button variant="submit" size="sm" (click)="openAddModal()">
+          <span class="flex items-center gap-2 text-sm font-semibold">
+            <span class="material-icons text-base">person_add</span>
+            {{ isSuperAdmin ? 'Add New Admin' : 'Add New User' }}
+          </span>
+        </component-button>
+      </div>
+    }
   </div>
 
   @if (isLoading()) {
@@ -22,13 +37,13 @@
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                <th class="px-6 py-4">User</th>
-                <th class="px-6 py-4">Email</th>
-                <th class="px-6 py-4">Mobile Phone</th>
-                <th class="px-6 py-4">Role</th>
-                <th class="px-6 py-4 text-center">Bookings Count</th>
-                @if (isSuperAdmin) {
-                  <th class="px-6 py-4 text-right">Action</th>
+                <th class="px-6 py-4">User / ผู้ใช้งาน</th>
+                <th class="px-6 py-4">Email / อีเมล</th>
+                <th class="px-6 py-4">Mobile Phone / เบอร์โทรศัพท์</th>
+                <th class="px-6 py-4">Role / บทบาท</th>
+                <th class="px-6 py-4 text-center">Bookings Count / จำนวนครั้งที่จอง</th>
+                @if (isAdmin) {
+                  <th class="px-6 py-4 text-right">Action / ดำเนินการ</th>
                 }
               </tr>
             </thead>
@@ -58,35 +73,27 @@
                   
                   <!-- Role Selector or Badge -->
                   <td class="px-6 py-4">
-                    @if (isSuperAdmin) {
-                      <select [value]="user.role"
-                              (change)="changeRole(user, $any($event.target).value)"
-                              class="px-2.5 py-1 border border-gray-200 rounded-lg text-xs font-semibold bg-white focus:outline-none focus:border-gray-400">
-                        <option value="User">User</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Super_Admin">Super Admin</option>
-                      </select>
+                    @if (user.role === 'Super_Admin') {
+                      <component-badge variant="booked" size="xs">Super Admin</component-badge>
+                    } @else if (user.role === 'Admin') {
+                      <component-badge variant="pending" size="xs">Admin</component-badge>
                     } @else {
-                      @if (user.role === 'Super_Admin') {
-                        <component-badge variant="booked" size="xs">Super Admin</component-badge>
-                      } @else if (user.role === 'Admin') {
-                        <component-badge variant="pending" size="xs">Admin</component-badge>
-                      } @else {
-                        <component-badge variant="available" size="xs">User</component-badge>
-                      }
+                      <component-badge variant="available" size="xs">User</component-badge>
                     }
                   </td>
                   
                   <!-- Bookings Count -->
                   <td class="px-6 py-4 text-center font-bold text-gray-800">{{ user.totalBooked }}</td>
                   
-                  <!-- Actions (Super Admin only) -->
-                  @if (isSuperAdmin) {
+                  <!-- Actions -->
+                  @if (isAdmin) {
                     <td class="px-6 py-4 text-right">
-                      <button (click)="deleteUser(user.userId)"
-                              class="p-2 rounded-xl border border-red-150 text-red-600 bg-white hover:bg-red-50 active:scale-95 transition-all cursor-pointer">
-                        <span class="material-icons text-sm flex items-center justify-center">delete_outline</span>
-                      </button>
+                      @if (canDelete(user)) {
+                        <button (click)="deleteUser(user.userId)"
+                                class="p-2 rounded-xl border border-red-150 text-red-600 bg-white hover:bg-red-50 active:scale-95 transition-all cursor-pointer">
+                          <span class="material-icons text-sm flex items-center justify-center">delete_outline</span>
+                        </button>
+                      }
                     </td>
                   }
                 </tr>
@@ -115,42 +122,32 @@
 
               <div class="grid grid-cols-2 gap-3 text-xs text-gray-500 bg-gray-50 p-3 rounded-xl">
                 <div>
-                  <div class="font-semibold text-gray-400">Email</div>
+                  <div class="font-semibold text-gray-400">Email / อีเมล</div>
                   <div class="font-medium text-gray-700 mt-0.5 break-all">{{ user.email }}</div>
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-400">Mobile Phone</div>
+                  <div class="font-semibold text-gray-400">Mobile Phone / เบอร์โทรศัพท์</div>
                   <div class="font-medium font-mono text-gray-700 mt-0.5">{{ user.phone || 'N/A' }}</div>
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-400">Bookings Count</div>
+                  <div class="font-semibold text-gray-400">Bookings Count / จำนวนครั้งที่จอง</div>
                   <div class="font-bold text-gray-800 mt-0.5">{{ user.totalBooked }} times</div>
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-400">Role</div>
+                  <div class="font-semibold text-gray-400">Role / บทบาท</div>
                   <div class="mt-1">
-                    @if (isSuperAdmin) {
-                      <select [value]="user.role"
-                              (change)="changeRole(user, $any($event.target).value)"
-                              class="px-2 py-0.5 border border-gray-200 rounded-lg text-xs font-semibold bg-white focus:outline-none focus:border-gray-400">
-                        <option value="User">User</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Super_Admin">Super Admin</option>
-                      </select>
+                    @if (user.role === 'Super_Admin') {
+                      <component-badge variant="booked" size="xs">Super Admin</component-badge>
+                    } @else if (user.role === 'Admin') {
+                      <component-badge variant="pending" size="xs">Admin</component-badge>
                     } @else {
-                      @if (user.role === 'Super_Admin') {
-                        <component-badge variant="booked" size="xs">Super Admin</component-badge>
-                      } @else if (user.role === 'Admin') {
-                        <component-badge variant="pending" size="xs">Admin</component-badge>
-                      } @else {
-                        <component-badge variant="available" size="xs">User</component-badge>
-                      }
+                      <component-badge variant="available" size="xs">User</component-badge>
                     }
                   </div>
                 </div>
               </div>
 
-              @if (isSuperAdmin) {
+              @if (canDelete(user)) {
                 <div class="flex justify-end pt-1">
                   <button (click)="deleteUser(user.userId)"
                           class="px-3 py-1.5 rounded-xl border border-red-150 text-red-600 bg-white hover:bg-red-50 active:scale-95 transition-all text-xs font-semibold cursor-pointer flex items-center gap-1">
@@ -179,4 +176,105 @@
     }
   }
 
+  <!-- Add User Modal Dialog -->
+  @if (isAddModalOpen()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <component-card variant="default" size="base" class="w-full max-w-md shadow-xl flex flex-col gap-4 animate-in zoom-in duration-200">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="material-icons text-gray-800 text-2xl">person_add</span>
+            <h2 class="text-xl font-bold text-gray-900">
+              {{ isSuperAdmin ? 'Register New Admin' : 'Register New User' }}
+            </h2>
+          </div>
+          <button (click)="closeAddModal()" class="text-gray-400 hover:text-gray-600 transition-colors border-0 bg-transparent cursor-pointer">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+
+        <p class="text-xs text-gray-500">
+          {{ isSuperAdmin ? 'Create a new Admin account. They will have access to vehicle management and user management.' : 'Create a new regular passenger account.' }}
+        </p>
+
+        <!-- Form Fields -->
+        <form (submit)="createUserSubmit(); $event.preventDefault()" class="space-y-4">
+          <!-- Full Name -->
+          <div class="space-y-1">
+            <label for="new_name" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Full Name / ชื่อ สกุล</label>
+            <component-input-ui
+              type="text"
+              id="new_name"
+              name="newUserName"
+              placeholder="e.g. John Doe"
+              [(ngModel)]="newUserName"
+              required
+            ></component-input-ui>
+          </div>
+
+          <!-- Email -->
+          <div class="space-y-1">
+            <label for="new_email" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Email Address / อีเมล</label>
+            <component-input-ui
+              type="email"
+              id="new_email"
+              name="newUserEmail"
+              placeholder="e.g. john@company.com"
+              [(ngModel)]="newUserEmail"
+              required
+            ></component-input-ui>
+          </div>
+
+          <!-- Password -->
+          <div class="space-y-1">
+            <label for="new_password" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Password / รหัสผ่าน</label>
+            <component-input-ui
+              type="password"
+              id="new_password"
+              name="newUserPassword"
+              placeholder="Minimum 6 characters"
+              [(ngModel)]="newUserPassword"
+              required
+            ></component-input-ui>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="space-y-1">
+            <label for="new_phone" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Mobile Phone / เบอร์</label>
+            <component-input-ui
+              type="tel"
+              id="new_phone"
+              name="newUserPhone"
+              placeholder="e.g. 0812345678"
+              [(ngModel)]="newUserPhone"
+              required
+            ></component-input-ui>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-end gap-3 mt-4 border-t border-gray-100 pt-4">
+            <button type="button" (click)="closeAddModal()" class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-xs font-semibold cursor-pointer">
+              Cancel
+            </button>
+            <component-button
+              type="submit"
+              variant="submit"
+              size="sm"
+              [disabled]="!isAddFormValid || isSaving()"
+            >
+              @if (isSaving()) {
+                <span class="flex items-center gap-1.5">
+                  <span class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  Creating...
+                </span>
+              } @else {
+                Create Account
+              }
+            </component-button>
+          </div>
+        </form>
+      </component-card>
+    </div>
+  }
 </div>

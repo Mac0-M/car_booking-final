@@ -34,15 +34,15 @@
       <div>
         <h3 class="text-base font-bold text-gray-800 flex items-center gap-1">
           <span class="material-icons text-gray-400 text-base">location_on</span>
-          <span class="line-clamp-1">{{ booking.destination || 'No destination specified' }}</span>
+          <span class="line-clamp-1">{{ booking.destination || 'No destination specified / ไม่ได้ระบุจุดหมาย' }}</span>
         </h3>
-        <p class="text-xs text-gray-500 mt-1 line-clamp-2 pl-5">{{ booking.purpose || 'No purpose specified' }}</p>
+        <p class="text-xs text-gray-500 mt-1 line-clamp-2 pl-5">{{ booking.purpose || 'No purpose specified / ไม่ได้ระบุวัตถุประสงค์' }}</p>
       </div>
 
       <!-- Vehicle Info -->
       <div class="pl-5 pt-1 space-y-1">
-        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Reserved Vehicle</div>
-        <div class="text-xs font-bold text-gray-700">{{ booking.vehicle?.model || 'No vehicle specified' }}</div>
+        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Reserved Vehicle / ยานพาหนะที่จอง</div>
+        <div class="text-xs font-bold text-gray-700">{{ booking.vehicle?.model || 'No vehicle specified / ไม่ได้ระบุยานพาหนะ' }}</div>
         @if (showPlateNumber && booking.vehicle?.plateNumber) {
           <div class="text-[10px] font-mono font-bold text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100 inline-block">
             {{ booking.vehicle?.plateNumber }}
@@ -58,11 +58,11 @@
         </div>
         <div class="flex items-center gap-1.5">
           <span class="material-icons text-gray-400 text-sm">calendar_today</span>
-          <span>Depart: {{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</span>
+          <span>Depart / ออกเดินทาง: {{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</span>
         </div>
         <div class="flex items-center gap-1.5">
           <span class="material-icons text-gray-400 text-sm">schedule</span>
-          <span>Return: {{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</span>
+          <span>Return / เดินทางกลับ: {{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</span>
         </div>
       </div>
     </div>

@@ -104,6 +104,23 @@ export class BookingService {
       throw new BadRequestException('This vehicle is currently unavailable.');
     }
 
+    // Check role restrictions:
+    // 1. Nobody can book for a Super Admin (except the Super Admin themselves)
+    if (dto.booked_for) {
+      const bookedFor = await this.userRepo.findOne({ where: { user_id: dto.booked_for } });
+      if (bookedFor && bookedFor.role === 'Super_Admin' && userId !== dto.booked_for) {
+        throw new BadRequestException('Cannot book vehicles for other Super Admins.');
+      }
+
+      // 2. Passenger (User) cannot book for Admin
+      const bookedBy = await this.userRepo.findOne({ where: { user_id: userId } });
+      if (bookedBy && bookedBy.role === 'User' && dto.booked_for !== userId) {
+        if (bookedFor && bookedFor.role === 'Admin') {
+          throw new BadRequestException('Passengers cannot book vehicles for Admins.');
+        }
+      }
+    }
+
     // 2. Prevent Double Booking
     const overlapping = await this.bookingRepo.createQueryBuilder('b')
       .where('b.vehicle_id = :vehicleId', { vehicleId: dto.vehicle_id })

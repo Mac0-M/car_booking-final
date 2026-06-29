@@ -34,6 +34,13 @@ export class UserService {
     );
   }
 
+  /** สร้างผู้ใช้ใหม่ (Admin/Super Admin) */
+  create(data: any): Observable<User> {
+    return this.http.post<any>(`${this.apiUrl}/users`, data).pipe(
+      map(res => mapUser(res.data || res))
+    );
+  }
+
   /** ดึงข้อมูลผู้ใช้ตาม ID */
   findById(id: number): Observable<User> {
     return this.http.get<any>(`${this.apiUrl}/users/${id}`).pipe(
@@ -42,7 +49,7 @@ export class UserService {
   }
 
   /** แก้ไขข้อมูลผู้ใช้ */
-  update(id: number, data: Partial<{ user_name: string; phone: string; email: string }>): Observable<User> {
+  update(id: number, data: Partial<{ user_name: string; phone: string; email: string; password?: string }>): Observable<User> {
     return this.http.patch<any>(`${this.apiUrl}/users/${id}`, data).pipe(
       map(res => mapUser(res.data || res))
     );

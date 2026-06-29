@@ -37,6 +37,16 @@ export class BookingFormComponent implements OnInit {
 
 
   readonly usersList = signal<User[]>([]);
+
+  readonly filteredUsersList = computed(() => {
+    const list = this.usersList();
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) return list.filter(u => u.role !== 'Super_Admin');
+    if (currentUser.role === 'User') {
+      return list.filter(u => u.role !== 'Admin' && u.role !== 'Super_Admin');
+    }
+    return list.filter(u => u.role !== 'Super_Admin');
+  });
   readonly isLoading = signal(false);
   readonly errorMessage = signal('');
 

@@ -135,6 +135,23 @@ export class VehicleFormComponent implements OnInit {
     }
   }
 
+  deleteVehicle(): void {
+    if (!this.vehicleId) return;
+    if (confirm('Are you sure you want to delete this vehicle from the system?')) {
+      this.isLoading.set(true);
+      this.vehicleService.delete(this.vehicleId).subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          this.router.navigate(['/vehicles']);
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          alert(err.error?.message || 'An error occurred while deleting the vehicle.');
+        }
+      });
+    }
+  }
+
   private uploadVehicleImage(id: string): void {
     if (!this.selectedFile) return;
 

@@ -19,12 +19,15 @@ export class ProfileEditComponent implements OnInit {
   private readonly location = inject(Location);
 
   readonly isLoading = signal(false);
+  readonly isEditing = signal(false); // Controls view-only vs edit mode
 
   // Form Fields
   userId: number | null = null;
   user_name = '';
   phone = '';
   email = '';
+  role = 'User';
+  newPassword = '';
 
   // Avatar Image Upload
   selectedFile: File | null = null;
@@ -60,6 +63,7 @@ export class ProfileEditComponent implements OnInit {
     this.user_name = user.userName || user.name || user.user_name || '';
     this.phone = user.phone || '';
     this.email = user.email || '';
+    this.role = user.role || 'User';
     
     const profileImg = user.profileImg || user.profile_image || user.profile_img;
     if (profileImg) {
@@ -76,6 +80,8 @@ export class ProfileEditComponent implements OnInit {
   }
 
   onFileSelected(event: Event): void {
+    if (!this.isEditing()) return;
+    
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
@@ -85,18 +91,26 @@ export class ProfileEditComponent implements OnInit {
   }
 
   get isFormValid(): boolean {
-    return !!this.user_name.trim() && !!this.email.trim();
+    const isBasicValid = !!this.user_name.trim() && !!this.email.trim();
+    if (this.newPassword.trim() && this.newPassword.trim().length < 6) {
+      return false;
+    }
+    return isBasicValid;
   }
 
   onSubmit(): void {
-    if (!this.isFormValid || !this.userId || this.isLoading()) return;
+    if (!this.isEditing() || !this.isFormValid || !this.userId || this.isLoading()) return;
 
     this.isLoading.set(true);
-    const updateData = {
+    const updateData: any = {
       user_name: this.user_name.trim(),
       phone: this.phone.trim(),
       email: this.email.trim(),
     };
+
+    if (this.newPassword.trim()) {
+      updateData.password = this.newPassword.trim();
+    }
 
     this.userService.update(this.userId, updateData).subscribe({
       next: () => {
@@ -135,14 +149,33 @@ export class ProfileEditComponent implements OnInit {
       next: (latestUser) => {
         this.populateForm(latestUser);
         this.isLoading.set(false);
+        this.isEditing.set(false);
+        this.selectedFile = null;
+        this.imagePreviewUrl = null;
+        this.newPassword = '';
         alert('Profile saved successfully.');
-        this.goBack();
       },
       error: (err) => {
         this.isLoading.set(false);
         console.error(err);
       }
     });
+  }
+
+  startEdit(): void {
+    this.isEditing.set(true);
+  }
+
+  cancelEdit(): void {
+    // Revert inputs to current session data
+    const user = this.authService.currentUser();
+    if (user) {
+      this.populateForm(user);
+    }
+    this.selectedFile = null;
+    this.imagePreviewUrl = null;
+    this.newPassword = '';
+    this.isEditing.set(false);
   }
 
   goBack(): void {

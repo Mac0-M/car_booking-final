@@ -32,7 +32,7 @@ export class BookingList implements OnInit {
   readonly isModalOpen = signal(false);
   
   // View Mode
-  readonly viewMode = signal<'calendar' | 'block'>('calendar');
+  readonly viewMode = signal<'calendar' | 'grid'>('calendar');
 
   // Filters State
   readonly searchQuery = signal('');
@@ -59,7 +59,7 @@ export class BookingList implements OnInit {
     this.loadBookings();
   }
 
-  setViewMode(mode: 'calendar' | 'block'): void {
+  setViewMode(mode: 'calendar' | 'grid'): void {
     this.viewMode.set(mode);
   }
 

@@ -14,7 +14,7 @@
   <app-booking-filters
     [vehicles]="vehiclesList()"
     [users]="usersList()"
-    [viewModes]="['block', 'list']"
+    [viewModes]="['grid', 'list']"
     [currentViewMode]="viewMode()"
     [searchQuery]="searchQuery()"
     [selectedVehicleId]="selectedVehicleId()"
@@ -36,8 +36,8 @@
 
   <!-- View Area -->
   @if (filteredBookings().length > 0) {
-    @if (viewMode() === 'block') {
-      <!-- Block View -->
+    @if (viewMode() === 'grid') {
+      <!-- Grid View -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
         @for (booking of filteredBookings(); track booking.id) {
           <app-booking-card
@@ -58,12 +58,12 @@
               <thead>
                 <tr class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
                   <th class="px-6 py-4">ID</th>
-                  <th class="px-6 py-4">Booker</th>
-                  <th class="px-6 py-4">Vehicle</th>
-                  <th class="px-6 py-4">Destination</th>
-                  <th class="px-6 py-4">Depart Date</th>
-                  <th class="px-6 py-4">Return Date</th>
-                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4">Booker / ผู้จอง</th>
+                  <th class="px-6 py-4">Vehicle / ยานพาหนะ</th>
+                  <th class="px-6 py-4">Destination / จุดหมาย</th>
+                  <th class="px-6 py-4">Depart Date / ออกเดินทาง</th>
+                  <th class="px-6 py-4">Return Date / เดินทางกลับ</th>
+                  <th class="px-6 py-4">Status / สถานะ</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
@@ -125,11 +125,11 @@
               <!-- Main Details Info -->
               <div class="grid grid-cols-2 gap-3 text-xs">
                 <div class="space-y-1">
-                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Booker</div>
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Booker / ผู้จอง</div>
                   <div class="font-bold text-gray-800">{{ booking.userName }}</div>
                 </div>
                 <div class="space-y-1">
-                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Vehicle</div>
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Vehicle / ยานพาหนะ</div>
                   <div class="font-semibold text-gray-700">
                     <div>{{ booking.vehicle?.model || 'N/A' }}</div>
                     @if (booking.vehicle?.plateNumber) {
@@ -141,7 +141,7 @@
 
               <!-- Destination info -->
               <div class="space-y-1 text-xs">
-                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Destination</div>
+                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Destination / จุดหมาย</div>
                 <div class="text-gray-700 flex items-center gap-1">
                   <span class="material-icons text-gray-400 text-sm">location_on</span>
                   <span class="font-medium line-clamp-1">{{ booking.destination || 'N/A' }}</span>
@@ -151,11 +151,11 @@
               <!-- Date Schedule -->
               <div class="pt-2.5 grid grid-cols-2 gap-3 text-[11px] text-gray-500 border-t border-gray-100">
                 <div>
-                  <span class="block text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Depart Date</span>
+                  <span class="block text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Depart Date / ออกเดินทาง</span>
                   <div class="font-mono text-gray-700 font-medium">{{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</div>
                 </div>
                 <div>
-                  <span class="block text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Return Date</span>
+                  <span class="block text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Return Date / เดินทางกลับ</span>
                   <div class="font-mono text-gray-700 font-medium">{{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</div>
                 </div>
               </div>

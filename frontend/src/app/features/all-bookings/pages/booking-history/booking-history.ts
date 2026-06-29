@@ -29,7 +29,7 @@ export class BookingHistoryComponent implements OnInit {
   readonly isModalOpen = signal(false);
   
   // View Mode
-  readonly viewMode = signal<'block' | 'list'>('block');
+  readonly viewMode = signal<'grid' | 'list'>('grid');
 
   // Filters State
   readonly searchQuery = signal('');

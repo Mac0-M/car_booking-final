@@ -22,7 +22,7 @@
   <app-booking-filters
     [vehicles]="vehiclesList()"
     [users]="usersList()"
-    [viewModes]="['calendar', 'block']"
+    [viewModes]="['calendar', 'grid']"
     [currentViewMode]="viewMode()"
     [searchQuery]="searchQuery()"
     [selectedVehicleId]="selectedVehicleId()"
@@ -47,7 +47,7 @@
       />
     </div>
   } @else {
-    <!-- Bookings List Grid (Block View) -->
+    <!-- Bookings List Grid (Grid View) -->
     @if (filteredBookings().length > 0) {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
         @for (booking of filteredBookings(); track booking.id) {

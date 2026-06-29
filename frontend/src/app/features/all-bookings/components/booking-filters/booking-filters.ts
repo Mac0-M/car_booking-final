@@ -42,7 +42,7 @@ export class BookingFilters {
   getModeIcon(mode: string): string {
     switch (mode) {
       case 'calendar': return 'calendar_today';
-      case 'block': return 'grid_view';
+      case 'grid': return 'grid_view';
       case 'list': return 'format_list_bulleted';
       default: return 'help_outline';
     }
@@ -51,7 +51,7 @@ export class BookingFilters {
   getModeLabel(mode: string): string {
     switch (mode) {
       case 'calendar': return 'Calendar';
-      case 'block': return 'Blocks';
+      case 'grid': return 'Grid';
       case 'list': return 'List';
       default: return mode;
     }

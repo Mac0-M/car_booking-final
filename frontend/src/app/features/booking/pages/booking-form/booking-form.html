@@ -17,7 +17,7 @@
         <div class="grid grid-cols-1 gap-4">
           <!-- Start Datetime -->
           <div class="space-y-2">
-            <label for="depart" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Departure Date & Time</label>
+            <label for="depart" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Departure Date & Time / ออกเดินทาง</label>
             <div class="relative">
               <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">event</span>
               <input type="datetime-local"
@@ -31,7 +31,7 @@
 
           <!-- End Datetime -->
           <div class="space-y-2">
-            <label for="returnTime" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Return Date & Time</label>
+            <label for="returnTime" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Return Date & Time /เดินทางกลับ</label>
             <div class="relative">
               <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">event</span>
               <input type="datetime-local"
@@ -47,7 +47,7 @@
         <div class="flex flex-col gap-4 w-full pt-2">
           <!-- Destination (Optional) -->
           <div class="space-y-2">
-            <label for="destination" class="text-xs font-bold text-gray-500 uppercase tracking-wider block font-sans">Destination (Optional)</label>
+            <label for="destination" class="text-xs font-bold text-gray-500 uppercase tracking-wider block font-sans">Destination (Optional) / จุดหมาย (ไม่บังคับ)</label>
             <component-input-ui
               type="text"
               icon="place"
@@ -59,7 +59,7 @@
 
           <!-- Purpose of Use (Optional) -->
           <div class="space-y-2">
-            <label for="purpose" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Purpose of Use (Optional)</label>
+            <label for="purpose" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Purpose of Use (Optional) / วัตถุประสงค์ (ไม่บังคับ)</label>
             <component-input-ui
               type="text"
               icon="assignment"
@@ -74,7 +74,7 @@
         <div class="border-t border-gray-100 pt-4 space-y-4">
           <!-- User Selector (person who will use the car) -->
           <div class="space-y-2">
-            <label for="booked_for" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Passenger</label>
+            <label for="booked_for" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Book for / จองให้</label>
             <div class="relative">
               <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
               <select id="booked_for"
@@ -82,7 +82,7 @@
                       [(ngModel)]="booked_for"
                       required
                       class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors">
-                @for (u of usersList(); track u.userId) {
+                @for (u of filteredUsersList(); track u.userId) {
                   <option [value]="u.userId">{{ u.userName }} ({{ u.email }})</option>
                 }
               </select>

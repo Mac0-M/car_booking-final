@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../../core/services/user.service';
@@ -20,12 +20,38 @@ export class UserListComponent implements OnInit {
   readonly users = signal<User[]>([]);
   readonly isLoading = signal(false);
 
+  // Add User Modal State
+  readonly isAddModalOpen = signal(false);
+  readonly isSaving = signal(false);
+
+  // Form Fields
+  newUserName = '';
+  newUserEmail = '';
+  newUserPassword = '';
+  newUserPhone = '';
+
   get currentUserRole(): string {
     return this.authService.currentUser()?.role || 'User';
   }
 
   get isSuperAdmin(): boolean {
     return this.currentUserRole === 'Super_Admin';
+  }
+
+  get isAdmin(): boolean {
+    return this.currentUserRole === 'Admin' || this.currentUserRole === 'Super_Admin';
+  }
+
+  canDelete(user: User): boolean {
+    const currentUserId = this.authService.currentUser()?.userId || this.authService.currentUser()?.user_id;
+    if (user.userId === currentUserId) return false; // Cannot delete self
+    if (this.isSuperAdmin) {
+      return user.role !== 'Super_Admin';
+    }
+    if (this.currentUserRole === 'Admin') {
+      return user.role === 'User';
+    }
+    return false;
   }
 
   ngOnInit(): void {
@@ -46,38 +72,14 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  changeRole(user: User, newRole: string): void {
-    if (!this.isSuperAdmin) {
-      alert('Only Super Admin can change user roles.');
-      return;
-    }
-
-    if (confirm(`Are you sure you want to change the role of ${user.userName} to ${newRole}?`)) {
-      this.userService.updateRole(user.userId, newRole).subscribe({
-        next: (updated) => {
-          this.users.update(current =>
-            current.map(u => u.userId === user.userId ? { ...u, role: updated.role } : u)
-          );
-        },
-        error: (err) => {
-          alert(err.error?.message || 'An error occurred while changing the user role.');
-          // Reload users to revert select state
-          this.loadUsers();
-        }
-      });
-    } else {
-      // Reload users to revert select state
-      this.loadUsers();
-    }
-  }
-
   deleteUser(userId: number): void {
-    if (!this.isSuperAdmin) {
-      alert('Only Super Admin can delete users.');
+    const user = this.users().find(u => u.userId === userId);
+    if (!user || !this.canDelete(user)) {
+      alert('You do not have permission to delete this user.');
       return;
     }
 
-    if (confirm('Are you sure you want to delete this user from the system?')) {
+    if (confirm(`Are you sure you want to delete ${user.userName} from the system?`)) {
       this.userService.delete(userId).subscribe({
         next: () => {
           this.users.update(current => current.filter(u => u.userId !== userId));
@@ -87,6 +89,51 @@ export class UserListComponent implements OnInit {
         }
       });
     }
+  }
+
+  openAddModal(): void {
+    this.newUserName = '';
+    this.newUserEmail = '';
+    this.newUserPassword = '';
+    this.newUserPhone = '';
+    this.isAddModalOpen.set(true);
+  }
+
+  closeAddModal(): void {
+    this.isAddModalOpen.set(false);
+  }
+
+  get isAddFormValid(): boolean {
+    return !!this.newUserName.trim() && 
+           !!this.newUserEmail.trim() && 
+           !!this.newUserPassword.trim() && 
+           !!this.newUserPhone.trim() && 
+           this.newUserPhone.trim().length === 10;
+  }
+
+  createUserSubmit(): void {
+    if (!this.isAddFormValid || this.isSaving()) return;
+
+    this.isSaving.set(true);
+    const payload = {
+      user_name: this.newUserName.trim(),
+      email: this.newUserEmail.trim(),
+      password: this.newUserPassword.trim(),
+      phone: this.newUserPhone.trim()
+    };
+
+    this.userService.create(payload).subscribe({
+      next: (createdUser) => {
+        this.isSaving.set(false);
+        this.isAddModalOpen.set(false);
+        this.users.update(current => [createdUser, ...current]);
+        alert('User registered successfully.');
+      },
+      error: (err) => {
+        this.isSaving.set(false);
+        alert(err.error?.message || 'An error occurred while creating the user.');
+      }
+    });
   }
 
   getProfileImgUrl(user: User): string {
