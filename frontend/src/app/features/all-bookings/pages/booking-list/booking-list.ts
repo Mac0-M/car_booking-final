@@ -9,9 +9,8 @@ import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { BookingDialogService } from '../../../booking/booking-dialog.service';
 import { BookingDetailModal } from '../../components/booking-detail-modal/booking-detail-modal';
-import { BookingCalendar } from '../../components/booking-calendar/booking-calendar';
-import { BookingCard } from '../../components/booking-card/booking-card';
 import { LeftSidebar } from '../../components/left-sidebar/left-sidebar';
+import { BookingViews } from '../../components/booking-views/booking-views';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 
@@ -20,7 +19,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingCalendar, BookingCard, LeftSidebar, MatSidenavModule],
+  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingViews, LeftSidebar, MatSidenavModule],
   templateUrl: './booking-list.html',
 })
 export class BookingList implements OnInit {
@@ -40,57 +39,14 @@ export class BookingList implements OnInit {
   // Responsive drawer states
   readonly isMobile = signal(window.innerWidth < 768);
   readonly leftDrawerOpened = signal(window.innerWidth >= 768);
-  readonly rightDrawerOpened = signal(window.innerWidth >= 1280);
 
-  // Bottom Sheet dragging state for mobile view
-  readonly bottomHeight = signal<number>(250);
-  private startY = 0;
-  private startHeight = 0;
-  private isDragging = false;
 
-  onPointerDown(event: PointerEvent): void {
-    const handle = event.currentTarget as HTMLElement;
-    if (handle) {
-      try {
-        handle.setPointerCapture(event.pointerId);
-      } catch (e) {}
-    }
-    this.isDragging = true;
-    this.startY = event.clientY;
-    this.startHeight = this.bottomHeight();
-    event.preventDefault();
-  }
-
-  onPointerMove(event: PointerEvent): void {
-    if (!this.isDragging) return;
-    const deltaY = this.startY - event.clientY;
-    let newHeight = this.startHeight + deltaY;
-    
-    // Bounds check: constrain height between 100px and 70% of viewport height
-    const maxHeight = Math.round(window.innerHeight * 0.7);
-    if (newHeight < 100) newHeight = 100;
-    if (newHeight > maxHeight) newHeight = maxHeight;
-    
-    this.bottomHeight.set(newHeight);
-  }
-
-  onPointerUp(event: PointerEvent): void {
-    if (!this.isDragging) return;
-    this.isDragging = false;
-    const handle = event.currentTarget as HTMLElement;
-    if (handle) {
-      try {
-        handle.releasePointerCapture(event.pointerId);
-      } catch (e) {}
-    }
-  }
 
   @HostListener('window:resize')
   onResize(): void {
     const mobile = window.innerWidth < 768;
     this.isMobile.set(mobile);
     this.leftDrawerOpened.set(!mobile);
-    this.rightDrawerOpened.set(window.innerWidth >= 1280);
   }
 
   // Dashboard Tab state
@@ -101,7 +57,6 @@ export class BookingList implements OnInit {
 
   // Filters State
   readonly searchQuery = signal('');
-  readonly selectedVehicleId = signal('');
   readonly selectedUserId = signal('');
   readonly startDate = signal('');
   readonly endDate = signal('');
@@ -120,9 +75,10 @@ export class BookingList implements OnInit {
   }
 
   ngOnInit(): void {
-    // Load dropdown lists for filter dropdowns
     this.vehicleService.findAll().subscribe(res => this.vehiclesList.set(res));
-    this.userService.findAll().subscribe(res => this.usersList.set(res));
+    this.userService.findAll().subscribe(res => {
+      this.usersList.set(res.filter(u => u.role === 'User'));
+    });
     
     // Load bookings
     this.loadBookings();
@@ -150,15 +106,6 @@ export class BookingList implements OnInit {
     this.selectedDate.set(date);
   }
 
-  setViewMode(mode: 'calendar' | 'grid' | 'list'): void {
-    this.viewMode.set(mode);
-  }
-
-  onRightDrawerOpenedChange(opened: boolean): void {
-    if (this.viewMode() === 'calendar') {
-      this.rightDrawerOpened.set(opened);
-    }
-  }
 
   loadBookings(): void {
     const filters: any = {};
@@ -171,9 +118,7 @@ export class BookingList implements OnInit {
                        (this.selectedStatusFilter() === 'COMPLETED' ? 'complete' : 'cancel');
     }
 
-    if (this.selectedVehicleId()) {
-      filters.vehicle_id = Number(this.selectedVehicleId());
-    }
+
     if (this.selectedUserId()) {
       filters.user_id = Number(this.selectedUserId());
     }
@@ -239,7 +184,6 @@ export class BookingList implements OnInit {
   });
 
   resetFilters(): void {
-    this.selectedVehicleId.set('');
     this.selectedUserId.set('');
     this.startDate.set('');
     this.endDate.set('');
@@ -247,25 +191,6 @@ export class BookingList implements OnInit {
     this.selectedStatusFilter.set('');
     this.selectedVehicleTypeFilter.set('');
     this.loadBookings();
-  }
-
-  getBookingStatusVariant(booking: Booking): 'available' | 'pending' | 'booked' | 'unavailable' {
-    if (booking.status === 'CANCELLED') return 'unavailable';
-    if (booking.status === 'COMPLETED') return 'booked';
-
-    const now = new Date();
-    const cleanTime = (t: string) => {
-      return new Date(t.replace(' ', 'T'));
-    };
-
-    const departTime = cleanTime(booking.depart || '');
-    const returnTime = cleanTime(booking.return || '');
-
-    if (now < departTime) {
-      return 'available';
-    } else {
-      return 'pending';
-    }
   }
 
   openDetail(booking: Booking): void {

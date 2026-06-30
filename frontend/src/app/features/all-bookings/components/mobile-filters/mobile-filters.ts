@@ -1,65 +1,63 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Vehicle, VEHICLE_TYPES } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
-import { MobileFilters } from '../mobile-filters/mobile-filters';
 import { BookingFilters } from '../booking-filters/booking-filters';
 
 @Component({
-  selector: 'app-left-sidebar',
+  selector: 'app-mobile-filters',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, MobileFilters, BookingFilters],
-  templateUrl: './left-sidebar.html',
+  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingFilters],
+  templateUrl: './mobile-filters.html',
 })
-export class LeftSidebar {
+export class MobileFilters {
+  @Input() isMobileHeader = false;
+  @Input() vehicles: Vehicle[] = [];
+  @Input() users: User[] = [];
   @Input() activeTab: 'active' | 'history' = 'active';
-  @Input() viewMode: 'calendar' | 'grid' | 'list' = 'calendar';
+  
+  // State bindings
   @Input() searchQuery = '';
   @Input() selectedUserId = '';
   @Input() startDate = '';
   @Input() endDate = '';
   @Input() selectedStatusFilter = '';
-  @Input() showFilters = false;
-  @Input() vehicles: Vehicle[] = [];
-  @Input() users: User[] = [];
-  @Input() isMobile = false;
-  @Input() showLegend = true;
   @Input() selectedVehicleTypeFilter = '';
-  @Input() isMobileHeader = false;
+  @Input() showLegend = true;
+
   readonly vehicleTypes = VEHICLE_TYPES;
 
-
-
-  @Output() activeTabChange = new EventEmitter<'active' | 'history'>();
-  @Output() viewModeChange = new EventEmitter<'calendar' | 'grid' | 'list'>();
   @Output() searchQueryChange = new EventEmitter<string>();
   @Output() selectedUserIdChange = new EventEmitter<string>();
   @Output() startDateChange = new EventEmitter<string>();
   @Output() endDateChange = new EventEmitter<string>();
   @Output() selectedStatusFilterChange = new EventEmitter<string>();
-  @Output() showFiltersChange = new EventEmitter<boolean>();
-  
-  @Output() filterChange = new EventEmitter<void>();
   @Output() resetFilters = new EventEmitter<void>();
-  @Output() addBooking = new EventEmitter<void>();
-  @Output() closeDrawer = new EventEmitter<void>();
   @Output() toggleVehicleType = new EventEmitter<string>();
+  @Output() filterChange = new EventEmitter<void>();
 
+  // Internal popup visibility state
+  readonly showMobileFiltersPopup = signal(false);
 
-  onActiveTabSelect(tab: 'active' | 'history'): void {
-    this.activeTabChange.emit(tab);
-    if (this.isMobile) {
-      this.closeDrawer.emit();
-    }
+  openMobileFilters(): void {
+    this.showMobileFiltersPopup.set(true);
   }
 
-  onViewModeSelect(mode: 'calendar' | 'grid' | 'list'): void {
-    this.viewModeChange.emit(mode);
-    if (this.isMobile) {
-      this.closeDrawer.emit();
-    }
+  closeMobileFilters(): void {
+    this.showMobileFiltersPopup.set(false);
+  }
+
+  get activeFiltersCount(): number {
+    let count = 0;
+    if (this.searchQuery && this.searchQuery.trim()) count++;
+    if (this.selectedUserId) count++;
+    if (this.startDate) count++;
+    if (this.endDate) count++;
+    if (this.selectedStatusFilter) count++;
+    if (this.selectedVehicleTypeFilter) count++;
+    return count;
   }
 
   onSearchInput(value: string): void {
@@ -86,10 +84,5 @@ export class LeftSidebar {
   onStatusSelect(value: string): void {
     this.selectedStatusFilterChange.emit(value);
     this.filterChange.emit();
-  }
-
-  toggleFilters(): void {
-    this.showFilters = !this.showFilters;
-    this.showFiltersChange.emit(this.showFilters);
   }
 }

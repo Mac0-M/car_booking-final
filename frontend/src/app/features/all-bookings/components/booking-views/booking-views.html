@@ -1,0 +1,157 @@
+@if (activeTab === 'active') { @if (viewMode === 'calendar') {
+<div class="flex-1 min-h-0 w-full flex flex-col overflow-y-auto md:overflow-hidden animate-in fade-in duration-200">
+  <app-booking-calendar
+    class="w-full flex flex-col h-[550px] md:h-full md:flex-1 md:min-h-0"
+    [calendarId]="isMobile ? 'mobile-month-calendar' : 'month-calendar'"
+    defaultView="month"
+    [height]="isMobile ? '550px' : '100%'"
+    [minHeight]="isMobile ? '550px' : '0'"
+    [showLegend]="false"
+    [bookings]="bookings"
+    [showQuickFilters]="true"
+    [selectedVehicleTypeFilter]="selectedVehicleTypeFilter"
+    (toggleVehicleType)="toggleVehicleType.emit($event)"
+    (bookingClick)="bookingClick.emit($event)"
+    (dateSelect)="dateSelect.emit($event)"
+  />
+</div>
+} @else {
+<!-- Cards View -->
+<div class="flex-1 overflow-y-auto">
+  @if (bookings.length > 0) {
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 animate-in fade-in duration-200"
+  >
+    @for (booking of bookings; track booking.id) {
+    <app-booking-card [booking]="booking" (click)="bookingClick.emit(booking)" />
+    }
+  </div>
+  } @else {
+  <component-empty-state
+    title="No bookings found"
+    description="There are currently no vehicle bookings matching the selected filters."
+    icon="search"
+    variant="card"
+  />
+  }
+</div>
+} } @else {
+<!-- Booking History Content -->
+<div class="flex-1 overflow-y-auto">
+  @if (bookings.length > 0) { @if (viewMode === 'grid') {
+  <!-- Cards View for History -->
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 animate-in fade-in duration-200"
+  >
+    @for (booking of bookings; track booking.id) {
+    <app-booking-card
+      [booking]="booking"
+      [showPlateNumber]="false"
+      (click)="bookingClick.emit(booking)"
+    />
+    }
+  </div>
+  } @else {
+  <!-- Responsive Table/Card List -->
+  <div class="space-y-4 md:space-y-0 animate-in fade-in duration-200">
+    <!-- Desktop Table View -->
+    <div
+      class="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+    >
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr
+              class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider"
+            >
+              <th class="px-6 py-4">ID</th>
+              <th class="px-6 py-4">Booker / ผู้จอง</th>
+              <th class="px-6 py-4">Vehicle / ยานพาหนะ</th>
+              <th class="px-6 py-4">Destination / จุดหมาย</th>
+              <th class="px-6 py-4">Depart Date / ออกเดินทาง</th>
+              <th class="px-6 py-4">Return Date / เดินทางกลับ</th>
+              <th class="px-6 py-4">Status / สถานะ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+            @for (booking of bookings; track booking.id) {
+            <tr
+              class="hover:bg-gray-50/50 transition-colors cursor-pointer"
+              (click)="bookingClick.emit(booking)"
+            >
+              <td
+                class="px-6 py-4 font-mono text-xs font-bold text-gray-400"
+              >
+                #{{ booking.id }}
+              </td>
+              <td class="px-6 py-4 font-bold text-gray-800">
+                {{ booking.userName }}
+              </td>
+              <td class="px-6 py-4 font-semibold text-gray-600">
+                <div>{{ booking.vehicle?.model || 'N/A' }}</div>
+                @if (booking.vehicle?.plateNumber) {
+                <div
+                  class="text-[10px] text-gray-400 font-normal font-mono"
+                >
+                  {{ booking.vehicle?.plateNumber }}
+                </div>
+                }
+              </td>
+              <td class="px-6 py-4 text-gray-600 line-clamp-1 max-w-xs">
+                {{ booking.destination || 'N/A' }}
+              </td>
+              <td class="px-6 py-4 text-xs font-mono text-gray-600">
+                {{ booking.depart | thaiDate }} {{ booking.depart |
+                thaiTime }}
+              </td>
+              <td class="px-6 py-4 text-xs font-mono text-gray-600">
+                {{ booking.return | thaiDate }} {{ booking.return |
+                thaiTime }}
+              </td>
+              <td class="px-6 py-4">
+                @if (booking.status === 'CONFIRMED') { @if
+                (getBookingStatusVariant(booking) === 'pending') {
+                <component-badge variant="pending" size="xs"
+                  >Ongoing</component-badge
+                >
+                } @else {
+                <component-badge variant="available" size="xs"
+                  >Upcoming</component-badge
+                >
+                } } @else if (booking.status === 'COMPLETED') {
+                <component-badge variant="booked" size="xs"
+                  >Completed</component-badge
+                >
+                } @else {
+                <component-badge variant="unavailable" size="xs"
+                  >Cancelled</component-badge
+                >
+                }
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="block md:hidden space-y-3">
+      @for (booking of bookings; track booking.id) {
+      <app-booking-card
+        [booking]="booking"
+        (click)="bookingClick.emit(booking)"
+      />
+      }
+    </div>
+  </div>
+  } } @else {
+  <component-empty-state
+    title="No booking history found"
+    description="There is currently no booking history in the system matching the selected filters."
+    icon="search"
+    variant="card"
+  />
+  }
+</div>
+}

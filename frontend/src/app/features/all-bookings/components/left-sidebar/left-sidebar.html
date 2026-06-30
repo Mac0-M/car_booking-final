@@ -24,8 +24,8 @@
   </div>
 
   <!-- View Mode Switcher -->
-  <div class="px-4 py-3 border-b border-gray-100 flex items-center shrink-0">
-    <div class="flex items-center bg-gray-100 p-0.5 rounded-xl w-full">
+  <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-3 shrink-0">
+    <div class="flex items-center bg-gray-100 p-0.5 rounded-xl flex-1">
       @if (activeTab === 'active') {
       <button
         (click)="onViewModeSelect('calendar')"
@@ -74,9 +74,32 @@
       </button>
       }
     </div>
+
+    <!-- Mobile Filters Trigger & Modal -->
+    <app-mobile-filters
+      [isMobileHeader]="isMobileHeader"
+      [vehicles]="vehicles"
+      [users]="users"
+      [activeTab]="activeTab"
+      [searchQuery]="searchQuery"
+      [selectedUserId]="selectedUserId"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [selectedStatusFilter]="selectedStatusFilter"
+      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter"
+      [showLegend]="showLegend"
+      (toggleVehicleType)="toggleVehicleType.emit($event)"
+      (searchQueryChange)="onSearchInput($event)"
+      (selectedUserIdChange)="onUserSelect($event)"
+      (startDateChange)="onStartDateSelect($event)"
+      (endDateChange)="onEndDateSelect($event)"
+      (selectedStatusFilterChange)="onStatusSelect($event)"
+      (resetFilters)="resetFilters.emit()"
+    />
   </div>
 
   <!-- Search & Filters -->
+  @if (!isMobileHeader) {
   <div
     class="p-4 border-b border-gray-100 flex flex-col gap-3 shrink-0 select-none"
   >
@@ -100,129 +123,27 @@
     </div>
     }
 
-    <!-- Search bar and Filter toggle button -->
-    <div class="flex items-center gap-2">
-      <div class="relative flex-1">
-        <span
-          class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"
-          >search</span
-        >
-        <input
-          type="text"
-          [value]="searchQuery"
-          (input)="onSearchInput($any($event.target).value)"
-          placeholder="Search..."
-          class="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50"
-        />
-      </div>
-      <button
-        (click)="toggleFilters()"
-        [class.bg-gray-800]="showFilters"
-        [class.text-white]="showFilters"
-        [class.bg-gray-50]="!showFilters"
-        [class.text-gray-700]="!showFilters"
-        class="px-3 py-2 rounded-xl border border-gray-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 select-none"
-      >
-        <span class="material-icons text-sm">filter_list</span>
-        Filter
-      </button>
-    </div>
-
-    <!-- Collapsible Filter Options -->
-    @if (showFilters) {
-    <div
-      class="space-y-3 pt-2 border-t border-gray-100 animate-in fade-in slide-in-from-top-1 duration-150"
-    >
-      <!-- Vehicle Filter -->
-      <div class="space-y-1">
-        <label class="text-[10px] font-bold text-gray-400 block"
-          >By Vehicle</label
-        >
-        <select
-          [value]="selectedVehicleId"
-          (change)="onVehicleSelect($any($event.target).value)"
-          class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
-        >
-          <option value="">All Vehicles</option>
-          @for (vehicle of vehicles; track vehicle.id) {
-          <option [value]="vehicle.id">{{ vehicle.model }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- User Filter -->
-      <div class="space-y-1">
-        <label class="text-[10px] font-bold text-gray-400 block">By User</label>
-        <select
-          [value]="selectedUserId"
-          (change)="onUserSelect($any($event.target).value)"
-          class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
-        >
-          <option value="">All Users</option>
-          @for (user of users; track user.userId) {
-          <option [value]="user.userId">{{ user.userName }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- Start Date Picker -->
-      <div class="space-y-1">
-        <label class="text-[10px] font-bold text-gray-400 block"
-          >From Date/Time</label
-        >
-        <input
-          type="datetime-local"
-          [value]="startDate"
-          (input)="onStartDateSelect($any($event.target).value)"
-          class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
-        />
-      </div>
-
-      <!-- End Date Picker -->
-      <div class="space-y-1">
-        <label class="text-[10px] font-bold text-gray-400 block"
-          >To Date/Time</label
-        >
-        <input
-          type="datetime-local"
-          [value]="endDate"
-          (input)="onEndDateSelect($any($event.target).value)"
-          class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
-        />
-      </div>
-
-      <!-- Status Filter (History only) -->
-      @if (activeTab === 'history') {
-      <div class="space-y-1">
-        <label class="text-[10px] font-bold text-gray-400 block"
-          >Booking Status</label
-        >
-        <select
-          [value]="selectedStatusFilter"
-          (change)="onStatusSelect($any($event.target).value)"
-          class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
-        >
-          <option value="">All Statuses</option>
-          <option value="CONFIRMED">CONFIRMED</option>
-          <option value="COMPLETED">COMPLETED</option>
-          <option value="CANCELLED">CANCELLED</option>
-        </select>
-      </div>
-      }
-
-      <!-- Action buttons -->
-      <div class="flex justify-end pt-1">
-        <button
-          (click)="resetFilters.emit()"
-          class="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-[11px] font-semibold cursor-pointer"
-        >
-          Clear Filters
-        </button>
-      </div>
-    </div>
-    }
+    <app-booking-filters
+      [searchQuery]="searchQuery"
+      [selectedUserId]="selectedUserId"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [selectedStatusFilter]="selectedStatusFilter"
+      [showStatusFilter]="activeTab === 'history'"
+      [vehicles]="vehicles"
+      [users]="users"
+      [forceExpanded]="true"
+      (searchQueryChange)="onSearchInput($event)"
+      (selectedUserIdChange)="onUserSelect($event)"
+      (startDateChange)="onStartDateSelect($event)"
+      (endDateChange)="onEndDateSelect($event)"
+      (selectedStatusFilterChange)="onStatusSelect($event)"
+      (reset)="resetFilters.emit()"
+    />
   </div>
+  }
 
+  @if (!isMobileHeader) {
   <!-- Spacer -->
   <div class="flex-1"></div>
 
@@ -238,4 +159,5 @@
       Add new book
     </component-button>
   </div>
+  }
 </div>

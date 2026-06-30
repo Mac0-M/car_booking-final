@@ -49,6 +49,13 @@ export class BookingDialogComponent implements OnInit {
   purpose = '';
   booked_for: number | null = null;
 
+  // Validation Errors
+  departError = '';
+  returnTimeError = '';
+  destinationError = '';
+  purposeError = '';
+  bookedForError = '';
+
   readonly usersList = signal<User[]>([]);
 
   readonly currentUser = computed(() => {
@@ -111,8 +118,56 @@ export class BookingDialogComponent implements OnInit {
     return endMs > startMs;
   }
 
+  validateForm(): boolean {
+    let isValid = true;
+
+    // Depart
+    if (!this.depart) {
+      this.departError = 'Departure date & time is required';
+      isValid = false;
+    } else {
+      this.departError = '';
+    }
+
+    // Return
+    if (!this.returnTime) {
+      this.returnTimeError = 'Return date & time is required';
+      isValid = false;
+    } else {
+      this.returnTimeError = '';
+    }
+
+    // Compare Depart and Return
+    if (this.depart && this.returnTime) {
+      const startMs = new Date(this.depart).getTime();
+      const endMs = new Date(this.returnTime).getTime();
+      const nowMs = new Date().getTime() - 60000; // Allow 1 minute buffer for present time
+
+      if (startMs < nowMs) {
+        this.departError = 'Departure time cannot be in the past';
+        isValid = false;
+      }
+
+      if (endMs <= startMs) {
+        this.returnTimeError = 'Return time must be after departure time';
+        isValid = false;
+      }
+    }
+
+    // Booked For
+    if (!this.booked_for) {
+      this.bookedForError = 'Passenger is required';
+      isValid = false;
+    } else {
+      this.bookedForError = '';
+    }
+
+    return isValid;
+  }
+
   onSearchVehicles(): void {
-    if (!this.isFormValid || this.isLoading()) return;
+    if (!this.validateForm()) return;
+    if (this.isLoading()) return;
 
     this.isLoading.set(true);
     this.errorMessage.set('');

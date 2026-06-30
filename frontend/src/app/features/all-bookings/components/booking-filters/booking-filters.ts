@@ -17,7 +17,6 @@ export class BookingFilters {
 
   // Input states
   @Input() searchQuery = '';
-  @Input() selectedVehicleId = '';
   @Input() selectedUserId = '';
   @Input() startDate = '';
   @Input() endDate = '';
@@ -29,7 +28,6 @@ export class BookingFilters {
 
   // Outputs to sync state back to parent
   @Output() searchQueryChange = new EventEmitter<string>();
-  @Output() selectedVehicleIdChange = new EventEmitter<string>();
   @Output() selectedUserIdChange = new EventEmitter<string>();
   @Output() startDateChange = new EventEmitter<string>();
   @Output() endDateChange = new EventEmitter<string>();

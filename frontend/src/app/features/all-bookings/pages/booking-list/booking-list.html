@@ -1,133 +1,75 @@
 @if (isMobile()) {
-<!-- Mobile layout: Calendar/Grid on top, Sidebar controls at the bottom -->
+<!-- Mobile layout: Controls on top, Calendar/Grid in middle, Add Booking at bottom -->
 <div
-  class="h-[calc(100vh-4rem)] w-full flex flex-col bg-gray-100/40 overflow-hidden"
+  class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-gray-100/40 overflow-hidden"
 >
-  <!-- Top Area: Dynamic Views (Calendar, Grid, List) -->
-  <div
-    class="flex-1 min-h-0 flex flex-col shrink-0 p-4 space-y-3 overflow-hidden"
-  >
-    <!-- Views Render Area -->
-    @if (activeTab() === 'active') { @if (viewMode() === 'calendar') {
-    <!-- Month Calendar -->
-    <div class="flex-1 min-h-0 flex flex-col animate-in fade-in duration-200">
-      <app-booking-calendar
-        class="flex-1 min-h-0 w-full flex flex-col"
-        calendarId="mobile-month-calendar"
-        defaultView="month"
-        height="100%"
-        minHeight="0"
-        [showLegend]="false"
-        [bookings]="filteredBookings()"
-        [showQuickFilters]="true"
-        [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
-        (toggleVehicleType)="toggleVehicleType($event)"
-        (bookingClick)="openDetail($event)"
-        (dateSelect)="onDateSelected($event)"
-      />
-    </div>
-    } @else {
-    <!-- Cards View -->
-    <div class="flex-1 overflow-y-auto">
-      @if (filteredBookings().length > 0) {
-      <div class="grid grid-cols-1 gap-4 animate-in fade-in duration-200">
-        @for (booking of filteredBookings(); track booking.id) {
-        <app-booking-card [booking]="booking" (click)="openDetail(booking)" />
-        }
-      </div>
-      } @else {
-      <component-empty-state
-        title="No bookings found"
-        description="There are currently no vehicle bookings matching the selected filters."
-        icon="search"
-        variant="card"
-      />
-      }
-    </div>
-    } } @else {
-    <!-- Booking History Content -->
-    <div class="flex-1 overflow-y-auto">
-      @if (filteredBookings().length > 0) { @if (viewMode() === 'grid') {
-      <!-- Grid View for History -->
-      <div class="grid grid-cols-1 gap-4 animate-in fade-in duration-200">
-        @for (booking of filteredBookings(); track booking.id) {
-        <app-booking-card
-          [booking]="booking"
-          [showPlateNumber]="false"
-          (click)="openDetail(booking)"
-        />
-        }
-      </div>
-      } @else {
-      <!-- Mobile Card List for History -->
-      <div class="space-y-3 animate-in fade-in duration-200">
-        @for (booking of filteredBookings(); track booking.id) {
-        <app-booking-card [booking]="booking" (click)="openDetail(booking)" />
-        }
-      </div>
-      } } @else {
-      <component-empty-state
-        title="No booking history found"
-        description="There is currently no booking history in the system matching the selected filters."
-        icon="search"
-        variant="card"
-      />
-      }
-    </div>
-    }
+  <!-- Top Area: Sidebar Controls (Tabs, Switchers, Filters) -->
+  <div class="w-full bg-white border-b border-gray-200 shrink-0">
+    <app-left-sidebar
+      [activeTab]="activeTab()"
+      [viewMode]="viewMode()"
+      [searchQuery]="searchQuery()"
+      [selectedUserId]="selectedUserId()"
+      [startDate]="startDate()"
+      [endDate]="endDate()"
+      [selectedStatusFilter]="selectedStatusFilter()"
+      [showFilters]="showFilters()"
+      [showLegend]="true"
+      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+      [vehicles]="vehiclesList()"
+      [users]="usersList()"
+      [isMobile]="isMobile()"
+      [isMobileHeader]="true"
+      (activeTabChange)="setActiveTab($event)"
+      (viewModeChange)="viewMode.set($event)"
+      (searchQueryChange)="searchQuery.set($event)"
+      (selectedUserIdChange)="selectedUserId.set($event)"
+      (startDateChange)="startDate.set($event)"
+      (endDateChange)="endDate.set($event)"
+      (selectedStatusFilterChange)="selectedStatusFilter.set($event)"
+      (showFiltersChange)="showFilters.set($event)"
+      (filterChange)="onFilterChange()"
+      (resetFilters)="resetFilters()"
+      (addBooking)="openBooking()"
+      (toggleVehicleType)="toggleVehicleType($event)"
+    />
   </div>
 
-  <!-- Bottom Area: Sidebar Controls (Tabs, Switchers, Filters & New Booking) -->
+  <!-- Middle Area: Dynamic Views (Calendar, Grid, List) -->
   <div
-    [style.height.px]="bottomHeight()"
-    class="border-t border-gray-200 bg-white shadow-xl flex flex-col min-h-0 shrink-0 rounded-t-2xl overflow-hidden select-none"
+    class="flex-1 min-h-0 w-full flex flex-col p-4 space-y-3 overflow-hidden"
   >
-    <!-- Premium Visual Bottom Sheet Indicator (Drag Handle) -->
-    <div
-      (pointerdown)="onPointerDown($event)"
-      (pointermove)="onPointerMove($event)"
-      (pointerup)="onPointerUp($event)"
-      class="w-full flex justify-center py-3 shrink-0 bg-gray-50/50 border-b border-gray-100 rounded-t-2xl cursor-row-resize touch-none select-none active:bg-gray-100"
+    <!-- Views Render Area -->
+    <app-booking-views
+      class="flex-1 min-h-0 w-full flex flex-col overflow-hidden"
+      [activeTab]="activeTab()"
+      [viewMode]="viewMode()"
+      [bookings]="filteredBookings()"
+      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+      [isMobile]="isMobile()"
+      (toggleVehicleType)="toggleVehicleType($event)"
+      (bookingClick)="openDetail($event)"
+      (dateSelect)="onDateSelected($event)"
+    />
+  </div>
+
+  <!-- Bottom Area: Sticky Add Booking Button -->
+  <div class="p-4 border-t border-gray-200 bg-white shrink-0">
+    <component-button
+      (click)="openBooking()"
+      variant="submit"
+      size="lg"
+      class="w-full"
     >
-      <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
-    </div>
-    <div class="flex-1 overflow-y-auto">
-      <app-left-sidebar
-        [activeTab]="activeTab()"
-        [viewMode]="viewMode()"
-        [searchQuery]="searchQuery()"
-        [selectedVehicleId]="selectedVehicleId()"
-        [selectedUserId]="selectedUserId()"
-        [startDate]="startDate()"
-        [endDate]="endDate()"
-        [selectedStatusFilter]="selectedStatusFilter()"
-        [showFilters]="showFilters()"
-        [showLegend]="true"
-        [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
-        [vehicles]="vehiclesList()"
-        [users]="usersList()"
-        [isMobile]="isMobile()"
-        (activeTabChange)="setActiveTab($event)"
-        (viewModeChange)="viewMode.set($event)"
-        (searchQueryChange)="searchQuery.set($event)"
-        (selectedVehicleIdChange)="selectedVehicleId.set($event)"
-        (selectedUserIdChange)="selectedUserId.set($event)"
-        (startDateChange)="startDate.set($event)"
-        (endDateChange)="endDate.set($event)"
-        (selectedStatusFilterChange)="selectedStatusFilter.set($event)"
-        (showFiltersChange)="showFilters.set($event)"
-        (filterChange)="onFilterChange()"
-        (resetFilters)="resetFilters()"
-        (addBooking)="openBooking()"
-        (toggleVehicleType)="toggleVehicleType($event)"
-      />
-    </div>
+      <span class="material-icons text-sm">add</span>
+      Add new book
+    </component-button>
   </div>
 </div>
 } @else {
 <mat-drawer-container
   [hasBackdrop]="isMobile()"
-  class="h-[calc(100vh-4rem)] w-full bg-gray-100/40 !overflow-hidden"
+  class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 !overflow-hidden"
 >
   <!-- Left Sidebar Drawer: Tabs, Views, Filters & Add Booking -->
   <mat-drawer
@@ -140,7 +82,6 @@
       [activeTab]="activeTab()"
       [viewMode]="viewMode()"
       [searchQuery]="searchQuery()"
-      [selectedVehicleId]="selectedVehicleId()"
       [selectedUserId]="selectedUserId()"
       [startDate]="startDate()"
       [endDate]="endDate()"
@@ -154,7 +95,6 @@
       (activeTabChange)="setActiveTab($event)"
       (viewModeChange)="viewMode.set($event)"
       (searchQueryChange)="searchQuery.set($event)"
-      (selectedVehicleIdChange)="selectedVehicleId.set($event)"
       (selectedUserIdChange)="selectedUserId.set($event)"
       (startDateChange)="startDate.set($event)"
       (endDateChange)="endDate.set($event)"
@@ -175,167 +115,17 @@
   >
     <!-- Main Dynamic Views Section -->
     <div class="flex-1 min-h-0 flex flex-col p-6 space-y-4 overflow-hidden">
-      <!-- Views Render Area -->
-      @if (activeTab() === 'active') { @if (viewMode() === 'calendar') {
-      <!-- Center Month Calendar -->
-      <div class="flex-1 min-h-0 flex flex-col animate-in fade-in duration-200">
-        <app-booking-calendar
-          class="flex-1 min-h-0 w-full flex flex-col"
-          calendarId="month-calendar"
-          defaultView="month"
-          height="100%"
-          minHeight="0"
-          [showLegend]="false"
-          [bookings]="filteredBookings()"
-          [showQuickFilters]="true"
-          [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
-          (toggleVehicleType)="toggleVehicleType($event)"
-          (bookingClick)="openDetail($event)"
-          (dateSelect)="onDateSelected($event)"
-        />
-      </div>
-      } @else {
-      <!-- Cards View -->
-      <div class="flex-1 overflow-y-auto">
-        @if (filteredBookings().length > 0) {
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200"
-        >
-          @for (booking of filteredBookings(); track booking.id) {
-          <app-booking-card [booking]="booking" (click)="openDetail(booking)" />
-          }
-        </div>
-        } @else {
-        <component-empty-state
-          title="No bookings found"
-          description="There are currently no vehicle bookings matching the selected filters."
-          icon="search"
-          variant="card"
-        >
-        </component-empty-state>
-        }
-      </div>
-      } } @else {
-      <!-- Booking History Content -->
-      <div class="flex-1 overflow-y-auto">
-        @if (filteredBookings().length > 0) { @if (viewMode() === 'grid') {
-        <!-- Cards View for History -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200"
-        >
-          @for (booking of filteredBookings(); track booking.id) {
-          <app-booking-card
-            [booking]="booking"
-            [showPlateNumber]="false"
-            (click)="openDetail(booking)"
-          />
-          }
-        </div>
-        } @else {
-        <!-- Responsive Table/Card List -->
-        <div class="space-y-4 md:space-y-0 animate-in fade-in duration-200">
-          <!-- Desktop Table View -->
-          <div
-            class="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
-          >
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr
-                    class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider"
-                  >
-                    <th class="px-6 py-4">ID</th>
-                    <th class="px-6 py-4">Booker / ผู้จอง</th>
-                    <th class="px-6 py-4">Vehicle / ยานพาหนะ</th>
-                    <th class="px-6 py-4">Destination / จุดหมาย</th>
-                    <th class="px-6 py-4">Depart Date / ออกเดินทาง</th>
-                    <th class="px-6 py-4">Return Date / เดินทางกลับ</th>
-                    <th class="px-6 py-4">Status / สถานะ</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
-                  @for (booking of filteredBookings(); track booking.id) {
-                  <tr
-                    class="hover:bg-gray-50/50 transition-colors cursor-pointer"
-                    (click)="openDetail(booking)"
-                  >
-                    <td
-                      class="px-6 py-4 font-mono text-xs font-bold text-gray-400"
-                    >
-                      #{{ booking.id }}
-                    </td>
-                    <td class="px-6 py-4 font-bold text-gray-800">
-                      {{ booking.userName }}
-                    </td>
-                    <td class="px-6 py-4 font-semibold text-gray-600">
-                      <div>{{ booking.vehicle?.model || 'N/A' }}</div>
-                      @if (booking.vehicle?.plateNumber) {
-                      <div
-                        class="text-[10px] text-gray-400 font-normal font-mono"
-                      >
-                        {{ booking.vehicle?.plateNumber }}
-                      </div>
-                      }
-                    </td>
-                    <td class="px-6 py-4 text-gray-600 line-clamp-1 max-w-xs">
-                      {{ booking.destination || 'N/A' }}
-                    </td>
-                    <td class="px-6 py-4 text-xs font-mono text-gray-600">
-                      {{ booking.depart | thaiDate }} {{ booking.depart |
-                      thaiTime }}
-                    </td>
-                    <td class="px-6 py-4 text-xs font-mono text-gray-600">
-                      {{ booking.return | thaiDate }} {{ booking.return |
-                      thaiTime }}
-                    </td>
-                    <td class="px-6 py-4">
-                      @if (booking.status === 'CONFIRMED') { @if
-                      (getBookingStatusVariant(booking) === 'pending') {
-                      <component-badge variant="pending" size="xs"
-                        >Ongoing</component-badge
-                      >
-                      } @else {
-                      <component-badge variant="available" size="xs"
-                        >Confirmed</component-badge
-                      >
-                      } } @else if (booking.status === 'COMPLETED') {
-                      <component-badge variant="booked" size="xs"
-                        >Completed</component-badge
-                      >
-                      } @else {
-                      <component-badge variant="unavailable" size="xs"
-                        >Cancelled</component-badge
-                      >
-                      }
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Mobile Card View -->
-          <div class="block md:hidden space-y-3">
-            @for (booking of filteredBookings(); track booking.id) {
-            <app-booking-card
-              [booking]="booking"
-              (click)="openDetail(booking)"
-            />
-            }
-          </div>
-        </div>
-        } } @else {
-        <component-empty-state
-          title="No booking history found"
-          description="There is currently no booking history in the system matching the selected filters."
-          icon="search"
-          variant="card"
-        >
-        </component-empty-state>
-        }
-      </div>
-      }
+      <app-booking-views
+        class="flex-1 min-h-0 w-full flex flex-col overflow-hidden"
+        [activeTab]="activeTab()"
+        [viewMode]="viewMode()"
+        [bookings]="filteredBookings()"
+        [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+        [isMobile]="isMobile()"
+        (toggleVehicleType)="toggleVehicleType($event)"
+        (bookingClick)="openDetail($event)"
+        (dateSelect)="onDateSelected($event)"
+      />
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

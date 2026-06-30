@@ -1,24 +1,33 @@
-import { Component, Input, Output, EventEmitter, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Booking } from '../../../../core/models/booking.model';
-import { VEHICLE_TYPES } from '../../../../core/models/vehicle.model';
-
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Booking } from "../../../../core/models/booking.model";
+import { VEHICLE_TYPES } from "../../../../core/models/vehicle.model";
+import { THAI_MONTHS } from "../../../../shared/pipes/thai-date.pipe";
 
 @Component({
-  selector: 'app-booking-calendar',
+  selector: "app-booking-calendar",
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './booking-calendar.html',
+  templateUrl: "./booking-calendar.html",
 })
 export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   private _bookings: Booking[] = [];
 
-  @Input() calendarId = 'calendar-container-' + Math.random().toString(36).substring(2, 9);
-  @Input() defaultView: 'month' | 'week' | 'day' = 'month';
+  @Input() calendarId =
+    "calendar-container-" + Math.random().toString(36).substring(2, 9);
+  @Input() defaultView: "month" | "week" | "day" = "month";
   @Input() showViewSwitcher = true;
   @Input() showLegend = true;
-  @Input() height = '720px';
-  @Input() minHeight = '850px';
+  @Input() height = "720px";
+  @Input() minHeight = "850px";
 
   @Input()
   set bookings(value: Booking[]) {
@@ -29,13 +38,14 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     return this._bookings;
   }
 
-  private _currentDate: Date | string = '';
+  private _currentDate: Date | string = "";
 
   @Input()
   set currentDate(value: Date | string) {
     this._currentDate = value;
     if (this.calendarInstance && value) {
       this.calendarInstance.setDate(value);
+      this.updateMonthYearLabel();
     }
   }
   get currentDate(): Date | string {
@@ -45,42 +55,60 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   @Output() bookingClick = new EventEmitter<Booking>();
   @Output() dateSelect = new EventEmitter<Date>();
   @Input() showQuickFilters = false;
-  @Input() selectedVehicleTypeFilter = '';
+  @Input() selectedVehicleTypeFilter = "";
   @Output() toggleVehicleType = new EventEmitter<string>();
 
   readonly vehicleTypes = VEHICLE_TYPES;
 
-
   private calendarInstance: any = null;
   private resizeObserver: any = null;
-  calendarView: 'month' | 'week' | 'day' = 'month';
+  private resizeRafId: number | null = null; // เพิ่ม
+  calendarView: "month" | "week" | "day" = "month";
+  monthYearLabel = "";
 
   ngOnInit(): void {
     this.calendarView = this.defaultView;
+    const initialDate = this._currentDate ? new Date(this._currentDate) : new Date();
+    const month = THAI_MONTHS[initialDate.getMonth()];
+    const year = initialDate.getFullYear() + 543;
+    this.monthYearLabel = `${month} ${year}`;
   }
 
-  changeView(viewName: 'month' | 'week' | 'day'): void {
+  changeView(viewName: "month" | "week" | "day"): void {
     this.calendarView = viewName;
     if (this.calendarInstance) {
       this.calendarInstance.changeView(viewName);
+      this.updateMonthYearLabel();
     }
   }
 
   prev(): void {
     if (this.calendarInstance) {
       this.calendarInstance.prev();
+      this.updateMonthYearLabel();
     }
   }
 
   next(): void {
     if (this.calendarInstance) {
       this.calendarInstance.next();
+      this.updateMonthYearLabel();
     }
   }
 
   today(): void {
     if (this.calendarInstance) {
       this.calendarInstance.today();
+      this.updateMonthYearLabel();
+    }
+  }
+
+  updateMonthYearLabel(): void {
+    if (this.calendarInstance) {
+      const currentDate = this.calendarInstance.getDate();
+      const month = THAI_MONTHS[currentDate.getMonth()];
+      const year = currentDate.getFullYear() + 543;
+      this.monthYearLabel = `${month} ${year}`;
     }
   }
 
@@ -95,6 +123,10 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
+    if (this.resizeRafId !== null) {
+      // เพิ่ม - กัน leak
+      cancelAnimationFrame(this.resizeRafId);
+    }
   }
 
   private initCalendar(): void {
@@ -108,7 +140,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
       const tuiCalendar = (window as any).tui?.Calendar;
       if (!tuiCalendar) {
-        console.error('TUI Calendar script not loaded');
+        console.error("TUI Calendar script not loaded");
         return;
       }
 
@@ -117,7 +149,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         useFormPopup: false,
         useDetailPopup: false,
         isReadOnly: true,
-        month: {  
+        month: {
           visibleEventCount: 3,
         },
         gridSelection: {
@@ -128,32 +160,36 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         },
         template: {
           time(event: any) {
-            const icon = event.raw?.icon || 'directions_car';
+            const icon = event.raw?.icon || "directions_car";
             return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
           },
           allday(event: any) {
-            const icon = event.raw?.icon || 'directions_car';
+            const icon = event.raw?.icon || "directions_car";
             return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
-          }
-        }
+          },
+        },
       });
 
       if (this._currentDate) {
         this.calendarInstance.setDate(this._currentDate);
       }
+      this.updateMonthYearLabel();
 
       // Handle event click to view details
-      this.calendarInstance.on('clickEvent', (eventInfo: any) => {
+      this.calendarInstance.on("clickEvent", (eventInfo: any) => {
         const bookingId = eventInfo.event.id;
-        const booking = this.bookings.find(b => b.id === bookingId);
+        const booking = this.bookings.find((b) => b.id === bookingId);
         if (booking) {
           this.bookingClick.emit(booking);
         }
       });
 
       // Handle click on grid cell/date to notify date selection
-      this.calendarInstance.on('selectDateTime', (eventInfo: any) => {
-        const date = eventInfo.start instanceof Date ? eventInfo.start : new Date(eventInfo.start);
+      this.calendarInstance.on("selectDateTime", (eventInfo: any) => {
+        const date =
+          eventInfo.start instanceof Date
+            ? eventInfo.start
+            : new Date(eventInfo.start);
         this.dateSelect.emit(date);
       });
 
@@ -161,11 +197,18 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
       if (this.resizeObserver) {
         this.resizeObserver.disconnect();
       }
-      if (typeof ResizeObserver !== 'undefined') {
+      if (typeof ResizeObserver !== "undefined") {
         this.resizeObserver = new ResizeObserver(() => {
-          if (this.calendarInstance) {
-            this.calendarInstance.render();
+          // รวม event ที่ถี่เกินไปตอนลาก ให้ render แค่ครั้งเดียวต่อ 1 เฟรม
+          if (this.resizeRafId !== null) {
+            cancelAnimationFrame(this.resizeRafId);
           }
+          this.resizeRafId = requestAnimationFrame(() => {
+            if (this.calendarInstance) {
+              this.calendarInstance.render();
+            }
+            this.resizeRafId = null;
+          });
         });
         this.resizeObserver.observe(container);
       }
@@ -178,44 +221,44 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     if (!this.calendarInstance) return;
 
     const events = this.bookings
-      .filter(b => b.status !== 'COMPLETED')
-      .map(b => {
-        let color = '#3b82f6'; // Blue for Sedan
-        let borderColor = '#2563eb';
-        let icon = 'directions_car';
+      .filter((b) => b.status !== "COMPLETED")
+      .map((b) => {
+        let color = "#3b82f6"; // Blue for Sedan
+        let borderColor = "#2563eb";
+        let icon = "directions_car";
 
         const type = b.vehicle?.vehicleTypeId;
-        if (type === 'Pickup') {
-          color = '#ef4444'; // Red (แดง)
-          borderColor = '#dc2626';
-          icon = 'local_shipping';
-        } else if (type === 'Van') {
-          color = '#f97316'; // Orange (ส้ม)
-          borderColor = '#ea580c';
-          icon = 'airport_shuttle';
-        } else if (type === 'SUV') {
-          color = '#10b981'; // Green (เขียว)
-          borderColor = '#059669';
-          icon = 'time_to_leave';
-        } else if (type === 'Other') {
-          color = '#8b5cf6'; // Purple (ม่วง)
-          borderColor = '#7c3aed';
-          icon = 'commute';
+        if (type === "Pickup") {
+          color = "#ef4444"; // Red (แดง)
+          borderColor = "#dc2626";
+          icon = "local_shipping";
+        } else if (type === "Van") {
+          color = "#f97316"; // Orange (ส้ม)
+          borderColor = "#ea580c";
+          icon = "airport_shuttle";
+        } else if (type === "SUV") {
+          color = "#10b981"; // Green (เขียว)
+          borderColor = "#059669";
+          icon = "time_to_leave";
+        } else if (type === "Other") {
+          color = "#8b5cf6"; // Purple (ม่วง)
+          borderColor = "#7c3aed";
+          icon = "commute";
         }
 
         return {
           id: b.id,
-          calendarId: 'cal1',
-          title: `${b.vehicle?.model || 'Booked'} - ${b.userName.split(' ')[0]}`,
-          start: (b.depart || '').replace(' ', 'T'),
-          end: (b.return || '').replace(' ', 'T'),
-          category: 'time',
+          calendarId: "cal1",
+          title: `${b.vehicle?.model || "Booked"} - ${b.userName.split(" ")[0]}`,
+          start: (b.depart || "").replace(" ", "T"),
+          end: (b.return || "").replace(" ", "T"),
+          category: "time",
           backgroundColor: color,
           borderColor: borderColor,
-          color: '#ffffff',
+          color: "#ffffff",
           raw: {
-            icon: icon
-          }
+            icon: icon,
+          },
         };
       });
 
