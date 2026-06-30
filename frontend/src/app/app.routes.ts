@@ -24,24 +24,16 @@ export const routes: Routes = [
   {
     path: 'bookings',
     canActivate: [authGuard],
-    children: [
-      {
-        path: '',
-        title: 'All-Bookings',
-        loadComponent: () =>
-          import('./features/all-bookings/pages/booking-list/booking-list').then(
-            (m) => m.BookingList
-          ),
-      },
-      {
-        path: 'history',
-        title: 'Booking History',
-        loadComponent: () =>
-          import('./features/all-bookings/pages/booking-history/booking-history').then(
-            (m) => m.BookingHistoryComponent
-          ),
-      }
-    ]
+    title: 'Bookings Dashboard',
+    loadComponent: () =>
+      import('./features/all-bookings/pages/booking-list/booking-list').then(
+        (m) => m.BookingList
+      ),
+  },
+  {
+    path: 'bookings/history',
+    redirectTo: 'bookings',
+    pathMatch: 'full'
   },
   {
     path: 'vehicles',

@@ -4,7 +4,6 @@ import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { AllSharedUi } from '../../shared/shared';
 import { AuthService } from '../../core/services/auth.service';
 import { environment } from '../../../environments/environment';
-import { BookingDialogService } from '../../features/booking/booking-dialog.service';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +14,6 @@ import { BookingDialogService } from '../../features/booking/booking-dialog.serv
 export class HeaderComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly bookingDialogService = inject(BookingDialogService);
 
   currentUrl = signal<string>('');
   isMobileMenuOpen = signal<boolean>(false);
@@ -87,12 +85,6 @@ export class HeaderComponent {
     const active = url === path;
     console.log(`[isRouteActive] path: ${path}, url: ${url}, active: ${active}`);
     return active;
-  }
-
-  openBooking(event: Event): void {
-    event.preventDefault();
-    this.isMobileMenuOpen.set(false);
-    this.bookingDialogService.open();
   }
 
   onLogout(): void {

@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Booking } from '../../../../../../core/models/booking.model';
+import { Booking } from '../../../../core/models/booking.model';
 
 @Component({
   selector: 'app-booking-calendar',
@@ -8,8 +8,15 @@ import { Booking } from '../../../../../../core/models/booking.model';
   imports: [CommonModule],
   templateUrl: './booking-calendar.html',
 })
-export class BookingCalendar implements AfterViewInit, OnDestroy {
+export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   private _bookings: Booking[] = [];
+
+  @Input() calendarId = 'calendar-container-' + Math.random().toString(36).substring(2, 9);
+  @Input() defaultView: 'month' | 'week' | 'day' = 'month';
+  @Input() showViewSwitcher = true;
+  @Input() showLegend = true;
+  @Input() height = '720px';
+  @Input() minHeight = '850px';
 
   @Input()
   set bookings(value: Booking[]) {
@@ -20,10 +27,40 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
     return this._bookings;
   }
 
+  private _currentDate: Date | string = '';
+
+  @Input()
+  set currentDate(value: Date | string) {
+    this._currentDate = value;
+    if (this.calendarInstance && value) {
+      this.calendarInstance.setDate(value);
+    }
+  }
+  get currentDate(): Date | string {
+    return this._currentDate;
+  }
+
   @Output() bookingClick = new EventEmitter<Booking>();
+  @Output() dateSelect = new EventEmitter<Date>();
+  @Input() showQuickFilters = false;
+  @Input() selectedVehicleTypeFilter = '';
+  @Output() toggleVehicleType = new EventEmitter<string>();
+
+  readonly vehicleTypes = [
+    { value: 'Sedan', label: 'Sedan', dotColor: 'bg-blue-500', ringClass: 'ring-blue-500' },
+    { value: 'Pickup', label: 'Pickup', dotColor: 'bg-red-500', ringClass: 'ring-red-500' },
+    { value: 'Van', label: 'Van', dotColor: 'bg-orange-500', ringClass: 'ring-orange-500' },
+    { value: 'SUV', label: 'SUV', dotColor: 'bg-emerald-500', ringClass: 'ring-emerald-500' },
+    { value: 'Other', label: 'Other', dotColor: 'bg-violet-500', ringClass: 'ring-violet-500' }
+  ];
 
   private calendarInstance: any = null;
+  private resizeObserver: any = null;
   calendarView: 'month' | 'week' | 'day' = 'month';
+
+  ngOnInit(): void {
+    this.calendarView = this.defaultView;
+  }
 
   changeView(viewName: 'month' | 'week' | 'day'): void {
     this.calendarView = viewName;
@@ -58,11 +95,14 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
     if (this.calendarInstance) {
       this.calendarInstance.destroy();
     }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
   }
 
   private initCalendar(): void {
     setTimeout(() => {
-      const container = document.getElementById('calendar-container');
+      const container = document.getElementById(this.calendarId);
       if (!container) return;
 
       if (this.calendarInstance) {
@@ -76,7 +116,7 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
       }
 
       this.calendarInstance = new tuiCalendar(container, {
-        defaultView: 'month',
+        defaultView: this.defaultView,
         useFormPopup: false,
         useDetailPopup: false,
         isReadOnly: true,
@@ -101,6 +141,10 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
         }
       });
 
+      if (this._currentDate) {
+        this.calendarInstance.setDate(this._currentDate);
+      }
+
       // Handle event click to view details
       this.calendarInstance.on('clickEvent', (eventInfo: any) => {
         const bookingId = eventInfo.event.id;
@@ -109,6 +153,25 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
           this.bookingClick.emit(booking);
         }
       });
+
+      // Handle click on grid cell/date to notify date selection
+      this.calendarInstance.on('selectDateTime', (eventInfo: any) => {
+        const date = eventInfo.start instanceof Date ? eventInfo.start : new Date(eventInfo.start);
+        this.dateSelect.emit(date);
+      });
+
+      // Observe container size changes to render calendar correctly
+      if (this.resizeObserver) {
+        this.resizeObserver.disconnect();
+      }
+      if (typeof ResizeObserver !== 'undefined') {
+        this.resizeObserver = new ResizeObserver(() => {
+          if (this.calendarInstance) {
+            this.calendarInstance.render();
+          }
+        });
+        this.resizeObserver.observe(container);
+      }
 
       this.renderCalendarEvents();
     }, 50);
@@ -126,20 +189,20 @@ export class BookingCalendar implements AfterViewInit, OnDestroy {
 
         const type = b.vehicle?.vehicleTypeId;
         if (type === 'Pickup') {
-          color = '#10b981'; // Green
-          borderColor = '#059669';
+          color = '#ef4444'; // Red (แดง)
+          borderColor = '#dc2626';
           icon = 'local_shipping';
         } else if (type === 'Van') {
-          color = '#8b5cf6'; // Purple
-          borderColor = '#7c3aed';
+          color = '#f97316'; // Orange (ส้ม)
+          borderColor = '#ea580c';
           icon = 'airport_shuttle';
         } else if (type === 'SUV') {
-          color = '#f97316'; // Orange
-          borderColor = '#ea580c';
+          color = '#10b981'; // Green (เขียว)
+          borderColor = '#059669';
           icon = 'time_to_leave';
         } else if (type === 'Other') {
-          color = '#ec4899'; // Pink
-          borderColor = '#db2777';
+          color = '#8b5cf6'; // Purple (ม่วง)
+          borderColor = '#7c3aed';
           icon = 'commute';
         }
 

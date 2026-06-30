@@ -10,7 +10,7 @@ import { UserService } from '../../core/services/user.service';
 import { BookingService } from '../../core/services/booking.service';
 import { User } from '../../core/models/user.model';
 import { Vehicle } from '../../core/models/vehicle.model';
-import { BookingDetailModal } from '../all-bookings/pages/booking-list/components/booking-detail-modal/booking-detail-modal';
+import { BookingDetailModal } from '../all-bookings/components/booking-detail-modal/booking-detail-modal';
 import { VehicleCardComponent } from './pages/vehicle-selection/components/vehicle-card/vehicle-card';
 import { NoVehicleAvailableComponent } from './pages/vehicle-selection/components/no-vehicle-available/no-vehicle-available';
 

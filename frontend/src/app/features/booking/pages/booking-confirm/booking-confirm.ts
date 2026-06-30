@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BookingStore } from '../../state/booking.store';
 import { AllSharedUi } from '../../../../shared/shared';
-import { BookingDetailModal } from '../../../all-bookings/pages/booking-list/components/booking-detail-modal/booking-detail-modal';
+import { BookingDetailModal } from '../../../all-bookings/components/booking-detail-modal/booking-detail-modal';
 import { BookingService } from '../../../../core/services/booking.service';
 import { AvailabilityService } from '../../../../core/services/availability.service';
 import { AuthService } from '../../../../core/services/auth.service';

@@ -1,6 +1,5 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
 import { BookingService } from '../../../../core/services/booking.service';
 import { VehicleService } from '../../../../core/services/vehicle.service';
 import { UserService } from '../../../../core/services/user.service';
@@ -9,17 +8,20 @@ import { Vehicle } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { BookingDialogService } from '../../../booking/booking-dialog.service';
-import { BookingDetailModal } from './components/booking-detail-modal/booking-detail-modal';
-import { BookingCalendar } from './components/booking-calendar/booking-calendar';
+import { BookingDetailModal } from '../../components/booking-detail-modal/booking-detail-modal';
+import { BookingCalendar } from '../../components/booking-calendar/booking-calendar';
 import { BookingCard } from '../../components/booking-card/booking-card';
-import { BookingFilters } from '../../components/booking-filters/booking-filters';
+import { LeftSidebar } from '../../components/left-sidebar/left-sidebar';
+import { RightSidebar } from '../../components/right-sidebar/right-sidebar';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ...AllSharedUi, BookingDetailModal, BookingCalendar, BookingCard, BookingFilters],
+  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingCalendar, BookingCard, LeftSidebar, RightSidebar, MatSidenavModule],
   templateUrl: './booking-list.html',
 })
 export class BookingList implements OnInit {
@@ -27,7 +29,6 @@ export class BookingList implements OnInit {
   private readonly vehicleService = inject(VehicleService);
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
   private readonly bookingDialogService = inject(BookingDialogService);
 
   openBooking(): void {
@@ -37,8 +38,22 @@ export class BookingList implements OnInit {
   readonly selectedBooking = signal<Booking | null>(null);
   readonly isModalOpen = signal(false);
   
+  // Responsive drawer states
+  readonly isMobile = signal(window.innerWidth < 768);
+  readonly leftDrawerOpened = signal(window.innerWidth >= 1024);
+  readonly rightDrawerOpened = signal(window.innerWidth >= 1280);
+
+  @HostListener('window:resize')
+  onResize(): void {
+    const mobile = window.innerWidth < 768;
+    this.isMobile.set(mobile);
+  }
+
+  // Dashboard Tab state
+  readonly activeTab = signal<'active' | 'history'>('active');
+
   // View Mode
-  readonly viewMode = signal<'calendar' | 'grid'>('calendar');
+  readonly viewMode = signal<'calendar' | 'grid' | 'list'>('calendar');
 
   // Filters State
   readonly searchQuery = signal('');
@@ -46,6 +61,10 @@ export class BookingList implements OnInit {
   readonly selectedUserId = signal('');
   readonly startDate = signal('');
   readonly endDate = signal('');
+  readonly selectedStatusFilter = signal('');
+  readonly showFilters = signal(false);
+  readonly selectedVehicleTypeFilter = signal('');
+  readonly selectedDate = signal<Date | string>('');
 
   // Dropdown Lists
   readonly vehiclesList = signal<Vehicle[]>([]);
@@ -65,14 +84,48 @@ export class BookingList implements OnInit {
     this.loadBookings();
   }
 
-  setViewMode(mode: 'calendar' | 'grid'): void {
+  setActiveTab(tab: 'active' | 'history'): void {
+    this.activeTab.set(tab);
+    if (tab === 'active') {
+      this.viewMode.set('calendar');
+    } else {
+      this.viewMode.set('grid');
+    }
+    this.loadBookings();
+  }
+
+  toggleVehicleType(type: string): void {
+    if (this.selectedVehicleTypeFilter() === type) {
+      this.selectedVehicleTypeFilter.set('');
+    } else {
+      this.selectedVehicleTypeFilter.set(type);
+    }
+  }
+
+  onDateSelected(date: Date): void {
+    this.selectedDate.set(date);
+  }
+
+  setViewMode(mode: 'calendar' | 'grid' | 'list'): void {
     this.viewMode.set(mode);
   }
 
+  onRightDrawerOpenedChange(opened: boolean): void {
+    if (this.viewMode() === 'calendar') {
+      this.rightDrawerOpened.set(opened);
+    }
+  }
+
   loadBookings(): void {
-    const filters: any = {
-      status: 'booked', // This page only shows active bookings
-    };
+    const filters: any = {};
+
+    if (this.activeTab() === 'active') {
+      filters.status = 'booked';
+    } else if (this.selectedStatusFilter()) {
+      // Map CONFIRMED -> booked, COMPLETED -> complete, CANCELLED -> cancel
+      filters.status = this.selectedStatusFilter() === 'CONFIRMED' ? 'booked' : 
+                       (this.selectedStatusFilter() === 'COMPLETED' ? 'complete' : 'cancel');
+    }
 
     if (this.selectedVehicleId()) {
       filters.vehicle_id = Number(this.selectedVehicleId());
@@ -120,6 +173,18 @@ export class BookingList implements OnInit {
       });
     }
 
+    // Filter by Quick Vehicle Type Filter
+    if (this.selectedVehicleTypeFilter()) {
+      const typeFilter = this.selectedVehicleTypeFilter();
+      result = result.filter(b => {
+        const type = b.vehicle?.vehicleTypeId || 'Sedan';
+        if (typeFilter === 'Sedan') {
+          return type === 'Sedan' || (!type || type !== 'Pickup' && type !== 'Van' && type !== 'SUV' && type !== 'Other');
+        }
+        return type === typeFilter;
+      });
+    }
+
     // Sort by travel date descending, then start time descending
     return [...result].sort((a, b) => {
       if (a.bookingDate !== b.bookingDate) {
@@ -135,7 +200,30 @@ export class BookingList implements OnInit {
     this.startDate.set('');
     this.endDate.set('');
     this.searchQuery.set('');
+    this.selectedStatusFilter.set('');
+    this.selectedVehicleTypeFilter.set('');
     this.loadBookings();
+  }
+
+  getBookingStatusVariant(booking: Booking): 'available' | 'pending' | 'booked' | 'unavailable' {
+    if (booking.status === 'CANCELLED') return 'unavailable';
+    if (booking.status === 'COMPLETED') return 'booked';
+
+    const now = new Date();
+    const cleanTime = (t: string) => {
+      return new Date(t.replace(' ', 'T'));
+    };
+
+    const departTime = cleanTime(booking.depart || '');
+    const returnTime = cleanTime(booking.return || '');
+
+    if (now < departTime) {
+      return 'available';
+    } else if (now > returnTime) {
+      return 'booked';
+    } else {
+      return 'pending';
+    }
   }
 
   openDetail(booking: Booking): void {

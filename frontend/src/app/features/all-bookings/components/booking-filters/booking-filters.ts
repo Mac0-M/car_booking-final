@@ -25,6 +25,7 @@ export class BookingFilters {
 
   @Input() showStatusFilter = false;
   @Input() placeholder = 'Search...';
+  @Input() forceExpanded = false;
 
   // Outputs to sync state back to parent
   @Output() searchQueryChange = new EventEmitter<string>();

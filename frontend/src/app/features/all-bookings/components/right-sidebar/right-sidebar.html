@@ -1,0 +1,32 @@
+<div class="h-full flex flex-col">
+  <div class="p-4 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white">
+    <span class="text-sm font-bold text-gray-800 flex items-center gap-2">
+      <span class="material-icons text-gray-500 text-lg">calendar_today</span>
+      Schedules Overview
+    </span>
+    @if (isMobile) {
+      <button (click)="closeDrawer.emit()" class="p-1 rounded hover:bg-gray-100 border-0 bg-transparent text-gray-400 hover:text-gray-600 cursor-pointer flex items-center justify-center">
+        <span class="material-icons text-lg">close</span>
+      </button>
+    }
+  </div>
+  
+  <div class="flex-1 min-h-0 flex flex-col p-4 bg-transparent">
+    <!-- Day Calendar -->
+    <div class="flex-1 min-h-0 flex flex-col space-y-1.5">
+      <span class="text-[10px] font-bold text-gray-400 block px-1 uppercase tracking-wider shrink-0">Daily Timeline / รายวัน</span>
+      <app-booking-calendar
+        class="flex-1 min-h-0 w-full flex flex-col"
+        calendarId="day-calendar"
+        defaultView="day"
+        height="100%"
+        minHeight="0"
+        [showViewSwitcher]="false"
+        [showLegend]="false"
+        [bookings]="bookings"
+        [currentDate]="currentDate"
+        (bookingClick)="bookingClick.emit($event)"
+      />
+    </div>
+  </div>
+</div>
