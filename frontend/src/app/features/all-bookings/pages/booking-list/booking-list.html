@@ -1,3 +1,130 @@
+@if (isMobile()) {
+<!-- Mobile layout: Calendar/Grid on top, Sidebar controls at the bottom -->
+<div
+  class="h-[calc(100vh-4rem)] w-full flex flex-col bg-gray-100/40 overflow-hidden"
+>
+  <!-- Top Area: Dynamic Views (Calendar, Grid, List) -->
+  <div
+    class="flex-1 min-h-0 flex flex-col shrink-0 p-4 space-y-3 overflow-hidden"
+  >
+    <!-- Views Render Area -->
+    @if (activeTab() === 'active') { @if (viewMode() === 'calendar') {
+    <!-- Month Calendar -->
+    <div class="flex-1 min-h-0 flex flex-col animate-in fade-in duration-200">
+      <app-booking-calendar
+        class="flex-1 min-h-0 w-full flex flex-col"
+        calendarId="mobile-month-calendar"
+        defaultView="month"
+        height="100%"
+        minHeight="0"
+        [showLegend]="false"
+        [bookings]="filteredBookings()"
+        [showQuickFilters]="true"
+        [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+        (toggleVehicleType)="toggleVehicleType($event)"
+        (bookingClick)="openDetail($event)"
+        (dateSelect)="onDateSelected($event)"
+      />
+    </div>
+    } @else {
+    <!-- Cards View -->
+    <div class="flex-1 overflow-y-auto">
+      @if (filteredBookings().length > 0) {
+      <div class="grid grid-cols-1 gap-4 animate-in fade-in duration-200">
+        @for (booking of filteredBookings(); track booking.id) {
+        <app-booking-card [booking]="booking" (click)="openDetail(booking)" />
+        }
+      </div>
+      } @else {
+      <component-empty-state
+        title="No bookings found"
+        description="There are currently no vehicle bookings matching the selected filters."
+        icon="search"
+        variant="card"
+      />
+      }
+    </div>
+    } } @else {
+    <!-- Booking History Content -->
+    <div class="flex-1 overflow-y-auto">
+      @if (filteredBookings().length > 0) { @if (viewMode() === 'grid') {
+      <!-- Grid View for History -->
+      <div class="grid grid-cols-1 gap-4 animate-in fade-in duration-200">
+        @for (booking of filteredBookings(); track booking.id) {
+        <app-booking-card
+          [booking]="booking"
+          [showPlateNumber]="false"
+          (click)="openDetail(booking)"
+        />
+        }
+      </div>
+      } @else {
+      <!-- Mobile Card List for History -->
+      <div class="space-y-3 animate-in fade-in duration-200">
+        @for (booking of filteredBookings(); track booking.id) {
+        <app-booking-card [booking]="booking" (click)="openDetail(booking)" />
+        }
+      </div>
+      } } @else {
+      <component-empty-state
+        title="No booking history found"
+        description="There is currently no booking history in the system matching the selected filters."
+        icon="search"
+        variant="card"
+      />
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Bottom Area: Sidebar Controls (Tabs, Switchers, Filters & New Booking) -->
+  <div
+    [style.height.px]="bottomHeight()"
+    class="border-t border-gray-200 bg-white shadow-xl flex flex-col min-h-0 shrink-0 rounded-t-2xl overflow-hidden select-none"
+  >
+    <!-- Premium Visual Bottom Sheet Indicator (Drag Handle) -->
+    <div
+      (pointerdown)="onPointerDown($event)"
+      (pointermove)="onPointerMove($event)"
+      (pointerup)="onPointerUp($event)"
+      class="w-full flex justify-center py-3 shrink-0 bg-gray-50/50 border-b border-gray-100 rounded-t-2xl cursor-row-resize touch-none select-none active:bg-gray-100"
+    >
+      <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <app-left-sidebar
+        [activeTab]="activeTab()"
+        [viewMode]="viewMode()"
+        [searchQuery]="searchQuery()"
+        [selectedVehicleId]="selectedVehicleId()"
+        [selectedUserId]="selectedUserId()"
+        [startDate]="startDate()"
+        [endDate]="endDate()"
+        [selectedStatusFilter]="selectedStatusFilter()"
+        [showFilters]="showFilters()"
+        [showLegend]="true"
+        [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+        [vehicles]="vehiclesList()"
+        [users]="usersList()"
+        [isMobile]="isMobile()"
+        (activeTabChange)="setActiveTab($event)"
+        (viewModeChange)="viewMode.set($event)"
+        (searchQueryChange)="searchQuery.set($event)"
+        (selectedVehicleIdChange)="selectedVehicleId.set($event)"
+        (selectedUserIdChange)="selectedUserId.set($event)"
+        (startDateChange)="startDate.set($event)"
+        (endDateChange)="endDate.set($event)"
+        (selectedStatusFilterChange)="selectedStatusFilter.set($event)"
+        (showFiltersChange)="showFilters.set($event)"
+        (filterChange)="onFilterChange()"
+        (resetFilters)="resetFilters()"
+        (addBooking)="openBooking()"
+        (toggleVehicleType)="toggleVehicleType($event)"
+      />
+    </div>
+  </div>
+</div>
+} @else {
 <mat-drawer-container
   [hasBackdrop]="isMobile()"
   class="h-[calc(100vh-4rem)] w-full bg-gray-100/40 !overflow-hidden"
@@ -19,6 +146,8 @@
       [endDate]="endDate()"
       [selectedStatusFilter]="selectedStatusFilter()"
       [showFilters]="showFilters()"
+      [showLegend]="true"
+      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
       [vehicles]="vehiclesList()"
       [users]="usersList()"
       [isMobile]="isMobile()"
@@ -35,60 +164,17 @@
       (resetFilters)="resetFilters()"
       (addBooking)="openBooking()"
       (closeDrawer)="leftDrawer.close()"
-    />
-  </mat-drawer>
-
-  <!-- Right Sidebar Drawer: Weekly and Daily Schedules -->
-  <mat-drawer
-    #rightDrawer
-    [mode]="isMobile() ? 'over' : 'side'"
-    [opened]="viewMode() === 'calendar' ? rightDrawerOpened() : false"
-    (openedChange)="onRightDrawerOpenedChange($event)"
-    [class.hidden]="viewMode() !== 'calendar'"
-    position="end"
-    class="w-[450px] border-l border-gray-200 bg-slate-50 shadow-sm"
-  >
-    <app-right-sidebar
-      [currentDate]="selectedDate()"
-      [bookings]="filteredBookings()"
-      [isMobile]="isMobile()"
-      (bookingClick)="openDetail($event)"
-      (closeDrawer)="rightDrawer.close()"
+      (toggleVehicleType)="toggleVehicleType($event)"
     />
   </mat-drawer>
 
   <!-- Center Content Area -->
   <mat-drawer-content
     [class.!z-20]="!isMobile()"
-    [class.!overflow-visible]="!isMobile()"
     class="h-full !flex !flex-col bg-gray-100/40 relative !overflow-hidden"
   >
-    <!-- Floating Left Drawer Toggle Button (placed exactly on the border line) -->
-    <button
-      (click)="leftDrawer.toggle()"
-      [title]="leftDrawer.opened ? 'Collapse left sidebar' : 'Expand left sidebar'"
-      class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 z-40 flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-white shadow-md text-gray-500 hover:text-gray-900 cursor-pointer transition-all active:scale-95 select-none transition-all duration-200"
-    >
-      <span class="material-icons text-base">
-        {{ leftDrawer.opened ? 'chevron_left' : 'chevron_right' }}
-      </span>
-    </button>
-
-    <!-- Floating Right Drawer Toggle Button (placed exactly on the border line) -->
-    @if (viewMode() === 'calendar') {
-    <button
-      (click)="rightDrawer.toggle()"
-      [title]="rightDrawer.opened ? 'Collapse right sidebar' : 'Expand right sidebar'"
-      class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 z-40 flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-white shadow-md text-gray-500 hover:text-gray-900 cursor-pointer transition-all active:scale-95 select-none transition-all duration-200"
-    >
-      <span class="material-icons text-base">
-        {{ rightDrawer.opened ? 'chevron_right' : 'chevron_left' }}
-      </span>
-    </button>
-    }
-
     <!-- Main Dynamic Views Section -->
-    <div class="flex-1 min-h-0 flex flex-col p-6 space-y-4">
+    <div class="flex-1 min-h-0 flex flex-col p-6 space-y-4 overflow-hidden">
       <!-- Views Render Area -->
       @if (activeTab() === 'active') { @if (viewMode() === 'calendar') {
       <!-- Center Month Calendar -->
@@ -253,6 +339,7 @@
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
+}
 
 <!-- Detail Modal Dialog popup -->
 <app-booking-detail-modal

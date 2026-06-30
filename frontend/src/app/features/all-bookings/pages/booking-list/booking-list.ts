@@ -12,7 +12,6 @@ import { BookingDetailModal } from '../../components/booking-detail-modal/bookin
 import { BookingCalendar } from '../../components/booking-calendar/booking-calendar';
 import { BookingCard } from '../../components/booking-card/booking-card';
 import { LeftSidebar } from '../../components/left-sidebar/left-sidebar';
-import { RightSidebar } from '../../components/right-sidebar/right-sidebar';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 
@@ -21,7 +20,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingCalendar, BookingCard, LeftSidebar, RightSidebar, MatSidenavModule],
+  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingCalendar, BookingCard, LeftSidebar, MatSidenavModule],
   templateUrl: './booking-list.html',
 })
 export class BookingList implements OnInit {
@@ -40,13 +39,58 @@ export class BookingList implements OnInit {
   
   // Responsive drawer states
   readonly isMobile = signal(window.innerWidth < 768);
-  readonly leftDrawerOpened = signal(window.innerWidth >= 1024);
+  readonly leftDrawerOpened = signal(window.innerWidth >= 768);
   readonly rightDrawerOpened = signal(window.innerWidth >= 1280);
+
+  // Bottom Sheet dragging state for mobile view
+  readonly bottomHeight = signal<number>(250);
+  private startY = 0;
+  private startHeight = 0;
+  private isDragging = false;
+
+  onPointerDown(event: PointerEvent): void {
+    const handle = event.currentTarget as HTMLElement;
+    if (handle) {
+      try {
+        handle.setPointerCapture(event.pointerId);
+      } catch (e) {}
+    }
+    this.isDragging = true;
+    this.startY = event.clientY;
+    this.startHeight = this.bottomHeight();
+    event.preventDefault();
+  }
+
+  onPointerMove(event: PointerEvent): void {
+    if (!this.isDragging) return;
+    const deltaY = this.startY - event.clientY;
+    let newHeight = this.startHeight + deltaY;
+    
+    // Bounds check: constrain height between 100px and 70% of viewport height
+    const maxHeight = Math.round(window.innerHeight * 0.7);
+    if (newHeight < 100) newHeight = 100;
+    if (newHeight > maxHeight) newHeight = maxHeight;
+    
+    this.bottomHeight.set(newHeight);
+  }
+
+  onPointerUp(event: PointerEvent): void {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    const handle = event.currentTarget as HTMLElement;
+    if (handle) {
+      try {
+        handle.releasePointerCapture(event.pointerId);
+      } catch (e) {}
+    }
+  }
 
   @HostListener('window:resize')
   onResize(): void {
     const mobile = window.innerWidth < 768;
     this.isMobile.set(mobile);
+    this.leftDrawerOpened.set(!mobile);
+    this.rightDrawerOpened.set(window.innerWidth >= 1280);
   }
 
   // Dashboard Tab state
@@ -219,8 +263,6 @@ export class BookingList implements OnInit {
 
     if (now < departTime) {
       return 'available';
-    } else if (now > returnTime) {
-      return 'booked';
     } else {
       return 'pending';
     }

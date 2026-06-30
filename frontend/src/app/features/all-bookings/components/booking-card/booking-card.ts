@@ -28,8 +28,6 @@ export class BookingCard {
 
     if (now < departTime) {
       return 'available';
-    } else if (now > returnTime) {
-      return 'booked';
     } else {
       return 'pending';
     }

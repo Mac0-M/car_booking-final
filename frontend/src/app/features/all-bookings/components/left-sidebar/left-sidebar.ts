@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Vehicle } from '../../../../core/models/vehicle.model';
+import { Vehicle, VEHICLE_TYPES } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 
@@ -24,6 +24,11 @@ export class LeftSidebar {
   @Input() vehicles: Vehicle[] = [];
   @Input() users: User[] = [];
   @Input() isMobile = false;
+  @Input() showLegend = true;
+  @Input() selectedVehicleTypeFilter = '';
+  readonly vehicleTypes = VEHICLE_TYPES;
+
+
 
   @Output() activeTabChange = new EventEmitter<'active' | 'history'>();
   @Output() viewModeChange = new EventEmitter<'calendar' | 'grid' | 'list'>();
@@ -39,6 +44,8 @@ export class LeftSidebar {
   @Output() resetFilters = new EventEmitter<void>();
   @Output() addBooking = new EventEmitter<void>();
   @Output() closeDrawer = new EventEmitter<void>();
+  @Output() toggleVehicleType = new EventEmitter<string>();
+
 
   onActiveTabSelect(tab: 'active' | 'history'): void {
     this.activeTabChange.emit(tab);

@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking } from '../../../../core/models/booking.model';
+import { VEHICLE_TYPES } from '../../../../core/models/vehicle.model';
+
 
 @Component({
   selector: 'app-booking-calendar',
@@ -46,13 +48,8 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   @Input() selectedVehicleTypeFilter = '';
   @Output() toggleVehicleType = new EventEmitter<string>();
 
-  readonly vehicleTypes = [
-    { value: 'Sedan', label: 'Sedan', dotColor: 'bg-blue-500', ringClass: 'ring-blue-500' },
-    { value: 'Pickup', label: 'Pickup', dotColor: 'bg-red-500', ringClass: 'ring-red-500' },
-    { value: 'Van', label: 'Van', dotColor: 'bg-orange-500', ringClass: 'ring-orange-500' },
-    { value: 'SUV', label: 'SUV', dotColor: 'bg-emerald-500', ringClass: 'ring-emerald-500' },
-    { value: 'Other', label: 'Other', dotColor: 'bg-violet-500', ringClass: 'ring-violet-500' }
-  ];
+  readonly vehicleTypes = VEHICLE_TYPES;
+
 
   private calendarInstance: any = null;
   private resizeObserver: any = null;

@@ -19,8 +19,8 @@ export class ComponentButton {
   protected readonly baseClasses = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200  active:scale-95 w-full';
 
   protected readonly variantClasses = {
-    submit: 'bg-gray-700 hover:bg-gray-800 text-white shadow-md shadow-gray-700',
-    cancel: 'border-3 border-gray-400 bg-transparent hover:bg-gray-300'
+    submit: 'bg-gray-700 text-white shadow-md shadow-gray-700',
+    cancel: 'border-3 border-gray-400 bg-transparent'
   };
 
   protected readonly sizeClasses = {

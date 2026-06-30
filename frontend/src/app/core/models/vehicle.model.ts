@@ -27,3 +27,11 @@ export interface VehicleType {
   ratePerKm: number;
   basePrice: number;
 }
+
+export const VEHICLE_TYPES = [
+  { value: 'Sedan', label: 'Sedan', dotColor: 'bg-blue-500', ringClass: 'ring-blue-500' },
+  { value: 'Pickup', label: 'Pickup', dotColor: 'bg-red-500', ringClass: 'ring-red-500' },
+  { value: 'Van', label: 'Van', dotColor: 'bg-orange-500', ringClass: 'ring-orange-500' },
+  { value: 'SUV', label: 'SUV', dotColor: 'bg-emerald-500', ringClass: 'ring-emerald-500' },
+  { value: 'Other', label: 'Other', dotColor: 'bg-violet-500', ringClass: 'ring-violet-500' }
+];

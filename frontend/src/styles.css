@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "@angular/cdk/overlay-prebuilt.css";
 
+html, body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* ล็อกไม่ให้หน้าต่างเบราว์เซอร์หลักเกิด Scrollbar ซ้อน */
+}
+
 /* TUI Calendar: Adjust font size and styling of week/day header numbers */
 .toastui-calendar-day-name__date {
   font-size: 15px !important;
