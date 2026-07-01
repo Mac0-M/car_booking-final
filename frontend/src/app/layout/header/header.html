@@ -34,18 +34,12 @@
         Bookings
       </a>
       <a
-        routerLink="/vehicles"
-        [ngClass]="isRouteActive('/vehicles') ? 'bg-gray-700 text-white shadow-md' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'"
-        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none"
+        routerLink="/directory"
+        [ngClass]="isRouteActive('/directory') ? 'bg-gray-700 text-white shadow-md' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'"
+        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center"
       >
-        Vehicles
-      </a>
-      <a
-        routerLink="/admin/users"
-        [ngClass]="isRouteActive('/admin/users') ? 'bg-gray-700 text-white shadow-md' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'"
-        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none"
-      >
-        {{ isAdmin ? 'Manage Users' : 'Users List' }}
+        <span class="material-icons text-xl px-1">folder_shared</span>
+        {{ isAdmin ? 'Manage' : 'Directory' }}
       </a>
     </nav>
 
@@ -57,7 +51,7 @@
         class="flex md:hidden items-center gap-2 sm:gap-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
       >
         <div
-          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-xs sm:text-sm uppercase shadow-sm shrink-0"
+          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden bg-linear-to-tr from-gray-700 to-gray-500 text-white font-bold text-xs sm:text-sm uppercase shadow-sm shrink-0"
         >
           @if (profileImage) {
           <img
@@ -80,10 +74,10 @@
       <div class="relative hidden md:block">
         <button
           (click)="toggleProfileDropdown(); $event.stopPropagation()"
-          class="flex items-center gap-1.5 sm:gap-2 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none bg-transparent"
+          class="flex items-center gap-1.5 sm:gap-2 bg-gray-50 hover:bg-gray-100 border border-gray-100 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
         >
           <div
-            class="flex items-center justify-center w-7 h-7 rounded-full overflow-hidden bg-gradient-to-tr from-gray-700 to-gray-500 text-white font-bold text-xs uppercase shadow-sm shrink-0"
+            class="flex items-center justify-center w-7 h-7 rounded-full overflow-hidden bg-linear-to-tr from-gray-700 to-gray-500 text-white font-bold text-xs uppercase shadow-sm shrink-0"
           >
             @if (profileImage) {
             <img
@@ -165,24 +159,16 @@
       Bookings
     </a>
     <a
-      routerLink="/vehicles"
-      [ngClass]="isRouteActive('/vehicles') ? 'bg-gray-700 text-white' : 'text-gray-600 hover:bg-gray-50'"
+      routerLink="/directory"
+      [ngClass]="isRouteActive('/directory') ? 'bg-gray-700 text-white' : 'text-gray-600 hover:bg-gray-50'"
       class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
     >
-      <span class="material-icons text-xl">directions_car</span>
-      Vehicles
-    </a>
-    <a
-      routerLink="/admin/users"
-      [ngClass]="isRouteActive('/admin/users') ? 'bg-gray-700 text-white' : 'text-gray-600 hover:bg-gray-50'"
-      class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
-    >
-      <span class="material-icons text-xl">people</span>
-      {{ isAdmin ? 'Manage Users' : 'Users List' }}
+      <span class="material-icons text-xl">folder_shared</span>
+      {{ isAdmin ? 'Manage' : 'Directory' }}
     </a>
 
     <!-- Divider -->
-    <div class="h-[1px] bg-gray-100 my-2"></div>
+    <div class="h-px bg-gray-100 my-2"></div>
 
     <!-- Logout Action in Mobile Menu -->
     <button

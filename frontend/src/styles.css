@@ -15,3 +15,20 @@ html, body {
 .toastui-calendar-day-name__name {
   display: none !important;
 }
+
+.wrap-break-word {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Instant display override to remove all open/close transitions */
+.no-animation-backdrop {
+  transition: none !important;
+  animation: none !important;
+}
+
+.no-animation-panel {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}

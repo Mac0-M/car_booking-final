@@ -7,7 +7,7 @@ import { Booking } from '../../../../core/models/booking.model';
 import { Vehicle } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
-import { BookingDialogService } from '../../../booking/booking-dialog.service';
+import { BookingDialogService } from '../../add-booking/booking-dialog.service';
 import { BookingDetailModal } from '../../components/booking-detail-modal/booking-detail-modal';
 import { LeftSidebar } from '../../components/left-sidebar/left-sidebar';
 import { BookingViews } from '../../components/booking-views/booking-views';

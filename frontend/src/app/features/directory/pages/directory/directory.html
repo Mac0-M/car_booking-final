@@ -1,0 +1,154 @@
+@if (isMobile()) {
+  <!-- Mobile layout: Controls on top, Lists in middle, Add Action at bottom -->
+  <div class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-gray-100/40 overflow-hidden">
+    <!-- Top Area: Switchers & Filters Trigger -->
+    <div class="w-full bg-white border-b border-gray-200 shrink-0">
+      <app-directory-left-sidebar
+        [activeTab]="activeTab()"
+        [isMobile]="isMobile()"
+        [isMobileHeader]="true"
+        [searchQuery]="searchQuery()"
+        [selectedType]="selectedType()"
+        [selectedStatus]="selectedStatus()"
+        [selectedReFuel]="selectedReFuel()"
+        [activeFiltersCount]="activeFiltersCount()"
+        (activeTabChange)="setActiveTab($event)"
+        (searchQueryChange)="searchQuery.set($event)"
+        (selectedTypeChange)="selectedType.set($event)"
+        (selectedStatusChange)="selectedStatus.set($event)"
+        (selectedReFuelChange)="selectedReFuel.set($event)"
+        (resetFilters)="resetFilters()"
+      ></app-directory-left-sidebar>
+    </div>
+
+    <!-- Middle Area: Dynamic Lists -->
+    <div class="flex-1 min-h-0 w-full overflow-y-auto p-4">
+      @if (activeTab() === 'vehicles') {
+        <app-vehicle-list
+          [hideHeader]="true"
+          [hideFilters]="true"
+          [searchQueryInput]="searchQuery()"
+          [selectedTypeInput]="selectedType()"
+          [selectedStatusInput]="selectedStatus()"
+          [selectedReFuelInput]="selectedReFuel()"
+        ></app-vehicle-list>
+      }
+
+      @if (activeTab() === 'users') {
+        <app-user-list
+          #userList
+          [hideHeader]="true"
+        ></app-user-list>
+      }
+    </div>
+
+    <!-- Bottom Area: Sticky Add Button (Admins only) -->
+    @if (isAdmin()) {
+      <div class="p-4 border-t border-gray-200 bg-white shrink-0">
+        @if (activeTab() === 'vehicles') {
+          <component-button
+            (click)="openAddVehicleModal()"
+            variant="submit"
+            size="lg"
+            class="w-full"
+          >
+            <span class="material-icons text-sm">add</span>
+            Add New Vehicle
+          </component-button>
+        } @else if (activeTab() === 'users') {
+          <component-button
+            (click)="openAddUserModal()"
+            variant="submit"
+            size="lg"
+            class="w-full"
+          >
+            <span class="material-icons text-sm">person_add</span>
+            Add New {{ isSuperAdmin() ? 'Admin' : 'User' }}
+          </component-button>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <!-- Desktop Layout -->
+  <mat-drawer-container
+    [hasBackdrop]="isMobile()"
+    class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
+  >
+    <!-- Left Sidebar Drawer -->
+    <mat-drawer
+      #leftDrawer
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="leftDrawerOpened()"
+      (closedStart)="leftDrawerOpened.set(false)"
+      class="w-72 border-r border-gray-200 bg-white shadow-sm flex flex-col"
+    >
+      <app-directory-left-sidebar
+        [activeTab]="activeTab()"
+        [isMobile]="isMobile()"
+        [isAdmin]="isAdmin()"
+        [isSuperAdmin]="isSuperAdmin()"
+        [isMobileHeader]="false"
+        [searchQuery]="searchQuery()"
+        [selectedType]="selectedType()"
+        [selectedStatus]="selectedStatus()"
+        [selectedReFuel]="selectedReFuel()"
+        (activeTabChange)="setActiveTab($event)"
+        (searchQueryChange)="searchQuery.set($event)"
+        (selectedTypeChange)="selectedType.set($event)"
+        (selectedStatusChange)="selectedStatus.set($event)"
+        (selectedReFuelChange)="selectedReFuel.set($event)"
+        (resetFilters)="resetFilters()"
+        (addVehicle)="openAddVehicleModal()"
+        (addUser)="openAddUserModal()"
+      ></app-directory-left-sidebar>
+    </mat-drawer>
+
+    <!-- Center Content Area -->
+    <mat-drawer-content
+      [class.z-20!]="!isMobile()"
+      class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
+    >
+      <!-- Top Area: Mobile Menu Bar & Title -->
+      <div class="w-full bg-white border-b border-gray-200 px-6 py-3 shrink-0 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <!-- Toggle button on Mobile -->
+          @if (isMobile()) {
+            <button
+              (click)="leftDrawer.toggle(); leftDrawerOpened.set(!leftDrawerOpened())"
+              class="p-1 text-gray-500 hover:text-gray-700 transition-colors border-0 bg-transparent cursor-pointer flex items-center"
+            >
+              <span class="material-icons">menu</span>
+            </button>
+          }
+          
+          <h2 class="text-lg font-black text-gray-800 m-0">
+            {{ pageTitle() }} ({{ activeTab() === 'vehicles' ? 'Vehicles' : 'Users' }})
+          </h2>
+        </div>
+      </div>
+
+      <!-- Main Dynamic Views Section -->
+      <div class="flex-1 min-h-0 w-full overflow-y-auto p-4 md:p-6">
+        @if (activeTab() === 'vehicles') {
+          <app-vehicle-list
+            #vehicleList
+            [hideHeader]="true"
+            [hideFilters]="true"
+            [searchQueryInput]="searchQuery()"
+            [selectedTypeInput]="selectedType()"
+            [selectedStatusInput]="selectedStatus()"
+            [selectedReFuelInput]="selectedReFuel()"
+          ></app-vehicle-list>
+        }
+
+        @if (activeTab() === 'users') {
+          <app-user-list
+            #userList
+            [hideHeader]="true"
+          ></app-user-list>
+        }
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+}

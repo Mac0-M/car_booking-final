@@ -18,7 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class ComponentInputUi implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = '';
-  @Input() type: 'text' | 'number' | 'email' | 'tel' | 'password' | 'date' | 'time' = 'text';
+  @Input() type: 'text' | 'number' | 'email' | 'tel' | 'password' | 'date' | 'time' | 'datetime-local' = 'text';
   @Input() id: string = '';
   @Input() error: string | boolean | null = '';
   @Input() disabled: boolean = false;

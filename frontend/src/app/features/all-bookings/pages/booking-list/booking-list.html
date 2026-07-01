@@ -69,7 +69,7 @@
 } @else {
 <mat-drawer-container
   [hasBackdrop]="isMobile()"
-  class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 !overflow-hidden"
+  class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
 >
   <!-- Left Sidebar Drawer: Tabs, Views, Filters & Add Booking -->
   <mat-drawer
@@ -110,8 +110,8 @@
 
   <!-- Center Content Area -->
   <mat-drawer-content
-    [class.!z-20]="!isMobile()"
-    class="h-full !flex !flex-col bg-gray-100/40 relative !overflow-hidden"
+    [class.z-20!]="!isMobile()"
+    class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
   >
     <!-- Main Dynamic Views Section -->
     <div class="flex-1 min-h-0 flex flex-col p-6 space-y-4 overflow-hidden">

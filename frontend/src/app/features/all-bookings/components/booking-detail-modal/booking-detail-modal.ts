@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, inject, signal, OnChanges, Simp
 import { CommonModule } from '@angular/common';
 import { Vehicle } from '../../../../core/models/vehicle.model';
 import { AllSharedUi } from '../../../../shared/shared';
-import { VehicleCardComponent } from '../../../booking/pages/vehicle-selection/components/vehicle-card/vehicle-card';
+import { VehicleCardComponent } from '../../add-booking/pages/vehicle-selection/components/vehicle-card/vehicle-card';
 import { AuthService } from '../../../../core/services/auth.service';
 import { DialogModule, Dialog, DialogRef } from '@angular/cdk/dialog';
 
@@ -39,6 +39,7 @@ export class BookingDetailModal implements OnChanges {
   @Input() title = '';
   @Input() description = '';
   @Input() isModal = false;
+  @Input() hideHeader = false;
   @Input() isOpen = false;
 
   @Output() close = new EventEmitter<void>();

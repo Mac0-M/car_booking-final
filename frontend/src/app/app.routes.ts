@@ -36,23 +36,29 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'directory',
+    canActivate: [authGuard],
+    title: 'Directory & Management',
+    loadComponent: () =>
+      import('./features/directory/pages/directory/directory').then(
+        (m) => m.DirectoryComponent
+      ),
+  },
+  {
     path: 'vehicles',
     canActivate: [authGuard],
     children: [
       {
         path: '',
-        title: 'All Vehicles',
-        loadComponent: () =>
-          import('./features/vehicles/pages/vehicle-list/vehicle-list').then(
-            (m) => m.VehicleListComponent
-          ),
+        redirectTo: '/directory',
+        pathMatch: 'full'
       },
       {
         path: 'new',
         title: 'New Vehicle',
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./features/vehicles/pages/vehicle-form/vehicle-form').then(
+          import('./features/directory/pages/vehicle-form/vehicle-form').then(
             (m) => m.VehicleFormComponent
           ),
       },
@@ -61,7 +67,7 @@ export const routes: Routes = [
         title: 'Edit Vehicle',
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./features/vehicles/pages/vehicle-form/vehicle-form').then(
+          import('./features/directory/pages/vehicle-form/vehicle-form').then(
             (m) => m.VehicleFormComponent
           ),
       },
@@ -73,11 +79,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'users',
-        title: 'All-Users',
-        loadComponent: () =>
-          import('./features/admin/pages/user-list/user-list').then(
-            (m) => m.UserListComponent
-          ),
+        redirectTo: '/directory',
+        pathMatch: 'full'
       },
     ],
   },
