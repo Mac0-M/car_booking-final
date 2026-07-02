@@ -18,7 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class ComponentInputUi implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = '';
-  @Input() type: 'text' | 'number' | 'email' | 'tel' | 'password' | 'date' | 'time' | 'datetime-local' = 'text';
+  @Input() type: 'text' | 'number' | 'email' | 'tel' | 'password' | 'date' | 'time' | 'datetime-local' | 'textarea' = 'text';
   @Input() id: string = '';
   @Input() error: string | boolean | null = '';
   @Input() disabled: boolean = false;
@@ -26,6 +26,7 @@ export class ComponentInputUi implements ControlValueAccessor {
   @Input() size: 'sm' | 'base' | 'lg' = 'base';
   @Input() min: string = '';
   @Input() max: string = '';
+  @Input() rows: number = 1;
 
   get hasError(): boolean {
     return !!this.error;
@@ -63,7 +64,7 @@ export class ComponentInputUi implements ControlValueAccessor {
   }
 
   onInput(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
+    const inputElement = event.target as HTMLInputElement | HTMLTextAreaElement;
     let val = inputElement.value;
 
     if (this.type === 'number') {
