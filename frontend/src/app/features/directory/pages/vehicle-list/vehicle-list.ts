@@ -49,8 +49,8 @@ export class VehicleListComponent implements OnInit {
     const dialogRef = this.dialog.open(VehicleFormComponent, {
       width: '672px',
       maxWidth: '95vw',
-      backdropClass: ['bg-gray-900/60', 'backdrop-blur-sm'],
-      panelClass: ['w-full', 'max-w-2xl', 'shadow-xl', 'rounded-2xl', 'overflow-hidden']
+      backdropClass: ['bg-gray-900/60', 'backdrop-blur-sm', 'no-animation-backdrop'],
+      panelClass: ['w-full', 'max-w-2xl', 'shadow-xl', 'rounded-2xl', 'overflow-hidden', 'no-animation-panel']
     });
     dialogRef.closed.subscribe(result => {
       if (result) {
@@ -63,8 +63,8 @@ export class VehicleListComponent implements OnInit {
     const dialogRef = this.dialog.open(VehicleFormComponent, {
       width: '672px',
       maxWidth: '95vw',
-      backdropClass: ['bg-gray-900/60', 'backdrop-blur-sm'],
-      panelClass: ['w-full', 'max-w-2xl', 'shadow-xl', 'rounded-2xl', 'overflow-hidden'],
+      backdropClass: ['bg-gray-900/60', 'backdrop-blur-sm', 'no-animation-backdrop'],
+      panelClass: ['w-full', 'max-w-2xl', 'shadow-xl', 'rounded-2xl', 'overflow-hidden', 'no-animation-panel'],
       data: { id: vehicleId }
     });
     dialogRef.closed.subscribe(result => {
