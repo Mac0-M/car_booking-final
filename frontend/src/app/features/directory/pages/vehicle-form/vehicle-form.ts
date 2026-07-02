@@ -21,6 +21,10 @@ export class VehicleFormComponent implements OnInit {
   readonly dialogRef = inject(DialogRef, { optional: true });
   private readonly dialogData = inject(DIALOG_DATA, { optional: true }) as { id?: string } | null;
 
+  get isDialog(): boolean {
+    return !!this.dialogRef;
+  }
+
   vehicleId: string | null = null;
   isEditMode = false;
   isLoading = signal(false);

@@ -195,9 +195,6 @@
         </button>
       </div>
 
-      <p class="text-xs text-gray-500">
-        {{ isSuperAdmin ? 'Create a new Admin account. They will have access to vehicle management and user management.' : 'Create a new regular passenger account.' }}
-      </p>
 
       <!-- Form Fields -->
       <form (submit)="createUserSubmit(); $event.preventDefault()" class="space-y-4">
