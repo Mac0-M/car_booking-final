@@ -47,6 +47,10 @@ export class BookingList implements OnInit {
     const mobile = window.innerWidth < 768;
     this.isMobile.set(mobile);
     this.leftDrawerOpened.set(!mobile);
+    
+    if (mobile && this.activeTab() === 'history' && this.viewMode() === 'list') {
+      this.viewMode.set('grid');
+    }
   }
 
   // Dashboard Tab state
