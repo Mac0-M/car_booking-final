@@ -116,6 +116,15 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  onDateInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value && this.calendarInstance) {
+      const selectedDate = new Date(input.value);
+      this.calendarInstance.setDate(selectedDate);
+      this.updateMonthYearLabel();
+    }
+  }
+
   updateMonthYearLabel(): void {
     if (this.calendarInstance) {
       const currentDate = this.calendarInstance.getDate();

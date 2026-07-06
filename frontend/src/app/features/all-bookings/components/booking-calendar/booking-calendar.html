@@ -29,11 +29,18 @@
         </button>
       </div>
 
-      <!-- Month & Year Display -->
-      <div class="flex items-center gap-1 text-gray-700 ml-0.5 sm:ml-1.5 select-none shrink-0">
-        <span class="text-[10px] sm:text-base font-bold tracking-wide whitespace-nowrap">
+      <!-- Month & Year Display (Click to open date picker) -->
+      <div class="relative flex items-center gap-1 text-gray-700 ml-0.5 sm:ml-1.5 select-none shrink-0 cursor-pointer hover:text-gray-900 transition-colors">
+        <span class="text-[10px] sm:text-base font-bold tracking-wide whitespace-nowrap flex items-center gap-0.5">
           {{ monthYearLabel }}
+          <span class="material-icons text-xs sm:text-sm text-gray-400">arrow_drop_down</span>
         </span>
+        <input
+          type="date"
+          (change)="onDateInputChange($event)"
+          class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+          title="Choose Date / เลือกวันที่"
+        />
       </div>
     </div>
 
