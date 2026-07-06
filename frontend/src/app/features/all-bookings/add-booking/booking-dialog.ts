@@ -224,7 +224,6 @@ export class BookingDialogComponent implements OnInit {
         this.isConfirmed.set(true);
         const savedBooking = res.data || res;
         this.bookingId.set(savedBooking.id);
-        this.store.clear();
       },
       error: (err: any) => {
         this.isSubmitting.set(false);
