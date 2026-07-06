@@ -58,10 +58,10 @@
           <div class="flex flex-wrap items-center gap-2">
             @for (type of vehicleTypes; track type.value) {
               <button
-                (click)="toggleVehicleType(type.value)"
-                [class.ring-2]="selectedType === type.value"
-                [class.ring-offset-2]="selectedType === type.value"
-                [ngClass]="selectedType === type.value ? type.ringClass : ''"
+                (click)="toggleLocalVehicleType(type.value)"
+                [class.ring-2]="localSelectedType === type.value"
+                [class.ring-offset-2]="localSelectedType === type.value"
+                [ngClass]="localSelectedType === type.value ? type.ringClass : ''"
                 class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-gray-200 bg-white text-xs font-semibold text-gray-700 cursor-pointer select-none transition-all active:scale-95 duration-100"
               >
                 <span class="w-1.5 h-1.5 rounded-full" [ngClass]="type.dotColor"></span>
@@ -77,8 +77,8 @@
           <div class="relative">
             <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base">search</span>
             <input type="text"
-                   [value]="searchQuery"
-                   (input)="searchQueryChange.emit($any($event.target).value)"
+                   [value]="localSearchQuery"
+                   (input)="localSearchQuery = $any($event.target).value"
                    placeholder="Search..."
                    class="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50 font-sans" />
           </div>
@@ -87,8 +87,8 @@
         <!-- Status Filter -->
         <div class="space-y-1">
           <label class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider">Status</label>
-          <select [value]="selectedStatus"
-                  (change)="selectedStatusChange.emit($any($event.target).value)"
+          <select [ngModel]="localSelectedStatus"
+                  (ngModelChange)="localSelectedStatus = $event"
                   class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans">
             <option value="">All Status / สถานะทั้งหมด</option>
             <option value="available">Available / พร้อมใช้งาน</option>
@@ -99,8 +99,8 @@
         <!-- Refuel Filter -->
         <div class="space-y-1">
           <label class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider">Fuel Status</label>
-          <select [value]="selectedReFuel"
-                  (change)="selectedReFuelChange.emit($any($event.target).value)"
+          <select [ngModel]="localSelectedReFuel"
+                  (ngModelChange)="localSelectedReFuel = $event"
                   class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans">
             <option value="">All Fuel Statuses / สถานะน้ำมันทั้งหมด</option>
             <option value="true">Refueled / เติมน้ำมันแล้ว</option>
@@ -112,13 +112,13 @@
       <!-- Footer Actions buttons -->
       <div class="px-5 py-4 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between gap-3 shrink-0">
         <button
-          (click)="resetFilters.emit(); closeMobileFilters()"
+          (click)="clearAllFilters()"
           class="px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 text-xs font-semibold cursor-pointer active:scale-95 transition-all flex-1 text-center font-sans"
         >
           Clear Filters
         </button>
         <button
-          (click)="closeMobileFilters()"
+          (click)="applyFilters()"
           class="px-5 py-2.5 bg-gray-700 text-white text-xs font-semibold hover:bg-gray-800 cursor-pointer active:scale-95 transition-all flex-1 text-center font-sans"
         >
           Apply

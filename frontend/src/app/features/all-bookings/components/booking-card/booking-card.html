@@ -11,7 +11,7 @@
       <img
         [src]="url"
         [alt]="booking.vehicle?.model"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        class="w-full h-full object-contain"
       />
       } @else {
       <span class="material-icons text-5xl text-gray-300">directions_car</span>
@@ -34,12 +34,7 @@
         }
       </div>
 
-      <!-- ID overlay -->
-      <div
-        class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-mono"
-      >
-        #{{ booking.id }}
-      </div>
+
     </div>
 
     <!-- Booking Details Body -->

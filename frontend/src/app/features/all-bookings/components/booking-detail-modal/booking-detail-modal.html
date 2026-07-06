@@ -1,65 +1,109 @@
 @if (!isModal) {
-  <div class="space-y-4 sm:space-y-6">
-    @if (!hideHeader) {
-      <div class="text-center md:text-left">
-        <h1 class="text-2xl font-bold text-gray-800">{{ title || 'Booking Summary' }}</h1>
-        <p class="text-sm text-gray-500 mt-1">{{ description || 'Please review your travel details before confirming the booking.' }}</p>
-      </div>
-    }
-
-    <ng-container *ngTemplateOutlet="detailsTemplate"></ng-container>
+<div class="space-y-4 sm:space-y-6">
+  @if (!hideHeader) {
+  <div class="text-center md:text-left">
+    <h1 class="text-2xl font-bold text-gray-800">
+      {{ title || 'Booking Summary' }}
+    </h1>
+    <p class="text-sm text-gray-500 mt-1">
+      {{ description || 'Please review your travel details before confirming the
+      booking.' }}
+    </p>
   </div>
+  }
+
+  <ng-container *ngTemplateOutlet="detailsTemplate"></ng-container>
+</div>
 }
 
 <!-- CDK Dialog template -->
 <ng-template #dialogTemplate>
-  <div class="relative w-full flex flex-col max-h-[90vh] bg-white">
+  <div
+    class="relative w-full flex flex-col max-h-[80dvh] md:max-h-[90dvh] bg-white"
+  >
     <!-- Modal Header -->
-    <div class="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
-      <h3 class="text-xl font-bold text-gray-800">{{ title || 'Booking Details' }}</h3>
-      <button class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer bg-transparent border-0" (click)="close.emit()">
+    <div
+      class="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
+    >
+      <h3 class="text-xl font-bold text-gray-800">
+        {{ title || 'Booking Details' }}
+      </h3>
+      <button
+        class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer bg-transparent border-0"
+        (click)="close.emit()"
+      >
         <span class="material-icons">close</span>
       </button>
     </div>
 
     <!-- Scrollable content -->
-    <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6 max-h-[70vh] bg-white">
+    <div class="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0 space-y-6 bg-white">
       <ng-container *ngTemplateOutlet="detailsTemplate"></ng-container>
     </div>
 
     <!-- Modal Footer -->
-    <div class="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col gap-4 shrink-0">
+    <div
+      class="px-4 sm:px-6 pb-6 pt-3 sm:py-4 bg-gray-50 border-t border-gray-100 flex flex-col gap-3 shrink-0"
+    >
       @if (showMileInput()) {
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
-          <div class="relative flex-1">
-            <input type="number" 
-                   [value]="mileDistanceValue()"
-                   (input)="mileDistanceValue.set($any($event.target).value)"
-                   placeholder="Actual distance traveled"
-                   class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-white" />
-            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">km</span>
-          </div>
-          <div class="flex gap-2 justify-end">
-            <button class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-sm font-semibold cursor-pointer" (click)="cancelComplete()">
-              Cancel
-            </button>
-            <component-button variant="submit" size="sm" (click)="confirmComplete()">
-              Confirm Complete
-            </component-button>
-          </div>
+      <div
+        class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full"
+      >
+        <div class="relative flex-1">
+          <input
+            type="number"
+            [value]="mileDistanceValue()"
+            (input)="mileDistanceValue.set($any($event.target).value)"
+            placeholder="Actual distance traveled"
+            class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-white"
+          />
+          <span
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400"
+            >km</span
+          >
         </div>
+        <div class="flex flex-row sm:justify-end gap-2.5 w-full sm:w-auto">
+          <button
+            class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-sm font-semibold cursor-pointer"
+            (click)="cancelComplete()"
+          >
+            Cancel
+          </button>
+          <component-button
+            variant="submit"
+            size="sm"
+            (click)="confirmComplete()"
+          >
+            Confirm Complete
+          </component-button>
+        </div>
+      </div>
       } @else {
-        <div class="flex flex-col sm:flex-row sm:justify-end gap-3 w-full">
-          @if (status === 'CONFIRMED' && canManage) {
-            <button class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-green-200 text-green-600 bg-white hover:bg-green-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer text-center font-sans" (click)="onCompleteClick()">
-              Complete Booking
-            </button>
-            <button class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-red-200 text-red-600 bg-white hover:bg-red-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer text-center font-sans" (click)="cancel.emit()">
-              Cancel Booking
-            </button>
-          }
-          <component-button class="w-full sm:w-auto font-sans" variant="submit" size="lg" (click)="close.emit()">Close</component-button>
+      <div class="flex flex-col sm:flex-row sm:justify-end gap-2.5 w-full">
+        @if (status === 'CONFIRMED' && canManage) {
+        <div class="flex flex-row gap-2.5 w-full sm:w-auto">
+          <button
+            class="flex-1 sm:flex-none px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-green-200 text-green-600 bg-white hover:bg-green-50 active:scale-95 transition-all text-xs sm:text-sm font-semibold cursor-pointer text-center font-sans whitespace-nowrap"
+            (click)="onCompleteClick()"
+          >
+            Complete Booking
+          </button>
+          <button
+            class="flex-1 sm:flex-none px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-red-200 text-red-600 bg-white hover:bg-red-50 active:scale-95 transition-all text-xs sm:text-sm font-semibold cursor-pointer text-center font-sans whitespace-nowrap"
+            (click)="cancel.emit()"
+          >
+            Cancel Booking
+          </button>
         </div>
+        }
+        <component-button
+          class="w-full sm:w-auto font-sans"
+          variant="submit"
+          [size]="isMobile ? 'sm' : 'lg'"
+          (click)="close.emit()"
+          >Close</component-button
+        >
+      </div>
       }
     </div>
   </div>
@@ -70,7 +114,9 @@
   <!-- Trip Details Card -->
   <component-card variant="default">
     <div class="space-y-3 sm:space-y-5">
-      <h2 class="hidden sm:flex text-lg font-bold text-gray-900 items-center gap-2 border-b border-gray-100 pb-3">
+      <h2
+        class="hidden sm:flex text-lg font-bold text-gray-900 items-center gap-2 border-b border-gray-100 pb-3"
+      >
         <span class="material-icons text-gray-700">description</span>
         Trip Details
       </h2>
@@ -79,10 +125,21 @@
         <!-- Destination -->
         <component-card variant="flat" size="sm" class="col-span-2">
           <div class="flex items-start gap-2.5 sm:gap-3">
-            <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg">location_on</span>
-            <div>
-              <div class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider">Destination / จุดหมาย</div>
-              <div class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5">{{ destination || '-' }}</div>
+            <span
+              class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+              >location_on</span
+            >
+            <div class="min-w-0 flex-1">
+              <div
+                class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              >
+                Destination / จุดหมาย
+              </div>
+              <div
+                class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+              >
+                {{ destination || '-' }}
+              </div>
             </div>
           </div>
         </component-card>
@@ -90,37 +147,77 @@
         <!-- Purpose -->
         <component-card variant="flat" size="sm" class="col-span-2">
           <div class="flex items-start gap-2.5 sm:gap-3">
-            <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg">assignment</span>
-            <div>
-              <div class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider">Purpose of Use / วัตถุประสงค์</div>
-              <div class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5">{{ purpose || '-' }}</div>
+            <span
+              class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+              >assignment</span
+            >
+            <div class="min-w-0 flex-1">
+              <div
+                class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              >
+                Purpose of Use / วัตถุประสงค์
+              </div>
+              <div
+                class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+              >
+                {{ purpose || '-' }}
+              </div>
             </div>
           </div>
         </component-card>
 
         <!-- Date/Time Depart -->
-        <component-card variant="flat" size="sm" class="col-span-2 sm:col-span-1">
+        <component-card
+          variant="flat"
+          size="sm"
+          class="col-span-2 sm:col-span-1"
+        >
           <div class="flex items-start gap-2.5 sm:gap-3">
-            <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg">calendar_today</span>
+            <span
+              class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+              >calendar_today</span
+            >
             <div>
-              <div class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider">Departure Date/Time / ออกเดินทาง</div>
-              <div class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans">
-                {{ depart ? (depart | thaiDate) + ' ' + (depart | thaiTime) : (bookingDate | thaiDate) }}
+              <div
+                class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              >
+                Departure Date/Time / ออกเดินทาง
+              </div>
+              <div
+                class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans"
+              >
+                {{ depart ? (depart | thaiDate) + ' ' + (depart | thaiTime) :
+                (bookingDate | thaiDate) }}
               </div>
             </div>
           </div>
         </component-card>
 
         <!-- Date/Time Return -->
-        <component-card variant="flat" size="sm" class="col-span-2 sm:col-span-1">
+        <component-card
+          variant="flat"
+          size="sm"
+          class="col-span-2 sm:col-span-1"
+        >
           <div class="flex items-start gap-2.5 sm:gap-3">
-            <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg">schedule</span>
+            <span
+              class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+              >schedule</span
+            >
             <div>
-              <div class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider">Return Date/Time / เดินทางกลับ</div>
-              <div class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans">
-                {{ returnTime ? (returnTime | thaiDate) + ' ' + (returnTime | thaiTime) : (endTime | thaiTime) }}
-                @if (totalDuration) {
-                  <span class="text-xs text-gray-500 font-normal ml-1">({{ totalDuration }})</span>
+              <div
+                class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              >
+                Return Date/Time / เดินทางกลับ
+              </div>
+              <div
+                class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans"
+              >
+                {{ returnTime ? (returnTime | thaiDate) + ' ' + (returnTime |
+                thaiTime) : (endTime | thaiTime) }} @if (totalDuration) {
+                <span class="text-xs text-gray-500 font-normal ml-1"
+                  >({{ totalDuration }})</span
+                >
                 }
               </div>
             </div>
@@ -130,10 +227,21 @@
         <!-- Booker -->
         <component-card variant="flat" size="sm" class="col-span-1">
           <div class="flex items-start gap-2.5 sm:gap-3">
-            <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg">person</span>
+            <span
+              class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+              >person</span
+            >
             <div>
-              <div class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider">Booker / ผู้จอง</div>
-              <div class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 truncate max-w-full block">{{ bookedByUser?.user_name || userName }}</div>
+              <div
+                class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              >
+                Booker / ผู้จอง
+              </div>
+              <div
+                class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 truncate max-w-full block"
+              >
+                {{ bookedByUser?.user_name || userName }}
+              </div>
             </div>
           </div>
         </component-card>
@@ -141,33 +249,61 @@
         <!-- Contact Number -->
         <component-card variant="flat" size="sm" class="col-span-1">
           <div class="flex items-start gap-2.5 sm:gap-3">
-            <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg">phone</span>
+            <span
+              class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+              >phone</span
+            >
             <div>
-              <div class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider">Booker's Phone / เบอร์ผู้จอง</div>
-              <div class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 truncate max-w-full block">{{ bookedByUser?.phone || userPhone }}</div>
+              <div
+                class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              >
+                Phone / เบอร์ติดต่อ
+              </div>
+              <div
+                class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 truncate max-w-full block"
+              >
+                {{ bookedByUser?.phone || userPhone }}
+              </div>
             </div>
           </div>
         </component-card>
 
         <!-- Proxy Booker User (if any) -->
         @if (bookedForUser && bookedForUser.user_id !== bookedByUser?.user_id) {
-          <component-card variant="flat" size="sm" class="border-indigo-100 bg-indigo-50/20 col-span-2">
-            <div class="flex items-start gap-2.5 sm:gap-3">
-              <span class="material-icons text-indigo-500 mt-0.5 text-base sm:text-lg">badge</span>
-              <div>
-                <div class="text-[10px] sm:text-xs text-indigo-400 font-semibold uppercase tracking-wider">Passenger / ผู้โดยสาร</div>
-                <div class="text-sm sm:text-base font-bold text-indigo-900 mt-0.5">{{ bookedForUser.user_name }}</div>
-                <div class="text-[9px] sm:text-[10px] text-indigo-500 font-mono">Tel: {{ bookedForUser.phone || 'N/A' }}</div>
+        <component-card
+          variant="flat"
+          size="sm"
+          class="border-indigo-100 bg-indigo-50/20 col-span-2"
+        >
+          <div class="flex items-start gap-2.5 sm:gap-3">
+            <span
+              class="material-icons text-indigo-500 mt-0.5 text-base sm:text-lg"
+              >badge</span
+            >
+            <div>
+              <div
+                class="text-[10px] sm:text-xs text-indigo-400 font-semibold uppercase tracking-wider"
+              >
+                Passenger / ผู้โดยสาร
+              </div>
+              <div
+                class="text-sm sm:text-base font-bold text-indigo-900 mt-0.5"
+              >
+                {{ bookedForUser.user_name }}
+              </div>
+              <div class="text-[9px] sm:text-[10px] text-indigo-500 font-mono">
+                Tel: {{ bookedForUser.phone || 'N/A' }}
               </div>
             </div>
-          </component-card>
+          </div>
+        </component-card>
         }
       </div>
     </div>
   </component-card>
   <div class="pt-4">
     @if (vehicle) {
-      <app-vehicle-card [vehicle]="vehicle" [readonly]="true" />
+    <app-vehicle-card [vehicle]="vehicle" [readonly]="true" />
     }
   </div>
 </ng-template>

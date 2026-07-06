@@ -20,7 +20,7 @@ export class ComponentButton {
 
   protected readonly variantClasses = {
     submit: 'bg-gray-700 text-white shadow-md shadow-gray-700',
-    cancel: 'border-3 border-gray-400 bg-transparent'
+    cancel: 'border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50'
   };
 
   protected readonly sizeClasses = {

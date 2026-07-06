@@ -1,11 +1,13 @@
 @if (activeTab === 'active') { @if (viewMode === 'calendar') {
-<div class="flex-1 min-h-0 w-full flex flex-col overflow-y-auto md:overflow-hidden animate-in fade-in duration-200">
+<div
+  class="flex-1 min-h-0 w-full flex flex-col overflow-hidden animate-in fade-in duration-200"
+>
   <app-booking-calendar
-    class="w-full flex flex-col h-[550px] md:h-full md:flex-1 md:min-h-0"
+    class="w-full flex flex-col h-full flex-1 min-h-0"
     [calendarId]="isMobile ? 'mobile-month-calendar' : 'month-calendar'"
     defaultView="month"
-    [height]="isMobile ? '550px' : '100%'"
-    [minHeight]="isMobile ? '550px' : '0'"
+    height="100%"
+    minHeight="0"
     [showLegend]="false"
     [bookings]="bookings"
     [showQuickFilters]="true"
@@ -23,7 +25,10 @@
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 animate-in fade-in duration-200"
   >
     @for (booking of bookings; track booking.id) {
-    <app-booking-card [booking]="booking" (click)="bookingClick.emit(booking)" />
+    <app-booking-card
+      [booking]="booking"
+      (click)="bookingClick.emit(booking)"
+    />
     }
   </div>
   } @else {
@@ -79,9 +84,7 @@
               class="hover:bg-gray-50/50 transition-colors cursor-pointer"
               (click)="bookingClick.emit(booking)"
             >
-              <td
-                class="px-6 py-4 font-mono text-xs font-bold text-gray-400"
-              >
+              <td class="px-6 py-4 font-mono text-xs font-bold text-gray-400">
                 #{{ booking.id }}
               </td>
               <td class="px-6 py-4 font-bold text-gray-800">
@@ -90,9 +93,7 @@
               <td class="px-6 py-4 font-semibold text-gray-600">
                 <div>{{ booking.vehicle?.model || 'N/A' }}</div>
                 @if (booking.vehicle?.plateNumber) {
-                <div
-                  class="text-[10px] text-gray-400 font-normal font-mono"
-                >
+                <div class="text-[10px] text-gray-400 font-normal font-mono">
                   {{ booking.vehicle?.plateNumber }}
                 </div>
                 }
@@ -101,12 +102,10 @@
                 {{ booking.destination || 'N/A' }}
               </td>
               <td class="px-6 py-4 text-xs font-mono text-gray-600">
-                {{ booking.depart | thaiDate }} {{ booking.depart |
-                thaiTime }}
+                {{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}
               </td>
               <td class="px-6 py-4 text-xs font-mono text-gray-600">
-                {{ booking.return | thaiDate }} {{ booking.return |
-                thaiTime }}
+                {{ booking.return | thaiDate }} {{ booking.return | thaiTime }}
               </td>
               <td class="px-6 py-4">
                 @if (booking.status === 'CONFIRMED') { @if

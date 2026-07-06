@@ -37,14 +37,14 @@ export class BookingList implements OnInit {
   readonly isModalOpen = signal(false);
   
   // Responsive drawer states
-  readonly isMobile = signal(window.innerWidth < 768);
-  readonly leftDrawerOpened = signal(window.innerWidth >= 768);
+  readonly isMobile = signal(window.innerWidth < 1024);
+  readonly leftDrawerOpened = signal(window.innerWidth >= 1024);
 
 
 
   @HostListener('window:resize')
   onResize(): void {
-    const mobile = window.innerWidth < 768;
+    const mobile = window.innerWidth < 1024;
     this.isMobile.set(mobile);
     this.leftDrawerOpened.set(!mobile);
     
@@ -178,13 +178,8 @@ export class BookingList implements OnInit {
       });
     }
 
-    // Sort by travel date descending, then start time descending
-    return [...result].sort((a, b) => {
-      if (a.bookingDate !== b.bookingDate) {
-        return b.bookingDate.localeCompare(a.bookingDate);
-      }
-      return b.startTime.localeCompare(a.startTime);
-    });
+    // Sort by Booking ID descending
+    return [...result].sort((a, b) => Number(b.id) - Number(a.id));
   });
 
   resetFilters(): void {

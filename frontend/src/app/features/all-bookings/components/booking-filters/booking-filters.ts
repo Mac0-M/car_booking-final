@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Vehicle } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-booking-filters',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './booking-filters.html',
 })
 export class BookingFilters {

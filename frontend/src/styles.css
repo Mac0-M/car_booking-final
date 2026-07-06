@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "@angular/cdk/overlay-prebuilt.css";
 
+@theme {
+  --breakpoint-md: 1024px;
+}
+
 html, body {
   height: 100vh;
   margin: 0;
@@ -35,4 +39,94 @@ html, body {
 
 .no-animation-panel * {
   transition: none !important;
+}
+
+/* Card hover effects targeting the inner div of component-card to avoid double borders & double shadows */
+component-card.cursor-pointer:hover > div {
+  border-color: #d1d5db !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
+
+/* TUI Calendar: Responsive styling for the +X exceed badge to prevent overlaps on mobile */
+@media (max-width: 1023px) {
+  .toastui-calendar-grid-cell-more-events {
+    background-color: #eff6ff !important;
+    color: #1d4ed8 !important;
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    padding: 1px 4px !important;
+    border-radius: 4px !important;
+    border: 1px solid #bfdbfe !important;
+    line-height: 1 !important;
+    position: absolute !important;
+    bottom: 2px !important;
+    right: 2px !important;
+    margin: 0 !important;
+    height: auto !important;
+    width: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Center the "See More" popup modal on mobile screens */
+  .toastui-calendar-see-more-container {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 9999 !important;
+    width: 90% !important;
+    max-width: 320px !important;
+    height: auto !important;
+    max-height: 400px !important;
+    background-color: white !important;
+    border-radius: 16px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden !important;
+  }
+
+  /* Inner container padding and layout */
+  .toastui-calendar-see-more {
+    padding: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    max-height: 400px !important;
+  }
+
+  /* Hide the pointing arrow of the popup */
+  .toastui-calendar-popup-arrow,
+  .toastui-calendar-popup-arrow-border,
+  .toastui-calendar-popup-arrow-fill {
+    display: none !important;
+  }
+
+  /* Header spacing and layout */
+  .toastui-calendar-see-more-header {
+    margin-bottom: 12px !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+  }
+
+  .toastui-calendar-more-title-date {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+  }
+
+  .toastui-calendar-more-title-day {
+    margin-left: 6px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #6b7280 !important;
+  }
+
+  /* List container scrollability */
+  .toastui-calendar-month-more-list {
+    overflow-y: auto !important;
+    padding: 0 !important;
+    max-height: 250px !important;
+  }
 }

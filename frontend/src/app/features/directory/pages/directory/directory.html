@@ -27,6 +27,7 @@
   <div class="flex-1 min-h-0 w-full overflow-y-auto p-4">
     @if (activeTab() === 'vehicles') {
     <app-vehicle-list
+      #vehicleList
       [hideHeader]="true"
       [hideFilters]="true"
       [searchQueryInput]="searchQuery()"
@@ -59,7 +60,7 @@
       size="lg"
       class="w-full"
     >
-      <span class="material-icons text-sm">person_add</span>
+      <span class="material-icons text-sm pr-2">person_add</span>
       Add New {{ isSuperAdmin() ? 'Admin' : 'User' }}
     </component-button>
     }
@@ -106,28 +107,6 @@
     [class.z-20!]="!isMobile()"
     class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
   >
-    <!-- Top Area: Mobile Menu Bar & Title -->
-    <div
-      class="w-full bg-white border-b border-gray-200 px-6 py-3 shrink-0 flex items-center justify-between gap-4"
-    >
-      <div class="flex items-center gap-3">
-        <!-- Toggle button on Mobile -->
-        @if (isMobile()) {
-        <button
-          (click)="leftDrawer.toggle(); leftDrawerOpened.set(!leftDrawerOpened())"
-          class="p-1 text-gray-500 hover:text-gray-700 transition-colors border-0 bg-transparent cursor-pointer flex items-center"
-        >
-          <span class="material-icons">menu</span>
-        </button>
-        }
-
-        <h2 class="text-lg font-black text-gray-800 m-0">
-          {{ pageTitle() }} ({{ activeTab() === 'vehicles' ? 'Vehicles' :
-          'Users' }})
-        </h2>
-      </div>
-    </div>
-
     <!-- Main Dynamic Views Section -->
     <div class="flex-1 min-h-0 w-full overflow-y-auto p-4 md:p-6">
       @if (activeTab() === 'vehicles') {

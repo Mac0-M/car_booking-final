@@ -69,8 +69,8 @@
       >Filter by User / กรองตามผู้ใช้</label
     >
     <select
-      [value]="selectedUserId"
-      (change)="selectedUserIdChange.emit($any($event.target).value)"
+      [ngModel]="selectedUserId"
+      (ngModelChange)="selectedUserIdChange.emit($event)"
       [class]="forceExpanded ? 'w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400' : 'w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400'"
     >
       <option value="">All Users / ผู้ใช้งานทั้งหมด</option>
@@ -118,8 +118,8 @@
       >Booking Status / สถานะการจอง</label
     >
     <select
-      [value]="selectedStatusFilter"
-      (change)="selectedStatusFilterChange.emit($any($event.target).value)"
+      [ngModel]="selectedStatusFilter"
+      (ngModelChange)="selectedStatusFilterChange.emit($event)"
       [class]="forceExpanded ? 'w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400' : 'w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400'"
     >
       <option value="">All Statuses / สถานะทั้งหมด</option>

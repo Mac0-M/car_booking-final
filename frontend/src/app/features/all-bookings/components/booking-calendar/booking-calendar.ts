@@ -144,13 +144,14 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
 
+      const isMobileScreen = window.innerWidth < 1024;
       this.calendarInstance = new tuiCalendar(container, {
         defaultView: this.defaultView,
         useFormPopup: false,
         useDetailPopup: false,
         isReadOnly: true,
         month: {
-          visibleEventCount: 3,
+          visibleEventCount: isMobileScreen ? 0 : 3,
         },
         gridSelection: {
           enableClick: true,
@@ -167,6 +168,9 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
             const icon = event.raw?.icon || "directions_car";
             return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
           },
+          monthGridHeaderExceed(hiddenSchedules: number) {
+            return `+${hiddenSchedules}`;
+          }
         },
       });
 

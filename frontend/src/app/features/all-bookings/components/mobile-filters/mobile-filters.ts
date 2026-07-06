@@ -1,30 +1,30 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Vehicle, VEHICLE_TYPES } from '../../../../core/models/vehicle.model';
-import { User } from '../../../../core/models/user.model';
-import { AllSharedUi } from '../../../../shared/shared';
-import { BookingFilters } from '../booking-filters/booking-filters';
+import { Component, Input, Output, EventEmitter, signal } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { Vehicle, VEHICLE_TYPES } from "../../../../core/models/vehicle.model";
+import { User } from "../../../../core/models/user.model";
+import { AllSharedUi } from "../../../../shared/shared";
+import { BookingFilters } from "../booking-filters/booking-filters";
 
 @Component({
-  selector: 'app-mobile-filters',
+  selector: "app-mobile-filters",
   standalone: true,
   imports: [CommonModule, FormsModule, ...AllSharedUi, BookingFilters],
-  templateUrl: './mobile-filters.html',
+  templateUrl: "./mobile-filters.html",
 })
 export class MobileFilters {
   @Input() isMobileHeader = false;
   @Input() vehicles: Vehicle[] = [];
   @Input() users: User[] = [];
-  @Input() activeTab: 'active' | 'history' = 'active';
-  
+  @Input() activeTab: "active" | "history" = "active";
+
   // State bindings
-  @Input() searchQuery = '';
-  @Input() selectedUserId = '';
-  @Input() startDate = '';
-  @Input() endDate = '';
-  @Input() selectedStatusFilter = '';
-  @Input() selectedVehicleTypeFilter = '';
+  @Input() searchQuery = "";
+  @Input() selectedUserId = "";
+  @Input() startDate = "";
+  @Input() endDate = "";
+  @Input() selectedStatusFilter = "";
+  @Input() selectedVehicleTypeFilter = "";
   @Input() showLegend = true;
 
   readonly vehicleTypes = VEHICLE_TYPES;
@@ -64,7 +64,6 @@ export class MobileFilters {
     this.searchQueryChange.emit(value);
     this.filterChange.emit();
   }
-
 
   onUserSelect(value: string): void {
     this.selectedUserIdChange.emit(value);

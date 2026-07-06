@@ -76,7 +76,7 @@ export class DirectoryComponent implements OnInit {
   }
 
   private checkScreenSize(): void {
-    const isMobileSize = window.innerWidth < 768;
+    const isMobileSize = window.innerWidth < 1024;
     this.isMobile.set(isMobileSize);
     
     // Automatically close drawer on mobile, open on desktop
