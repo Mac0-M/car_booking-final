@@ -1,125 +1,167 @@
-@if (isMobile()) {
-<!-- Mobile layout: Controls on top, Calendar/Grid in middle, Add Booking at bottom -->
-<div
-  class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-gray-100/40 overflow-hidden"
->
-  <!-- Top Area: Sidebar Controls (Tabs, Switchers, Filters) -->
-  <div class="w-full bg-white border-b border-gray-200 shrink-0">
-    <app-left-sidebar
-      [activeTab]="activeTab()"
-      [viewMode]="viewMode()"
-      [searchQuery]="searchQuery()"
-      [selectedUserId]="selectedUserId()"
-      [startDate]="startDate()"
-      [endDate]="endDate()"
-      [selectedStatusFilter]="selectedStatusFilter()"
-      [showFilters]="showFilters()"
-      [showLegend]="true"
-      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
-      [vehicles]="vehiclesList()"
-      [users]="usersList()"
-      [isMobile]="isMobile()"
-      [isMobileHeader]="true"
-      (activeTabChange)="setActiveTab($event)"
-      (viewModeChange)="viewMode.set($event)"
-      (searchQueryChange)="searchQuery.set($event)"
-      (selectedUserIdChange)="selectedUserId.set($event)"
-      (startDateChange)="startDate.set($event)"
-      (endDateChange)="endDate.set($event)"
-      (selectedStatusFilterChange)="selectedStatusFilter.set($event)"
-      (showFiltersChange)="showFilters.set($event)"
-      (filterChange)="onFilterChange()"
-      (resetFilters)="resetFilters()"
-      (addBooking)="openBooking()"
-      (toggleVehicleType)="toggleVehicleType($event)"
-    />
-  </div>
-
-  <!-- Middle Area: Dynamic Views (Calendar, Grid, List) -->
-  <div
-    class="flex-1 min-h-0 w-full flex flex-col p-4 space-y-3 overflow-hidden"
-  >
-    <!-- Views Render Area -->
-    <app-booking-views
-      class="flex-1 min-h-0 w-full flex flex-col overflow-hidden"
-      [activeTab]="activeTab()"
-      [viewMode]="viewMode()"
-      [bookings]="filteredBookings()"
-      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
-      [isMobile]="isMobile()"
-      (toggleVehicleType)="toggleVehicleType($event)"
-      (bookingClick)="openDetail($event)"
-      (dateSelect)="onDateSelected($event)"
-    />
-  </div>
-
-  <!-- Bottom Area: Sticky Add Booking Button -->
-  <div class="p-4 border-t border-gray-200 bg-white shrink-0">
-    <component-button
-      (click)="openBooking()"
-      variant="submit"
-      size="lg"
-      class="w-full"
-    >
-      <span class="material-icons text-sm">add</span>
-      Add new book
-    </component-button>
-  </div>
-</div>
-} @else {
 <mat-drawer-container
-  [hasBackdrop]="isMobile()"
+  [hasBackdrop]="true"
   class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
 >
-  <!-- Left Sidebar Drawer: Tabs, Views, Filters & Add Booking -->
+  <!-- Left Filter Drawer overlay (covers 1/4 width on desktop, 3/4 or full on mobile) -->
   <mat-drawer
-    #leftDrawer
-    [mode]="isMobile() ? 'over' : 'side'"
+    #filterDrawer
+    mode="over"
     [opened]="leftDrawerOpened()"
-    class="w-72 border-r border-gray-200 bg-white shadow-sm"
+    (closedStart)="leftDrawerOpened.set(false)"
+    class="w-72 sm:w-80 lg:w-80 border-r border-gray-200 bg-white shadow-xl z-50 flex flex-col h-full"
   >
     <app-left-sidebar
-      [activeTab]="activeTab()"
-      [viewMode]="viewMode()"
+      class="h-full flex flex-col"
       [searchQuery]="searchQuery()"
       [selectedUserId]="selectedUserId()"
       [startDate]="startDate()"
       [endDate]="endDate()"
       [selectedStatusFilter]="selectedStatusFilter()"
-      [showFilters]="showFilters()"
-      [showLegend]="true"
-      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+      [showStatusFilter]="activeTab() === 'history'"
       [vehicles]="vehiclesList()"
       [users]="usersList()"
-      [isMobile]="isMobile()"
-      (activeTabChange)="setActiveTab($event)"
-      (viewModeChange)="viewMode.set($event)"
-      (searchQueryChange)="searchQuery.set($event)"
-      (selectedUserIdChange)="selectedUserId.set($event)"
-      (startDateChange)="startDate.set($event)"
-      (endDateChange)="endDate.set($event)"
-      (selectedStatusFilterChange)="selectedStatusFilter.set($event)"
-      (showFiltersChange)="showFilters.set($event)"
-      (filterChange)="onFilterChange()"
-      (resetFilters)="resetFilters()"
-      (addBooking)="openBooking()"
-      (closeDrawer)="leftDrawer.close()"
+      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+      (searchQueryChange)="searchQuery.set($event); onFilterChange()"
+      (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
+      (startDateChange)="startDate.set($event); onFilterChange()"
+      (endDateChange)="endDate.set($event); onFilterChange()"
+      (selectedStatusFilterChange)="selectedStatusFilter.set($event); onFilterChange()"
       (toggleVehicleType)="toggleVehicleType($event)"
+      (resetFilters)="resetFilters()"
+      (close)="leftDrawerOpened.set(false)"
     />
   </mat-drawer>
 
-  <!-- Center Content Area -->
-  <mat-drawer-content
-    [class.z-20!]="!isMobile()"
-    class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
-  >
-    <!-- Main Dynamic Views Section -->
-    <div class="flex-1 min-h-0 flex flex-col p-6 space-y-4 overflow-hidden">
+  <!-- Main Sidenav Content -->
+  <mat-drawer-content class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!">
+    <!-- Top Header Bar -->
+    <div class="w-full bg-white border-b border-gray-200 shrink-0 px-4 md:px-6 py-3">
+      <div class="flex items-center justify-between gap-2 md:gap-4 flex-wrap">
+        
+        <!-- Left Side: Tabs Switcher, View Switcher, Filter button in order -->
+        <div class="flex items-center gap-3 md:gap-4 flex-wrap">
+          
+          <!-- Tab Switcher (Active / History) -->
+          <div class="flex gap-4 border-b border-gray-100 mr-2 md:mr-4 select-none shrink-0">
+            <button
+              (click)="setActiveTab('active')"
+              [ngClass]="activeTab() === 'active' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
+              class="pb-2 text-xs flex items-center gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+            >
+              <span class="material-icons text-sm">bookmark_border</span>
+              Active Bookings
+            </button>
+            <button
+              (click)="setActiveTab('history')"
+              [ngClass]="activeTab() === 'history' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
+              class="pb-2 text-xs flex items-center gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+            >
+              <span class="material-icons text-sm">history</span>
+              Booking History
+            </button>
+          </div>
+
+          <!-- 1. View Mode Switcher -->
+          <div class="flex items-center bg-gray-100 p-0.5 rounded-xl shrink-0">
+            <button
+              (click)="viewMode.set('calendar')"
+              [class.bg-white]="viewMode() === 'calendar'"
+              [class.shadow-sm]="viewMode() === 'calendar'"
+              [class.text-gray-800]="viewMode() === 'calendar'"
+              [class.text-gray-500]="viewMode() !== 'calendar'"
+              class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+            >
+              <span class="material-icons text-base">calendar_today</span>
+              <span class="hidden sm:inline">Calendar</span>
+            </button>
+            <button
+              (click)="viewMode.set('grid')"
+              [class.bg-white]="viewMode() === 'grid'"
+              [class.shadow-sm]="viewMode() === 'grid'"
+              [class.text-gray-800]="viewMode() === 'grid'"
+              [class.text-gray-500]="viewMode() !== 'grid'"
+              class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+            >
+              <span class="material-icons text-base">grid_view</span>
+              <span class="hidden sm:inline">Grid</span>
+            </button>
+            @if (!isMobile()) {
+            <button
+              (click)="viewMode.set('list')"
+              [class.bg-white]="viewMode() === 'list'"
+              [class.shadow-sm]="viewMode() === 'list'"
+              [class.text-gray-800]="viewMode() === 'list'"
+              [class.text-gray-500]="viewMode() !== 'list'"
+              class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+            >
+              <span class="material-icons text-base">format_list_bulleted</span>
+              <span class="hidden sm:inline">List</span>
+            </button>
+            }
+          </div>
+
+          <!-- 2. Filter Trigger Button -->
+          @if (!isMobile()) {
+          <button
+            (click)="leftDrawerOpened.set(true)"
+            [class.bg-gray-700]="leftDrawerOpened()"
+            [class.text-white]="leftDrawerOpened()"
+            [class.bg-white]="!leftDrawerOpened()"
+            [class.text-gray-500]="!leftDrawerOpened()"
+            [class.border-gray-200]="!leftDrawerOpened()"
+            [class.border-gray-700]="leftDrawerOpened()"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0"
+          >
+            <span class="material-icons text-sm">filter_list</span>
+            <span>Filters</span>
+          </button>
+          } @else {
+          <app-mobile-filters
+            [vehicles]="vehiclesList()"
+            [users]="usersList()"
+            [activeTab]="activeTab()"
+            [searchQuery]="searchQuery()"
+            [selectedUserId]="selectedUserId()"
+            [startDate]="startDate()"
+            [endDate]="endDate()"
+            [selectedStatusFilter]="selectedStatusFilter()"
+            [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+            [showLegend]="true"
+            [isMobileHeader]="true"
+            (toggleVehicleType)="toggleVehicleType($event)"
+            (searchQueryChange)="searchQuery.set($event); onFilterChange()"
+            (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
+            (startDateChange)="startDate.set($event); onFilterChange()"
+            (endDateChange)="endDate.set($event); onFilterChange()"
+            (selectedStatusFilterChange)="selectedStatusFilter.set($event); onFilterChange()"
+            (resetFilters)="resetFilters()"
+          />
+          }
+        </div>
+
+        <!-- Right Side: Add Button (Desktop only) -->
+        @if (!isMobile()) {
+        <component-button
+          (click)="openBooking()"
+          variant="submit"
+          size="xs"
+          class="w-auto font-sans"
+        >
+          <span class="material-icons text-sm mr-1">add</span>
+          Add Booking
+        </component-button>
+        }
+
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="flex-1 min-h-0 w-full flex flex-col p-4 md:p-6 overflow-hidden">
       <app-booking-views
         class="flex-1 min-h-0 w-full flex flex-col overflow-hidden"
-        [activeTab]="activeTab()"
         [viewMode]="viewMode()"
         [bookings]="filteredBookings()"
+        [showOldBookings]="activeTab() === 'history'"
         [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
         [isMobile]="isMobile()"
         (toggleVehicleType)="toggleVehicleType($event)"
@@ -127,14 +169,28 @@
         (dateSelect)="onDateSelected($event)"
       />
     </div>
+
+    <!-- Mobile: Bottom Add Booking Button -->
+    @if (isMobile()) {
+    <div class="p-4 border-t border-gray-200 bg-white shrink-0">
+      <component-button
+        (click)="openBooking()"
+        variant="submit"
+        size="lg"
+        class="w-full"
+      >
+        <span class="material-icons text-sm">add</span>
+        Add new book
+      </component-button>
+    </div>
+    }
   </mat-drawer-content>
 </mat-drawer-container>
-}
 
 <!-- Detail Modal Dialog popup -->
 <app-booking-detail-modal
-  [title]="activeTab() === 'active' ? 'Booking Details' : 'Booking History Details'"
-  [description]="activeTab() === 'active' ? 'Summary of vehicle bookings and usage in the system' : 'Detailed information of past and current vehicle bookings'"
+  [title]="'Booking Details'"
+  [description]="'Summary of vehicle bookings and usage in the system'"
   [bookingDate]="selectedBooking()?.bookingDate || ''"
   [startTime]="selectedBooking()?.startTime || ''"
   [endTime]="selectedBooking()?.endTime || ''"

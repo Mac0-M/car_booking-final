@@ -20,17 +20,15 @@
       />
     </div>
     @if (!forceExpanded) {
-    <button
+    <component-button
       (click)="showAdvancedFilters.set(!showAdvancedFilters())"
-      [class.bg-gray-800]="showAdvancedFilters()"
-      [class.text-white]="showAdvancedFilters()"
-      [class.bg-gray-50]="!showAdvancedFilters()"
-      [class.text-gray-700]="!showAdvancedFilters()"
-      class="px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 select-none"
+      [variant]="showAdvancedFilters() ? 'submit' : 'secondary'"
+      size="xs"
+      class="w-auto"
     >
-      <span class="material-icons text-base">filter_list</span>
+      <span class="material-icons text-base mr-1.5">filter_list</span>
       Filters
-    </button>
+    </component-button>
     }
   </div>
 
@@ -136,7 +134,7 @@
   >
     <button
       (click)="reset.emit()"
-      [class]="forceExpanded ? 'px-3 py-1.5 rounded-lg border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-[11px] font-semibold cursor-pointer' : 'px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all text-xs font-semibold cursor-pointer'"
+      [class]="forceExpanded ? 'px-3 py-1.5 rounded-lg border border-gray-200 text-gray-700 bg-white hover:bg-gray-200 transition-all text-[11px] font-semibold cursor-pointer' : 'px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-200 transition-all text-xs font-semibold cursor-pointer'"
     >
       Clear Filters
     </button>

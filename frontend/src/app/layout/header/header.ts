@@ -46,6 +46,10 @@ export class HeaderComponent {
     this.isMobileMenuOpen.update((open) => !open);
   }
 
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen.set(false);
+  }
+
   get userName(): string {
     return this.authService.currentUser()?.name || 'Guest';
   }

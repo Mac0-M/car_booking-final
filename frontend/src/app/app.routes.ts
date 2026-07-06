@@ -37,7 +37,7 @@ export const routes: Routes = [
   },
   {
     path: 'directory',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     title: 'Directory & Management',
     loadComponent: () =>
       import('./features/directory/pages/directory/directory').then(

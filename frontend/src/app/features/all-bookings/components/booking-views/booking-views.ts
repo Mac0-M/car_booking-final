@@ -15,11 +15,11 @@ import { AllSharedUi } from '../../../../shared/shared';
   }
 })
 export class BookingViews {
-  @Input() activeTab: 'active' | 'history' = 'active';
   @Input() viewMode: 'calendar' | 'grid' | 'list' = 'calendar';
   @Input() bookings: Booking[] = [];
   @Input() selectedVehicleTypeFilter = '';
   @Input() isMobile = false;
+  @Input() showOldBookings = false;
 
   @Output() toggleVehicleType = new EventEmitter<string>();
   @Output() bookingClick = new EventEmitter<Booking>();
@@ -36,6 +36,11 @@ export class BookingViews {
 
     const departTime = cleanTime(booking.depart || '');
     const returnTime = cleanTime(booking.return || '');
+
+    // Auto-complete: past return time = completed
+    if (!isNaN(returnTime.getTime()) && returnTime < now) {
+      return 'booked';
+    }
 
     if (now < departTime) {
       return 'available';

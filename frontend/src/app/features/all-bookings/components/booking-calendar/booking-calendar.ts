@@ -6,16 +6,18 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
+  HostListener,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Booking } from "../../../../core/models/booking.model";
 import { VEHICLE_TYPES } from "../../../../core/models/vehicle.model";
 import { THAI_MONTHS } from "../../../../shared/pipes/thai-date.pipe";
+import { AllSharedUi } from "../../../../shared/shared";
 
 @Component({
   selector: "app-booking-calendar",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AllSharedUi],
   templateUrl: "./booking-calendar.html",
 })
 export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
@@ -56,6 +58,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   @Output() dateSelect = new EventEmitter<Date>();
   @Input() showQuickFilters = false;
   @Input() selectedVehicleTypeFilter = "";
+  @Input() showOldBookings = false;
   @Output() toggleVehicleType = new EventEmitter<string>();
 
   readonly vehicleTypes = VEHICLE_TYPES;
@@ -63,8 +66,18 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   private calendarInstance: any = null;
   private resizeObserver: any = null;
   private resizeRafId: number | null = null; // เพิ่ม
+  private wasMobile = window.innerWidth < 1024;
   calendarView: "month" | "week" | "day" = "month";
   monthYearLabel = "";
+
+  @HostListener('window:resize')
+  onResize(): void {
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile !== this.wasMobile) {
+      this.wasMobile = isMobile;
+      this.initCalendar();
+    }
+  }
 
   ngOnInit(): void {
     this.calendarView = this.defaultView;
@@ -221,33 +234,51 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     }, 50);
   }
 
+  /** Check if booking is old (completed, cancelled, or auto-complete past return time) */
+  private isOldBooking(b: Booking): boolean {
+    if (b.status === 'COMPLETED' || b.status === 'CANCELLED') return true;
+    // Auto-complete: CONFIRMED but past return time
+    if (b.status === 'CONFIRMED') {
+      const returnTime = new Date((b.return || '').replace(' ', 'T'));
+      if (!isNaN(returnTime.getTime()) && returnTime < new Date()) return true;
+    }
+    return false;
+  }
+
   private renderCalendarEvents(): void {
     if (!this.calendarInstance) return;
 
     const events = this.bookings
-      .filter((b) => b.status !== "COMPLETED")
       .map((b) => {
+        const isOld = this.isOldBooking(b);
+
         let color = "#3b82f6"; // Blue for Sedan
         let borderColor = "#2563eb";
         let icon = "directions_car";
 
         const type = b.vehicle?.vehicleTypeId;
         if (type === "Pickup") {
-          color = "#ef4444"; // Red (แดง)
+          color = "#ef4444";
           borderColor = "#dc2626";
           icon = "local_shipping";
         } else if (type === "Van") {
-          color = "#f97316"; // Orange (ส้ม)
+          color = "#f97316";
           borderColor = "#ea580c";
           icon = "airport_shuttle";
         } else if (type === "SUV") {
-          color = "#10b981"; // Green (เขียว)
+          color = "#10b981";
           borderColor = "#059669";
           icon = "time_to_leave";
         } else if (type === "Other") {
-          color = "#8b5cf6"; // Purple (ม่วง)
+          color = "#8b5cf6";
           borderColor = "#7c3aed";
           icon = "commute";
+        }
+
+        // Old bookings get gray background
+        if (isOld) {
+          color = "#9ca3af";
+          borderColor = "#6b7280";
         }
 
         return {

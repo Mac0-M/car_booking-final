@@ -192,13 +192,15 @@
       <div
         class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-gray-100"
       >
-        <button
+        <component-button
           (click)="openEditModal(vehicle.id)"
-          class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1.5 text-xs font-semibold"
+          variant="secondary"
+          size="sm"
+          class="w-auto"
         >
-          <span class="material-icons text-sm">edit</span>
+          <span class="material-icons text-sm mr-1">edit</span>
           Edit Vehicle
-        </button>
+        </component-button>
       </div>
       }
     </component-card>

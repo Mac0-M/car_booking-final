@@ -41,7 +41,29 @@ export class MobileFilters {
   // Internal popup visibility state
   readonly showMobileFiltersPopup = signal(false);
 
+  // Local drafts for buffering changes before Apply is clicked
+  localSearchQuery = '';
+  localSelectedUserId = '';
+  localStartDate = '';
+  localEndDate = '';
+  localSelectedStatusFilter = '';
+  localSelectedVehicleTypeFilter = '';
+
+  toggleLocalVehicleType(type: string): void {
+    if (this.localSelectedVehicleTypeFilter === type) {
+      this.localSelectedVehicleTypeFilter = '';
+    } else {
+      this.localSelectedVehicleTypeFilter = type;
+    }
+  }
+
   openMobileFilters(): void {
+    this.localSearchQuery = this.searchQuery;
+    this.localSelectedUserId = this.selectedUserId;
+    this.localStartDate = this.startDate;
+    this.localEndDate = this.endDate;
+    this.localSelectedStatusFilter = this.selectedStatusFilter;
+    this.localSelectedVehicleTypeFilter = this.selectedVehicleTypeFilter;
     this.showMobileFiltersPopup.set(true);
   }
 
@@ -60,28 +82,26 @@ export class MobileFilters {
     return count;
   }
 
-  onSearchInput(value: string): void {
-    this.searchQueryChange.emit(value);
+  applyFilters(): void {
+    this.searchQueryChange.emit(this.localSearchQuery);
+    this.selectedUserIdChange.emit(this.localSelectedUserId);
+    this.startDateChange.emit(this.localStartDate);
+    this.endDateChange.emit(this.localEndDate);
+    this.selectedStatusFilterChange.emit(this.localSelectedStatusFilter);
+    this.toggleVehicleType.emit(this.localSelectedVehicleTypeFilter);
     this.filterChange.emit();
+    this.closeMobileFilters();
   }
 
-  onUserSelect(value: string): void {
-    this.selectedUserIdChange.emit(value);
-    this.filterChange.emit();
-  }
-
-  onStartDateSelect(value: string): void {
-    this.startDateChange.emit(value);
-    this.filterChange.emit();
-  }
-
-  onEndDateSelect(value: string): void {
-    this.endDateChange.emit(value);
-    this.filterChange.emit();
-  }
-
-  onStatusSelect(value: string): void {
-    this.selectedStatusFilterChange.emit(value);
-    this.filterChange.emit();
+  clearAllFilters(): void {
+    this.localSearchQuery = '';
+    this.localSelectedUserId = '';
+    this.localStartDate = '';
+    this.localEndDate = '';
+    this.localSelectedStatusFilter = '';
+    this.localSelectedVehicleTypeFilter = '';
+    
+    this.resetFilters.emit();
+    this.closeMobileFilters();
   }
 }

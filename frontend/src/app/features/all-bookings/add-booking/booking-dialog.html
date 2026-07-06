@@ -13,9 +13,14 @@
         Confirm Travel Details
       }
     </h3>
-    <button class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer bg-transparent border-0" (click)="onClose()">
+    <component-button
+      variant="plain"
+      size="xs"
+      class="w-auto p-1 text-gray-400 hover:text-gray-600"
+      (click)="onClose()"
+    >
       <span class="material-icons">close</span>
-    </button>
+    </component-button>
   </div>
 
   <!-- Dialog Body (Scrollable) -->
@@ -186,10 +191,15 @@
 
         <!-- Back Button -->
         <div class="pt-4 flex justify-start">
-          <button (click)="onBackToStep1()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer flex items-center gap-2 font-sans">
-            <span class="material-icons text-sm">arrow_back</span>
+          <component-button
+            (click)="onBackToStep1()"
+            variant="cancel"
+            size="md"
+            class="w-auto font-sans"
+          >
+            <span class="material-icons text-sm mr-2">arrow_back</span>
             Back to Details
-          </button>
+          </component-button>
         </div>
       </div>
     }

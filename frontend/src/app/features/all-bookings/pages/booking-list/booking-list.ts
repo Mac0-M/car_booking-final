@@ -4,22 +4,22 @@ import { BookingService } from '../../../../core/services/booking.service';
 import { VehicleService } from '../../../../core/services/vehicle.service';
 import { UserService } from '../../../../core/services/user.service';
 import { Booking } from '../../../../core/models/booking.model';
-import { Vehicle } from '../../../../core/models/vehicle.model';
+import { Vehicle, VEHICLE_TYPES } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { BookingDialogService } from '../../add-booking/booking-dialog.service';
 import { BookingDetailModal } from '../../components/booking-detail-modal/booking-detail-modal';
-import { LeftSidebar } from '../../components/left-sidebar/left-sidebar';
 import { BookingViews } from '../../components/booking-views/booking-views';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
-
+import { LeftSidebar } from '../../components/left-sidebar/left-sidebar';
+import { MobileFilters } from '../../components/mobile-filters/mobile-filters';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingViews, LeftSidebar, MatSidenavModule],
+  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingViews, LeftSidebar, MobileFilters, MatSidenavModule],
   templateUrl: './booking-list.html',
 })
 export class BookingList implements OnInit {
@@ -36,28 +36,24 @@ export class BookingList implements OnInit {
   readonly selectedBooking = signal<Booking | null>(null);
   readonly isModalOpen = signal(false);
   
-  // Responsive drawer states
+  // Responsive
   readonly isMobile = signal(window.innerWidth < 1024);
-  readonly leftDrawerOpened = signal(window.innerWidth >= 1024);
-
-
+  readonly leftDrawerOpened = signal(false);
 
   @HostListener('window:resize')
   onResize(): void {
     const mobile = window.innerWidth < 1024;
     this.isMobile.set(mobile);
-    this.leftDrawerOpened.set(!mobile);
-    
-    if (mobile && this.activeTab() === 'history' && this.viewMode() === 'list') {
+    if (mobile && this.viewMode() === 'list') {
       this.viewMode.set('grid');
     }
   }
 
+  // View Mode: calendar, grid, or list
+  readonly viewMode = signal<'calendar' | 'grid' | 'list'>('calendar');
+
   // Dashboard Tab state
   readonly activeTab = signal<'active' | 'history'>('active');
-
-  // View Mode
-  readonly viewMode = signal<'calendar' | 'grid' | 'list'>('calendar');
 
   // Filters State
   readonly searchQuery = signal('');
@@ -68,6 +64,8 @@ export class BookingList implements OnInit {
   readonly showFilters = signal(false);
   readonly selectedVehicleTypeFilter = signal('');
   readonly selectedDate = signal<Date | string>('');
+
+  readonly vehicleTypes = VEHICLE_TYPES;
 
   // Dropdown Lists
   readonly vehiclesList = signal<Vehicle[]>([]);
@@ -84,17 +82,12 @@ export class BookingList implements OnInit {
       this.usersList.set(res.filter(u => u.role === 'User'));
     });
     
-    // Load bookings
     this.loadBookings();
   }
 
   setActiveTab(tab: 'active' | 'history'): void {
     this.activeTab.set(tab);
-    if (tab === 'active') {
-      this.viewMode.set('calendar');
-    } else {
-      this.viewMode.set('grid');
-    }
+    this.selectedStatusFilter.set('');
     this.loadBookings();
   }
 
@@ -110,6 +103,12 @@ export class BookingList implements OnInit {
     this.selectedDate.set(date);
   }
 
+  /** Check if a booking is past its return time (auto-complete) */
+  private isAutoComplete(booking: Booking): boolean {
+    if (booking.status !== 'CONFIRMED') return false;
+    const returnTime = new Date((booking.return || '').replace(' ', 'T'));
+    return !isNaN(returnTime.getTime()) && returnTime < new Date();
+  }
 
   loadBookings(): void {
     const filters: any = {};
@@ -117,11 +116,9 @@ export class BookingList implements OnInit {
     if (this.activeTab() === 'active') {
       filters.status = 'booked';
     } else if (this.selectedStatusFilter()) {
-      // Map CONFIRMED -> booked, COMPLETED -> complete, CANCELLED -> cancel
       filters.status = this.selectedStatusFilter() === 'CONFIRMED' ? 'booked' : 
                        (this.selectedStatusFilter() === 'COMPLETED' ? 'complete' : 'cancel');
     }
-
 
     if (this.selectedUserId()) {
       filters.user_id = Number(this.selectedUserId());
@@ -142,12 +139,24 @@ export class BookingList implements OnInit {
     this.loadBookings();
   }
 
-  // Filter bookings locally by search query only (database handled user/vehicle/date)
+  // Filter bookings locally by search query and vehicle type
   readonly filteredBookings = computed(() => {
     const list = this.bookingService.bookings();
     const query = this.searchQuery().toLowerCase().trim();
+    const now = new Date();
 
     let result = list;
+
+    // Filter by activeTab:
+    if (this.activeTab() === 'active') {
+      result = result.filter(b => {
+        if (b.status === 'CANCELLED' || b.status === 'COMPLETED') return false;
+        // Auto-complete: hide CONFIRMED bookings past return time
+        const returnTime = new Date((b.return || '').replace(' ', 'T'));
+        if (!isNaN(returnTime.getTime()) && returnTime < now) return false;
+        return true;
+      });
+    }
 
     // Filter by Search Query
     if (query) {

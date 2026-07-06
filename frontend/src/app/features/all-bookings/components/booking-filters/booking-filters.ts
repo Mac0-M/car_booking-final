@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Vehicle } from '../../../../core/models/vehicle.model';
 import { User } from '../../../../core/models/user.model';
 
+import { AllSharedUi } from '../../../../shared/shared';
+
 @Component({
   selector: 'app-booking-filters',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AllSharedUi],
   templateUrl: './booking-filters.html',
 })
 export class BookingFilters {
