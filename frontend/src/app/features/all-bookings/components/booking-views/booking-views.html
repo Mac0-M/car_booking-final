@@ -1,13 +1,13 @@
 @if (activeTab === 'active') { @if (viewMode === 'calendar') {
 <div
-  class="flex-1 min-h-0 w-full flex flex-col overflow-hidden animate-in fade-in duration-200"
+  class="flex-1 min-h-0 w-full flex flex-col overflow-y-auto md:overflow-hidden animate-in fade-in duration-200"
 >
   <app-booking-calendar
-    class="w-full flex flex-col h-full flex-1 min-h-0"
+    class="w-full flex flex-col h-[450px] md:h-full md:flex-1 md:min-h-0"
     [calendarId]="isMobile ? 'mobile-month-calendar' : 'month-calendar'"
     defaultView="month"
-    height="100%"
-    minHeight="0"
+    [height]="isMobile ? '500px' : '100%'"
+    [minHeight]="isMobile ? '500px' : '0'"
     [showLegend]="false"
     [bookings]="bookings"
     [showQuickFilters]="true"
