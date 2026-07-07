@@ -22,6 +22,7 @@ export class VehicleCardComponent {
   @Input({ required: true }) vehicle!: Vehicle;
   @Input() isAvailable = true;
   @Input() readonly = false;
+  @Input() type: 'full' | 'mini' = 'full';
   @Output() selectVehicle = new EventEmitter<Vehicle>();
 
   get vehicleImgUrl(): string {

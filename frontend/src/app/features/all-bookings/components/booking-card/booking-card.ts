@@ -28,6 +28,11 @@ export class BookingCard {
     const departTime = cleanTime(booking.depart || "");
     const returnTime = cleanTime(booking.return || "");
 
+    // Auto-complete: past return time = completed
+    if (!isNaN(returnTime.getTime()) && returnTime < now) {
+      return "booked";
+    }
+
     if (now < departTime) {
       return "available";
     } else {

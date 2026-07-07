@@ -12,8 +12,8 @@ export class BookingDialogService {
     this.dialog.open(BookingDialogComponent, {
       width: '672px',
       maxWidth: '95vw',
-      backdropClass: ['bg-gray-900/60', 'backdrop-blur-sm'],
-      panelClass: ['w-full', 'max-w-2xl', 'shadow-xl', 'rounded-2xl', 'overflow-hidden', 'animate-in', 'zoom-in', 'duration-200']
+      backdropClass: ['bg-gray-900/60', 'backdrop-blur-sm', 'animate-backdrop-fade'],
+      panelClass: ['w-full', 'max-w-2xl', 'shadow-xl', 'rounded-2xl', 'overflow-hidden', 'animate-modal-zoom']
     });
   }
 }

@@ -20,6 +20,7 @@ export class BookingViews {
   @Input() selectedVehicleTypeFilter: string[] = [];
   @Input() isMobile = false;
   @Input() showOldBookings = false;
+  @Input() currentDate: Date | string = '';
 
   @Output() toggleVehicleType = new EventEmitter<string>();
   @Output() bookingClick = new EventEmitter<Booking>();

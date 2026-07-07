@@ -1,18 +1,23 @@
-import { Component, Input, Output, EventEmitter, signal } from "@angular/core";
+import { Component, Input, Output, EventEmitter, signal, ViewChild, TemplateRef, inject, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Vehicle, VEHICLE_TYPES } from "../../../../../core/models/vehicle.model";
 import { User } from "../../../../../core/models/user.model";
 import { AllSharedUi } from "../../../../../shared/shared";
 import { FilterSidebar } from "../filter-sidebar/filter-sidebar";
+import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
 
 @Component({
   selector: "app-mobile-filters",
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, FilterSidebar],
+  imports: [CommonModule, FormsModule, ...AllSharedUi, FilterSidebar, DialogModule],
   templateUrl: "./mobile-filters.html",
 })
-export class MobileFilters {
+export class MobileFilters implements OnDestroy {
+  private readonly dialog = inject(Dialog);
+  @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
+  private dialogRef: DialogRef<any> | null = null;
+
   getVehicleColor(vehicle: Vehicle): { dotColor: string; ringClass: string } {
     const type = vehicle.vehicleTypeId || 'Sedan';
     const found = VEHICLE_TYPES.find(t => t.value === type);
@@ -24,6 +29,7 @@ export class MobileFilters {
   @Input() activeTab: "active" | "history" = "active";
 
   // State bindings
+  @Input() selectedDate: Date | string = "";
   @Input() searchQuery = "";
   @Input() selectedUserId = "";
   @Input() startDate = "";
@@ -35,6 +41,7 @@ export class MobileFilters {
 
   readonly vehicleTypes = VEHICLE_TYPES;
 
+  @Output() selectedDateChange = new EventEmitter<Date | string>();
   @Output() searchQueryChange = new EventEmitter<string>();
   @Output() selectedUserIdChange = new EventEmitter<string>();
   @Output() startDateChange = new EventEmitter<string>();
@@ -45,10 +52,9 @@ export class MobileFilters {
   @Output() resetFilters = new EventEmitter<void>();
   @Output() filterChange = new EventEmitter<void>();
 
-  // Internal popup visibility state
-  readonly showMobileFiltersPopup = signal(false);
 
   // Local drafts for buffering changes before Apply is clicked
+  localSelectedDate: Date | string = "";
   localSearchQuery = '';
   localSelectedUserId = '';
   localStartDate = '';
@@ -92,6 +98,7 @@ export class MobileFilters {
   }
 
   openMobileFilters(): void {
+    this.localSelectedDate = this.selectedDate;
     this.localSearchQuery = this.searchQuery;
     this.localSelectedUserId = this.selectedUserId;
     this.localStartDate = this.startDate;
@@ -99,11 +106,38 @@ export class MobileFilters {
     this.localSelectedStatusFilter = this.selectedStatusFilter;
     this.localSelectedVehicleTypeFilter = [...this.selectedVehicleTypeFilter];
     this.localSelectedVehiclePlates = [...this.selectedVehiclePlates];
-    this.showMobileFiltersPopup.set(true);
+    
+    if (this.dialogRef || !this.dialogTemplate) return;
+    this.dialogRef = this.dialog.open(this.dialogTemplate, {
+      width: "100vw",
+      maxWidth: "100vw",
+      maxHeight: "80dvh",
+      backdropClass: ["bg-gray-900/60", "backdrop-blur-sm", "animate-backdrop-fade"],
+      panelClass: [
+        "w-full",
+        "max-w-full",
+        "max-h-[80dvh]",
+        "flex",
+        "flex-col",
+        "shadow-xl",
+        "mobile-filter-dialog-pane",
+        "animate-slide-up",
+      ],
+    });
+
+    this.dialogRef.closed.subscribe(() => {
+      this.dialogRef = null;
+    });
   }
 
   closeMobileFilters(): void {
-    this.showMobileFiltersPopup.set(false);
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.closeMobileFilters();
   }
 
   get activeFiltersCount(): number {
@@ -115,10 +149,12 @@ export class MobileFilters {
     if (this.selectedStatusFilter) count++;
     if (this.selectedVehicleTypeFilter.length > 0) count++;
     if (this.selectedVehiclePlates.length > 0) count++;
+    if (this.selectedDate) count++;
     return count;
   }
 
   applyFilters(): void {
+    this.selectedDateChange.emit(this.localSelectedDate);
     this.searchQueryChange.emit(this.localSearchQuery);
     this.selectedUserIdChange.emit(this.localSelectedUserId);
     this.startDateChange.emit(this.localStartDate);
@@ -131,6 +167,7 @@ export class MobileFilters {
   }
 
   clearAllFilters(): void {
+    this.localSelectedDate = '';
     this.localSearchQuery = '';
     this.localSelectedUserId = '';
     this.localStartDate = '';

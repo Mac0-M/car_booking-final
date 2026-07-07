@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit, HostListener } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, HostListener, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from '../../../../core/services/booking.service';
 import { VehicleService } from '../../../../core/services/vehicle.service';
@@ -39,14 +39,14 @@ export class BookingList implements OnInit {
   
   // Responsive
   readonly isMobile = signal(window.innerWidth < 1024);
-  readonly leftDrawerOpened = signal(!this.isMobile());
+  readonly leftDrawerOpened = signal(false);
 
   @HostListener('window:resize')
   onResize(): void {
     const mobile = window.innerWidth < 1024;
     this.isMobile.set(mobile);
     if (mobile && this.viewMode() === 'list') {
-      this.viewMode.set('grid');
+      this.setViewMode('grid');
     }
   }
 
@@ -68,6 +68,58 @@ export class BookingList implements OnInit {
   readonly selectedDate = signal<Date | string>('');
   readonly rightDrawerOpened = signal(false);
   readonly selectedDailyDate = signal<Date | null>(null);
+
+  constructor() {
+    // Load cached filters FIRST
+    const cached = localStorage.getItem('booking_list_filters');
+    if (cached) {
+      try {
+        const filters = JSON.parse(cached);
+        if (filters.searchQuery !== undefined) this.searchQuery.set(filters.searchQuery);
+        if (filters.selectedUserId !== undefined) this.selectedUserId.set(filters.selectedUserId);
+        if (filters.startDate !== undefined) this.startDate.set(filters.startDate);
+        if (filters.endDate !== undefined) this.endDate.set(filters.endDate);
+        if (filters.selectedStatusFilter !== undefined) this.selectedStatusFilter.set(filters.selectedStatusFilter);
+        if (filters.selectedVehicleTypeFilter !== undefined) this.selectedVehicleTypeFilter.set(filters.selectedVehicleTypeFilter);
+        if (filters.selectedVehiclePlates !== undefined) this.selectedVehiclePlates.set(filters.selectedVehiclePlates);
+        if (filters.activeTab !== undefined) this.activeTab.set(filters.activeTab);
+        if (filters.selectedDate !== undefined) {
+          this.selectedDate.set(filters.selectedDate ? new Date(filters.selectedDate) : '');
+        }
+      } catch (e) {
+        console.error('Error parsing cached filters:', e);
+      }
+    }
+
+    // Register the effect
+    effect(() => {
+      const filters = {
+        searchQuery: this.searchQuery(),
+        selectedUserId: this.selectedUserId(),
+        startDate: this.startDate(),
+        endDate: this.endDate(),
+        selectedStatusFilter: this.selectedStatusFilter(),
+        selectedVehicleTypeFilter: this.selectedVehicleTypeFilter(),
+        selectedVehiclePlates: this.selectedVehiclePlates(),
+        activeTab: this.activeTab(),
+        selectedDate: this.selectedDate()
+      };
+      localStorage.setItem('booking_list_filters', JSON.stringify(filters));
+    });
+  }
+
+  readonly activeFiltersCount = computed(() => {
+    let count = 0;
+    if (this.searchQuery().trim()) count++;
+    if (this.selectedUserId()) count++;
+    if (this.startDate()) count++;
+    if (this.endDate()) count++;
+    if (this.selectedStatusFilter()) count++;
+    if (this.selectedVehicleTypeFilter().length > 0) count++;
+    if (this.selectedVehiclePlates().length > 0) count++;
+    if (this.selectedDate()) count++;
+    return count;
+  });
 
   readonly filteredVehiclesForPills = computed(() => {
     const selectedTypes = this.selectedVehicleTypeFilter();
@@ -150,6 +202,7 @@ export class BookingList implements OnInit {
 
   onDateSelected(date: Date): void {
     this.selectedDate.set(date);
+    this.onFilterChange();
   }
 
   onMoreClicked(date: Date): void {
@@ -164,23 +217,49 @@ export class BookingList implements OnInit {
     return !isNaN(returnTime.getTime()) && returnTime < new Date();
   }
 
+  getBookingEffectiveStatus(b: Booking): 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' {
+    if (b.status === 'CANCELLED') return 'CANCELLED';
+    if (b.status === 'COMPLETED') return 'COMPLETED';
+    
+    // Auto-complete: if CONFIRMED but past return time, treat as COMPLETED
+    const returnTime = new Date((b.return || '').replace(' ', 'T'));
+    if (!isNaN(returnTime.getTime()) && returnTime < new Date()) {
+      return 'COMPLETED';
+    }
+    return 'CONFIRMED';
+  }
+
+  setViewMode(mode: 'calendar' | 'grid' | 'list'): void {
+    this.viewMode.set(mode);
+    this.onFilterChange();
+  }
+
   loadBookings(): void {
     const filters: any = {};
 
     if (this.activeTab() === 'active') {
       filters.status = 'booked';
     } else if (this.selectedStatusFilter()) {
-      filters.status = this.selectedStatusFilter() === 'CONFIRMED' ? 'booked' : 
-                       (this.selectedStatusFilter() === 'COMPLETED' ? 'complete' : 'cancel');
+      const statusFilter = this.selectedStatusFilter();
+      if (statusFilter === 'CONFIRMED') {
+        filters.status = 'booked';
+      } else if (statusFilter === 'CANCELLED') {
+        filters.status = 'cancel';
+      }
+      // Note: For 'COMPLETED', we don't pass status parameter so backend returns all,
+      // and we filter locally on the frontend (since some CONFIRMED bookings are effectively completed).
     }
 
     if (this.selectedUserId()) {
       filters.user_id = Number(this.selectedUserId());
     }
-    if (this.startDate()) {
+
+    // Only send date filters to backend when manual date range (startDate/endDate) is set
+    // and we are NOT in calendar view.
+    // For quick month filter (selectedDate), we fetch all bookings and filter locally in
+    // filteredBookings — same approach as Calendar view, ensuring consistent results.
+    if (this.viewMode() !== 'calendar' && this.startDate() && this.endDate()) {
       filters.depart_start = this.startDate().replace('T', ' ') + ':00';
-    }
-    if (this.endDate()) {
       filters.depart_end = this.endDate().replace('T', ' ') + ':00';
     }
 
@@ -200,6 +279,47 @@ export class BookingList implements OnInit {
     const now = new Date();
 
     let result = list;
+
+    // Filter by selectedStatusFilter locally
+    if (this.selectedStatusFilter()) {
+      const targetStatus = this.selectedStatusFilter();
+      result = result.filter(b => this.getBookingEffectiveStatus(b) === targetStatus);
+    }
+
+    // Filter by Date Range locally (overlapping check) for Grid and List views
+    if (this.viewMode() !== 'calendar') {
+      if (this.startDate() && this.endDate()) {
+        const filterStart = new Date(this.startDate().replace(' ', 'T')).getTime();
+        const filterEnd = new Date(this.endDate().replace(' ', 'T')).getTime();
+        
+        result = result.filter(b => {
+          if (!b.depart || !b.return) return false;
+          const bookingStart = new Date(b.depart.replace(' ', 'T')).getTime();
+          const bookingEnd = new Date(b.return.replace(' ', 'T')).getTime();
+          
+          return bookingStart <= filterEnd && bookingEnd >= filterStart;
+        });
+      } else if (this.selectedDate()) {
+        const date = this.selectedDate() instanceof Date ? (this.selectedDate() as Date) : new Date(this.selectedDate() as string);
+        if (!isNaN(date.getTime())) {
+          const year = date.getFullYear();
+          const month = date.getMonth();
+          const pad = (n: number) => n.toString().padStart(2, '0');
+          const lastDay = new Date(year, month + 1, 0).getDate();
+          
+          const filterStart = new Date(`${year}-${pad(month + 1)}-01T00:00`).getTime();
+          const filterEnd = new Date(`${year}-${pad(month + 1)}-${pad(lastDay)}T23:59`).getTime();
+          
+          result = result.filter(b => {
+            if (!b.depart || !b.return) return false;
+            const bookingStart = new Date(b.depart.replace(' ', 'T')).getTime();
+            const bookingEnd = new Date(b.return.replace(' ', 'T')).getTime();
+            
+            return bookingStart <= filterEnd && bookingEnd >= filterStart;
+          });
+        }
+      }
+    }
 
     // Filter by activeTab:
     if (this.activeTab() === 'active') {
@@ -264,6 +384,7 @@ export class BookingList implements OnInit {
     this.selectedStatusFilter.set('');
     this.selectedVehicleTypeFilter.set([]);
     this.selectedVehiclePlates.set([]);
+    this.selectedDate.set('');
     this.loadBookings();
   }
 
@@ -304,4 +425,9 @@ export class BookingList implements OnInit {
     });
   }
 
+  onDailyDrawerOpened(): void {
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 300);
+  }
 }

@@ -17,27 +17,19 @@
 </component-button>
 }
 
-<!-- Mobile Filters Modal/Popup -->
-@if (isMobileHeader && showMobileFiltersPopup()) {
-<div class="fixed inset-0 z-50 flex items-end justify-center select-none">
-  <!-- Backdrop -->
+<!-- Mobile Filters CDK Dialog Template -->
+<ng-template #dialogTemplate>
   <div
-    (click)="closeMobileFilters()"
-    class="absolute inset-0 bg-gray-700/60 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in"
-  ></div>
-
-  <!-- Modal Panel (Bottom sheet on mobile) -->
-  <div
-    class="relative w-full bg-white rounded-t-3xl shadow-2xl z-10 flex flex-col max-h-[85vh] animate-in slide-in-from-bottom duration-300 border-t border-gray-100"
+    class="relative w-full bg-white flex flex-col h-auto max-h-[80dvh] rounded-t-3xl overflow-hidden"
   >
     <!-- Drag Indicator / Accent bar at top of bottom-sheet -->
-    <div class="flex justify-center py-2.5 shrink-0">
-      <div class="w-12 h-1 bg-gray-300 rounded-full"></div>
+    <div class="flex justify-center py-2 shrink-0">
+      <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
     </div>
 
     <!-- Header -->
     <div
-      class="px-5 pb-3 border-b border-gray-100 flex items-center justify-between shrink-0"
+      class="px-4 pb-2 border-b border-gray-100 flex items-center justify-between shrink-0"
     >
       <h3 class="text-sm font-bold text-gray-900 flex items-center gap-1.5">
         <span class="material-icons text-base text-gray-500">search</span>
@@ -54,7 +46,7 @@
     </div>
 
     <!-- Content (Scrollable) -->
-    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+    <div class="flex-1 overflow-y-auto p-4 space-y-3.5">
       <!-- Quick Filters (Car Types) -->
       @if (showLegend) {
       <div class="space-y-1.5">
@@ -104,6 +96,7 @@
       } }
 
       <app-filter-sidebar
+        [selectedDate]="localSelectedDate"
         [searchQuery]="localSearchQuery"
         [selectedUserId]="localSelectedUserId"
         [startDate]="localStartDate"
@@ -113,23 +106,24 @@
         [vehicles]="vehicles"
         [users]="users"
         [forceExpanded]="true"
+        (selectedDateChange)="localSelectedDate = $event"
         (searchQueryChange)="localSearchQuery = $event"
         (selectedUserIdChange)="localSelectedUserId = $event"
         (startDateChange)="localStartDate = $event"
         (endDateChange)="localEndDate = $event"
         (selectedStatusFilterChange)="localSelectedStatusFilter = $event"
-        (reset)="localSearchQuery = ''; localSelectedUserId = ''; localStartDate = ''; localEndDate = ''; localSelectedStatusFilter = ''; localSelectedVehicleTypeFilter = []; localSelectedVehiclePlates = []"
+        (reset)="localSearchQuery = ''; localSelectedUserId = ''; localStartDate = ''; localEndDate = ''; localSelectedStatusFilter = ''; localSelectedVehicleTypeFilter = []; localSelectedVehiclePlates = []; localSelectedDate = ''"
       />
     </div>
 
     <!-- Footer / Actions -->
     <div
-      class="px-5 py-4 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between gap-3 shrink-0"
+      class="px-4 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between gap-2.5 shrink-0"
     >
       <component-button
         (click)="clearAllFilters()"
         variant="secondary"
-        size="md"
+        size="sm"
         class="flex-1"
       >
         Clear Filters
@@ -137,12 +131,11 @@
       <component-button
         (click)="applyFilters()"
         variant="submit"
-        size="md"
+        size="sm"
         class="flex-1"
       >
         Apply
       </component-button>
     </div>
   </div>
-</div>
-}
+</ng-template>

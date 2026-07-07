@@ -25,7 +25,7 @@ export class FilterSidebar {
   @Input() viewModes: string[] = [];
   @Input() currentViewMode = "";
 
-  // Input states
+  @Input() selectedDate: Date | string = "";
   @Input() searchQuery = "";
   @Input() selectedUserId = "";
   @Input() startDate = "";
@@ -41,7 +41,7 @@ export class FilterSidebar {
   @Input() showHeader = false;
   @Input() showQuickFilters = false;
 
-  // Outputs
+  @Output() selectedDateChange = new EventEmitter<Date | string>();
   @Output() searchQueryChange = new EventEmitter<string>();
   @Output() selectedUserIdChange = new EventEmitter<string>();
   @Output() startDateChange = new EventEmitter<string>();
@@ -80,6 +80,33 @@ export class FilterSidebar {
         return "List";
       default:
         return mode;
+    }
+  }
+
+  get currentMonthValue(): string {
+    if (this.selectedDate) {
+      const date = this.selectedDate instanceof Date ? this.selectedDate : new Date(this.selectedDate);
+      if (!isNaN(date.getTime())) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${year}-${month}`;
+      }
+    }
+    return '';
+  }
+
+  onMonthFilterChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value) {
+      const parts = input.value.split('-');
+      if (parts.length >= 2) {
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const selectedDate = new Date(year, month, 1);
+        this.selectedDateChange.emit(selectedDate);
+      }
+    } else {
+      this.selectedDateChange.emit('');
     }
   }
 }

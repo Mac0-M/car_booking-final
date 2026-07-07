@@ -25,7 +25,10 @@ import { NoVehicleAvailableComponent } from './pages/vehicle-selection/component
     VehicleCardComponent,
     NoVehicleAvailableComponent
   ],
-  templateUrl: './booking-dialog.html'
+  templateUrl: './booking-dialog.html',
+  host: {
+    class: 'block w-full h-full'
+  }
 })
 export class BookingDialogComponent implements OnInit {
   private readonly dialogRef = inject(DialogRef);
@@ -61,6 +64,10 @@ export class BookingDialogComponent implements OnInit {
   readonly currentUser = computed(() => {
     return this.authService.currentUser();
   });
+
+  isMobile(): boolean {
+    return window.innerWidth < 1024;
+  }
 
   readonly filteredUsersList = computed(() => {
     const list = this.usersList();

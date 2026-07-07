@@ -75,5 +75,7 @@ export class AuthService {
   logout(): void {
     this.tokenService.clear();
     this.currentUser.set(null);
+    localStorage.removeItem('booking_list_filters');
+    localStorage.removeItem('directory_filters');
   }
 }

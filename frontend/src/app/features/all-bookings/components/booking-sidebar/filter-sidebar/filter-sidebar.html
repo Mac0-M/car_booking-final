@@ -21,7 +21,7 @@
   } @if (forceExpanded) {
   <!-- Vertical Sidenav/Sidebar layout (Desktop & Mobile Expanded View) -->
   <div
-    class="p-4 flex flex-col gap-3 flex-1 min-h-0 select-none bg-white overflow-y-auto"
+    class="p-0 lg:p-4 flex flex-col gap-2 lg:gap-3 flex-1 min-h-0 select-none bg-white"
   >
     <!-- Quick Filters (Car Types) -->
     @if (showQuickFilters) {
@@ -108,6 +108,19 @@
       </select>
     </div>
 
+    <!-- Month Quick Filter -->
+    <div class="space-y-1">
+      <label class="text-[10px] font-bold text-gray-400 block"
+        >Month / เดือน</label
+      >
+      <input
+        type="month"
+        [value]="currentMonthValue"
+        (change)="onMonthFilterChange($event)"
+        class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans cursor-pointer"
+      />
+    </div>
+
     <!-- Start Date Picker (datetime-local) -->
     <div class="space-y-1">
       <label class="text-[10px] font-bold text-gray-400 block"
@@ -155,7 +168,7 @@
 
     <!-- Action Buttons -->
     <div
-      class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100"
+      class="hidden lg:flex items-center justify-end gap-2 pt-2 border-t border-gray-100"
     >
       <component-button
         (click)="reset.emit()"
@@ -242,6 +255,19 @@
           <option [value]="user.userId">{{ user.userName }}</option>
           }
         </select>
+      </div>
+
+      <!-- Month Quick Filter -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block"
+          >Filter by Month / กรองตามเดือน</label
+        >
+        <input
+          type="month"
+          [value]="currentMonthValue"
+          (change)="onMonthFilterChange($event)"
+          class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 cursor-pointer"
+        />
       </div>
 
       <!-- Start Date Picker -->

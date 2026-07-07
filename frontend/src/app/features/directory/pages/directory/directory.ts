@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild, HostListener, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -39,6 +39,35 @@ export class DirectoryComponent implements OnInit {
   readonly selectedType = signal('');
   readonly selectedStatus = signal('');
   readonly selectedReFuel = signal('');
+
+  constructor() {
+    // Load cached filters FIRST
+    const cached = localStorage.getItem('directory_filters');
+    if (cached) {
+      try {
+        const filters = JSON.parse(cached);
+        if (filters.searchQuery !== undefined) this.searchQuery.set(filters.searchQuery);
+        if (filters.selectedType !== undefined) this.selectedType.set(filters.selectedType);
+        if (filters.selectedStatus !== undefined) this.selectedStatus.set(filters.selectedStatus);
+        if (filters.selectedReFuel !== undefined) this.selectedReFuel.set(filters.selectedReFuel);
+        if (filters.activeTab !== undefined) this.activeTab.set(filters.activeTab);
+      } catch (e) {
+        console.error('Error parsing cached directory filters:', e);
+      }
+    }
+
+    // Register the effect
+    effect(() => {
+      const filters = {
+        searchQuery: this.searchQuery(),
+        selectedType: this.selectedType(),
+        selectedStatus: this.selectedStatus(),
+        selectedReFuel: this.selectedReFuel(),
+        activeTab: this.activeTab()
+      };
+      localStorage.setItem('directory_filters', JSON.stringify(filters));
+    });
+  }
 
   readonly activeFiltersCount = computed(() => {
     let count = 0;

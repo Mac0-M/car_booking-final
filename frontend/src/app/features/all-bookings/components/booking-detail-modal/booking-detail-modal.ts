@@ -174,21 +174,22 @@ export class BookingDetailModal implements OnChanges {
     if (this.dialogRef || !this.dialogTemplate) return;
     const isMobile = this.isMobile;
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      width: "672px", // max-w-2xl
-      maxWidth: "95vw",
-      maxHeight: isMobile ? "80dvh" : "90dvh",
-      backdropClass: ["bg-gray-900/60", "backdrop-blur-sm", "no-animation-backdrop"],
+      width: isMobile ? "100vw" : "672px",
+      maxWidth: isMobile ? "100vw" : "95vw",
+      maxHeight: isMobile ? "100dvh" : "90dvh",
+      backdropClass: ["bg-gray-900/60", "backdrop-blur-sm", "animate-backdrop-fade"],
       panelClass: [
         "w-full",
-        "max-w-2xl",
-        isMobile ? "max-h-[80dvh]" : "max-h-[90dvh]",
+        isMobile ? "max-w-full" : "max-w-2xl",
+        isMobile ? "max-h-[100dvh]" : "max-h-[90dvh]",
+        isMobile ? "h-[100dvh]" : "",
         "flex",
         "flex-col",
         "shadow-xl",
-        "rounded-2xl",
+        isMobile ? "rounded-none" : "rounded-2xl",
         "overflow-hidden",
-        "no-animation-panel",
-      ],
+        "animate-modal-zoom",
+      ].filter(Boolean),
     });
 
     this.dialogRef.closed.subscribe(() => {

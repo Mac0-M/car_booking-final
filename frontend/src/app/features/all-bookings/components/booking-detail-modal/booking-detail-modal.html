@@ -19,13 +19,13 @@
 <!-- CDK Dialog template -->
 <ng-template #dialogTemplate>
   <div
-    class="relative w-full flex flex-col max-h-[80dvh] md:max-h-[90dvh] bg-white"
+    class="relative w-full flex flex-col h-[100dvh] lg:h-auto max-h-[100dvh] lg:max-h-[90dvh] bg-white"
   >
     <!-- Modal Header -->
     <div
-      class="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
+      class="px-3 py-1 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
     >
-      <h3 class="text-xl font-bold text-gray-800">
+      <h3 class="text-lg lg:text-xl font-bold text-gray-800">
         {{ title || 'Booking Details' }}
       </h3>
       <component-button
@@ -39,13 +39,15 @@
     </div>
 
     <!-- Scrollable content -->
-    <div class="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0 space-y-6 bg-white">
+    <div
+      class="px-2 lg:p-2 py-2 overflow-y-auto flex-1 min-h-0 space-y-3 lg:space-y-6 bg-white"
+    >
       <ng-container *ngTemplateOutlet="detailsTemplate"></ng-container>
     </div>
 
     <!-- Modal Footer -->
     <div
-      class="px-4 sm:px-6 pb-6 pt-3 sm:py-4 bg-gray-50 border-t border-gray-100 flex flex-col gap-3 shrink-0"
+      class="px-3 lg:px-6 pb-4 lg:pb-6 pt-2 lg:pt-4 bg-gray-50 border-t border-gray-100 flex flex-col gap-2 lg:gap-3 shrink-0"
     >
       @if (showMileInput()) {
       <div
@@ -114,7 +116,7 @@
 <ng-template #detailsTemplate>
   <!-- Trip Details Card -->
   <component-card variant="default">
-    <div class="space-y-3 sm:space-y-5">
+    <div class="space-y-2 lg:space-y-5">
       <h2
         class="hidden sm:flex text-lg font-bold text-gray-900 items-center gap-2 border-b border-gray-100 pb-3"
       >
@@ -122,7 +124,7 @@
         Trip Details
       </h2>
 
-      <div class="grid grid-cols-2 gap-2 sm:gap-4">
+      <div class="grid grid-cols-2 gap-1.5 lg:gap-4">
         <!-- Destination -->
         <component-card variant="flat" size="sm" class="col-span-2">
           <div class="flex items-start gap-2.5 sm:gap-3">
@@ -302,9 +304,9 @@
       </div>
     </div>
   </component-card>
-  <div class="pt-4">
+  <div class="pt-2">
     @if (vehicle) {
-    <app-vehicle-card [vehicle]="vehicle" [readonly]="true" />
+    <app-vehicle-card [vehicle]="vehicle" [readonly]="true" type="mini" />
     }
   </div>
 </ng-template>
