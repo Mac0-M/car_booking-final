@@ -17,13 +17,14 @@ import { AllSharedUi } from '../../../../shared/shared';
 export class BookingViews {
   @Input() viewMode: 'calendar' | 'grid' | 'list' = 'calendar';
   @Input() bookings: Booking[] = [];
-  @Input() selectedVehicleTypeFilter = '';
+  @Input() selectedVehicleTypeFilter: string[] = [];
   @Input() isMobile = false;
   @Input() showOldBookings = false;
 
   @Output() toggleVehicleType = new EventEmitter<string>();
   @Output() bookingClick = new EventEmitter<Booking>();
   @Output() dateSelect = new EventEmitter<Date>();
+  @Output() clickMore = new EventEmitter<Date>();
 
   getBookingStatusVariant(booking: Booking): 'available' | 'pending' | 'booked' | 'unavailable' {
     if (booking.status === 'CANCELLED') return 'unavailable';

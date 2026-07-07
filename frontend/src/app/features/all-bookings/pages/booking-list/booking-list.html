@@ -2,16 +2,37 @@
   [hasBackdrop]="true"
   class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
 >
-  <!-- Left Filter Drawer overlay (covers 1/4 width on desktop, 3/4 or full on mobile) -->
+  <!-- Left Sidebar (Daily view) -->
+  <mat-drawer
+    #dailyDrawer
+    mode="over"
+    [opened]="rightDrawerOpened()"
+    (closedStart)="rightDrawerOpened.set(false)"
+    class="w-full md:w-2/3 border-r border-gray-200 bg-white shadow-2xl z-50 flex flex-col h-full overflow-hidden font-sans"
+  >
+    <app-daily-bookings-sidebar
+      class="h-full flex flex-col"
+      [selectedDailyDate]="selectedDailyDate()"
+      [dailyBookings]="dailyBookings()"
+      (close)="rightDrawerOpened.set(false)"
+      (bookingClick)="openDetail($event)"
+    />
+  </mat-drawer>
+
+  <!-- Right Filter Drawer (overlay on top of content) -->
   <mat-drawer
     #filterDrawer
+    position="end"
     mode="over"
     [opened]="leftDrawerOpened()"
     (closedStart)="leftDrawerOpened.set(false)"
-    class="w-72 sm:w-80 lg:w-80 border-r border-gray-200 bg-white shadow-xl z-50 flex flex-col h-full"
+    class="w-72 border-l border-gray-200 bg-white shadow-sm flex flex-col h-full z-30"
   >
-    <app-left-sidebar
+    <app-filter-sidebar
       class="h-full flex flex-col"
+      [showHeader]="true"
+      [showQuickFilters]="true"
+      [forceExpanded]="true"
       [searchQuery]="searchQuery()"
       [selectedUserId]="selectedUserId()"
       [startDate]="startDate()"
@@ -21,47 +42,56 @@
       [vehicles]="vehiclesList()"
       [users]="usersList()"
       [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+      [selectedVehiclePlates]="selectedVehiclePlates()"
+      [filteredVehiclesForPills]="filteredVehiclesForPills()"
       (searchQueryChange)="searchQuery.set($event); onFilterChange()"
       (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
       (startDateChange)="startDate.set($event); onFilterChange()"
       (endDateChange)="endDate.set($event); onFilterChange()"
       (selectedStatusFilterChange)="selectedStatusFilter.set($event); onFilterChange()"
       (toggleVehicleType)="toggleVehicleType($event)"
-      (resetFilters)="resetFilters()"
+      (toggleVehiclePlate)="toggleVehiclePlate($event)"
+      (reset)="resetFilters()"
       (close)="leftDrawerOpened.set(false)"
     />
   </mat-drawer>
 
   <!-- Main Sidenav Content -->
-  <mat-drawer-content class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!">
+  <mat-drawer-content
+    class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
+  >
     <!-- Top Header Bar -->
-    <div class="w-full bg-white border-b border-gray-200 shrink-0 px-4 md:px-6 py-3">
-      <div class="flex items-center justify-between gap-2 md:gap-4 flex-wrap">
-        
-        <!-- Left Side: Tabs Switcher, View Switcher, Filter button in order -->
-        <div class="flex items-center gap-3 md:gap-4 flex-wrap">
-          
+    <div
+      class="w-full bg-white border-b border-gray-200 shrink-0 px-3 md:px-6 py-3"
+    >
+      <div class="flex items-center justify-between gap-2 md:gap-4">
+        <!-- Left Side: Tabs Switcher + View Switcher -->
+        <div class="flex items-center gap-2 md:gap-4 min-w-0">
           <!-- Tab Switcher (Active / History) -->
-          <div class="flex gap-4 border-b border-gray-100 mr-2 md:mr-4 select-none shrink-0">
+          <div
+            class="flex gap-3 md:gap-4 border-b border-gray-100 mr-0 md:mr-4 select-none shrink-0"
+          >
             <button
               (click)="setActiveTab('active')"
               [ngClass]="activeTab() === 'active' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
-              class="pb-2 text-xs flex items-center gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+              class="pb-2 text-[11px] md:text-xs flex items-center gap-1 md:gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
             >
-              <span class="material-icons text-sm">bookmark_border</span>
-              Active Bookings
+              <span class="material-icons text-xs md:text-sm"
+                >bookmark_border</span
+              >
+              Active
             </button>
             <button
               (click)="setActiveTab('history')"
               [ngClass]="activeTab() === 'history' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
-              class="pb-2 text-xs flex items-center gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+              class="pb-2 text-[11px] md:text-xs flex items-center gap-1 md:gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
             >
-              <span class="material-icons text-sm">history</span>
-              Booking History
+              <span class="material-icons text-xs md:text-sm">history</span>
+              History
             </button>
           </div>
 
-          <!-- 1. View Mode Switcher -->
+          <!-- View Mode Switcher -->
           <div class="flex items-center bg-gray-100 p-0.5 rounded-xl shrink-0">
             <button
               (click)="viewMode.set('calendar')"
@@ -69,9 +99,11 @@
               [class.shadow-sm]="viewMode() === 'calendar'"
               [class.text-gray-800]="viewMode() === 'calendar'"
               [class.text-gray-500]="viewMode() !== 'calendar'"
-              class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+              class="flex items-center justify-center gap-1.5 px-2 py-1 md:px-3 md:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
             >
-              <span class="material-icons text-base">calendar_today</span>
+              <span class="material-icons text-sm md:text-base"
+                >calendar_today</span
+              >
               <span class="hidden sm:inline">Calendar</span>
             </button>
             <button
@@ -80,9 +112,9 @@
               [class.shadow-sm]="viewMode() === 'grid'"
               [class.text-gray-800]="viewMode() === 'grid'"
               [class.text-gray-500]="viewMode() !== 'grid'"
-              class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+              class="flex items-center justify-center gap-1.5 px-2 py-1 md:px-3 md:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
             >
-              <span class="material-icons text-base">grid_view</span>
+              <span class="material-icons text-sm md:text-base">grid_view</span>
               <span class="hidden sm:inline">Grid</span>
             </button>
             @if (!isMobile()) {
@@ -99,11 +131,14 @@
             </button>
             }
           </div>
+        </div>
 
-          <!-- 2. Filter Trigger Button -->
+        <!-- Right Side: Filter + Add Button -->
+        <div class="flex items-center gap-1 shrink-0">
+          <!-- Filter Button -->
           @if (!isMobile()) {
           <button
-            (click)="leftDrawerOpened.set(true)"
+            (click)="leftDrawerOpened.set(!leftDrawerOpened())"
             [class.bg-gray-700]="leftDrawerOpened()"
             [class.text-white]="leftDrawerOpened()"
             [class.bg-white]="!leftDrawerOpened()"
@@ -126,37 +161,48 @@
             [endDate]="endDate()"
             [selectedStatusFilter]="selectedStatusFilter()"
             [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+            [selectedVehiclePlates]="selectedVehiclePlates()"
             [showLegend]="true"
             [isMobileHeader]="true"
-            (toggleVehicleType)="toggleVehicleType($event)"
             (searchQueryChange)="searchQuery.set($event); onFilterChange()"
             (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
             (startDateChange)="startDate.set($event); onFilterChange()"
             (endDateChange)="endDate.set($event); onFilterChange()"
             (selectedStatusFilterChange)="selectedStatusFilter.set($event); onFilterChange()"
+            (selectedVehicleTypeFilterChange)="selectedVehicleTypeFilter.set($event); onFilterChange()"
+            (selectedVehiclePlatesChange)="selectedVehiclePlates.set($event); onFilterChange()"
             (resetFilters)="resetFilters()"
           />
           }
+
+          <!-- Add Booking Button -->
+          @if (!isMobile()) {
+          <component-button
+            (click)="openBooking()"
+            variant="submit"
+            size="xs"
+            class="w-auto font-sans"
+          >
+            <span class="material-icons text-sm mr-1">add</span>
+            Add Booking
+          </component-button>
+          } @else {
+          <button
+            (click)="openBooking()"
+            class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800 text-white shadow-sm hover:bg-gray-700 active:scale-95 transition-all cursor-pointer border-0 shrink-0"
+            aria-label="Add new booking"
+          >
+            <span class="material-icons text-base">add</span>
+          </button>
+          }
         </div>
-
-        <!-- Right Side: Add Button (Desktop only) -->
-        @if (!isMobile()) {
-        <component-button
-          (click)="openBooking()"
-          variant="submit"
-          size="xs"
-          class="w-auto font-sans"
-        >
-          <span class="material-icons text-sm mr-1">add</span>
-          Add Booking
-        </component-button>
-        }
-
       </div>
     </div>
 
     <!-- Content Area -->
-    <div class="flex-1 min-h-0 w-full flex flex-col p-4 md:p-6 overflow-hidden">
+    <div
+      class="flex-1 min-h-0 w-full flex flex-col py-1 md:p-3 overflow-hidden"
+    >
       <app-booking-views
         class="flex-1 min-h-0 w-full flex flex-col overflow-hidden"
         [viewMode]="viewMode()"
@@ -167,23 +213,9 @@
         (toggleVehicleType)="toggleVehicleType($event)"
         (bookingClick)="openDetail($event)"
         (dateSelect)="onDateSelected($event)"
+        (clickMore)="onMoreClicked($event)"
       />
     </div>
-
-    <!-- Mobile: Bottom Add Booking Button -->
-    @if (isMobile()) {
-    <div class="p-4 border-t border-gray-200 bg-white shrink-0">
-      <component-button
-        (click)="openBooking()"
-        variant="submit"
-        size="lg"
-        class="w-full"
-      >
-        <span class="material-icons text-sm">add</span>
-        Add new book
-      </component-button>
-    </div>
-    }
   </mat-drawer-content>
 </mat-drawer-container>
 

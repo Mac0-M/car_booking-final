@@ -1,0 +1,48 @@
+<!-- Sidebar Header -->
+<div
+  class="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between shrink-0 select-none bg-white font-sans"
+>
+  <div class="flex items-center gap-3">
+    <p class="text-sm text-gray-700 font-bold">
+      รายการจองยานพาหนะประจำวันที่ {{ selectedDailyDate | thaiDate }}
+    </p>
+  </div>
+  <component-button
+    (click)="close.emit()"
+    variant="plain"
+    size="xs"
+    class="w-auto p-1 text-gray-400 hover:text-gray-600"
+  >
+    <span class="material-icons">close</span>
+  </component-button>
+</div>
+
+<!-- Sidebar Body -->
+<div class="flex-1 min-h-0 bg-white p-4 md:p-6 flex flex-col font-sans">
+  @if (dailyBookings && dailyBookings.length > 0) {
+  <app-booking-calendar
+    class="w-full flex flex-col h-full flex-1 min-h-0"
+    [calendarId]="'daily-view-calendar'"
+    defaultView="day"
+    height="100%"
+    minHeight="0"
+    [showLegend]="false"
+    [bookings]="dailyBookings"
+    [currentDate]="selectedDailyDate || ''"
+    [showControls]="false"
+    [flat]="true"
+    (bookingClick)="bookingClick.emit($event)"
+  />
+  } @else {
+  <div
+    class="h-full flex items-center justify-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200 p-8"
+  >
+    <component-empty-state
+      title="ไม่มีรายการจองในวันนี้"
+      description="ไม่มีรถยนต์คันใดถูกจองในวันที่คุณเลือก"
+      icon="calendar"
+      variant="default"
+    ></component-empty-state>
+  </div>
+  }
+</div>

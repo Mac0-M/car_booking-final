@@ -6,11 +6,10 @@
   size="xs"
   class="w-auto"
 >
-  <span class="material-icons text-base mr-1">filter_list</span>
-  <span>Filter</span>
+  <span class="material-icons text-base">filter_list</span>
   @if (activeFiltersCount > 0) {
   <span
-    class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1.5 shrink-0"
+    class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
   >
     {{ activeFiltersCount }}
   </span>
@@ -65,27 +64,46 @@
         >
         <div class="flex flex-wrap items-center gap-2">
           @for (type of vehicleTypes; track type.value) {
-          <component-button
+          <button
+            component-filter-pill
+            [label]="type.label"
+            [active]="localSelectedVehicleTypeFilter.includes(type.value)"
+            [dotColor]="type.dotColor"
+            [ringClass]="type.ringClass"
+            size="md"
             (click)="toggleLocalVehicleType(type.value)"
-            variant="secondary"
-            size="xs"
-            [class.ring-2]="localSelectedVehicleTypeFilter === type.value"
-            [class.ring-offset-2]="localSelectedVehicleTypeFilter === type.value"
-            [ngClass]="localSelectedVehicleTypeFilter === type.value ? type.ringClass : ''"
-            class="w-auto rounded-full"
-          >
-            <span
-              class="w-1.5 h-1.5 rounded-full mr-1.5"
-              [ngClass]="type.dotColor"
-            ></span>
-            {{ type.label }}
-          </component-button>
+          ></button>
           }
         </div>
       </div>
-      }
 
-      <app-booking-filters
+      <!-- License Plate Pills -->
+      @if (localSelectedVehicleTypeFilter.length > 0 &&
+      localFilteredVehiclesForPills.length > 0) {
+      <div
+        class="space-y-1.5 pt-1.5 animate-in fade-in slide-in-from-top-1 duration-150"
+      >
+        <label
+          class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider"
+          >License Plate / ทะเบียนรถ</label
+        >
+        <div class="flex flex-wrap items-center gap-2">
+          @for (vehicle of localFilteredVehiclesForPills; track vehicle.id) {
+          <button
+            component-filter-pill
+            [label]="vehicle.plateNumber + ' (' + vehicle.model + ')'"
+            [active]="localSelectedVehiclePlates.includes(vehicle.id)"
+            [dotColor]="getVehicleColor(vehicle).dotColor"
+            [ringClass]="getVehicleColor(vehicle).ringClass"
+            size="md"
+            (click)="toggleLocalVehiclePlate(vehicle.id)"
+          ></button>
+          }
+        </div>
+      </div>
+      } }
+
+      <app-filter-sidebar
         [searchQuery]="localSearchQuery"
         [selectedUserId]="localSelectedUserId"
         [startDate]="localStartDate"
@@ -100,7 +118,7 @@
         (startDateChange)="localStartDate = $event"
         (endDateChange)="localEndDate = $event"
         (selectedStatusFilterChange)="localSelectedStatusFilter = $event"
-        (reset)="localSearchQuery = ''; localSelectedUserId = ''; localStartDate = ''; localEndDate = ''; localSelectedStatusFilter = ''; localSelectedVehicleTypeFilter = ''"
+        (reset)="localSearchQuery = ''; localSelectedUserId = ''; localStartDate = ''; localEndDate = ''; localSelectedStatusFilter = ''; localSelectedVehicleTypeFilter = []; localSelectedVehiclePlates = []"
       />
     </div>
 

@@ -33,8 +33,6 @@
         >
         }
       </div>
-
-
     </div>
 
     <!-- Booking Details Body -->
@@ -90,17 +88,11 @@
           <span class="material-icons text-gray-400 text-sm"
             >calendar_today</span
           >
-          <span
-            >Depart / ออกเดินทาง: {{ booking.depart | thaiDate }} {{
-            booking.depart | thaiTime }}</span
-          >
+          <span>Depart / เดินทาง: {{ booking.depart | thaiDate }}</span>
         </div>
         <div class="flex items-center gap-1.5">
           <span class="material-icons text-gray-400 text-sm">schedule</span>
-          <span
-            >Return / เดินทางกลับ: {{ booking.return | thaiDate }} {{
-            booking.return | thaiTime }}</span
-          >
+          <span>Return / กลับ: {{ booking.return | thaiDate }}</span>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { ComponentEmptyState } from "./components/empty-state/empty-state";
 import { ComponentInputUi } from "./components/input-ui/input-ui";
 import { ComponentLoading } from "./components/loading/loading";
 import { ComponentProcess } from "./components/process/process";
+import { ComponentFilterPill } from "./components/filter-pill/filter-pill";
 
 import { ThaiDatePipe } from "./pipes/thai-date.pipe";
 import { ThaiTimePipe } from "./pipes/thai-time.pipe";
@@ -16,7 +17,8 @@ export const AllComponentUi = [
   ComponentEmptyState,
   ComponentInputUi,
   ComponentLoading,
-  ComponentProcess
+  ComponentProcess,
+  ComponentFilterPill
 ];
 
 export const AllPipes = [

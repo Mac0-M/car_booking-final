@@ -12,14 +12,15 @@ import { BookingDetailModal } from '../../components/booking-detail-modal/bookin
 import { BookingViews } from '../../components/booking-views/booking-views';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { LeftSidebar } from '../../components/left-sidebar/left-sidebar';
-import { MobileFilters } from '../../components/mobile-filters/mobile-filters';
+import { FilterSidebar } from '../../components/booking-sidebar/filter-sidebar/filter-sidebar';
+import { MobileFilters } from '../../components/booking-sidebar/mobile-filters/mobile-filters';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { DailyBookingsSidebar } from '../../components/booking-sidebar/daily-bookings-sidebar/daily-bookings-sidebar';
 
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingViews, LeftSidebar, MobileFilters, MatSidenavModule],
+  imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingViews, FilterSidebar, MobileFilters, MatSidenavModule, DailyBookingsSidebar],
   templateUrl: './booking-list.html',
 })
 export class BookingList implements OnInit {
@@ -38,7 +39,7 @@ export class BookingList implements OnInit {
   
   // Responsive
   readonly isMobile = signal(window.innerWidth < 1024);
-  readonly leftDrawerOpened = signal(false);
+  readonly leftDrawerOpened = signal(!this.isMobile());
 
   @HostListener('window:resize')
   onResize(): void {
@@ -62,8 +63,42 @@ export class BookingList implements OnInit {
   readonly endDate = signal('');
   readonly selectedStatusFilter = signal('');
   readonly showFilters = signal(false);
-  readonly selectedVehicleTypeFilter = signal('');
+  readonly selectedVehicleTypeFilter = signal<string[]>([]);
+  readonly selectedVehiclePlates = signal<string[]>([]);
   readonly selectedDate = signal<Date | string>('');
+  readonly rightDrawerOpened = signal(false);
+  readonly selectedDailyDate = signal<Date | null>(null);
+
+  readonly filteredVehiclesForPills = computed(() => {
+    const selectedTypes = this.selectedVehicleTypeFilter();
+    if (selectedTypes.length === 0) return [];
+    
+    const list = this.vehiclesList();
+    return list.filter(v => {
+      const type = v.vehicleTypeId || 'Sedan';
+      if (selectedTypes.includes('Sedan')) {
+        if (type === 'Sedan' || (!type || type !== 'Pickup' && type !== 'Van' && type !== 'SUV' && type !== 'Other')) {
+          return true;
+        }
+      }
+      return selectedTypes.includes(type);
+    });
+  });
+
+  readonly dailyBookings = computed(() => {
+    const date = this.selectedDailyDate();
+    if (!date) return [];
+    const targetMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    
+    return this.filteredBookings().filter(b => {
+      if (!b.depart || !b.return) return false;
+      const depDate = new Date(b.depart.replace(' ', 'T'));
+      const retDate = new Date(b.return.replace(' ', 'T'));
+      const depMidnight = new Date(depDate.getFullYear(), depDate.getMonth(), depDate.getDate()).getTime();
+      const retMidnight = new Date(retDate.getFullYear(), retDate.getMonth(), retDate.getDate()).getTime();
+      return targetMidnight >= depMidnight && targetMidnight <= retMidnight;
+    }).sort((a, b) => new Date(a.depart.replace(' ', 'T')).getTime() - new Date(b.depart.replace(' ', 'T')).getTime());
+  });
 
   readonly vehicleTypes = VEHICLE_TYPES;
 
@@ -92,15 +127,34 @@ export class BookingList implements OnInit {
   }
 
   toggleVehicleType(type: string): void {
-    if (this.selectedVehicleTypeFilter() === type) {
-      this.selectedVehicleTypeFilter.set('');
+    const current = this.selectedVehicleTypeFilter();
+    if (current.includes(type)) {
+      this.selectedVehicleTypeFilter.set(current.filter(t => t !== type));
     } else {
-      this.selectedVehicleTypeFilter.set(type);
+      this.selectedVehicleTypeFilter.set([...current, type]);
+    }
+    
+    // Auto-update selected vehicle IDs to match the updated type selection
+    const availableIds = this.filteredVehiclesForPills().map(v => v.id);
+    this.selectedVehiclePlates.set(this.selectedVehiclePlates().filter(id => availableIds.includes(id)));
+  }
+
+  toggleVehiclePlate(vehicleId: string): void {
+    const current = this.selectedVehiclePlates();
+    if (current.includes(vehicleId)) {
+      this.selectedVehiclePlates.set(current.filter(id => id !== vehicleId));
+    } else {
+      this.selectedVehiclePlates.set([...current, vehicleId]);
     }
   }
 
   onDateSelected(date: Date): void {
     this.selectedDate.set(date);
+  }
+
+  onMoreClicked(date: Date): void {
+    this.selectedDailyDate.set(date);
+    this.rightDrawerOpened.set(true);
   }
 
   /** Check if a booking is past its return time (auto-complete) */
@@ -176,14 +230,25 @@ export class BookingList implements OnInit {
     }
 
     // Filter by Quick Vehicle Type Filter
-    if (this.selectedVehicleTypeFilter()) {
-      const typeFilter = this.selectedVehicleTypeFilter();
+    if (this.selectedVehicleTypeFilter().length > 0) {
+      const selectedTypes = this.selectedVehicleTypeFilter();
       result = result.filter(b => {
         const type = b.vehicle?.vehicleTypeId || 'Sedan';
-        if (typeFilter === 'Sedan') {
-          return type === 'Sedan' || (!type || type !== 'Pickup' && type !== 'Van' && type !== 'SUV' && type !== 'Other');
+        if (selectedTypes.includes('Sedan')) {
+          if (type === 'Sedan' || (!type || type !== 'Pickup' && type !== 'Van' && type !== 'SUV' && type !== 'Other')) {
+            return true;
+          }
         }
-        return type === typeFilter;
+        return selectedTypes.includes(type);
+      });
+    }
+
+    // Filter by Selected Vehicle License Plates (using unique vehicle IDs)
+    if (this.selectedVehiclePlates().length > 0) {
+      const selectedIds = this.selectedVehiclePlates();
+      result = result.filter(b => {
+        const vehicleId = b.vehicle?.id;
+        return vehicleId ? selectedIds.includes(vehicleId) : false;
       });
     }
 
@@ -197,7 +262,8 @@ export class BookingList implements OnInit {
     this.endDate.set('');
     this.searchQuery.set('');
     this.selectedStatusFilter.set('');
-    this.selectedVehicleTypeFilter.set('');
+    this.selectedVehicleTypeFilter.set([]);
+    this.selectedVehiclePlates.set([]);
     this.loadBookings();
   }
 

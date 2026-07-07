@@ -47,28 +47,34 @@ component-card.cursor-pointer:hover > div {
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
-/* TUI Calendar: Responsive styling for the +X exceed badge to prevent overlaps on mobile */
-@media (max-width: 1023px) {
-  .toastui-calendar-grid-cell-more-events {
-    background-color: #eff6ff !important;
-    color: #1d4ed8 !important;
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    padding: 1px 4px !important;
-    border-radius: 4px !important;
-    border: 1px solid #bfdbfe !important;
-    line-height: 1 !important;
-    position: absolute !important;
-    bottom: 2px !important;
-    right: 2px !important;
-    margin: 0 !important;
-    height: auto !important;
-    width: auto !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
+/* TUI Calendar: Styling for the +X exceed badge to prevent overlaps, positioned bottom-right */
+.toastui-calendar-grid-cell-more-events,
+.toastui-calendar-weekday-grid-more-events {
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 2.5px 6.5px !important;
+  border-radius: 6px !important;
+  border: 1px solid #bfdbfe !important;
+  line-height: 1 !important;
+  position: absolute !important;
+  bottom: 4px !important;
+  right: 4px !important;
+  margin: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 
+/* Hide default TUI calendar see-more popup */
+.toastui-calendar-see-more-container {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
   /* Center the "See More" popup modal on mobile screens */
   .toastui-calendar-see-more-container {
     position: fixed !important;
@@ -128,5 +134,15 @@ component-card.cursor-pointer:hover > div {
     overflow-y: auto !important;
     padding: 0 !important;
     max-height: 250px !important;
+  }
+
+  /* Make mat-drawer with w-full class take up 100% width on mobile */
+  mat-drawer.w-full,
+  .mat-drawer.w-full {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 100% !important;
+    border-left: none !important;
+    box-shadow: none !important;
   }
 }

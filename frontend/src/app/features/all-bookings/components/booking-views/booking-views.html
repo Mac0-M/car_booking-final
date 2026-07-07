@@ -16,6 +16,7 @@
     (toggleVehicleType)="toggleVehicleType.emit($event)"
     (bookingClick)="bookingClick.emit($event)"
     (dateSelect)="dateSelect.emit($event)"
+    (clickMore)="clickMore.emit($event)"
   />
 </div>
 } @else if (viewMode === 'grid') {
@@ -56,8 +57,8 @@
             <th class="px-6 py-4">Booker / ผู้จอง</th>
             <th class="px-6 py-4">Vehicle / ยานพาหนะ</th>
             <th class="px-6 py-4">Destination / จุดหมาย</th>
-            <th class="px-6 py-4">Depart Date / ออกเดินทาง</th>
-            <th class="px-6 py-4">Return Date / เดินทางกลับ</th>
+            <th class="px-6 py-4">Depart Date / เดินทาง</th>
+            <th class="px-6 py-4">Return Date / กลับ</th>
             <th class="px-6 py-4">Status / สถานะ</th>
           </tr>
         </thead>
@@ -85,24 +86,33 @@
               {{ booking.destination || 'N/A' }}
             </td>
             <td class="px-6 py-4 text-xs font-mono text-gray-600">
-              {{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}
+              {{ booking.depart | thaiDate }}
             </td>
             <td class="px-6 py-4 text-xs font-mono text-gray-600">
-              {{ booking.return | thaiDate }} {{ booking.return | thaiTime }}
+              {{ booking.return | thaiDate }}
             </td>
             <td class="px-6 py-4">
-              @if (booking.status === 'CONFIRMED') { 
-                @if (getBookingStatusVariant(booking) === 'booked') {
-                  <component-badge variant="booked" size="xs">Completed</component-badge>
-                } @else if (getBookingStatusVariant(booking) === 'pending') {
-                  <component-badge variant="pending" size="xs">Ongoing</component-badge>
-                } @else {
-                  <component-badge variant="available" size="xs">Upcoming</component-badge>
-                } 
-              } @else if (booking.status === 'COMPLETED') {
-                <component-badge variant="booked" size="xs">Completed</component-badge>
+              @if (booking.status === 'CONFIRMED') { @if
+              (getBookingStatusVariant(booking) === 'booked') {
+              <component-badge variant="booked" size="xs"
+                >Completed</component-badge
+              >
+              } @else if (getBookingStatusVariant(booking) === 'pending') {
+              <component-badge variant="pending" size="xs"
+                >Ongoing</component-badge
+              >
               } @else {
-                <component-badge variant="unavailable" size="xs">Cancelled</component-badge>
+              <component-badge variant="available" size="xs"
+                >Upcoming</component-badge
+              >
+              } } @else if (booking.status === 'COMPLETED') {
+              <component-badge variant="booked" size="xs"
+                >Completed</component-badge
+              >
+              } @else {
+              <component-badge variant="unavailable" size="xs"
+                >Cancelled</component-badge
+              >
               }
             </td>
           </tr>

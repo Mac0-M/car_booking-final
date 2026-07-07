@@ -85,9 +85,9 @@
       } @else {
       <div class="flex flex-col sm:flex-row sm:justify-end gap-2.5 w-full">
         @if (status === 'CONFIRMED' && canManage) {
-        <div class="flex flex-row gap-2.5 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto">
           <component-button
-            variant="success-outline"
+            variant="success"
             size="md"
             class="flex-1 sm:flex-none font-sans"
             (click)="onCompleteClick()"
@@ -95,7 +95,7 @@
             Complete Booking
           </component-button>
           <component-button
-            variant="danger-outline"
+            variant="danger"
             size="md"
             class="flex-1 sm:flex-none font-sans"
             (click)="cancel.emit()"
@@ -104,13 +104,6 @@
           </component-button>
         </div>
         }
-        <component-button
-          class="w-full sm:w-auto font-sans"
-          variant="submit"
-          size="md"
-          (click)="close.emit()"
-          >Close</component-button
-        >
       </div>
       }
     </div>

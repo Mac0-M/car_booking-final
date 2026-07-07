@@ -18,6 +18,7 @@ export class ComponentButton {
     | "secondary"
     | "danger-outline"
     | "success-outline"
+    | "success"
     | "danger"
     | "plain"
     | "danger-text" = "submit";
@@ -37,6 +38,8 @@ export class ComponentButton {
       "border border-red-200 bg-white text-red-600 hover:bg-red-100",
     "success-outline":
       "border border-green-200 bg-white text-green-600 hover:bg-green-100",
+    success:
+      "bg-green-500 text-white shadow-md shadow-green-500/20 hover:bg-green-650 border-0",
     danger:
       "bg-red-500 text-white shadow-md shadow-red-500/20 hover:bg-red-650 border-0",
     plain: "border-0 bg-transparent text-gray-400 hover:text-gray-600",

@@ -27,6 +27,8 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     "calendar-container-" + Math.random().toString(36).substring(2, 9);
   @Input() defaultView: "month" | "week" | "day" = "month";
   @Input() showViewSwitcher = true;
+  @Input() showControls = true;
+  @Input() flat = false;
   @Input() showLegend = true;
   @Input() height = "720px";
   @Input() minHeight = "850px";
@@ -56,8 +58,9 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
   @Output() bookingClick = new EventEmitter<Booking>();
   @Output() dateSelect = new EventEmitter<Date>();
+  @Output() clickMore = new EventEmitter<Date>();
   @Input() showQuickFilters = false;
-  @Input() selectedVehicleTypeFilter = "";
+  @Input() selectedVehicleTypeFilter: string[] = [];
   @Input() showOldBookings = false;
   @Output() toggleVehicleType = new EventEmitter<string>();
 
@@ -70,7 +73,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   calendarView: "month" | "week" | "day" = "month";
   monthYearLabel = "";
 
-  @HostListener('window:resize')
+  @HostListener("window:resize")
   onResize(): void {
     const isMobile = window.innerWidth < 1024;
     if (isMobile !== this.wasMobile) {
@@ -81,7 +84,9 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.calendarView = this.defaultView;
-    const initialDate = this._currentDate ? new Date(this._currentDate) : new Date();
+    const initialDate = this._currentDate
+      ? new Date(this._currentDate)
+      : new Date();
     const month = THAI_MONTHS[initialDate.getMonth()];
     const year = initialDate.getFullYear() + 543;
     this.monthYearLabel = `${month} ${year}`;
@@ -173,7 +178,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         useDetailPopup: false,
         isReadOnly: true,
         month: {
-          visibleEventCount: isMobileScreen ? 0 : 3,
+          visibleEventCount: isMobileScreen ? 0 : 1,
         },
         gridSelection: {
           enableClick: true,
@@ -192,7 +197,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
           },
           monthGridHeaderExceed(hiddenSchedules: number) {
             return `+${hiddenSchedules}`;
-          }
+          },
         },
       });
 
@@ -217,6 +222,33 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
             ? eventInfo.start
             : new Date(eventInfo.start);
         this.dateSelect.emit(date);
+      });
+
+      // Handle click on the exceed (+N) button to notify and prevent default
+      this.calendarInstance.on("clickMoreEventsBtn", (eventInfo: any) => {
+        console.log("clickMoreEventsBtn triggered:", eventInfo);
+        if (eventInfo && eventInfo.nativeEvent) {
+          eventInfo.nativeEvent.preventDefault();
+        }
+
+        let date: Date;
+        if (eventInfo && eventInfo.date) {
+          if (eventInfo.date instanceof Date) {
+            date = eventInfo.date;
+          } else if (typeof eventInfo.date.toDate === "function") {
+            date = eventInfo.date.toDate();
+          } else if (typeof eventInfo.date.getTime === "function") {
+            date = new Date(eventInfo.date.getTime());
+          } else if (eventInfo.date.d instanceof Date) {
+            date = eventInfo.date.d;
+          } else {
+            date = new Date(eventInfo.date);
+          }
+        } else {
+          date = new Date();
+        }
+
+        this.clickMore.emit(date);
       });
 
       // Observe container size changes to render calendar correctly
@@ -245,10 +277,10 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
   /** Check if booking is old (completed, cancelled, or auto-complete past return time) */
   private isOldBooking(b: Booking): boolean {
-    if (b.status === 'COMPLETED' || b.status === 'CANCELLED') return true;
+    if (b.status === "COMPLETED" || b.status === "CANCELLED") return true;
     // Auto-complete: CONFIRMED but past return time
-    if (b.status === 'CONFIRMED') {
-      const returnTime = new Date((b.return || '').replace(' ', 'T'));
+    if (b.status === "CONFIRMED") {
+      const returnTime = new Date((b.return || "").replace(" ", "T"));
       if (!isNaN(returnTime.getTime()) && returnTime < new Date()) return true;
     }
     return false;
@@ -257,54 +289,53 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   private renderCalendarEvents(): void {
     if (!this.calendarInstance) return;
 
-    const events = this.bookings
-      .map((b) => {
-        const isOld = this.isOldBooking(b);
+    const events = this.bookings.map((b) => {
+      const isOld = this.isOldBooking(b);
 
-        let color = "#3b82f6"; // Blue for Sedan
-        let borderColor = "#2563eb";
-        let icon = "directions_car";
+      let color = "#3b82f6"; // Blue for Sedan
+      let borderColor = "#2563eb";
+      let icon = "directions_car";
 
-        const type = b.vehicle?.vehicleTypeId;
-        if (type === "Pickup") {
-          color = "#ef4444";
-          borderColor = "#dc2626";
-          icon = "local_shipping";
-        } else if (type === "Van") {
-          color = "#f97316";
-          borderColor = "#ea580c";
-          icon = "airport_shuttle";
-        } else if (type === "SUV") {
-          color = "#10b981";
-          borderColor = "#059669";
-          icon = "time_to_leave";
-        } else if (type === "Other") {
-          color = "#8b5cf6";
-          borderColor = "#7c3aed";
-          icon = "commute";
-        }
+      const type = b.vehicle?.vehicleTypeId;
+      if (type === "Pickup") {
+        color = "#ef4444";
+        borderColor = "#dc2626";
+        icon = "local_shipping";
+      } else if (type === "Van") {
+        color = "#f97316";
+        borderColor = "#ea580c";
+        icon = "airport_shuttle";
+      } else if (type === "SUV") {
+        color = "#10b981";
+        borderColor = "#059669";
+        icon = "time_to_leave";
+      } else if (type === "Other") {
+        color = "#8b5cf6";
+        borderColor = "#7c3aed";
+        icon = "commute";
+      }
 
-        // Old bookings get gray background
-        if (isOld) {
-          color = "#9ca3af";
-          borderColor = "#6b7280";
-        }
+      // Old bookings get gray background
+      if (isOld) {
+        color = "#9ca3af";
+        borderColor = "#6b7280";
+      }
 
-        return {
-          id: b.id,
-          calendarId: "cal1",
-          title: `${b.vehicle?.model || "Booked"} - ${b.userName.split(" ")[0]}`,
-          start: (b.depart || "").replace(" ", "T"),
-          end: (b.return || "").replace(" ", "T"),
-          category: "time",
-          backgroundColor: color,
-          borderColor: borderColor,
-          color: "#ffffff",
-          raw: {
-            icon: icon,
-          },
-        };
-      });
+      return {
+        id: b.id,
+        calendarId: "cal1",
+        title: `${b.vehicle?.model || "Booked"} - ${b.userName.split(" ")[0]}`,
+        start: (b.depart || "").replace(" ", "T"),
+        end: (b.return || "").replace(" ", "T"),
+        category: "time",
+        backgroundColor: color,
+        borderColor: borderColor,
+        color: "#ffffff",
+        raw: {
+          icon: icon,
+        },
+      };
+    });
 
     this.calendarInstance.clear();
     this.calendarInstance.createEvents(events);

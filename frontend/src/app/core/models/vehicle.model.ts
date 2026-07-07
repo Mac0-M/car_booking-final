@@ -35,3 +35,13 @@ export const VEHICLE_TYPES = [
   { value: 'SUV', label: 'SUV', dotColor: 'bg-emerald-500', ringClass: 'ring-emerald-500' },
   { value: 'Other', label: 'Other', dotColor: 'bg-violet-500', ringClass: 'ring-violet-500' }
 ];
+
+export function getVehicleTypeColor(vehicleTypeId: string): { dotColor: string; ringClass: string } {
+  const type = vehicleTypeId || 'Sedan';
+  const found = VEHICLE_TYPES.find(t => t.value === type);
+  if (found) {
+    return { dotColor: found.dotColor, ringClass: found.ringClass };
+  }
+  // Fallback for custom or undefined types to Sedan (or Other)
+  return { dotColor: 'bg-gray-400', ringClass: 'ring-gray-400' };
+}
