@@ -1,0 +1,75 @@
+<div
+  [class.bg-white]="!flat"
+  [class.p-1.5]="!flat"
+  [class.sm:p-2.5]="!flat"
+  [class.rounded-2xl]="!flat"
+  [class.border]="!flat"
+  [class.border-gray-100]="!flat"
+  [class.shadow-sm]="!flat"
+  class="calendar-view relative overflow-hidden h-full flex flex-col w-full"
+  [style.min-height]="minHeight"
+>
+  <!-- Calendar Controls -->
+  @if (showControls) {
+  <div
+    class="flex flex-row items-center justify-between gap-1 sm:gap-3 mb-4 bg-gray-50 p-1 sm:p-2 rounded-xl border border-gray-100 shrink-0"
+  >
+    <!-- Navigation Buttons & Month/Year Display -->
+    <div class="flex items-center gap-1 sm:gap-2.5 justify-start">
+      <div class="flex items-center gap-0.5 sm:gap-1.5">
+        <button
+          (click)="prev()"
+          class="w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-200 hover:text-black cursor-pointer active:scale-95 transition-all flex items-center justify-center select-none"
+        >
+          <span class="material-icons text-[10px] sm:text-base"
+            >chevron_left</span
+          >
+        </button>
+        <button
+          (click)="today()"
+          class="h-8 sm:h-10 px-3 sm:px-4 rounded-md sm:rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-200 hover:text-black font-bold text-[9px] sm:text-xs cursor-pointer active:scale-95 transition-all flex items-center justify-center select-none"
+        >
+          Today
+        </button>
+        <button
+          (click)="next()"
+          class="w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-200 hover:text-black cursor-pointer active:scale-95 transition-all flex items-center justify-center select-none"
+        >
+          <span class="material-icons text-[10px] sm:text-base"
+            >chevron_right</span
+          >
+        </button>
+      </div>
+
+      <!-- Month & Year Display (Click to open date picker) -->
+      <div
+        class="relative h-8 sm:h-10 px-2.5 sm:px-4 rounded-md sm:rounded-lg text-gray-700 font-bold text-xs sm:text-sm cursor-pointer active:scale-95 transition-all flex items-center justify-center select-none shrink-0"
+      >
+        <span class="flex items-center gap-0.5 whitespace-nowrap">
+          {{ monthYearLabel }}
+          <span class="material-icons text-xs sm:text-sm text-gray-400"
+            >arrow_drop_down</span
+          >
+        </span>
+        <input
+          #monthInput
+          type="month"
+          (click)="triggerMonthPicker($event, monthInput)"
+          (change)="onMonthInputChange($event)"
+          class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+          title="Choose Month / เลือกเดือน"
+        />
+      </div>
+    </div>
+
+    <!-- View Mode Switcher -->
+  </div>
+  }
+
+  <!-- TUI Container -->
+  <div
+    [id]="calendarId"
+    class="flex-1 min-h-0 w-full"
+    [style.height]="height"
+  ></div>
+</div>

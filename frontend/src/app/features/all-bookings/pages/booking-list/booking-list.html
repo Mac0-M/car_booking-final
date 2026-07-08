@@ -1,100 +1,266 @@
-<div class="my-bookings-page max-w-5xl mx-auto p-4 md:p-6 space-y-6">
-  
-  <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-      <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
-        <span class="material-icons text-gray-700">bookmark_border</span>
-        Vehicle Bookings
-      </h1>
-      <p class="text-sm text-gray-500 mt-1">View all vehicle bookings and usage status of all users.</p>
-    </div>
-    
-    <div class="flex items-center gap-2">
-      <component-button variant="submit" size="sm" class="sm:w-auto" routerLink="/booking/form">
-        <span class="flex items-center gap-2 text-sm font-semibold">
-          <span class="material-icons text-base">add</span>
-          Book New Vehicle
-        </span>
-      </component-button>
-    </div>
-  </div>
-  <app-booking-filters
-    [vehicles]="vehiclesList()"
-    [users]="usersList()"
-    [viewModes]="['calendar', 'grid']"
-    [currentViewMode]="viewMode()"
-    [searchQuery]="searchQuery()"
-    [selectedVehicleId]="selectedVehicleId()"
-    [selectedUserId]="selectedUserId()"
-    [startDate]="startDate()"
-    [endDate]="endDate()"
-    [placeholder]="'Search destination, booker, purpose...'"
-    (searchQueryChange)="searchQuery.set($event)"
-    (selectedVehicleIdChange)="selectedVehicleId.set($event); onFilterChange()"
-    (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
-    (startDateChange)="startDate.set($event); onFilterChange()"
-    (endDateChange)="endDate.set($event); onFilterChange()"
-    (viewModeChange)="setViewMode($event)"
-    (reset)="resetFilters()"
-  />
-  <!-- View Area -->
-  @if (viewMode() === 'calendar') {
-    <div class="pt-10">
-      <app-booking-calendar
-        [bookings]="filteredBookings()"
-        (bookingClick)="openDetail($event)"
-      />
-    </div>
-  } @else {
-    <!-- Bookings List Grid (Grid View) -->
-    @if (filteredBookings().length > 0) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
-        @for (booking of filteredBookings(); track booking.id) {
-          <app-booking-card
-            [booking]="booking"
-            (click)="openDetail(booking)"
-            class="pt-10"
+<mat-drawer-container
+  [hasBackdrop]="true"
+  class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
+>
+  <mat-drawer
+    #dailyDrawer
+    mode="over"
+    [opened]="rightDrawerOpened()"
+    (closedStart)="rightDrawerOpened.set(false)"
+    (opened)="onDailyDrawerOpened()"
+    class="w-full md:w-2/3 border-r border-gray-200 bg-white shadow-2xl z-50 flex flex-col h-full overflow-hidden font-sans"
+  >
+    <app-daily-bookings-sidebar
+      class="h-full flex flex-col"
+      [selectedDailyDate]="selectedDailyDate()"
+      [dailyBookings]="dailyBookings()"
+      (close)="rightDrawerOpened.set(false)"
+      (bookingClick)="openDetail($event)"
+    />
+  </mat-drawer>
+
+  <!-- Right Filter Drawer (overlay on top of content) -->
+  <mat-drawer
+    #filterDrawer
+    position="end"
+    mode="over"
+    [opened]="leftDrawerOpened() && !isMobile()"
+    (closedStart)="leftDrawerOpened.set(false)"
+    class="w-72 border-l border-gray-200 bg-white shadow-sm flex flex-col h-full z-30"
+  >
+    <app-filter-sidebar
+      class="h-full flex flex-col"
+      [showHeader]="true"
+      [showQuickFilters]="true"
+      [forceExpanded]="true"
+      [selectedDate]="selectedDate()"
+      [searchQuery]="searchQuery()"
+      [selectedUserId]="selectedUserId()"
+      [startDate]="startDate()"
+      [endDate]="endDate()"
+      [selectedStatusFilter]="selectedStatusFilter()"
+      [showStatusFilter]="activeTab() === 'history'"
+      [vehicles]="vehiclesList()"
+      [users]="usersList()"
+      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+      [selectedVehiclePlates]="selectedVehiclePlates()"
+      [filteredVehiclesForPills]="filteredVehiclesForPills()"
+      (selectedDateChange)="selectedDate.set($event); onFilterChange()"
+      (searchQueryChange)="searchQuery.set($event); onFilterChange()"
+      (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
+      (startDateChange)="startDate.set($event); onFilterChange()"
+      (endDateChange)="endDate.set($event); onFilterChange()"
+      (selectedStatusFilterChange)="selectedStatusFilter.set($event); onFilterChange()"
+      (toggleVehicleType)="toggleVehicleType($event)"
+      (toggleVehiclePlate)="toggleVehiclePlate($event)"
+      (reset)="resetFilters()"
+      (close)="leftDrawerOpened.set(false)"
+    />
+  </mat-drawer>
+
+  <!-- Main Sidenav Content -->
+  <mat-drawer-content
+    class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
+  >
+    <!-- Top Header Bar -->
+    <div
+      class="w-full bg-white border-b border-gray-200 shrink-0 px-3 md:px-6 py-3"
+    >
+      <div class="flex items-center justify-between gap-2 md:gap-4">
+        <!-- Left Side: Tabs Switcher + View Switcher -->
+        <div class="flex items-center gap-2 md:gap-4 min-w-0">
+          <!-- Tab Switcher (Active / History) -->
+          <div
+            class="flex gap-3 md:gap-4 border-b border-gray-100 mr-0 md:mr-4 select-none shrink-0"
+          >
+            <button
+              (click)="setActiveTab('active')"
+              [ngClass]="activeTab() === 'active' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
+              class="pb-2 text-[11px] md:text-xs flex items-center gap-1 md:gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+            >
+              <span class="material-icons text-xs md:text-sm"
+                >bookmark_border</span
+              >
+              Active
+            </button>
+            <button
+              (click)="setActiveTab('history')"
+              [ngClass]="activeTab() === 'history' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
+              class="pb-2 text-[11px] md:text-xs flex items-center gap-1 md:gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+            >
+              <span class="material-icons text-xs md:text-sm">history</span>
+              History
+            </button>
+          </div>
+
+          <!-- View Mode Switcher -->
+          <div
+            class="relative grid bg-gray-100 p-0.5 rounded-lg shrink-0 select-none"
+            [ngClass]="isMobile() ? 'grid-cols-2 w-20' : 'grid-cols-3 w-72'"
+          >
+            <!-- Sliding Background Indicator -->
+            <div
+              class="absolute top-0.5 bottom-0.5 left-0.5 bg-white shadow-sm rounded-md transition-transform duration-200 ease-out"
+              [style.width]="isMobile() ? 'calc(50% - 2px)' : 'calc(33.33% - 2px)'"
+              [style.transform]="
+                isMobile()
+                  ? (viewMode() === 'calendar' ? 'translateX(0)' : 'translateX(calc(100% + 2px))')
+                  : (viewMode() === 'calendar' ? 'translateX(0)' : (viewMode() === 'grid' ? 'translateX(calc(100% + 2px))' : 'translateX(calc(200% + 4px))'))
+              "
+            ></div>
+
+            <button
+              (click)="setViewMode('calendar')"
+              [class.text-gray-800]="viewMode() === 'calendar'"
+              [class.text-gray-500]="viewMode() !== 'calendar'"
+              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
+            >
+              <span class="material-icons text-sm sm:text-base">calendar_today</span>
+              @if (!isMobile()) {
+                <span>Calendar</span>
+              }
+            </button>
+
+            <button
+              (click)="setViewMode('grid')"
+              [class.text-gray-800]="viewMode() === 'grid'"
+              [class.text-gray-500]="viewMode() !== 'grid'"
+              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
+            >
+              <span class="material-icons text-sm sm:text-base">grid_view</span>
+              @if (!isMobile()) {
+                <span>Grid</span>
+              }
+            </button>
+
+            @if (!isMobile()) {
+            <button
+              (click)="setViewMode('list')"
+              [class.text-gray-800]="viewMode() === 'list'"
+              [class.text-gray-500]="viewMode() !== 'list'"
+              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
+            >
+              <span class="material-icons text-base">format_list_bulleted</span>
+              <span>List</span>
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Right Side: Filter + Add Button -->
+        <div class="flex items-center gap-1 shrink-0">
+          <!-- Filter Button -->
+          @if (!isMobile()) {
+          <button
+            (click)="leftDrawerOpened.set(!leftDrawerOpened())"
+            [class.bg-gray-700]="leftDrawerOpened() || activeFiltersCount() > 0"
+            [class.text-white]="leftDrawerOpened() || activeFiltersCount() > 0"
+            [class.border-gray-700]="leftDrawerOpened() || activeFiltersCount() > 0"
+            [class.bg-white]="!leftDrawerOpened() && activeFiltersCount() === 0"
+            [class.text-gray-500]="!leftDrawerOpened() && activeFiltersCount() === 0"
+            [class.border-gray-200]="!leftDrawerOpened() && activeFiltersCount() === 0"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0"
+          >
+            <span class="material-icons text-sm">filter_list</span>
+            <span>Filters</span>
+            @if (activeFiltersCount() > 0) {
+            <span
+              class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
+            >
+              {{ activeFiltersCount() }}
+            </span>
+            }
+          </button>
+          } @else {
+          <app-mobile-filters
+            [vehicles]="vehiclesList()"
+            [users]="usersList()"
+            [activeTab]="activeTab()"
+            [selectedDate]="selectedDate()"
+            [searchQuery]="searchQuery()"
+            [selectedUserId]="selectedUserId()"
+            [startDate]="startDate()"
+            [endDate]="endDate()"
+            [selectedStatusFilter]="selectedStatusFilter()"
+            [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+            [selectedVehiclePlates]="selectedVehiclePlates()"
+            [showLegend]="true"
+            [isMobileHeader]="false"
+            (selectedDateChange)="selectedDate.set($event); onFilterChange()"
+            (searchQueryChange)="searchQuery.set($event); onFilterChange()"
+            (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
+            (startDateChange)="startDate.set($event); onFilterChange()"
+            (endDateChange)="endDate.set($event); onFilterChange()"
+            (selectedStatusFilterChange)="selectedStatusFilter.set($event); onFilterChange()"
+            (selectedVehicleTypeFilterChange)="selectedVehicleTypeFilter.set($event); onFilterChange()"
+            (selectedVehiclePlatesChange)="selectedVehiclePlates.set($event); onFilterChange()"
+            (resetFilters)="resetFilters()"
           />
-        }
-      </div>
-    } @else {
-      <!-- Empty State -->
-      <div class="py-8 flex flex-col items-center">
-        <div class="w-full">
-          <component-empty-state
-            title="No bookings found"
-            description="There are currently no vehicle bookings matching the selected filters."
-            icon="search"
-            variant="card">
-          </component-empty-state>
+          }
+
+          <!-- Add Booking Button -->
+          @if (!isMobile()) {
+          <button
+            (click)="openBooking()"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border border-gray-700 bg-gray-700 text-white shadow-sm active:scale-95 shrink-0"
+          >
+            <span class="material-icons text-sm">add</span>
+            <span>Add Booking</span>
+          </button>
+          } @else {
+          <button
+            (click)="openBooking()"
+            class="flex items-center justify-center w-8.5 h-8.5 rounded-lg bg-gray-700 text-white shadow-sm hover:bg-gray-700 active:scale-95 transition-all cursor-pointer border-0 shrink-0"
+            aria-label="Add new booking"
+          >
+            <span class="material-icons text-base">add</span>
+          </button>
+          }
         </div>
       </div>
-    }
-  }
+    </div>
 
-  <!-- Detail Modal Dialog popup -->
-  <app-booking-detail-modal
-    [title]="'Booking Details'"
-    [description]="'Summary of vehicle bookings and usage in the system'"
-    [bookingDate]="selectedBooking()?.bookingDate || ''"
-    [startTime]="selectedBooking()?.startTime || ''"
-    [endTime]="selectedBooking()?.endTime || ''"
-    [destination]="selectedBooking()?.destination || ''"
-    [purpose]="selectedBooking()?.purpose || ''"
-    [userName]="selectedBooking()?.userName || ''"
-    [userPhone]="selectedBooking()?.userPhone || ''"
-    [vehicle]="selectedBooking()?.vehicle || null"
-    [status]="selectedBooking()?.status || 'CONFIRMED'"
-    [depart]="selectedBooking()?.depart || ''"
-    [returnTime]="selectedBooking()?.return || ''"
-    [bookedByUser]="selectedBooking()?.bookedByUser || null"
-    [bookedForUser]="selectedBooking()?.bookedForUser || null"
+    <!-- Content Area -->
+    <div
+      class="flex-1 min-h-0 w-full flex flex-col py-1 md:p-3 overflow-hidden"
+    >
+      <app-booking-views
+        class="flex-1 min-h-0 w-full flex flex-col overflow-hidden"
+        [viewMode]="viewMode()"
+        [bookings]="filteredBookings()"
+        [showOldBookings]="activeTab() === 'history'"
+        [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
+        [isMobile]="isMobile()"
+        [currentDate]="selectedDate()"
+        (toggleVehicleType)="toggleVehicleType($event)"
+        (bookingClick)="openDetail($event)"
+        (dateSelect)="onDateSelected($event)"
+        (clickMore)="onMoreClicked($event)"
+      />
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
 
-    [isModal]="true"
-    [isOpen]="isModalOpen()"
-    (close)="closeDetail()"
-    (cancel)="onCancelBooking(selectedBooking()?.id || '')"
-    (complete)="onCompleteBooking(selectedBooking()?.id || '', $event)"
-  />
-</div>
+<!-- Detail Modal Dialog popup -->
+<app-booking-detail-modal
+  [title]="'Booking Details'"
+  [description]="'Summary of vehicle bookings and usage in the system'"
+  [bookingDate]="selectedBooking()?.bookingDate || ''"
+  [startTime]="selectedBooking()?.startTime || ''"
+  [endTime]="selectedBooking()?.endTime || ''"
+  [destination]="selectedBooking()?.destination || ''"
+  [purpose]="selectedBooking()?.purpose || ''"
+  [userName]="selectedBooking()?.userName || ''"
+  [userPhone]="selectedBooking()?.userPhone || ''"
+  [vehicle]="selectedBooking()?.vehicle || null"
+  [status]="selectedBooking()?.status || 'CONFIRMED'"
+  [depart]="selectedBooking()?.depart || ''"
+  [returnTime]="selectedBooking()?.return || ''"
+  [bookedByUser]="selectedBooking()?.bookedByUser || null"
+  [bookedForUser]="selectedBooking()?.bookedForUser || null"
+  [isModal]="true"
+  [isOpen]="isModalOpen()"
+  (close)="closeDetail()"
+  (cancel)="onCancelBooking(selectedBooking()?.id || '')"
+  (complete)="onCompleteBooking(selectedBooking()?.id || '', $event)"
+/>

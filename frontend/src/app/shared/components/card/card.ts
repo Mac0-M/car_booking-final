@@ -20,8 +20,8 @@ export class ComponentCard {
   };
 
   protected readonly sizeClasses = {
-    sm: 'p-4 text-sm',
-    base: 'p-5 md:p-6 text-base',
-    lg: 'p-6 md:p-8 text-lg'
+    sm: 'p-3 sm:p-4 text-xs sm:text-sm',
+    base: 'p-4 sm:p-5 md:p-6 text-sm sm:text-base',
+    lg: 'p-5 sm:p-6 md:p-8 text-base sm:text-lg'
   };
 }

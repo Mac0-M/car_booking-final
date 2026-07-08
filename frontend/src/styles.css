@@ -1,4 +1,16 @@
 @import "tailwindcss";
+@import "@angular/cdk/overlay-prebuilt.css";
+
+@theme {
+  --breakpoint-md: 1024px;
+}
+
+html, body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* ล็อกไม่ให้หน้าต่างเบราว์เซอร์หลักเกิด Scrollbar ซ้อน */
+}
 
 /* TUI Calendar: Adjust font size and styling of week/day header numbers */
 .toastui-calendar-day-name__date {
@@ -6,4 +18,233 @@
 }
 .toastui-calendar-day-name__name {
   display: none !important;
+}
+
+.wrap-break-word {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Instant display override to remove all open/close transitions
+.no-animation-backdrop {
+  transition: none !important;
+  animation: none !important;
+}
+
+.no-animation-panel {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+.no-animation-panel * {
+  transition: none !important;
+} */
+
+/* Card hover effects targeting the inner div of component-card to avoid double borders & double shadows */
+component-card.cursor-pointer:hover > div {
+  border-color: #d1d5db !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
+
+/* TUI Calendar: Styling for the +X exceed badge to prevent overlaps, positioned bottom-right */
+.toastui-calendar-grid-cell-more-events,
+.toastui-calendar-weekday-grid-more-events {
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 4px 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid #bfdbfe !important;
+  line-height: 1 !important;
+  position: absolute !important;
+  bottom: 4px !important;
+  right: 4px !important;
+  margin: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Hide default TUI calendar see-more popup */
+.toastui-calendar-see-more-container {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
+  /* Center the "See More" popup modal on mobile screens */
+  .toastui-calendar-see-more-container {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 9999 !important;
+    width: 90% !important;
+    max-width: 320px !important;
+    height: auto !important;
+    max-height: 400px !important;
+    background-color: white !important;
+    border-radius: 16px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden !important;
+  }
+
+  /* Inner container padding and layout */
+  .toastui-calendar-see-more {
+    padding: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    max-height: 400px !important;
+  }
+
+  /* Hide the pointing arrow of the popup */
+  .toastui-calendar-popup-arrow,
+  .toastui-calendar-popup-arrow-border,
+  .toastui-calendar-popup-arrow-fill {
+    display: none !important;
+  }
+
+  /* Header spacing and layout */
+  .toastui-calendar-see-more-header {
+    margin-bottom: 12px !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+  }
+
+  .toastui-calendar-more-title-date {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+  }
+
+  .toastui-calendar-more-title-day {
+    margin-left: 6px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #6b7280 !important;
+  }
+
+  /* List container scrollability */
+  .toastui-calendar-month-more-list {
+    overflow-y: auto !important;
+    padding: 0 !important;
+    max-height: 250px !important;
+  }
+
+  /* Make mat-drawer with w-full class take up 100% width on mobile */
+  mat-drawer.w-full,
+  .mat-drawer.w-full {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 100% !important;
+    border-left: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Force CDK dialogs to be fullscreen on mobile, except bottom-sheets */
+  .cdk-overlay-pane:not(.mobile-filter-dialog-pane) {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .cdk-dialog-container:not(.mobile-filter-dialog-pane .cdk-dialog-container) {
+    border-radius: 0 !important;
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .cdk-dialog-container:not(.mobile-filter-dialog-pane .cdk-dialog-container) > * {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Mobile filter dialog bottom-sheet styling */
+  .mobile-filter-dialog-pane {
+    align-self: flex-end !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    max-height: 80dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: auto !important;
+    bottom: 0 !important;
+    border-radius: 24px 24px 0 0 !important;
+  }
+
+  .mobile-filter-dialog-pane .cdk-dialog-container {
+    border-radius: 24px 24px 0 0 !important;
+    max-height: 80dvh !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+}
+
+/* Custom CDK Dialog Animations */
+@keyframes backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-backdrop-fade {
+  animation: backdrop-fade-in 0.2s ease-out forwards !important;
+}
+
+.animate-modal-zoom {
+  animation: modal-zoom-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+/* Mobile styling: Reduce font size of Toast UI Calendar elements only */
+@media (max-width: 1023px) {
+  .toastui-calendar-layout,
+  .toastui-calendar-layout * {
+    font-size: 10px !important;
+  }
+  .toastui-calendar-day-name__date {
+    font-size: 10px !important;
+  }
+
 }

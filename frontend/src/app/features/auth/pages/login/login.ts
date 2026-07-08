@@ -65,7 +65,7 @@ export class LoginComponent {
     this.authService.loginLocal(this.email, this.password).subscribe({
       next: (res) => {
         console.log('Login successful:', res);
-        this.router.navigate(['/booking/form']);
+        this.router.navigate(['/bookings']);
       },
       error: (err) => {
         alert(err.error?.message || 'Invalid email or password');

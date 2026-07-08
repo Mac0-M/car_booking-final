@@ -1,0 +1,134 @@
+@if (viewMode === 'calendar') {
+<div
+  class="flex-1 min-h-0 w-full flex flex-col overflow-hidden animate-in fade-in duration-200"
+>
+  <app-booking-calendar
+    class="w-full flex flex-col h-full flex-1 min-h-0"
+    [calendarId]="isMobile ? 'mobile-month-calendar' : 'month-calendar'"
+    defaultView="month"
+    height="100%"
+    minHeight="0"
+    [showLegend]="false"
+    [bookings]="bookings"
+    [showOldBookings]="showOldBookings"
+    [showQuickFilters]="true"
+    [selectedVehicleTypeFilter]="selectedVehicleTypeFilter"
+    [currentDate]="currentDate"
+    (toggleVehicleType)="toggleVehicleType.emit($event)"
+    (bookingClick)="bookingClick.emit($event)"
+    (dateSelect)="dateSelect.emit($event)"
+    (clickMore)="clickMore.emit($event)"
+  />
+</div>
+} @else if (viewMode === 'grid') {
+<div class="flex-1 overflow-y-auto">
+  @if (bookings.length > 0) {
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5 animate-in fade-in duration-200"
+  >
+    @for (booking of bookings; track booking.id) {
+    <app-booking-card
+      [booking]="booking"
+      (click)="bookingClick.emit(booking)"
+    />
+    }
+  </div>
+  } @else {
+  <component-empty-state
+    title="No bookings found"
+    description="There are currently no vehicle bookings matching the selected filters."
+    icon="search"
+    variant="card"
+  />
+  }
+</div>
+} @else if (viewMode === 'list' && !isMobile) {
+<div class="flex-1 overflow-y-auto">
+  @if (bookings.length > 0) {
+  <div
+    class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-200"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr
+            class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider"
+          >
+            <th class="px-6 py-4">ID</th>
+            <th class="px-6 py-4">Booker / ผู้จอง</th>
+            <th class="px-6 py-4">Vehicle / ยานพาหนะ</th>
+            <th class="px-6 py-4">Destination / จุดหมาย</th>
+            <th class="px-6 py-4">Depart Date / เดินทาง</th>
+            <th class="px-6 py-4">Return Date / กลับ</th>
+            <th class="px-6 py-4">Status / สถานะ</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+          @for (booking of bookings; track booking.id) {
+          <tr
+            class="hover:bg-gray-50/50 transition-colors cursor-pointer"
+            (click)="bookingClick.emit(booking)"
+          >
+            <td class="px-6 py-4 font-mono text-xs font-bold text-gray-400">
+              #{{ booking.id }}
+            </td>
+            <td class="px-6 py-4 font-bold text-gray-800">
+              {{ booking.userName }}
+            </td>
+            <td class="px-6 py-4 font-semibold text-gray-600">
+              <div>{{ booking.vehicle?.model || 'N/A' }}</div>
+              @if (booking.vehicle?.plateNumber) {
+              <div class="text-[10px] text-gray-400 font-normal font-mono">
+                {{ booking.vehicle?.plateNumber }}
+              </div>
+              }
+            </td>
+            <td class="px-6 py-4 text-gray-600 line-clamp-1 max-w-xs">
+              {{ booking.destination || 'N/A' }}
+            </td>
+            <td class="px-6 py-4 text-xs font-mono text-gray-600">
+              {{ booking.depart | thaiDate }}
+            </td>
+            <td class="px-6 py-4 text-xs font-mono text-gray-600">
+              {{ booking.return | thaiDate }}
+            </td>
+            <td class="px-6 py-4">
+              @if (booking.status === 'CONFIRMED') { @if
+              (getBookingStatusVariant(booking) === 'booked') {
+              <component-badge variant="booked" size="xs"
+                >Completed</component-badge
+              >
+              } @else if (getBookingStatusVariant(booking) === 'pending') {
+              <component-badge variant="pending" size="xs"
+                >Ongoing</component-badge
+              >
+              } @else {
+              <component-badge variant="available" size="xs"
+                >Upcoming</component-badge
+              >
+              } } @else if (booking.status === 'COMPLETED') {
+              <component-badge variant="booked" size="xs"
+                >Completed</component-badge
+              >
+              } @else {
+              <component-badge variant="unavailable" size="xs"
+                >Cancelled</component-badge
+              >
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  } @else {
+  <component-empty-state
+    title="No bookings found"
+    description="There are currently no vehicle bookings matching the selected filters."
+    icon="search"
+    variant="card"
+  />
+  }
+</div>
+}

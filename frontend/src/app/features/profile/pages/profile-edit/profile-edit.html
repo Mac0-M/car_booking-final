@@ -1,131 +1,186 @@
-<div class="profile-edit-page max-w-xl mx-auto p-4 md:p-6 space-y-6">
+<div class="h-[calc(100dvh-4rem)] w-full overflow-y-auto bg-gray-100/40">
+  <div
+    class="profile-edit-page max-w-xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6"
+  >
+    <!-- Header -->
+    <div>
+      <h1
+        class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-2"
+      >
+        <span class="material-icons text-gray-700 font-bold"
+          >person_outline</span
+        >
+        {{ isEditing() ? 'Edit Profile / แก้ไขโปรไฟล์' : 'My Profile /
+        โปรไฟล์ของฉัน' }}
+      </h1>
+    </div>
 
-  <!-- Header -->
-  <div>
-    <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
-      <span class="material-icons text-gray-700 font-bold">person_outline</span>
-      {{ isEditing() ? 'Edit Profile / แก้ไขโปรไฟล์' : 'My Profile / โปรไฟล์ของฉัน' }}
-    </h1>
-    <p class="text-sm text-gray-500 mt-1">
-      {{ isEditing() ? 'Modify your profile name, mobile number, and avatar image. / ปรับเปลี่ยนชื่อ หมายเลขโทรศัพท์ และรูปภาพโปรไฟล์ของคุณ' : 'View your profile details. / ดูรายละเอียดข้อมูลโปรไฟล์ของคุณ' }}
-    </p>
-  </div>
-
-  <component-card variant="default" size="base">
-    <form (submit)="onSubmit(); $event.preventDefault()" class="space-y-6">
-      
-      <!-- Avatar Section -->
-      <div class="flex flex-col items-center justify-center space-y-3 pb-2">
-        <div [class.pointer-events-none]="!isEditing()"
-             class="relative w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden group cursor-pointer bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-3xl font-bold">
-          
-          @if (isEditing()) {
-            <input type="file" 
-                   accept="image/*" 
-                   (change)="onFileSelected($event)" 
-                   class="absolute inset-0 opacity-0 cursor-pointer z-10" />
-          }
-          
-          @if (imagePreviewUrl || existingImgUrl) {
-            <img [src]="imagePreviewUrl || existingImgUrl" 
-                 alt="Profile" 
-                 class="w-full h-full object-cover" />
-          } @else {
+    <component-card variant="default" size="base">
+      <form
+        (submit)="onSubmit(); $event.preventDefault()"
+        class="space-y-4 md:space-y-6"
+      >
+        <!-- Avatar Section -->
+        <div
+          class="flex flex-col items-center justify-center space-y-2 md:space-y-3 pb-1 md:pb-2"
+        >
+          <div
+            [class.pointer-events-none]="!isEditing()"
+            class="relative w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-white shadow-md overflow-hidden group cursor-pointer bg-linear-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl md:text-3xl font-bold"
+          >
+            @if (isEditing()) {
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              class="absolute inset-0 opacity-0 cursor-pointer z-10"
+            />
+            } @if (imagePreviewUrl || existingImgUrl) {
+            <img
+              [src]="imagePreviewUrl || existingImgUrl"
+              alt="Profile"
+              class="w-full h-full object-cover"
+            />
+            } @else {
             <span>{{ (user_name[0] || 'U') | uppercase }}</span>
-          }
-
-          @if (isEditing()) {
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-20 pointer-events-none">
-              <span class="material-icons text-white text-base">photo_camera</span>
+            } @if (isEditing()) {
+            <div
+              class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-20 pointer-events-none"
+            >
+              <span class="material-icons text-white text-sm md:text-base"
+                >photo_camera</span
+              >
             </div>
+            }
+          </div>
+        </div>
+
+        <!-- User Name Input -->
+        <div class="space-y-1.5 md:space-y-2">
+          <label
+            for="user_name"
+            class="text-xs md:text-sm font-bold text-gray-700 block"
+            >Full Name / ชื่อ-นามสกุล</label
+          >
+          <input
+            type="text"
+            id="user_name"
+            name="user_name"
+            [(ngModel)]="user_name"
+            [disabled]="!isEditing()"
+            required
+            placeholder="Enter your full name"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <!-- Email Input -->
+        <div class="space-y-1.5 md:space-y-2">
+          <label
+            for="email"
+            class="text-xs md:text-sm font-bold text-gray-700 block"
+            >Email Address / อีเมล</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            [disabled]="!isEditing()"
+            required
+            placeholder="Enter your email address"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <!-- Phone Input -->
+        <div class="space-y-1.5 md:space-y-2">
+          <label
+            for="phone"
+            class="text-xs md:text-sm font-bold text-gray-700 block"
+            >Mobile Phone Number / เบอร์โทรศัพท์มือถือ</label
+          >
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            [(ngModel)]="phone"
+            [disabled]="!isEditing()"
+            placeholder="Enter mobile phone number"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <!-- Password Input -->
+        <div class="space-y-1.5 md:space-y-2">
+          <label
+            for="password"
+            class="text-xs md:text-sm font-bold text-gray-700 block"
+            >Password / รหัสผ่าน</label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="newPassword"
+            [disabled]="!isEditing()"
+            [placeholder]="isEditing() ? 'Enter new password (min. 6 characters)' : '••••••••'"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <!-- Form Actions -->
+        <div
+          class="flex items-center justify-end gap-2 md:gap-3 pt-3 md:pt-4 border-t border-gray-100"
+        >
+          @if (!isEditing()) {
+          <component-button
+            type="button"
+            variant="cancel"
+            size="sm"
+            (click)="goBack()"
+            class="w-full sm:w-auto"
+          >
+            Back
+          </component-button>
+          <component-button
+            type="button"
+            variant="submit"
+            size="sm"
+            (click)="startEdit()"
+            class="w-full sm:w-auto"
+          >
+            Edit Profile
+          </component-button>
+          } @else {
+          <component-button
+            type="button"
+            variant="cancel"
+            size="sm"
+            (click)="cancelEdit()"
+            class="w-full sm:w-auto"
+          >
+            Cancel
+          </component-button>
+          <component-button
+            type="submit"
+            variant="submit"
+            size="sm"
+            [disabled]="!isFormValid || isLoading()"
+            class="w-full sm:w-auto"
+          >
+            @if (isLoading()) {
+            <span class="flex items-center gap-2 justify-center">
+              <span
+                class="w-3.5 h-3.5 md:w-4 md:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
+              ></span>
+              Saving...
+            </span>
+            } @else { Save Profile }
+          </component-button>
           }
         </div>
-        
-        @if (isEditing()) {
-          <div class="text-xs text-gray-400 font-medium">Click on image to change profile photo / คลิกที่รูปภาพเพื่อเปลี่ยนรูปโปรไฟล์</div>
-        }
-      </div>
-
-      <!-- User Name Input -->
-      <div class="space-y-2">
-        <label for="user_name" class="text-sm font-bold text-gray-700 block">Full Name / ชื่อ-นามสกุล</label>
-        <input type="text"
-               id="user_name"
-               name="user_name"
-               [(ngModel)]="user_name"
-               [disabled]="!isEditing()"
-               required
-               placeholder="Enter your full name"
-               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed" />
-      </div>
-
-      <!-- Email Input -->
-      <div class="space-y-2">
-        <label for="email" class="text-sm font-bold text-gray-700 block">Email Address / อีเมล</label>
-        <input type="email"
-               id="email"
-               name="email"
-               [(ngModel)]="email"
-               [disabled]="!isEditing()"
-               required
-               placeholder="Enter your email address"
-               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed" />
-      </div>
-
-      <!-- Phone Input -->
-      <div class="space-y-2">
-        <label for="phone" class="text-sm font-bold text-gray-700 block">Mobile Phone Number / เบอร์โทรศัพท์มือถือ</label>
-        <input type="tel"
-               id="phone"
-               name="phone"
-               [(ngModel)]="phone"
-               [disabled]="!isEditing()"
-               placeholder="Enter mobile phone number"
-               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed" />
-      </div>
-
-      <!-- Password Input -->
-      <div class="space-y-2">
-        <label for="password" class="text-sm font-bold text-gray-700 block">Password / รหัสผ่าน</label>
-        <input type="password"
-               id="password"
-               name="password"
-               [(ngModel)]="newPassword"
-               [disabled]="!isEditing()"
-               [placeholder]="isEditing() ? 'Enter new password (min. 6 characters)' : '••••••••'"
-               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed" />
-      </div>
-
-      <!-- Form Actions -->
-      <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-        @if (!isEditing()) {
-          <button type="button" (click)="goBack()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer">
-            Back
-          </button>
-          <component-button type="button" variant="submit" size="sm" (click)="startEdit()" class="w-full sm:w-auto">
-            <span class="flex items-center gap-1.5 justify-center">
-              <span class="material-icons text-sm">edit</span>
-              Edit Profile
-            </span>
-          </component-button>
-        } @else {
-          <button type="button" (click)="cancelEdit()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 active:scale-95 transition-all text-sm font-semibold cursor-pointer">
-            Cancel
-          </button>
-          <component-button type="submit" variant="submit" size="sm" [disabled]="!isFormValid || isLoading()" class="w-full sm:w-auto">
-            @if (isLoading()) {
-              <span class="flex items-center gap-2 justify-center">
-                <span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                Saving...
-              </span>
-            } @else {
-              Save Profile
-            }
-          </component-button>
-        }
-      </div>
-
-    </form>
-  </component-card>
-
+      </form>
+    </component-card>
+  </div>
 </div>

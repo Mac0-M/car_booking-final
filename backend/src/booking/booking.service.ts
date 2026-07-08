@@ -45,7 +45,7 @@ export class BookingService {
       );
     }
     if (filter.depart_start) {
-      query.andWhere('b.depart >= :departStart', { departStart: filter.depart_start });
+      query.andWhere('(b.return >= :departStart OR b.return IS NULL)', { departStart: filter.depart_start });
     }
     if (filter.depart_end) {
       query.andWhere('b.depart <= :departEnd', { departEnd: filter.depart_end });

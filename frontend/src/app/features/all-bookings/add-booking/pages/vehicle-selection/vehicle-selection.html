@@ -1,0 +1,32 @@
+<!-- Vehicle Selection Step 2 Template -->
+<div class="max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6">
+
+  <!-- Stepper Indicator -->
+  <component-process [currentStep]="2" size="base"></component-process>
+
+  <h1 class="text-2xl font-bold text-gray-800">Select a Vehicle</h1>
+  <p class="text-sm text-gray-500 -mt-4">Choose an available vehicle for your trip.</p>
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <component-loading message="Searching for available vehicles..." size="base" />
+  }
+
+  <!-- Vehicle Cards -->
+  @if (!isLoading() && vehicles().length > 0) {
+    <div class="flex flex-col gap-3">
+      @for (vehicle of vehicles(); track vehicle.id) {
+        <app-vehicle-card
+          [vehicle]="vehicle"
+          [isAvailable]="vehicle.status === 'available'"
+          (selectVehicle)="onSelectVehicle($event)" />
+      }
+    </div>
+  }
+
+  <!-- No Vehicles Available -->
+  @if (!isLoading() && vehicles().length === 0) {
+    <app-no-vehicle-available (goBack)="onGoBack()" />
+  }
+
+</div>

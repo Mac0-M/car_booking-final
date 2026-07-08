@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 /**
  * adminGuard: ตรวจสอบสิทธิ์ Admin / Super_Admin
  * - อนุญาตเฉพาะผู้ใช้ที่มี role เป็น Admin หรือ Super_Admin
- * - ถ้าไม่มีสิทธิ์ → ส่งกลับไปหน้า /booking/form
+ * - ถ้าไม่มีสิทธิ์ → ส่งกลับไปหน้า /bookings
  */
 export const adminGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
@@ -36,5 +36,5 @@ export const adminGuard: CanActivateFn = async () => {
     return true;
   }
 
-  return router.parseUrl('/booking/form');
+  return router.parseUrl('/bookings');
 };

@@ -1,30 +1,37 @@
-<component-card variant="default"
-                class="group overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer w-full">
+<component-card
+  variant="default"
+  class="group overflow-hidden flex flex-col justify-between hover:shadow-md hover:rounded-2xl hover:border-gray-300 transition-all duration-200 cursor-pointer w-full max-w-[360px]"
+>
   <div>
     <!-- Vehicle Image Section -->
-    <div class="relative w-full h-40 rounded-xl overflow-hidden bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-100">
+    <div
+      class="relative w-full h-40 rounded-xl overflow-hidden bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-100"
+    >
       @if (getVehicleImgUrl(booking.vehicle); as url) {
-        <img [src]="url" [alt]="booking.vehicle?.model" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      <img
+        [src]="url"
+        [alt]="booking.vehicle?.model"
+        class="w-full h-full object-contain"
+      />
       } @else {
-        <span class="material-icons text-5xl text-gray-300">directions_car</span>
+      <span class="material-icons text-5xl text-gray-300">directions_car</span>
       }
-      
+
       <!-- Status Badge overlay -->
       <div class="absolute top-3 right-3">
         @if (getBookingStatusVariant(booking) === 'available') {
-          <component-badge variant="available" size="xs">Upcoming</component-badge>
+        <component-badge variant="available" size="xs"
+          >Upcoming</component-badge
+        >
         } @else if (getBookingStatusVariant(booking) === 'pending') {
-          <component-badge variant="pending" size="xs">Ongoing</component-badge>
+        <component-badge variant="pending" size="xs">Ongoing</component-badge>
         } @else if (getBookingStatusVariant(booking) === 'booked') {
-          <component-badge variant="booked" size="xs">Completed</component-badge>
+        <component-badge variant="booked" size="xs">Completed</component-badge>
         } @else {
-          <component-badge variant="unavailable" size="xs">Cancelled</component-badge>
+        <component-badge variant="unavailable" size="xs"
+          >Cancelled</component-badge
+        >
         }
-      </div>
-
-      <!-- ID overlay -->
-      <div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-mono">
-        #{{ booking.id }}
       </div>
     </div>
 
@@ -33,36 +40,59 @@
       <!-- Destination & Purpose -->
       <div>
         <h3 class="text-base font-bold text-gray-800 flex items-center gap-1">
-          <span class="material-icons text-gray-400 text-base">location_on</span>
-          <span class="line-clamp-1">{{ booking.destination || 'No destination specified / ไม่ได้ระบุจุดหมาย' }}</span>
+          <span class="material-icons text-gray-400 text-base"
+            >location_on</span
+          >
+          <span class="line-clamp-1"
+            >{{ booking.destination || 'No destination specified /
+            ไม่ได้ระบุจุดหมาย' }}</span
+          >
         </h3>
-        <p class="text-xs text-gray-500 mt-1 line-clamp-2 pl-5">{{ booking.purpose || 'No purpose specified / ไม่ได้ระบุวัตถุประสงค์' }}</p>
+        <p class="text-xs text-gray-500 mt-1 line-clamp-2 pl-5">
+          {{ booking.purpose || 'No purpose specified / ไม่ได้ระบุวัตถุประสงค์'
+          }}
+        </p>
       </div>
 
       <!-- Vehicle Info -->
       <div class="pl-5 pt-1 space-y-1">
-        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Reserved Vehicle / ยานพาหนะที่จอง</div>
-        <div class="text-xs font-bold text-gray-700">{{ booking.vehicle?.model || 'No vehicle specified / ไม่ได้ระบุยานพาหนะ' }}</div>
+        <div
+          class="text-[10px] text-gray-400 font-bold uppercase tracking-wider"
+        >
+          Reserved Vehicle / ยานพาหนะที่จอง
+        </div>
+        <div class="text-xs font-bold text-gray-700">
+          {{ booking.vehicle?.model || 'No vehicle specified /
+          ไม่ได้ระบุยานพาหนะ' }}
+        </div>
         @if (showPlateNumber && booking.vehicle?.plateNumber) {
-          <div class="text-[10px] font-mono font-bold text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100 inline-block">
-            {{ booking.vehicle?.plateNumber }}
-          </div>
+        <div
+          class="text-[10px] font-mono font-bold text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100 inline-block"
+        >
+          {{ booking.vehicle?.plateNumber }}
+        </div>
         }
       </div>
 
       <!-- Travel Date and User Info -->
-      <div class="grid grid-cols-1 gap-2 pt-3 text-xs text-gray-500 border-t border-gray-50 pl-1">
-        <div class="flex items-center gap-1.5 font-semibold text-gray-700 bg-gray-50/50 px-2 py-1 rounded">
+      <div
+        class="grid grid-cols-1 gap-2 pt-3 text-xs text-gray-500 border-t border-gray-50 pl-1"
+      >
+        <div
+          class="flex items-center gap-1.5 font-semibold text-gray-700 bg-gray-50/50 px-2 py-1 rounded"
+        >
           <span class="material-icons text-gray-400 text-sm">person</span>
           <span class="line-clamp-1">{{ booking.userName }}</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <span class="material-icons text-gray-400 text-sm">calendar_today</span>
-          <span>Depart / ออกเดินทาง: {{ booking.depart | thaiDate }} {{ booking.depart | thaiTime }}</span>
+          <span class="material-icons text-gray-400 text-sm"
+            >calendar_today</span
+          >
+          <span>Depart / เดินทาง: {{ booking.depart | thaiDate }}</span>
         </div>
         <div class="flex items-center gap-1.5">
           <span class="material-icons text-gray-400 text-sm">schedule</span>
-          <span>Return / เดินทางกลับ: {{ booking.return | thaiDate }} {{ booking.return | thaiTime }}</span>
+          <span>Return / กลับ: {{ booking.return | thaiDate }}</span>
         </div>
       </div>
     </div>

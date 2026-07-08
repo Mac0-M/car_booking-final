@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { bookingStepGuard } from './core/guards/booking-step.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
 /**
@@ -23,58 +22,27 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'booking',
-    canActivate: [authGuard],
-    children: [
-      {
-        path: 'form',
-        title: 'Booking',
-        loadComponent: () =>
-          import('./features/booking/pages/booking-form/booking-form').then(
-            (m) => m.BookingFormComponent
-          ),
-      },
-      {
-        path: 'select-vehicle',
-        title: 'Booking',
-        canActivate: [bookingStepGuard],
-        loadComponent: () =>
-          import('./features/booking/pages/vehicle-selection/vehicle-selection').then(
-            (m) => m.VehicleSelectionComponent
-          ),
-      },
-      {
-        path: 'confirm',
-        title: 'Confirm-Booking',
-        canActivate: [bookingStepGuard],
-        loadComponent: () =>
-          import('./features/booking/pages/booking-confirm/booking-confirm').then(
-            (m) => m.BookingConfirmComponent
-          ),
-      },
-    ],
-  },
-  {
     path: 'bookings',
     canActivate: [authGuard],
-    children: [
-      {
-        path: '',
-        title: 'All-Bookings',
-        loadComponent: () =>
-          import('./features/all-bookings/pages/booking-list/booking-list').then(
-            (m) => m.BookingList
-          ),
-      },
-      {
-        path: 'history',
-        title: 'Booking History',
-        loadComponent: () =>
-          import('./features/all-bookings/pages/booking-history/booking-history').then(
-            (m) => m.BookingHistoryComponent
-          ),
-      }
-    ]
+    title: 'Bookings Dashboard',
+    loadComponent: () =>
+      import('./features/all-bookings/pages/booking-list/booking-list').then(
+        (m) => m.BookingList
+      ),
+  },
+  {
+    path: 'bookings/history',
+    redirectTo: 'bookings',
+    pathMatch: 'full'
+  },
+  {
+    path: 'directory',
+    canActivate: [authGuard, adminGuard],
+    title: 'Directory & Management',
+    loadComponent: () =>
+      import('./features/directory/pages/directory/directory').then(
+        (m) => m.DirectoryComponent
+      ),
   },
   {
     path: 'vehicles',
@@ -82,18 +50,15 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        title: 'All Vehicles',
-        loadComponent: () =>
-          import('./features/vehicles/pages/vehicle-list/vehicle-list').then(
-            (m) => m.VehicleListComponent
-          ),
+        redirectTo: '/directory',
+        pathMatch: 'full'
       },
       {
         path: 'new',
         title: 'New Vehicle',
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./features/vehicles/pages/vehicle-form/vehicle-form').then(
+          import('./features/directory/pages/vehicle-form/vehicle-form').then(
             (m) => m.VehicleFormComponent
           ),
       },
@@ -102,7 +67,7 @@ export const routes: Routes = [
         title: 'Edit Vehicle',
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./features/vehicles/pages/vehicle-form/vehicle-form').then(
+          import('./features/directory/pages/vehicle-form/vehicle-form').then(
             (m) => m.VehicleFormComponent
           ),
       },
@@ -114,11 +79,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'users',
-        title: 'All-Users',
-        loadComponent: () =>
-          import('./features/admin/pages/user-list/user-list').then(
-            (m) => m.UserListComponent
-          ),
+        redirectTo: '/directory',
+        pathMatch: 'full'
       },
     ],
   },

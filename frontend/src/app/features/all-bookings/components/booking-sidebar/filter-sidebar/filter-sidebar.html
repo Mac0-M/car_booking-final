@@ -1,0 +1,331 @@
+<div class="h-full flex flex-col bg-white">
+  @if (showHeader) {
+  <!-- Drawer Header -->
+  <div
+    class="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between shrink-0 select-none bg-white"
+  >
+    <div class="flex items-center gap-2">
+      <h3 class="text-sm text-gray-700 font-bold">
+        Search & Filters / ค้นหาและกรอง
+      </h3>
+    </div>
+    <component-button
+      (click)="close.emit()"
+      variant="plain"
+      size="xs"
+      class="w-auto p-1 text-gray-400 hover:text-gray-600"
+    >
+      <span class="material-icons">close</span>
+    </component-button>
+  </div>
+  } @if (forceExpanded) {
+  <!-- Vertical Sidenav/Sidebar layout (Desktop & Mobile Expanded View) -->
+  <div
+    class="p-0 lg:p-4 flex flex-col gap-2 lg:gap-3 flex-1 min-h-0 select-none bg-white"
+  >
+    <!-- Quick Filters (Car Types) -->
+    @if (showQuickFilters) {
+    <div class="space-y-2 border-b border-gray-100 pb-3 mb-1 shrink-0">
+      <div class="flex flex-wrap items-center gap-2">
+        @for (type of vehicleTypes; track type.value) {
+        <button
+          component-filter-pill
+          [label]="type.label"
+          [active]="selectedVehicleTypeFilter.includes(type.value)"
+          [dotColor]="type.dotColor"
+          [ringClass]="type.ringClass"
+          size="sm"
+          (click)="toggleVehicleType.emit(type.value)"
+        ></button>
+        }
+      </div>
+
+      <!-- License Plate Pills -->
+      @if (selectedVehicleTypeFilter.length > 0 &&
+      filteredVehiclesForPills.length > 0) {
+      <div
+        class="space-y-1 pt-1 animate-in fade-in slide-in-from-top-1 duration-150"
+      >
+        <label
+          class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider"
+          >License Plate / ทะเบียนรถ</label
+        >
+        <div class="flex flex-wrap items-center gap-2">
+          @for (vehicle of filteredVehiclesForPills; track vehicle.id) {
+          <button
+            component-filter-pill
+            [label]="vehicle.plateNumber + ' (' + vehicle.model + ')'"
+            [active]="selectedVehiclePlates.includes(vehicle.id)"
+            [dotColor]="getVehicleColor(vehicle).dotColor"
+            [ringClass]="getVehicleColor(vehicle).ringClass"
+            size="sm"
+            (click)="toggleVehiclePlate.emit(vehicle.id)"
+          ></button>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Search Bar -->
+    <div class="space-y-1">
+      @if (showHeader) {
+      <label
+        class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider"
+        >Search / ค้นหา</label
+      >
+      }
+      <div class="relative w-full">
+        <span
+          class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
+          >search</span
+        >
+        <input
+          type="text"
+          [value]="searchQuery"
+          (input)="searchQueryChange.emit($any($event.target).value)"
+          [placeholder]="placeholder"
+          class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50 font-sans"
+        />
+      </div>
+    </div>
+
+    <!-- User Filter -->
+    <div class="space-y-1">
+      <label class="text-[10px] font-bold text-gray-400 block"
+        >User / ผู้ใช้งาน</label
+      >
+      <select
+        [ngModel]="selectedUserId"
+        (ngModelChange)="selectedUserIdChange.emit($event)"
+        class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
+      >
+        <option value="">All Users / ผู้ใช้งานทั้งหมด</option>
+        @for (user of users; track user.userId) {
+        <option [value]="user.userId">{{ user.userName }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Month Quick Filter -->
+    <div class="space-y-1">
+      <label class="text-[10px] font-bold text-gray-400 block"
+        >Month / เดือน</label
+      >
+      <input
+        type="month"
+        [value]="currentMonthValue"
+        (change)="onMonthFilterChange($event)"
+        class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans cursor-pointer"
+      />
+    </div>
+
+    <!-- Start Date Picker (datetime-local) -->
+    <div class="space-y-1">
+      <label class="text-[10px] font-bold text-gray-400 block"
+        >From Date/Time / ตั้งแต่วันเวลา</label
+      >
+      <input
+        type="datetime-local"
+        [value]="startDate"
+        (input)="startDateChange.emit($any($event.target).value)"
+        class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
+      />
+    </div>
+
+    <!-- End Date Picker (datetime-local) -->
+    <div class="space-y-1">
+      <label class="text-[10px] font-bold text-gray-400 block"
+        >To Date/Time / ถึงวันเวลา</label
+      >
+      <input
+        type="datetime-local"
+        [value]="endDate"
+        (input)="endDateChange.emit($any($event.target).value)"
+        class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
+      />
+    </div>
+
+    <!-- Optional Status Filter -->
+    @if (showStatusFilter) {
+    <div class="space-y-1">
+      <label class="text-[10px] font-bold text-gray-400 block"
+        >Booking Status / สถานะการจอง</label
+      >
+      <select
+        [ngModel]="selectedStatusFilter"
+        (ngModelChange)="selectedStatusFilterChange.emit($event)"
+        class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
+      >
+        <option value="">All Statuses / สถานะทั้งหมด</option>
+        <option value="CONFIRMED">CONFIRMED / ยืนยันแล้ว (กำลังมาถึง)</option>
+        <option value="COMPLETED">COMPLETED / เสร็จสิ้น</option>
+        <option value="CANCELLED">CANCELLED / ยกเลิกแล้ว</option>
+      </select>
+    </div>
+    }
+
+    <!-- Action Buttons -->
+    <div
+      class="hidden lg:flex items-center justify-end gap-2 pt-2 border-t border-gray-100"
+    >
+      <component-button
+        (click)="reset.emit()"
+        variant="cancel"
+        size="xs"
+        class="w-auto font-sans"
+      >
+        Clear Filters
+      </component-button>
+    </div>
+  </div>
+  } @else {
+  <!-- Horizontal Search & Filters Bar layout -->
+  <div class="flex flex-col gap-3 w-full">
+    <div
+      class="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-3 rounded-2xl border border-gray-100 shadow-sm w-full"
+    >
+      <!-- Search Bar + Toggle -->
+      <div class="flex items-center gap-2 w-full md:w-auto flex-1">
+        <div class="relative flex-1 max-w-md">
+          <span
+            class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
+            >search</span
+          >
+          <input
+            type="text"
+            [value]="searchQuery"
+            (input)="searchQueryChange.emit($any($event.target).value)"
+            [placeholder]="placeholder"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50"
+          />
+        </div>
+        <component-button
+          (click)="showAdvancedFilters.set(!showAdvancedFilters())"
+          [variant]="showAdvancedFilters() ? 'submit' : 'secondary'"
+          size="xs"
+          class="w-auto font-sans"
+        >
+          <span class="material-icons text-base mr-1.5">filter_list</span>
+          Filters
+        </component-button>
+      </div>
+
+      <!-- View Mode Toggle -->
+      @if (viewModes.length > 0) {
+      <div class="flex items-center bg-gray-100 p-1 rounded-xl shrink-0">
+        @for (mode of viewModes; track mode) {
+        <button
+          (click)="viewModeChange.emit(mode)"
+          [class.bg-white]="currentViewMode === mode"
+          [class.shadow-sm]="currentViewMode === mode"
+          [class.text-gray-800]="currentViewMode === mode"
+          [class.text-gray-500]="currentViewMode !== mode"
+          [class.hidden]="mode === 'list'"
+          [class.md:flex]="mode === 'list'"
+          [class.flex]="mode !== 'list'"
+          class="items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+        >
+          <span class="material-icons text-base">{{ getModeIcon(mode) }}</span>
+          {{ getModeLabel(mode) }}
+        </button>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Advanced Filters Panel -->
+    @if (showAdvancedFilters()) {
+    <div
+      class="bg-white p-4 rounded-2xl border border-gray-150 shadow-sm grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-1 duration-150 w-full mt-4"
+    >
+      <!-- User Filter -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block"
+          >Filter by User / กรองตามผู้ใช้</label
+        >
+        <select
+          [ngModel]="selectedUserId"
+          (ngModelChange)="selectedUserIdChange.emit($event)"
+          class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
+        >
+          <option value="">All Users / ผู้ใช้งานทั้งหมด</option>
+          @for (user of users; track user.userId) {
+          <option [value]="user.userId">{{ user.userName }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Month Quick Filter -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block"
+          >Filter by Month / กรองตามเดือน</label
+        >
+        <input
+          type="month"
+          [value]="currentMonthValue"
+          (change)="onMonthFilterChange($event)"
+          class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 cursor-pointer"
+        />
+      </div>
+
+      <!-- Start Date Picker -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block"
+          >From Date/Time / ตั้งแต่วันเวลา</label
+        >
+        <input
+          type="datetime-local"
+          [value]="startDate"
+          (input)="startDateChange.emit($any($event.target).value)"
+          class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
+        />
+      </div>
+
+      <!-- End Date Picker -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-400 block"
+          >To Date/Time / ถึงวันเวลา</label
+        >
+        <input
+          type="datetime-local"
+          [value]="endDate"
+          (input)="endDateChange.emit($any($event.target).value)"
+          class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
+        />
+      </div>
+
+      <!-- Status Filter -->
+      @if (showStatusFilter) {
+      <div class="space-y-1.5 sm:col-span-2 md:col-span-2">
+        <label class="text-xs font-bold text-gray-400 block"
+          >Booking Status / สถานะการจอง</label
+        >
+        <select
+          [ngModel]="selectedStatusFilter"
+          (ngModelChange)="selectedStatusFilterChange.emit($event)"
+          class="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400"
+        >
+          <option value="">All Statuses / สถานะทั้งหมด</option>
+          <option value="CONFIRMED">CONFIRMED / ยืนยันแล้ว (กำลังมาถึง)</option>
+          <option value="COMPLETED">COMPLETED / เสร็จสิ้น</option>
+          <option value="CANCELLED">CANCELLED / ยกเลิกแล้ว</option>
+        </select>
+      </div>
+      }
+
+      <!-- Actions -->
+      <div class="sm:col-span-2 md:col-span-2 flex items-end justify-end gap-2">
+        <button
+          (click)="reset.emit()"
+          class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 bg-white hover:bg-gray-200 transition-all text-xs font-semibold cursor-pointer"
+        >
+          Clear Filters
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>

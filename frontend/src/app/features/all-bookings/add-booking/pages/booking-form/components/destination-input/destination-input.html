@@ -1,0 +1,40 @@
+<div class="relative flex flex-col w-full" (focusin)="onFocus()" (focusout)="onBlur()">
+  <!-- Input UI wrapper -->
+  <component-input-ui
+    [label]="label"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [(ngModel)]="value"
+    (ngModelChange)="onQueryChange($event)"
+    icon="place"
+  ></component-input-ui>
+
+  <!-- Autocomplete Suggestions Dropdown Overlay -->
+  @if (showResults && (isSearching || searchResults.length > 0)) {
+    <div class="absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto animate-[fadeIn_0.15s_ease-out]">
+      <!-- Loading indicator -->
+      @if (isSearching) {
+        <component-loading message="Searching real locations..." size="xs" class="bg-gray-50/50 block py-1"></component-loading>
+      }
+
+      <!-- Results List -->
+      @if (searchResults.length > 0) {
+        <div class="divide-y divide-gray-50">
+          @for (location of searchResults; track location.displayName) {
+            <button
+              type="button"
+              (click)="selectLocation(location)"
+              class="w-full text-left px-4 py-3 flex gap-3 hover:bg-gray-200 transition-colors duration-150 active:bg-gray-100"
+            >
+              <span class="material-icons text-gray-400 mt-0.5 text-lg select-none">place</span>
+              <div class="flex flex-col overflow-hidden">
+                <span class="text-sm font-semibold text-gray-900 truncate">{{ location.name }}</span>
+                <span class="text-[11px] text-gray-400 truncate">{{ location.displayName }}</span>
+              </div>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
