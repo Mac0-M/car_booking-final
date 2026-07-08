@@ -136,6 +136,13 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  triggerMonthPicker(event: Event, input: HTMLInputElement): void {
+    event.preventDefault();
+    if (input && typeof input.showPicker === 'function') {
+      input.showPicker();
+    }
+  }
+
   updateMonthYearLabel(): void {
     if (this.calendarInstance) {
       const currentDate = this.calendarInstance.getDate();
@@ -221,13 +228,38 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         }
       });
 
-      // Handle click on grid cell/date to notify date selection
-      this.calendarInstance.on("selectDateTime", (eventInfo: any) => {
-        const date =
-          eventInfo.start instanceof Date
-            ? eventInfo.start
-            : new Date(eventInfo.start);
-        this.dateSelect.emit(date);
+      // Handle click on month grid cell natively to allow cell clicks with isReadOnly: true
+      container.addEventListener("click", (event: MouseEvent) => {
+        if (!this.calendarInstance) return;
+
+        // Only handle cell clicks on mobile screen widths (< 1024px)
+        const isMobileScreen = window.innerWidth < 1024;
+        if (!isMobileScreen) {
+          return;
+        }
+
+        const target = event.target as HTMLElement;
+
+        // Ignore clicks on event elements so clickEvent details listener takes priority
+        if (target.closest(".toastui-calendar-weekday-event") || target.closest(".toastui-calendar-event-item")) {
+          return;
+        }
+
+        const cell = target.closest(".toastui-calendar-daygrid-cell");
+        if (cell) {
+          const cells = Array.from(container.querySelectorAll(".toastui-calendar-daygrid-cell"));
+          const index = cells.indexOf(cell);
+          if (index !== -1) {
+            const rangeStartObj = this.calendarInstance.getDateRangeStart();
+            const rangeStartDate = typeof rangeStartObj.toDate === "function"
+              ? rangeStartObj.toDate()
+              : new Date(rangeStartObj);
+
+            const clickedDate = new Date(rangeStartDate.getTime());
+            clickedDate.setDate(clickedDate.getDate() + index);
+            this.clickMore.emit(clickedDate);
+          }
+        }
       });
 
       // Handle click on the exceed (+N) button to notify and prevent default
@@ -337,6 +369,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         backgroundColor: color,
         borderColor: borderColor,
         color: "#ffffff",
+        isReadOnly: true,
         raw: {
           icon: icon,
         },

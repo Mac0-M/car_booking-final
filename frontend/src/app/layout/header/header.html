@@ -108,6 +108,30 @@
         }
       </div>
 
+      <!-- Filter Button (mobile only) -->
+      @if (headerService.isMobileFilterVisible()) {
+      <button
+        (click)="headerService.mobileFilterAction()?.()"
+        [class.bg-gray-700]="headerService.activeFiltersCount() > 0"
+        [class.text-white]="headerService.activeFiltersCount() > 0"
+        [class.border-gray-700]="headerService.activeFiltersCount() > 0"
+        [class.bg-white]="headerService.activeFiltersCount() === 0"
+        [class.text-gray-500]="headerService.activeFiltersCount() === 0"
+        [class.border-gray-200]="headerService.activeFiltersCount() === 0"
+        class="relative flex md:hidden items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border hover:bg-gray-200 transition-all active:scale-95 cursor-pointer shrink-0"
+        aria-label="Toggle Filters"
+      >
+        <span class="material-icons text-xl sm:text-2xl">filter_list</span>
+        @if (headerService.activeFiltersCount() > 0) {
+        <span
+          class="absolute top-1.5 right-1.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full"
+        >
+          {{ headerService.activeFiltersCount() }}
+        </span>
+        }
+      </button>
+      }
+
       <!-- Menu Button (mobile only) -->
       <button
         (click)="toggleMobileMenu()"

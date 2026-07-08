@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { AllSharedUi } from '../../shared/shared';
 import { AuthService } from '../../core/services/auth.service';
+import { HeaderService } from '../../core/services/header.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -14,6 +15,7 @@ import { environment } from '../../../environments/environment';
 export class HeaderComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  public readonly headerService = inject(HeaderService);
 
   currentUrl = signal<string>('');
   isMobileMenuOpen = signal<boolean>(false);

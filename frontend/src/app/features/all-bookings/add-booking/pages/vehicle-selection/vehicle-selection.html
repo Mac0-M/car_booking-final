@@ -14,7 +14,7 @@
 
   <!-- Vehicle Cards -->
   @if (!isLoading() && vehicles().length > 0) {
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-3">
       @for (vehicle of vehicles(); track vehicle.id) {
         <app-vehicle-card
           [vehicle]="vehicle"

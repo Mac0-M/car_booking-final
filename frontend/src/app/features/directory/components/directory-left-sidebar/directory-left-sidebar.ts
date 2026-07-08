@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AllSharedUi } from '../../../../shared/shared';
@@ -12,6 +12,7 @@ import { DirectoryMobileFiltersComponent } from '../directory-mobile-filters/dir
   templateUrl: './directory-left-sidebar.html',
 })
 export class DirectoryLeftSidebarComponent {
+  @ViewChild(DirectoryMobileFiltersComponent) mobileFilters?: DirectoryMobileFiltersComponent;
   @Input() activeTab: 'vehicles' | 'users' = 'vehicles';
   @Input() isMobile = false;
   @Input() isAdmin = false;

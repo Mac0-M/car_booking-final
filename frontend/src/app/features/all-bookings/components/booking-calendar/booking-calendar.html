@@ -43,18 +43,18 @@
 
       <!-- Month & Year Display (Click to open date picker) -->
       <div
-        class="relative flex items-center gap-1 text-gray-700 ml-0.5 sm:ml-1.5 select-none shrink-0 cursor-pointer hover:text-gray-900 transition-colors"
+        class="relative h-8 sm:h-10 px-2.5 sm:px-4 rounded-md sm:rounded-lg text-gray-700 font-bold text-xs sm:text-sm cursor-pointer active:scale-95 transition-all flex items-center justify-center select-none shrink-0"
       >
-        <span
-          class="text-[10px] sm:text-base font-bold tracking-wide whitespace-nowrap flex items-center gap-0.5"
-        >
+        <span class="flex items-center gap-0.5 whitespace-nowrap">
           {{ monthYearLabel }}
           <span class="material-icons text-xs sm:text-sm text-gray-400"
             >arrow_drop_down</span
           >
         </span>
         <input
+          #monthInput
           type="month"
+          (click)="triggerMonthPicker($event, monthInput)"
           (change)="onMonthInputChange($event)"
           class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
           title="Choose Month / เลือกเดือน"
@@ -63,43 +63,6 @@
     </div>
 
     <!-- View Mode Switcher -->
-
-    <div class="flex items-center shrink-0 justify-end">
-      <div
-        class="bg-gray-200 p-0.5 rounded-md sm:rounded-lg flex items-center gap-0.5"
-      >
-        <button
-          (click)="changeView('month')"
-          [class.bg-white]="calendarView === 'month'"
-          [class.shadow-sm]="calendarView === 'month'"
-          [class.text-gray-800]="calendarView === 'month'"
-          [class.text-gray-500]="calendarView !== 'month'"
-          class="inline-flex items-center justify-center px-1.5 py-1 sm:px-3.5 sm:py-1.5 rounded-md text-[9px] sm:text-xs font-bold transition-all cursor-pointer select-none border-0"
-        >
-          Month
-        </button>
-        <button
-          (click)="changeView('week')"
-          [class.bg-white]="calendarView === 'week'"
-          [class.shadow-sm]="calendarView === 'week'"
-          [class.text-gray-800]="calendarView === 'week'"
-          [class.text-gray-500]="calendarView !== 'week'"
-          class="inline-flex items-center justify-center px-1.5 py-1 sm:px-3.5 sm:py-1.5 rounded-md text-[9px] sm:text-xs font-bold transition-all cursor-pointer select-none border-0"
-        >
-          Week
-        </button>
-        <button
-          (click)="changeView('day')"
-          [class.bg-white]="calendarView === 'day'"
-          [class.shadow-sm]="calendarView === 'day'"
-          [class.text-gray-800]="calendarView === 'day'"
-          [class.text-gray-500]="calendarView !== 'day'"
-          class="inline-flex items-center justify-center px-1.5 py-1 sm:px-3.5 sm:py-1.5 rounded-md text-[9px] sm:text-xs font-bold transition-all cursor-pointer select-none border-0"
-        >
-          Day
-        </button>
-      </div>
-    </div>
   </div>
   }
 

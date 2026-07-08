@@ -1,7 +1,10 @@
 import { Component, Input, Output, EventEmitter, signal } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { Vehicle, VEHICLE_TYPES } from "../../../../../core/models/vehicle.model";
+import {
+  Vehicle,
+  VEHICLE_TYPES,
+} from "../../../../../core/models/vehicle.model";
 import { User } from "../../../../../core/models/user.model";
 import { AllSharedUi } from "../../../../../shared/shared";
 
@@ -16,9 +19,11 @@ import { AllSharedUi } from "../../../../../shared/shared";
 })
 export class FilterSidebar {
   getVehicleColor(vehicle: Vehicle): { dotColor: string; ringClass: string } {
-    const type = vehicle.vehicleTypeId || 'Sedan';
-    const found = VEHICLE_TYPES.find(t => t.value === type);
-    return found ? { dotColor: found.dotColor, ringClass: found.ringClass } : { dotColor: 'bg-gray-400', ringClass: 'ring-gray-400' };
+    const type = vehicle.vehicleTypeId || "Sedan";
+    const found = VEHICLE_TYPES.find((t) => t.value === type);
+    return found
+      ? { dotColor: found.dotColor, ringClass: found.ringClass }
+      : { dotColor: "bg-gray-400", ringClass: "ring-gray-400" };
   }
   @Input() vehicles: Vehicle[] = [];
   @Input() users: User[] = [];
@@ -85,20 +90,23 @@ export class FilterSidebar {
 
   get currentMonthValue(): string {
     if (this.selectedDate) {
-      const date = this.selectedDate instanceof Date ? this.selectedDate : new Date(this.selectedDate);
+      const date =
+        this.selectedDate instanceof Date
+          ? this.selectedDate
+          : new Date(this.selectedDate);
       if (!isNaN(date.getTime())) {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, "0");
         return `${year}-${month}`;
       }
     }
-    return '';
+    return "";
   }
 
   onMonthFilterChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.value) {
-      const parts = input.value.split('-');
+      const parts = input.value.split("-");
       if (parts.length >= 2) {
         const year = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10) - 1;
@@ -106,7 +114,7 @@ export class FilterSidebar {
         this.selectedDateChange.emit(selectedDate);
       }
     } else {
-      this.selectedDateChange.emit('');
+      this.selectedDateChange.emit("");
     }
   }
 }

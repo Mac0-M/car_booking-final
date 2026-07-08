@@ -1,10 +1,11 @@
-import { Component, OnInit, inject, signal, computed, ViewChild, HostListener, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild, HostListener, effect, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { AllSharedUi } from '../../../../shared/shared';
 import { AuthService } from '../../../../core/services/auth.service';
+import { HeaderService } from '../../../../core/services/header.service';
 import { VehicleListComponent } from '../vehicle-list/vehicle-list';
 import { UserListComponent } from '../user-list/user-list';
 import { DirectoryLeftSidebarComponent } from '../../components/directory-left-sidebar/directory-left-sidebar';
@@ -23,12 +24,14 @@ import { DirectoryLeftSidebarComponent } from '../../components/directory-left-s
   ],
   templateUrl: './directory.html',
 })
-export class DirectoryComponent implements OnInit {
+export class DirectoryComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   readonly router = inject(Router);
+  private readonly headerService = inject(HeaderService);
 
   @ViewChild('userList') userList!: UserListComponent;
   @ViewChild('vehicleList') vehicleList!: VehicleListComponent;
+  @ViewChild(DirectoryLeftSidebarComponent) leftSidebar?: DirectoryLeftSidebarComponent;
 
   readonly activeTab = signal<'vehicles' | 'users'>('vehicles');
   readonly leftDrawerOpened = signal(true);
@@ -67,6 +70,25 @@ export class DirectoryComponent implements OnInit {
       };
       localStorage.setItem('directory_filters', JSON.stringify(filters));
     });
+
+    // Sync with HeaderService for mobile filter button
+    effect(() => {
+      const mobile = this.isMobile();
+      const tab = this.activeTab();
+      const count = this.activeFiltersCount();
+
+      if (mobile && tab === 'vehicles') {
+        this.headerService.isMobileFilterVisible.set(true);
+        this.headerService.mobileFilterAction.set(() => {
+          if (this.leftSidebar?.mobileFilters) {
+            this.leftSidebar.mobileFilters.openMobileFilters();
+          }
+        });
+        this.headerService.activeFiltersCount.set(count);
+      } else {
+        this.headerService.reset();
+      }
+    }, { allowSignalWrites: true });
   }
 
   readonly activeFiltersCount = computed(() => {
@@ -99,6 +121,10 @@ export class DirectoryComponent implements OnInit {
     this.checkScreenSize();
   }
 
+  ngOnDestroy(): void {
+    this.headerService.reset();
+  }
+
   @HostListener('window:resize', [])
   onResize(): void {
     this.checkScreenSize();
@@ -113,7 +139,12 @@ export class DirectoryComponent implements OnInit {
   }
 
   setActiveTab(tab: 'vehicles' | 'users'): void {
-    this.activeTab.set(tab);
+    if (tab === this.activeTab()) {
+      const nextTab = this.activeTab() === 'vehicles' ? 'users' : 'vehicles';
+      this.activeTab.set(nextTab);
+    } else {
+      this.activeTab.set(tab);
+    }
     if (this.isMobile()) {
       this.leftDrawerOpened.set(false);
     }

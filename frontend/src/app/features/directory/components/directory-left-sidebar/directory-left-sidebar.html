@@ -1,13 +1,28 @@
 <div class="h-full flex flex-col">
   <!-- Tabs Switcher -->
   <div
-    class="px-4 pt-4 pb-3 border-b border-gray-100 flex items-center shrink-0"
+    class="px-4 pt-4 pb-2 flex items-center shrink-0"
   >
-    <div class="flex gap-3 w-full">
+    <div
+      class="relative flex bg-transparent select-none shrink-0 border-b border-gray-100 w-40 pb-2"
+    >
+      <!-- Sliding Underline Indicator -->
+      <div
+        class="absolute bottom-0 h-0.5 bg-gray-900 transition-all duration-200 ease-out w-[50%]"
+        [style.transform]="
+          activeTab === 'vehicles'
+            ? 'translateX(0)'
+            : 'translateX(100%)'
+        "
+      ></div>
+
       <button
         (click)="activeTabChange.emit('vehicles')"
-        [ngClass]="activeTab === 'vehicles' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
-        class="pb-2 text-xs flex items-center gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+        [class.text-gray-900]="activeTab === 'vehicles'"
+        [class.font-bold]="activeTab === 'vehicles'"
+        [class.text-gray-400]="activeTab !== 'vehicles'"
+        [class.hover:text-gray-600]="activeTab !== 'vehicles'"
+        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
       >
         <span class="material-icons text-sm">directions_car</span>
         Vehicles
@@ -15,8 +30,11 @@
 
       <button
         (click)="activeTabChange.emit('users')"
-        [ngClass]="activeTab === 'users' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
-        class="pb-2 text-xs flex items-center gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+        [class.text-gray-900]="activeTab === 'users'"
+        [class.font-bold]="activeTab === 'users'"
+        [class.text-gray-400]="activeTab !== 'users'"
+        [class.hover:text-gray-600]="activeTab !== 'users'"
+        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
       >
         <span class="material-icons text-sm">people_outline</span>
         Users
@@ -24,12 +42,11 @@
     </div>
   </div>
 
-  <!-- Mobile View Header controls (if isMobileHeader is true) -->
-  @if (isMobileHeader) {
-  <!-- Filters Trigger (Only for Vehicles) -->
-  @if (activeTab === 'vehicles') {
-  <div class="px-4 py-3 flex items-center justify-end shrink-0">
+  <!-- Mobile View Header controls (always initialized on mobile to enable header trigger) -->
+  @if (isMobile && activeTab === 'vehicles') {
+  <div class="hidden shrink-0">
     <app-directory-mobile-filters
+      [showTrigger]="false"
       [searchQuery]="searchQuery"
       [selectedType]="selectedType"
       [selectedStatus]="selectedStatus"
@@ -40,9 +57,9 @@
       (selectedStatusChange)="selectedStatusChange.emit($event)"
       (selectedReFuelChange)="selectedReFuelChange.emit($event)"
       (resetFilters)="resetFilters.emit()"
-    />
+    ></app-directory-mobile-filters>
   </div>
-  } }
+  }
 
   <!-- Desktop View Filters (if !isMobileHeader) -->
   @if (!isMobileHeader) {

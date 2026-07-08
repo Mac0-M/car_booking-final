@@ -21,8 +21,8 @@ export class ComponentProcess {
   protected readonly baseClasses = 'w-full flex justify-center select-none';
 
   protected readonly sizeClasses = {
-    sm: 'py-2 px-4 mb-4 sm:mb-8',
-    base: 'py-4 px-6 mb-6 sm:mb-10'
+    sm: 'py-1 px-4 mb-2 sm:mb-4',
+    base: 'py-2 px-6 mb-3 sm:mb-6'
   };
 
   protected readonly circleSizeClasses = {

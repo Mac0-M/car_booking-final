@@ -1,6 +1,7 @@
-import { Component, inject, signal, computed, OnInit, HostListener, effect } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, HostListener, effect, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from '../../../../core/services/booking.service';
+import { HeaderService } from '../../../../core/services/header.service';
 import { VehicleService } from '../../../../core/services/vehicle.service';
 import { UserService } from '../../../../core/services/user.service';
 import { Booking } from '../../../../core/models/booking.model';
@@ -23,12 +24,15 @@ import { DailyBookingsSidebar } from '../../components/booking-sidebar/daily-boo
   imports: [CommonModule, FormsModule, ...AllSharedUi, BookingDetailModal, BookingViews, FilterSidebar, MobileFilters, MatSidenavModule, DailyBookingsSidebar],
   templateUrl: './booking-list.html',
 })
-export class BookingList implements OnInit {
+export class BookingList implements OnInit, OnDestroy, AfterViewInit {
   private readonly bookingService = inject(BookingService);
   private readonly vehicleService = inject(VehicleService);
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
   private readonly bookingDialogService = inject(BookingDialogService);
+  private readonly headerService = inject(HeaderService);
+
+  @ViewChild(MobileFilters) mobileFiltersComponent?: MobileFilters;
 
   openBooking(): void {
     this.bookingDialogService.open();
@@ -106,6 +110,24 @@ export class BookingList implements OnInit {
       };
       localStorage.setItem('booking_list_filters', JSON.stringify(filters));
     });
+
+    // Sync with HeaderService for mobile filter button
+    effect(() => {
+      const mobile = this.isMobile();
+      const count = this.activeFiltersCount();
+
+      if (mobile) {
+        this.headerService.isMobileFilterVisible.set(true);
+        this.headerService.mobileFilterAction.set(() => {
+          if (this.mobileFiltersComponent) {
+            this.mobileFiltersComponent.openMobileFilters();
+          }
+        });
+        this.headerService.activeFiltersCount.set(count);
+      } else {
+        this.headerService.reset();
+      }
+    }, { allowSignalWrites: true });
   }
 
   readonly activeFiltersCount = computed(() => {
@@ -172,8 +194,21 @@ export class BookingList implements OnInit {
     this.loadBookings();
   }
 
+  ngAfterViewInit(): void {
+    // Triggers view child queries resolution update if needed
+  }
+
+  ngOnDestroy(): void {
+    this.headerService.reset();
+  }
+
   setActiveTab(tab: 'active' | 'history'): void {
-    this.activeTab.set(tab);
+    if (tab === this.activeTab()) {
+      const nextTab = this.activeTab() === 'active' ? 'history' : 'active';
+      this.activeTab.set(nextTab);
+    } else {
+      this.activeTab.set(tab);
+    }
     this.selectedStatusFilter.set('');
     this.loadBookings();
   }
@@ -230,7 +265,12 @@ export class BookingList implements OnInit {
   }
 
   setViewMode(mode: 'calendar' | 'grid' | 'list'): void {
-    this.viewMode.set(mode);
+    if (this.isMobile() && mode === this.viewMode()) {
+      const nextMode = this.viewMode() === 'calendar' ? 'grid' : 'calendar';
+      this.viewMode.set(nextMode);
+    } else {
+      this.viewMode.set(mode);
+    }
     this.onFilterChange();
   }
 
@@ -329,6 +369,17 @@ export class BookingList implements OnInit {
         const returnTime = new Date((b.return || '').replace(' ', 'T'));
         if (!isNaN(returnTime.getTime()) && returnTime < now) return false;
         return true;
+      });
+    } else if (this.activeTab() === 'history') {
+      result = result.filter(b => {
+        // CANCELLED and COMPLETED bookings are always history
+        if (b.status === 'CANCELLED' || b.status === 'COMPLETED') return true;
+        // CONFIRMED bookings past return time are effectively COMPLETED, so they belong to history
+        if (b.status === 'CONFIRMED') {
+          const returnTime = new Date((b.return || '').replace(' ', 'T'));
+          return !isNaN(returnTime.getTime()) && returnTime < now;
+        }
+        return false;
       });
     }
 

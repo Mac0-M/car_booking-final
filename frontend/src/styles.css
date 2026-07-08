@@ -236,3 +236,15 @@ component-card.cursor-pointer:hover > div {
 .animate-slide-up {
   animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
+
+/* Mobile styling: Reduce font size of Toast UI Calendar elements only */
+@media (max-width: 1023px) {
+  .toastui-calendar-layout,
+  .toastui-calendar-layout * {
+    font-size: 10px !important;
+  }
+  .toastui-calendar-day-name__date {
+    font-size: 10px !important;
+  }
+
+}

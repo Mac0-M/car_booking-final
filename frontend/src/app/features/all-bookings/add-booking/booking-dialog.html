@@ -1,4 +1,4 @@
-<div class="relative w-full h-full md:max-h-[90vh] flex flex-col bg-white">
+<div class="relative w-full h-full md:max-h-[95vh] flex flex-col bg-white">
   <!-- Header -->
   <div
     class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
@@ -20,7 +20,7 @@
 
   <!-- Dialog Body (Scrollable) -->
   <div
-    class="p-3 sm:p-6 overflow-y-auto flex-1 space-y-3 sm:space-y-6 max-h-none md:max-h-[70vh] bg-white"
+    class="px-3 py-1 sm:px-6 sm:py-2 overflow-y-auto flex-1 space-y-3 sm:space-y-6 max-h-none md:max-h-[82vh] bg-white"
   >
     <!-- Stepper Indicator -->
     @if (!isConfirmed()) {
@@ -149,12 +149,8 @@
                 name="purpose"
               ></component-input-ui>
             </div>
-          </div>
 
-          <!-- User Selector -->
-          <div
-            class="border-t border-gray-100 pt-3 sm:pt-4 space-y-2.5 sm:space-y-4"
-          >
+            <!-- User Selector -->
             <div class="space-y-1 sm:space-y-2">
               <label
                 for="booked_for"
@@ -219,10 +215,10 @@
 
     <!-- STEP 2: VEHICLE SELECTION -->
     @if (currentStep() === 2 && !isConfirmed()) {
-    <div class="space-y-4">
+    <div class="space-y-3">
       <!-- Vehicle Cards -->
       @if (vehicles().length > 0) {
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-3">
         @for (vehicle of vehicles(); track vehicle.id) {
         <app-vehicle-card
           [vehicle]="vehicle"
@@ -239,7 +235,7 @@
       }
 
       <!-- Back Button -->
-      <div class="pt-4 flex justify-start">
+      <div class="pt-1 flex justify-start">
         <component-button
           (click)="onBackToStep1()"
           variant="cancel"

@@ -94,42 +94,54 @@
           </div>
 
           <!-- View Mode Switcher -->
-          <div class="flex items-center bg-gray-100 p-0.5 rounded-xl shrink-0">
+          <div
+            class="relative grid bg-gray-100 p-0.5 rounded-lg shrink-0 select-none"
+            [ngClass]="isMobile() ? 'grid-cols-2 w-20' : 'grid-cols-3 w-72'"
+          >
+            <!-- Sliding Background Indicator -->
+            <div
+              class="absolute top-0.5 bottom-0.5 left-0.5 bg-white shadow-sm rounded-md transition-transform duration-200 ease-out"
+              [style.width]="isMobile() ? 'calc(50% - 2px)' : 'calc(33.33% - 2px)'"
+              [style.transform]="
+                isMobile()
+                  ? (viewMode() === 'calendar' ? 'translateX(0)' : 'translateX(calc(100% + 2px))')
+                  : (viewMode() === 'calendar' ? 'translateX(0)' : (viewMode() === 'grid' ? 'translateX(calc(100% + 2px))' : 'translateX(calc(200% + 4px))'))
+              "
+            ></div>
+
             <button
               (click)="setViewMode('calendar')"
-              [class.bg-white]="viewMode() === 'calendar'"
-              [class.shadow-sm]="viewMode() === 'calendar'"
               [class.text-gray-800]="viewMode() === 'calendar'"
               [class.text-gray-500]="viewMode() !== 'calendar'"
-              class="flex items-center justify-center gap-1.5 px-2 py-1 md:px-3 md:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
             >
-              <span class="material-icons text-sm md:text-base"
-                >calendar_today</span
-              >
-              <span class="hidden sm:inline">Calendar</span>
+              <span class="material-icons text-sm sm:text-base">calendar_today</span>
+              @if (!isMobile()) {
+                <span>Calendar</span>
+              }
             </button>
+
             <button
               (click)="setViewMode('grid')"
-              [class.bg-white]="viewMode() === 'grid'"
-              [class.shadow-sm]="viewMode() === 'grid'"
               [class.text-gray-800]="viewMode() === 'grid'"
               [class.text-gray-500]="viewMode() !== 'grid'"
-              class="flex items-center justify-center gap-1.5 px-2 py-1 md:px-3 md:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
             >
-              <span class="material-icons text-sm md:text-base">grid_view</span>
-              <span class="hidden sm:inline">Grid</span>
+              <span class="material-icons text-sm sm:text-base">grid_view</span>
+              @if (!isMobile()) {
+                <span>Grid</span>
+              }
             </button>
+
             @if (!isMobile()) {
             <button
               (click)="setViewMode('list')"
-              [class.bg-white]="viewMode() === 'list'"
-              [class.shadow-sm]="viewMode() === 'list'"
               [class.text-gray-800]="viewMode() === 'list'"
               [class.text-gray-500]="viewMode() !== 'list'"
-              class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border-0"
+              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
             >
               <span class="material-icons text-base">format_list_bulleted</span>
-              <span class="hidden sm:inline">List</span>
+              <span>List</span>
             </button>
             }
           </div>
@@ -173,7 +185,7 @@
             [selectedVehicleTypeFilter]="selectedVehicleTypeFilter()"
             [selectedVehiclePlates]="selectedVehiclePlates()"
             [showLegend]="true"
-            [isMobileHeader]="true"
+            [isMobileHeader]="false"
             (selectedDateChange)="selectedDate.set($event); onFilterChange()"
             (searchQueryChange)="searchQuery.set($event); onFilterChange()"
             (selectedUserIdChange)="selectedUserId.set($event); onFilterChange()"
@@ -190,7 +202,7 @@
           @if (!isMobile()) {
           <button
             (click)="openBooking()"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border border-gray-700 bg-gray-700 text-white shadow-sm hover:bg-gray-600 hover:border-gray-600 active:scale-95 shrink-0"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border border-gray-700 bg-gray-700 text-white shadow-sm active:scale-95 shrink-0"
           >
             <span class="material-icons text-sm">add</span>
             <span>Add Booking</span>
