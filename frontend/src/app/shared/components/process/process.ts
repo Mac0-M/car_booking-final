@@ -1,32 +1,36 @@
-import { Component, Input } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { Component, Input } from "@angular/core";
+import { NgClass } from "@angular/common";
 
 @Component({
-  selector: 'component-process',
+  selector: "component-process",
   standalone: true,
   imports: [NgClass],
-  templateUrl: './process.html',
+  templateUrl: "./process.html",
 })
 export class ComponentProcess {
-  @Input() steps: string[] = ['Booking', 'Choose Car', 'Confirm'];
+  @Input() steps: string[] = ["Booking", "Choose Car", "Confirm"];
   @Input() currentStep: number = 1;
-  @Input() size: 'sm' | 'base' = 'base';
+  @Input() size: "sm" | "base" = "base";
 
-  get progressWidth(): number { //คำนวณ ดูว่าอยุ่processไหนแล้ว -> แปลงเป็น % ไปให้ ui 
-    if (this.steps.length <= 1) return 0;//น้อยกว่า1 return 0
-    const activeIndex = Math.min(Math.max(this.currentStep - 1, 0), this.steps.length - 1);//ปรับเป็นลำดับแบบarray + validtion กัน ค่าติดลบ < 0 หรือ > จนprocess
-    return (activeIndex / (this.steps.length - 1)) * 100;// คำนวณเป็นอัตราส่วน%
+  get progressWidth(): number {
+    //คำนวณ ดูว่าอยุ่processไหนแล้ว -> แปลงเป็น % ไปให้ ui
+    if (this.steps.length <= 1) return 0; //น้อยกว่า1 return 0
+    const activeIndex = Math.min(
+      Math.max(this.currentStep - 1, 0),
+      this.steps.length - 1,
+    ); //ปรับเป็นลำดับแบบarray + validtion กัน ค่าติดลบ < 0 หรือ > จนprocess
+    return (activeIndex / (this.steps.length - 1)) * 100; // คำนวณเป็นอัตราส่วน%
   }
 
-  protected readonly baseClasses = 'w-full flex justify-center select-none';
+  protected readonly baseClasses = "w-full flex justify-center select-none";
 
   protected readonly sizeClasses = {
-    sm: 'py-1 px-4 mb-2 sm:mb-4',
-    base: 'py-2 px-6 mb-3 sm:mb-6'
+    sm: "pt-1 px-4 pb-6 mb-2 sm:mb-4",
+    base: "pt-1 px-6 pb-2 mb-3 sm:mb-6",
   };
 
   protected readonly circleSizeClasses = {
-    sm: 'w-7 h-7 text-xs',
-    base: 'w-9 h-9 text-sm md:w-10 md:h-10 md:text-base'
+    sm: "w-7 h-7 text-xs",
+    base: "w-9 h-9 text-sm md:w-10 md:h-10 md:text-base",
   };
 }

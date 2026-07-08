@@ -1,13 +1,13 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { DialogRef } from '@angular/cdk/dialog';
 import { BookingStore } from '../../state/booking.store';
 import { AllSharedUi } from '../../../../../shared/shared';
 import { BookingDetailModal } from '../../../components/booking-detail-modal/booking-detail-modal';
 import { BookingService } from '../../../../../core/services/booking.service';
 import { AvailabilityService } from '../../../../../core/services/availability.service';
 import { AuthService } from '../../../../../core/services/auth.service';
-
 
 /**
  * BookingConfirmComponent:
@@ -21,8 +21,13 @@ import { AuthService } from '../../../../../core/services/auth.service';
   templateUrl: './booking-confirm.html',
 })
 export class BookingConfirmComponent {
+  @Input() isDialog = false;
+  @Output() confirmed = new EventEmitter<string>();
+  @Output() back = new EventEmitter<void>();
+
   protected readonly store = inject(BookingStore);
   private readonly router = inject(Router);
+  private readonly dialogRef = inject(DialogRef, { optional: true });
   private readonly bookingService = inject(BookingService);
   private readonly availabilityService = inject(AvailabilityService);
   private readonly authService = inject(AuthService);
@@ -61,20 +66,29 @@ export class BookingConfirmComponent {
   });
 
   onBack(): void {
-    // Go back to vehicle selection step (Step 2)
-    this.router.navigate(['/booking/select-vehicle']);
+    if (this.isDialog) {
+      this.back.emit();
+    } else {
+      this.router.navigate(['/booking/select-vehicle']);
+    }
   }
 
   onBackToForm(): void {
-    // Reset all booking info and return to form step (Step 1)
     this.store.clear();
-    this.router.navigate(['/booking/form']);
+    if (this.isDialog) {
+      this.back.emit();
+    } else {
+      this.router.navigate(['/booking/form']);
+    }
   }
 
   onViewBookingHistory(): void {
-    // Reset store and navigate to bookings list
     this.store.clear();
-    this.router.navigate(['/bookings']);
+    if (this.isDialog && this.dialogRef) {
+      this.dialogRef.close();
+    } else {
+      this.router.navigate(['/bookings']);
+    }
   }
 
   onConfirm(): void {
@@ -99,14 +113,13 @@ export class BookingConfirmComponent {
         this.isConfirmed.set(true);
         const savedBooking = res.data || res;
         this.bookingId.set(savedBooking.id);
-        this.store.clear();
+        this.confirmed.emit(savedBooking.id);
       },
       error: (err: any) => {
         this.isSubmitting.set(false);
         if (err.status === 409) {
           alert('This vehicle is already booked. Please select another vehicle.');
           
-          // Re-fetch availability and update store to reflect correct status
           this.availabilityService.search(
             this.store.depart(),
             this.store.returnTime()
@@ -114,10 +127,18 @@ export class BookingConfirmComponent {
             next: (res: any) => {
               const vehicles = res.data || res;
               this.store.setVehicles(vehicles);
-              this.router.navigate(['/booking/select-vehicle']);
+              if (this.isDialog) {
+                this.back.emit();
+              } else {
+                this.router.navigate(['/booking/select-vehicle']);
+              }
             },
             error: () => {
-              this.router.navigate(['/booking/select-vehicle']);
+              if (this.isDialog) {
+                this.back.emit();
+              } else {
+                this.router.navigate(['/booking/select-vehicle']);
+              }
             }
           });
         } else {

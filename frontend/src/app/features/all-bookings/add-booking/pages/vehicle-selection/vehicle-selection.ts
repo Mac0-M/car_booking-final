@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Vehicle } from '../../../../../core/models/vehicle.model';
 import { VehicleCardComponent } from './components/vehicle-card/vehicle-card';
@@ -18,6 +18,10 @@ import { AllSharedUi } from '../../../../../shared/shared';
   templateUrl: './vehicle-selection.html',
 })
 export class VehicleSelectionComponent {
+  @Input() isDialog = false;
+  @Output() selected = new EventEmitter<void>();
+  @Output() back = new EventEmitter<void>();
+
   protected readonly store = inject(BookingStore);
   readonly vehicles = this.store.vehicles;
   readonly isLoading = signal(false);
@@ -27,10 +31,18 @@ export class VehicleSelectionComponent {
   onSelectVehicle(vehicle: Vehicle): void {
     console.log('Selected vehicle:', vehicle);
     this.store.setSelectedVehicle(vehicle);
-    this.router.navigate(['/booking/confirm']);
+    if (this.isDialog) {
+      this.selected.emit();
+    } else {
+      this.router.navigate(['/booking/confirm']);
+    }
   }
 
   onGoBack(): void {
-    this.router.navigate(['/booking/form']);
+    if (this.isDialog) {
+      this.back.emit();
+    } else {
+      this.router.navigate(['/booking/form']);
+    }
   }
 }

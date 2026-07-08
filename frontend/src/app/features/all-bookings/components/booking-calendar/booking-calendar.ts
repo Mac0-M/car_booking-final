@@ -330,33 +330,33 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     const events = this.bookings.map((b) => {
       const isOld = this.isOldBooking(b);
 
-      let color = "#3b82f6"; // Blue for Sedan
-      let borderColor = "#2563eb";
+      let color = "#0ea5e9"; // Premium blue-500 for Sedan
+      let borderColor = "#0284c7"; // Premium blue-600
       let icon = "directions_car";
 
       const type = b.vehicle?.vehicleTypeId;
       if (type === "Pickup") {
-        color = "#ef4444";
-        borderColor = "#dc2626";
+        color = "#be3350"; // Premium red-500
+        borderColor = "#982840"; // Premium red-600
         icon = "local_shipping";
       } else if (type === "Van") {
-        color = "#f97316";
-        borderColor = "#ea580c";
+        color = "#d25414"; // Premium orange-500
+        borderColor = "#aa410d"; // Premium orange-600
         icon = "airport_shuttle";
       } else if (type === "SUV") {
-        color = "#10b981";
-        borderColor = "#059669";
+        color = "#2b9f6f"; // Premium emerald-500
+        borderColor = "#207a54"; // Premium emerald-600
         icon = "time_to_leave";
       } else if (type === "Other") {
-        color = "#8b5cf6";
-        borderColor = "#7c3aed";
+        color = "#7542d9"; // Premium violet-500
+        borderColor = "#5c30b2"; // Premium violet-600
         icon = "commute";
       }
 
       // Old bookings get gray background
       if (isOld) {
-        color = "#9ca3af";
-        borderColor = "#6b7280";
+        color = "#7c8fa6"; // Premium gray-400
+        borderColor = "#52647c"; // Premium gray-500
       }
 
       return {

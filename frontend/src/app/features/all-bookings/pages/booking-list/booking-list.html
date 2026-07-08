@@ -1,6 +1,6 @@
 <mat-drawer-container
   [hasBackdrop]="true"
-  class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
+  class="booking-drawer-container h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
 >
   <mat-drawer
     #dailyDrawer
@@ -8,7 +8,7 @@
     [opened]="rightDrawerOpened()"
     (closedStart)="rightDrawerOpened.set(false)"
     (opened)="onDailyDrawerOpened()"
-    class="w-full md:w-2/3 border-r border-gray-200 bg-white shadow-2xl z-50 flex flex-col h-full overflow-hidden font-sans"
+    class="w-full md:w-2/3 border-r border-gray-200 bg-white shadow-2xl z-30 flex flex-col h-full overflow-hidden font-sans"
   >
     <app-daily-bookings-sidebar
       class="h-full flex flex-col"

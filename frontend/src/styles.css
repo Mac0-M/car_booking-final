@@ -1,8 +1,116 @@
 @import "tailwindcss";
 @import "@angular/cdk/overlay-prebuilt.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 @theme {
   --breakpoint-md: 1024px;
+
+  /* Premium Custom Cool Slate-Blue palette centered on rgb(54, 65, 83) at gray-700 */
+  --color-gray-50: #f5f7fa;
+  --color-gray-100: #e8ecf1;
+  --color-gray-150: #dee2ea;
+  --color-gray-200: #ccd4e0;
+  --color-gray-300: #afbcd0;
+  --color-gray-400: #7c8fa6;
+  --color-gray-500: #52647c;
+  --color-gray-600: #425164;
+  --color-gray-700: rgb(54, 65, 83); /* #364153 */
+  --color-gray-800: #252d3a;
+  --color-gray-900: #181d26;
+  --color-gray-950: #0f1217;
+
+  /* Premium forest/mint green palette for success/available state */
+  --color-green-50: #f2faf6;
+  --color-green-100: #e1f5ec;
+  --color-green-200: #bfead6;
+  --color-green-300: #8cd6b2;
+  --color-green-400: #50c08b;
+  --color-green-500: #37a471;
+  --color-green-600: #2c835a;
+  --color-green-700: #226545;
+  --color-green-800: #184731;
+  --color-green-900: #102f21;
+
+  /* Premium crimson/coral red palette for danger/unavailable state */
+  --color-red-50: #fdf2f4;
+  --color-red-100: #fae1e5;
+  --color-red-200: #f4c0c8;
+  --color-red-300: #eb8ea0;
+  --color-red-400: #de506d;
+  --color-red-500: #be3350;
+  --color-red-600: #982840;
+  --color-red-700: #751f31;
+  --color-red-800: #511522;
+  --color-red-900: #360e17;
+
+  /* Premium warm amber palette for pending state */
+  --color-yellow-50: #fef8eb;
+  --color-yellow-100: #fdefd1;
+  --color-yellow-200: #fbdda1;
+  --color-yellow-300: #f8c364;
+  --color-yellow-400: #f5a725;
+  --color-yellow-500: #cf8514;
+  --color-yellow-600: #a56a10;
+  --color-yellow-700: #7f510c;
+  --color-yellow-800: #593908;
+  --color-yellow-900: #3c2605;
+
+  /* Premium blue palette */
+  --color-blue-50: #f0f7ff;
+  --color-blue-100: #e0effe;
+  --color-blue-200: #bae0fd;
+  --color-blue-300: #7cc7fc;
+  --color-blue-400: #38a9f8;
+  --color-blue-500: #0ea5e9;
+  --color-blue-600: #0284c7;
+  --color-blue-700: #0369a1;
+  --color-blue-800: #075985;
+  --color-blue-900: #0c4a6e;
+
+  /* Premium indigo/violet palette */
+  --color-indigo-50: #f4f6fe;
+  --color-indigo-100: #eaedfc;
+  --color-indigo-200: #d8ddfb;
+  --color-indigo-300: #b9c1f7;
+  --color-indigo-400: #929df2;
+  --color-indigo-500: #6b77eb;
+  --color-indigo-600: #4f58d9;
+  --color-indigo-700: #3e44b8;
+  --color-indigo-800: #2f338f;
+  --color-indigo-900: #212463;
+
+  /* Premium orange palette for Van type */
+  --color-orange-50: #fef6f0;
+  --color-orange-100: #fde7d4;
+  --color-orange-200: #fbcbad;
+  --color-orange-300: #f8a26b;
+  --color-orange-400: #f57025;
+  --color-orange-500: #d25414;
+  --color-orange-600: #aa410d;
+  --color-orange-700: #823007;
+  --color-orange-800: #5b2003;
+
+  /* Premium violet/purple palette for Other type */
+  --color-violet-50: #faf7fe;
+  --color-violet-100: #f1eafd;
+  --color-violet-200: #ddccfa;
+  --color-violet-300: #c0a2f7;
+  --color-violet-400: #9a6bf3;
+  --color-violet-500: #7542d9;
+  --color-violet-600: #5c30b2;
+  --color-violet-700: #442286;
+  --color-violet-800: #2f165e;
+
+  /* Premium emerald palette for SUV type */
+  --color-emerald-50: #f1fbf7;
+  --color-emerald-100: #dcf6eb;
+  --color-emerald-200: #b0ecd0;
+  --color-emerald-300: #79deb1;
+  --color-emerald-400: #3ec98f;
+  --color-emerald-500: #2b9f6f;
+  --color-emerald-600: #207a54;
+  --color-emerald-700: #16563a;
+  --color-emerald-800: #0d3423;
 }
 
 html, body {
@@ -25,173 +133,84 @@ html, body {
   word-wrap: break-word;
 }
 
-/* Instant display override to remove all open/close transitions
-.no-animation-backdrop {
-  transition: none !important;
-  animation: none !important;
-}
-
-.no-animation-panel {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-}
-
-.no-animation-panel * {
-  transition: none !important;
-} */
-
 /* Card hover effects targeting the inner div of component-card to avoid double borders & double shadows */
 component-card.cursor-pointer:hover > div {
-  border-color: #d1d5db !important;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  @apply !border-gray-300 !shadow-md;
 }
 
 /* TUI Calendar: Styling for the +X exceed badge to prevent overlaps, positioned bottom-right */
 .toastui-calendar-grid-cell-more-events,
 .toastui-calendar-weekday-grid-more-events {
-  background-color: #eff6ff !important;
-  color: #1d4ed8 !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  padding: 4px 10px !important;
-  border-radius: 8px !important;
-  border: 1px solid #bfdbfe !important;
-  line-height: 1 !important;
-  position: absolute !important;
-  bottom: 4px !important;
-  right: 4px !important;
-  margin: 0 !important;
-  height: auto !important;
-  width: auto !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  @apply !bg-blue-100 !text-blue-700 text-[13px] font-bold py-1 px-2.5 rounded-lg leading-none absolute bottom-1 right-1 m-0 h-auto w-auto inline-flex items-center justify-center !border !border-blue-300;
 }
 
 /* Hide default TUI calendar see-more popup */
 .toastui-calendar-see-more-container {
-  display: none !important;
+  @apply !hidden;
 }
 
 @media (max-width: 1023px) {
   /* Center the "See More" popup modal on mobile screens */
   .toastui-calendar-see-more-container {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    z-index: 9999 !important;
-    width: 90% !important;
-    max-width: 320px !important;
-    height: auto !important;
-    max-height: 400px !important;
-    background-color: white !important;
-    border-radius: 16px !important;
-    border: 1px solid #e5e7eb !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-    overflow: hidden !important;
+    @apply !fixed !top-1/2 !left-1/2 !-translate-x-1/2 !-translate-y-1/2 !z-[9999] !w-[90%] !max-w-[320px] !h-auto !max-h-[400px] !bg-white !rounded-2xl !border !border-gray-200 !shadow-xl !overflow-hidden;
   }
 
   /* Inner container padding and layout */
   .toastui-calendar-see-more {
-    padding: 16px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    max-height: 400px !important;
+    @apply !p-4 !flex !flex-col !h-full !max-h-[400px];
   }
 
   /* Hide the pointing arrow of the popup */
   .toastui-calendar-popup-arrow,
   .toastui-calendar-popup-arrow-border,
   .toastui-calendar-popup-arrow-fill {
-    display: none !important;
+    @apply !hidden;
   }
 
   /* Header spacing and layout */
   .toastui-calendar-see-more-header {
-    margin-bottom: 12px !important;
-    padding-bottom: 8px !important;
-    border-bottom: 1px solid #f3f4f6 !important;
+    @apply !mb-3 !pb-2 !border-b !border-gray-100;
   }
 
   .toastui-calendar-more-title-date {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #111827 !important;
+    @apply !text-xl !font-bold !text-gray-900;
   }
 
   .toastui-calendar-more-title-day {
-    margin-left: 6px !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    color: #6b7280 !important;
+    @apply !ml-1.5 !text-sm !font-medium !text-gray-400;
   }
 
   /* List container scrollability */
   .toastui-calendar-month-more-list {
-    overflow-y: auto !important;
-    padding: 0 !important;
-    max-height: 250px !important;
+    @apply !overflow-y-auto !p-0 !max-h-[250px];
   }
 
   /* Make mat-drawer with w-full class take up 100% width on mobile */
   mat-drawer.w-full,
   .mat-drawer.w-full {
-    width: 100% !important;
-    max-width: 100vw !important;
-    min-width: 100% !important;
-    border-left: none !important;
-    box-shadow: none !important;
+    @apply !w-full !max-w-full !min-w-full !border-l-0 !shadow-none;
   }
 
-  /* Force CDK dialogs to be fullscreen on mobile, except bottom-sheets */
-  .cdk-overlay-pane:not(.mobile-filter-dialog-pane) {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    top: 0 !important;
-    left: 0 !important;
-    border-radius: 0 !important;
+  /* Force CDK dialogs to be fullscreen on mobile, except bottom-sheets and desktop-style modals */
+  .cdk-overlay-pane:not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) {
+    @apply !w-[100vw] !max-w-[100vw] !h-[100dvh] !max-h-[100dvh] !m-0 !p-0 !top-0 !left-0 !rounded-none;
   }
 
-  .cdk-dialog-container:not(.mobile-filter-dialog-pane .cdk-dialog-container) {
-    border-radius: 0 !important;
-    max-width: 100vw !important;
-    max-height: 100dvh !important;
-    width: 100% !important;
-    height: 100% !important;
+  .cdk-overlay-pane:not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) .cdk-dialog-container {
+    @apply !rounded-none !max-w-[100vw] !max-h-[100dvh] !w-full !h-full !p-0 !m-0;
   }
 
-  .cdk-dialog-container:not(.mobile-filter-dialog-pane .cdk-dialog-container) > * {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
+  .cdk-overlay-pane:not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) .cdk-dialog-container > * {
+    @apply !w-full !h-full;
   }
 
   /* Mobile filter dialog bottom-sheet styling */
   .mobile-filter-dialog-pane {
-    align-self: flex-end !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: auto !important;
-    max-height: 80dvh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    top: auto !important;
-    bottom: 0 !important;
-    border-radius: 24px 24px 0 0 !important;
+    @apply !self-end !w-[100vw] !max-w-[100vw] !h-auto !max-h-[80dvh] !m-0 !p-0 !top-auto !bottom-0 !rounded-t-[24px];
   }
 
   .mobile-filter-dialog-pane .cdk-dialog-container {
-    border-radius: 24px 24px 0 0 !important;
-    max-height: 80dvh !important;
-    height: auto !important;
-    width: 100% !important;
+    @apply !rounded-t-[24px] !max-h-[80dvh] !h-auto !w-full;
   }
 }
 
@@ -247,4 +266,9 @@ component-card.cursor-pointer:hover > div {
     font-size: 10px !important;
   }
 
+}
+
+/* Make backdrop transparent for booking page so it does not dim other areas but still allows close-on-click-outside */
+.booking-drawer-container .mat-drawer-backdrop.mat-drawer-shown {
+  background-color: transparent !important;
 }

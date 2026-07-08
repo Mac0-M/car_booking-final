@@ -1,7 +1,7 @@
-<div class="booking-confirm-page max-w-2xl mx-auto p-4 md:p-6 space-y-6">
+<div [class]="isDialog ? 'flex flex-col flex-1 h-full' : 'booking-confirm-page max-w-2xl mx-auto p-4 md:p-6 space-y-6'">
 
   <!-- Stepper Indicator -->
-  @if (!isConfirmed()) {
+  @if (!isDialog && !isConfirmed()) {
     <component-process [currentStep]="3" size="base"></component-process>
   }
 
@@ -27,7 +27,7 @@
 
     @if (!isConfirmed()) {
       <!-- STEP 3: Review and Confirm (Summary and confirmation) -->
-      <div class="space-y-6">
+      <div [class]="isDialog ? 'flex flex-col flex-1 h-full justify-between gap-6' : 'space-y-6'">
         <app-booking-detail-modal
           [bookingDate]="store.bookingDate()"
           [startTime]="store.startTime()"
@@ -39,21 +39,21 @@
           [vehicle]="store.selectedVehicle()"
         />
         <!-- Actions -->
-        <div class="flex flex-col sm:flex-row gap-3 pt-2">
-          <component-button variant="cancel" size="lg" class="sm:flex-1" (click)="onBack()" [disabled]="isSubmitting()">
-            <span class="flex items-center justify-center gap-2 text-base font-semibold py-1">
-              <span class="material-icons text-lg">arrow_back</span>
+        <div [class]="isDialog ? 'flex flex-col sm:flex-row gap-3 pt-2 mt-auto' : 'flex flex-col sm:flex-row gap-3 pt-2'">
+          <component-button variant="cancel" [size]="isDialog ? 'md' : 'lg'" class="sm:flex-1" (click)="onBack()" [disabled]="isSubmitting()">
+            <span [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'">
+              <span class="material-icons text-sm sm:text-lg">arrow_back</span>
               Back
             </span>
           </component-button>
 
-          <component-button variant="submit" size="lg" class="sm:flex-1" (click)="onConfirm()" [disabled]="isSubmitting()">
-            <span class="flex items-center justify-center gap-2 text-base font-semibold py-1">
+          <component-button variant="submit" [size]="isDialog ? 'md' : 'lg'" class="sm:flex-1" (click)="onConfirm()" [disabled]="isSubmitting()">
+            <span [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'">
               @if (isSubmitting()) {
-                <span class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></span>
+                <span class="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent"></span>
                 Processing...
               } @else {
-                <span class="material-icons text-lg">done_all</span>
+                <span class="material-icons text-sm sm:text-lg">done_all</span>
                 Confirm Booking
               }
             </span>
