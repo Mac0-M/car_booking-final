@@ -79,25 +79,25 @@
         <!-- Dropdown Menu overlay -->
         @if (isProfileDropdownOpen()) {
         <div
-          class="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-gray-150/80 shadow-lg py-0.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+          class="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-gray-150/80 shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150"
         >
           <!-- View Profile Link -->
           <a
             routerLink="/profile"
             (click)="closeProfileDropdown()"
-            class="flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-gray-700 rounded-xl hover:bg-gray-200 transition-colors text-decoration-none"
+            class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-gray-700 rounded-none hover:bg-gray-200 transition-colors text-decoration-none"
           >
             <span class="material-icons text-lg text-gray-400">person</span>
             View Profile
           </a>
 
           <!-- Divider -->
-          <hr class="border-gray-100 my-1" />
+          <hr class="border-gray-200" />
 
           <!-- Logout Button -->
           <button
             (click)="onLogout(); closeProfileDropdown()"
-            class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-red-500 rounded-xl hover:bg-red-100 transition-colors border-0 bg-transparent text-left cursor-pointer"
+            class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-red-500 rounded-none hover:bg-red-100 transition-colors border-0 bg-transparent text-left cursor-pointer"
           >
             <span class="material-icons text-lg text-red-400">logout</span>
             Logout
