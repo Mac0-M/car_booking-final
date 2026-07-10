@@ -123,19 +123,22 @@
       @if (headerService.isMobileFilterVisible()) {
       <button
         (click)="headerService.mobileFilterAction()?.()"
-        [class.bg-gray-700]="headerService.activeFiltersCount() > 0"
+        [class.bg-gray-800]="headerService.activeFiltersCount() > 0"
         [class.text-white]="headerService.activeFiltersCount() > 0"
-        [class.border-gray-700]="headerService.activeFiltersCount() > 0"
-        [class.bg-white]="headerService.activeFiltersCount() === 0"
-        [class.text-gray-500]="headerService.activeFiltersCount() === 0"
+        [class.hover:bg-gray-900]="headerService.activeFiltersCount() > 0"
+        [class.border-gray-800]="headerService.activeFiltersCount() > 0"
+        [class.bg-gray-100]="headerService.activeFiltersCount() === 0"
+        [class.text-gray-800]="headerService.activeFiltersCount() === 0"
+        [class.hover:bg-gray-200]="headerService.activeFiltersCount() === 0"
         [class.border-gray-200]="headerService.activeFiltersCount() === 0"
-        class="relative flex md:hidden items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border hover:bg-gray-200 transition-all active:scale-95 cursor-pointer shrink-0"
+        class="relative flex md:hidden items-center justify-center gap-1.5 px-3 h-10 sm:h-11 rounded-xl border transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs text-xs font-bold font-sans"
         aria-label="Toggle Filters"
       >
-        <span class="material-icons text-xl sm:text-2xl">filter_list</span>
+        <span class="material-icons text-base">filter_list</span>
+        <span>Filter</span>
         @if (headerService.activeFiltersCount() > 0) {
         <span
-          class="absolute top-1.5 right-1.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full"
+          class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-0.5"
         >
           {{ headerService.activeFiltersCount() }}
         </span>
@@ -146,10 +149,10 @@
       <!-- Menu Button (mobile only) -->
       <button
         (click)="toggleMobileMenu()"
-        class="flex md:hidden items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-gray-500 hover:bg-gray-200 transition-all active:scale-95 cursor-pointer bg-white shrink-0 border-0"
+        class="flex md:hidden items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-800 active:scale-90 transition-all cursor-pointer bg-transparent shrink-0 border-0 ml-1"
         [title]="isMobileMenuOpen() ? 'Close Menu' : 'Open Menu'"
       >
-        <span class="material-icons text-xl sm:text-2xl">
+        <span class="material-icons text-2xl sm:text-3xl">
           {{ isMobileMenuOpen() ? 'close' : 'menu' }}
         </span>
       </button>
