@@ -2,16 +2,16 @@
   <ng-content>
     @switch (variant) {
       @case ("available") {
-        available
+        {{ 'Available' | translate }}
       }
       @case ("booked") {
-        booked
+        {{ 'Booked' | translate }}
       }
       @case ("unavailable") {
-        unavailable
+        {{ 'Unavailable' | translate }}
       }
       @case ("pending") {
-        pending
+        {{ 'PENDING' | translate }}
       }
     }
   </ng-content>

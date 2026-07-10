@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'component-badge',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, TranslatePipe],
   templateUrl: './badge.html',
   host: {
     class: 'inline-flex'

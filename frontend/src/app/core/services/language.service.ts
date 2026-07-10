@@ -316,6 +316,12 @@ export class LanguageService {
     "All Status / สถานะทั้งหมด": { th: "สถานะทั้งหมด", en: "All Status" },
     "Available / พร้อมใช้งาน": { th: "พร้อมใช้งาน", en: "Available" },
     "Unavailable / ไม่พร้อมใช้งาน": { th: "ไม่พร้อมใช้งาน", en: "Unavailable" },
+    Available: { th: "พร้อมใช้งาน", en: "Available" },
+    Unavailable: { th: "ไม่พร้อมใช้งาน", en: "Unavailable" },
+    available: { th: "พร้อมใช้งาน", en: "Available" },
+    unavailable: { th: "ไม่พร้อมใช้งาน", en: "Unavailable" },
+    booked: { th: "ถูกจอง", en: "Booked" },
+    Select: { th: "เลือก", en: "Select" },
     "Fuel Status / สถานะน้ำมัน": { th: "สถานะน้ำมัน", en: "Fuel Status" },
     "All Fuel Statuses / สถานะน้ำมันทั้งหมด": {
       th: "สถานะน้ำมันทั้งหมด",

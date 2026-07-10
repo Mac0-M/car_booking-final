@@ -4,6 +4,7 @@ import { Vehicle } from '../../../../../../../core/models/vehicle.model';
 import { ComponentCard } from '../../../../../../../shared/components/card/card';
 import { ComponentBadge } from '../../../../../../../shared/components/badge/badge';
 import { ComponentButton } from '../../../../../../../shared/components/button/button';
+import { TranslatePipe } from '../../../../../../../shared/pipes/translate.pipe';
 import { environment } from '../../../../../../../../environments/environment';
 
 /**
@@ -15,7 +16,7 @@ import { environment } from '../../../../../../../../environments/environment';
 @Component({
   selector: 'app-vehicle-card',
   standalone: true,
-  imports: [ComponentCard, ComponentBadge, ComponentButton, TitleCasePipe],
+  imports: [ComponentCard, ComponentBadge, ComponentButton, TranslatePipe, TitleCasePipe],
   templateUrl: './vehicle-card.html',
 })
 export class VehicleCardComponent {
