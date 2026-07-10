@@ -7,6 +7,7 @@ import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { environment } from '../../../../../environments/environment';
 import { DialogModule, Dialog, DialogRef } from '@angular/cdk/dialog';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-user-list',
@@ -20,6 +21,7 @@ export class UserListComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(Dialog);
+  private readonly langService = inject(LanguageService);
 
   @ViewChild('addDialogTemplate') addDialogTemplate!: TemplateRef<any>;
   private dialogRef: DialogRef<any> | null = null;
@@ -87,17 +89,20 @@ export class UserListComponent implements OnInit {
   deleteUser(userId: number): void {
     const user = this.users().find(u => u.userId === userId);
     if (!user || !this.canDelete(user)) {
-      alert('You do not have permission to delete this user.');
+      alert(this.langService.translate('You do not have permission to delete this user.'));
       return;
     }
 
-    if (confirm(`Are you sure you want to delete ${user.userName} from the system?`)) {
+    const confirmMsg = this.langService.currentLang() === 'th'
+      ? `คุณแน่ใจหรือไม่ว่าต้องการลบ ${user.userName} ออกจากระบบ?`
+      : `Are you sure you want to delete ${user.userName} from the system?`;
+    if (confirm(confirmMsg)) {
       this.userService.delete(userId).subscribe({
         next: () => {
           this.users.update(current => current.filter(u => u.userId !== userId));
         },
         error: (err) => {
-          alert(err.error?.message || 'An error occurred while deleting the user.');
+          alert(this.langService.translate(err.error?.message || 'An error occurred while deleting the user.'));
         }
       });
     }
@@ -200,11 +205,11 @@ export class UserListComponent implements OnInit {
         this.isSaving.set(false);
         this.closeAddModal();
         this.users.update(current => [createdUser, ...current]);
-        alert('User registered successfully.');
+        alert(this.langService.translate('User registered successfully.'));
       },
       error: (err) => {
         this.isSaving.set(false);
-        alert(err.error?.message || 'An error occurred while creating the user.');
+        alert(this.langService.translate(err.error?.message || 'An error occurred while creating the user.'));
       }
     });
   }

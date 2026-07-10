@@ -4,6 +4,7 @@ import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { AllSharedUi } from '../../shared/shared';
 import { AuthService } from '../../core/services/auth.service';
 import { HeaderService } from '../../core/services/header.service';
+import { LanguageService } from '../../core/services/language.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -16,10 +17,19 @@ export class HeaderComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   public readonly headerService = inject(HeaderService);
+  public readonly langService = inject(LanguageService);
 
   currentUrl = signal<string>('');
   isMobileMenuOpen = signal<boolean>(false);
   isProfileDropdownOpen = signal<boolean>(false);
+
+  toggleLanguage(): void {
+    this.langService.toggleLanguage();
+  }
+
+  currentLang(): string {
+    return this.langService.currentLang();
+  }
 
   @HostListener('window:click')
   closeDropdowns(): void {

@@ -11,8 +11,9 @@ import {
 import { CommonModule } from "@angular/common";
 import { Booking } from "../../../../core/models/booking.model";
 import { VEHICLE_TYPES } from "../../../../core/models/vehicle.model";
-import { THAI_MONTHS } from "../../../../shared/pipes/thai-date.pipe";
 import { AllSharedUi } from "../../../../shared/shared";
+import { inject } from "@angular/core";
+import { LanguageService } from "../../../../core/services/language.service";
 
 @Component({
   selector: "app-booking-calendar",
@@ -65,13 +66,25 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   @Output() toggleVehicleType = new EventEmitter<string>();
 
   readonly vehicleTypes = VEHICLE_TYPES;
+  private readonly langService = inject(LanguageService);
 
   private calendarInstance: any = null;
   private resizeObserver: any = null;
   private resizeRafId: number | null = null; // เพิ่ม
   private wasMobile = window.innerWidth < 1024;
   calendarView: "month" | "week" | "day" = "month";
-  monthYearLabel = "";
+
+  get activeCalendarDate(): Date {
+    let d = this._currentDate ? new Date(this._currentDate) : new Date();
+    if (this.calendarInstance) {
+      try {
+        d = this.calendarInstance.getDate();
+      } catch (e) {
+        // Fallback
+      }
+    }
+    return d;
+  }
 
   @HostListener("window:resize")
   onResize(): void {
@@ -84,12 +97,6 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.calendarView = this.defaultView;
-    const initialDate = this._currentDate
-      ? new Date(this._currentDate)
-      : new Date();
-    const month = THAI_MONTHS[initialDate.getMonth()];
-    const year = initialDate.getFullYear() + 543;
-    this.monthYearLabel = `${month} ${year}`;
   }
 
   changeView(viewName: "month" | "week" | "day"): void {
@@ -144,12 +151,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateMonthYearLabel(): void {
-    if (this.calendarInstance) {
-      const currentDate = this.calendarInstance.getDate();
-      const month = THAI_MONTHS[currentDate.getMonth()];
-      const year = currentDate.getFullYear() + 543;
-      this.monthYearLabel = `${month} ${year}`;
-    }
+    // Dynamically computed by monthYearLabel getter
   }
 
   ngAfterViewInit(): void {

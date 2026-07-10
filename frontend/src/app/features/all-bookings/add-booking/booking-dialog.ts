@@ -95,6 +95,13 @@ export class BookingDialogComponent implements OnInit {
     this.currentStep.set(2);
   }
 
+  onBookAnother(): void {
+    this.isConfirmed.set(false);
+    this.bookingId.set('');
+    this.currentStep.set(1);
+    this.ngOnInit();
+  }
+
   onClose(): void {
     this.dialogRef.close();
   }

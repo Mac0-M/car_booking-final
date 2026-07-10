@@ -6,6 +6,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { environment } from '../../../../../environments/environment';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-profile-edit',
@@ -17,6 +18,7 @@ export class ProfileEditComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
   private readonly location = inject(Location);
+  private readonly langService = inject(LanguageService);
 
   readonly isLoading = signal(false);
   readonly isEditing = signal(false); // Controls view-only vs edit mode
@@ -122,7 +124,7 @@ export class ProfileEditComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(err.error?.message || 'An error occurred while saving profile data.');
+        alert(this.langService.translate(err.error?.message || 'An error occurred while saving profile data.'));
       }
     });
   }
@@ -138,7 +140,7 @@ export class ProfileEditComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(err.error?.message || 'Profile saved successfully, but avatar image upload failed.');
+        alert(this.langService.translate(err.error?.message || 'Profile saved successfully, but avatar image upload failed.'));
         this.refreshSession();
       }
     });
@@ -153,7 +155,7 @@ export class ProfileEditComponent implements OnInit {
         this.selectedFile = null;
         this.imagePreviewUrl = null;
         this.newPassword = '';
-        alert('Profile saved successfully.');
+        alert(this.langService.translate('Profile saved successfully.'));
       },
       error: (err) => {
         this.isLoading.set(false);

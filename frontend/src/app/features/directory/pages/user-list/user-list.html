@@ -47,15 +47,15 @@
           <tr
             class="bg-gray-50/75 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider"
           >
-            <th class="px-6 py-4">User / ผู้ใช้งาน</th>
-            <th class="px-6 py-4">Email / อีเมล</th>
-            <th class="px-6 py-4">Mobile Phone / เบอร์โทรศัพท์</th>
-            <th class="px-6 py-4">Role / บทบาท</th>
+            <th class="px-6 py-4">{{ 'User / ผู้ใช้งาน' | translate }}</th>
+            <th class="px-6 py-4">{{ 'Email / อีเมล' | translate }}</th>
+            <th class="px-6 py-4">{{ 'Mobile Phone / เบอร์โทรศัพท์' | translate }}</th>
+            <th class="px-6 py-4">{{ 'Role / บทบาท' | translate }}</th>
             <th class="px-6 py-4 text-center">
-              Bookings Count / จำนวนครั้งที่จอง
+              {{ 'Bookings Count / จำนวนครั้งที่จอง' | translate }}
             </th>
             @if (isAdmin) {
-            <th class="px-6 py-4 text-right">Action / ดำเนินการ</th>
+            <th class="px-6 py-4 text-right">{{ 'Action / ดำเนินการ' | translate }}</th>
             }
           </tr>
         </thead>
@@ -80,7 +80,7 @@
               <div>
                 <div class="font-bold text-gray-800">{{ user.userName }}</div>
                 <div class="text-xs text-gray-400">
-                  Registered on {{ user.createAt | thaiDate }}
+                  {{ 'Registered on' | translate }} {{ user.createAt | appDate }}
                 </div>
               </div>
             </td>
@@ -159,7 +159,7 @@
           <div>
             <h3 class="font-bold text-gray-800">{{ user.userName }}</h3>
             <p class="text-xs text-gray-400">
-              Registered on {{ user.createAt | thaiDate }}
+              {{ 'Registered on' | translate }} {{ user.createAt | appDate }}
             </p>
           </div>
         </div>
@@ -168,14 +168,14 @@
           class="grid grid-cols-2 gap-3 text-xs text-gray-500 bg-gray-50 p-3 rounded-xl"
         >
           <div>
-            <div class="font-semibold text-gray-400">Email / อีเมล</div>
+            <div class="font-semibold text-gray-400">{{ 'Email / อีเมล' | translate }}</div>
             <div class="font-medium text-gray-700 mt-0.5 break-all">
               {{ user.email }}
             </div>
           </div>
           <div>
             <div class="font-semibold text-gray-400">
-              Mobile Phone / เบอร์โทรศัพท์
+              {{ 'Mobile Phone / เบอร์โทรศัพท์' | translate }}
             </div>
             <div class="font-medium font-mono text-gray-700 mt-0.5">
               {{ user.phone || 'N/A' }}
@@ -183,14 +183,14 @@
           </div>
           <div>
             <div class="font-semibold text-gray-400">
-              Bookings Count / จำนวนครั้งที่จอง
+              {{ 'Bookings Count / จำนวนครั้งที่จอง' | translate }}
             </div>
             <div class="font-bold text-gray-800 mt-0.5">
-              {{ user.totalBooked }} times
+              {{ user.totalBooked }} {{ 'times' | translate }}
             </div>
           </div>
           <div>
-            <div class="font-semibold text-gray-400">Role / บทบาท</div>
+            <div class="font-semibold text-gray-400">{{ 'Role / บทบาท' | translate }}</div>
             <div class="mt-1">
               @if (user.role === 'Super_Admin') {
               <component-badge variant="booked" size="xs"
@@ -218,7 +218,7 @@
             class="w-auto"
           >
             <span class="material-icons text-sm mr-1">delete_outline</span>
-            Delete User
+            {{ 'Delete User' | translate }}
           </component-button>
         </div>
         }
@@ -231,8 +231,8 @@
   <div class="py-8 flex flex-col items-center">
     <div class="w-full">
       <component-empty-state
-        title="No users found"
-        description="There are currently no registered users in the system."
+        [title]="'No users found' | translate"
+        [description]="'There are currently no registered users in the system.' | translate"
         icon="search"
         variant="card"
       >
@@ -255,7 +255,7 @@
         <div class="flex items-center gap-2">
           <span class="material-icons text-gray-800 text-2xl">person_add</span>
           <h2 class="text-xl font-bold text-gray-900">
-            {{ isSuperAdmin ? 'Register New Admin' : 'Register New User' }}
+            {{ (isSuperAdmin ? 'Register New Admin' : 'Register New User') | translate }}
           </h2>
         </div>
         <component-button
@@ -278,13 +278,13 @@
           <label
             for="new_name"
             class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-            >Full Name / ชื่อ สกุล</label
+            >{{ 'Full Name / ชื่อ สกุล' | translate }}</label
           >
           <component-input-ui
             type="text"
             id="new_name"
             name="newUserName"
-            placeholder="e.g. John Doe"
+            [placeholder]="'e.g. John Doe' | translate"
             [(ngModel)]="newUserName"
             (ngModelChange)="nameError = ''"
             [error]="nameError"
@@ -297,13 +297,13 @@
           <label
             for="new_email"
             class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-            >Email Address / อีเมล</label
+            >{{ 'Email Address / อีเมล' | translate }}</label
           >
           <component-input-ui
             type="email"
             id="new_email"
             name="newUserEmail"
-            placeholder="e.g. john@company.com"
+            [placeholder]="'e.g. john@company.com' | translate"
             [(ngModel)]="newUserEmail"
             (ngModelChange)="emailError = ''"
             [error]="emailError"
@@ -316,13 +316,13 @@
           <label
             for="new_password"
             class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-            >Password / รหัสผ่าน</label
+            >{{ 'Password / รหัสผ่าน' | translate }}</label
           >
           <component-input-ui
             type="password"
             id="new_password"
             name="newUserPassword"
-            placeholder="Minimum 6 characters"
+            [placeholder]="'Minimum 6 characters' | translate"
             [(ngModel)]="newUserPassword"
             (ngModelChange)="passwordError = ''"
             [error]="passwordError"
@@ -335,13 +335,13 @@
           <label
             for="new_phone"
             class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-            >Mobile Phone / เบอร์</label
+            >{{ 'Mobile Phone / เบอร์' | translate }}</label
           >
           <component-input-ui
             type="tel"
             id="new_phone"
             name="newUserPhone"
-            placeholder="e.g. 0812345678"
+            [placeholder]="'e.g. 0812345678' | translate"
             [(ngModel)]="newUserPhone"
             (ngModelChange)="phoneError = ''"
             [error]="phoneError"
@@ -358,7 +358,7 @@
             size="sm"
             class="w-auto"
           >
-            Cancel
+            {{ 'Cancel' | translate }}
           </component-button>
           <component-button
             type="submit"
@@ -371,9 +371,9 @@
               <span
                 class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"
               ></span>
-              Creating...
+              {{ 'Creating...' | translate }}
             </span>
-            } @else { Create Account }
+            } @else { {{ 'Create Account' | translate }} }
           </component-button>
         </div>
       </form>

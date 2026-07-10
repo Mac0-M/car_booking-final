@@ -24,7 +24,7 @@
         class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
       >
         <span class="material-icons text-sm">directions_car</span>
-        Vehicles
+        {{ 'Vehicles' | translate }}
       </button>
 
       <button
@@ -36,7 +36,7 @@
         class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
       >
         <span class="material-icons text-sm">people_outline</span>
-        Users
+        {{ 'Users' | translate }}
       </button>
     </div>
   </div>
@@ -79,7 +79,7 @@
         class="flex items-center gap-1 px-1.5 py-0.5 rounded-full border border-gray-200 bg-white text-xs font-semibold text-gray-700 cursor-pointer select-none transition-all active:scale-95 duration-100"
       >
         <span class="w-1.5 h-1.5 rounded-full" [ngClass]="type.dotColor"></span>
-        {{ type.label }}
+        {{ type.label | translate }}
       </button>
       }
     </div>
@@ -94,7 +94,7 @@
         type="text"
         [value]="searchQuery"
         (input)="searchQueryChange.emit($any($event.target).value)"
-        placeholder="Search..."
+        [placeholder]="'Search...' | translate"
         class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50 font-sans"
       />
     </div>
@@ -102,32 +102,32 @@
     <!-- Status Filter -->
     <div class="space-y-1">
       <label class="text-[10px] font-bold text-gray-400 block"
-        >Status / สถานะ</label
+        >{{ 'Status / สถานะ' | translate }}</label
       >
       <select
         [value]="selectedStatus"
         (change)="selectedStatusChange.emit($any($event.target).value)"
         class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
       >
-        <option value="">All Status / สถานะทั้งหมด</option>
-        <option value="available">Available / พร้อมใช้งาน</option>
-        <option value="unavailable">Unavailable / ไม่พร้อมใช้งาน</option>
+        <option value="">{{ 'All Status / สถานะทั้งหมด' | translate }}</option>
+        <option value="available">{{ 'Available / พร้อมใช้งาน' | translate }}</option>
+        <option value="unavailable">{{ 'Unavailable / ไม่พร้อมใช้งาน' | translate }}</option>
       </select>
     </div>
 
     <!-- Refuel Filter -->
     <div class="space-y-1">
       <label class="text-[10px] font-bold text-gray-400 block"
-        >Fuel Status / สถานะน้ำมัน</label
+        >{{ 'Fuel Status / สถานะน้ำมัน' | translate }}</label
       >
       <select
         [value]="selectedReFuel"
         (change)="selectedReFuelChange.emit($any($event.target).value)"
         class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
       >
-        <option value="">All Fuel Statuses / สถานะน้ำมันทั้งหมด</option>
-        <option value="true">Refueled / เติมน้ำมันแล้ว</option>
-        <option value="false">Needs Refuel / ต้องเติมน้ำมัน</option>
+        <option value="">{{ 'All Fuel Statuses / สถานะน้ำมันทั้งหมด' | translate }}</option>
+        <option value="true">{{ 'Refueled / เติมน้ำมันแล้ว' | translate }}</option>
+        <option value="false">{{ 'Needs Refuel / ต้องเติมน้ำมัน' | translate }}</option>
       </select>
     </div>
 
@@ -141,7 +141,7 @@
         size="xs"
         class="w-auto font-sans"
       >
-        Clear Filters
+        {{ 'Clear Filters' | translate }}
       </component-button>
     </div>
   </div>
@@ -150,7 +150,7 @@
     class="p-6 text-center text-gray-400 text-xs flex-1 flex flex-col justify-center items-center gap-2 select-none"
   >
     <span class="material-icons text-3xl text-gray-300">filter_alt_off</span>
-    <span>No filters available for Users List</span>
+    <span>{{ 'No filters available for Users List' | translate }}</span>
   </div>
   }
 
@@ -168,7 +168,7 @@
       class="w-full"
     >
       <span class="material-icons text-sm">add</span>
-      Add New Vehicle
+      {{ 'Add New Vehicle' | translate }}
     </component-button>
     } @else if (activeTab === 'users') {
     <component-button
@@ -178,7 +178,7 @@
       class="w-full"
     >
       <span class="material-icons text-sm pr-2">person_add</span>
-      Add New {{ isSuperAdmin ? 'Admin' : 'User' }}
+      {{ (isSuperAdmin ? 'Register New Admin' : 'Register New User') | translate }}
     </component-button>
     }
   </div>

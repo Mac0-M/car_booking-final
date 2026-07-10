@@ -177,7 +177,11 @@ export class BookingDetailModal implements OnChanges {
       width: isMobile ? "100vw" : "672px",
       maxWidth: isMobile ? "100vw" : "95vw",
       maxHeight: isMobile ? "100dvh" : "90dvh",
-      backdropClass: ["bg-gray-900/60", "backdrop-blur-sm", "animate-backdrop-fade"],
+      backdropClass: [
+        "bg-gray-900/60",
+        "backdrop-blur-sm",
+        "animate-backdrop-fade",
+      ],
       panelClass: [
         "w-full",
         isMobile ? "max-w-full" : "max-w-2xl",

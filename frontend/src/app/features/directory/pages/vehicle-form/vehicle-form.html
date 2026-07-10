@@ -7,11 +7,10 @@
   >
     <div>
       <h3 class="text-xl font-bold text-gray-800">
-        {{ isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle' }}
+        {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate }}
       </h3>
       <p class="text-xs text-gray-500 mt-1">
-        {{ isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the
-        details to register a new vehicle.' }}
+        {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the details to register a new vehicle.') | translate }}
       </p>
     </div>
     <component-button
@@ -53,11 +52,10 @@
         </component-button>
         <div>
           <h1 class="text-xl font-bold text-gray-800">
-            {{ isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle' }}
+            {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate }}
           </h1>
           <p class="text-xs text-gray-500 mt-1">
-            {{ isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the
-            details to register a new vehicle.' }}
+            {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the details to register a new vehicle.') | translate }}
           </p>
         </div>
       </div>
@@ -82,7 +80,7 @@
     <!-- Image Upload Field -->
     <div class="space-y-2">
       <label class="text-sm font-bold text-gray-700 block"
-        >Vehicle Image / รูปภาพยานพาหนะ</label
+        >{{ 'Vehicle Image / รูปภาพยานพาหนะ' | translate }}</label
       >
 
       <div
@@ -106,7 +104,7 @@
         >
           <span class="text-white text-xs font-bold flex items-center gap-1">
             <span class="material-icons text-base">photo_camera</span>
-            Change Image / เปลี่ยนรูปภาพ
+            {{ 'Change Image / เปลี่ยนรูปภาพ' | translate }}
           </span>
         </div>
         } @else {
@@ -120,14 +118,13 @@
             class="text-gray-500 font-medium"
             [ngClass]="isDialog ? 'text-xs' : 'text-sm'"
           >
-            Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ
+            {{ 'Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ' | translate }}
           </div>
           <div
             class="text-gray-400"
             [ngClass]="isDialog ? 'text-[10px]' : 'text-xs'"
           >
-            Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG ขนาดไม่เกิน
-            5MB
+            {{ 'Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG ขนาดไม่เกิน 5MB' | translate }}
           </div>
         </div>
         }
@@ -137,7 +134,7 @@
     <!-- Vehicle Name Input -->
     <div class="space-y-2">
       <label for="vehicle_name" class="text-sm font-bold text-gray-700 block"
-        >Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)</label
+        >{{ 'Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)' | translate }}</label
       >
       <input
         type="text"
@@ -145,7 +142,7 @@
         name="vehicle_name"
         [(ngModel)]="vehicle_name"
         required
-        placeholder="e.g. Toyota Hilux Revo (AB-1234)"
+        [placeholder]="'e.g. Toyota Hilux Revo (AB-1234)' | translate"
         class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors"
       />
     </div>
@@ -157,7 +154,7 @@
       <!-- Type Select -->
       <div class="space-y-2">
         <label for="type" class="text-sm font-bold text-gray-700 block"
-          >Vehicle Type / ประเภทรถ</label
+          >{{ 'Vehicle Type / ประเภทรถ' | translate }}</label
         >
         <select
           id="type"
@@ -165,18 +162,18 @@
           [(ngModel)]="type"
           class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors"
         >
-          <option value="Sedan">Sedan / เก๋ง</option>
-          <option value="Pickup">Pickup / กระบะ</option>
-          <option value="Van">Van / ตู้</option>
-          <option value="SUV">SUV / อเนกประสงค์</option>
-          <option value="Other">Other / อื่นๆ</option>
+          <option value="Sedan">{{ 'Sedan / เก๋ง' | translate }}</option>
+          <option value="Pickup">{{ 'Pickup / กระบะ' | translate }}</option>
+          <option value="Van">{{ 'Van / ตู้' | translate }}</option>
+          <option value="SUV">{{ 'SUV / อเนกประสงค์' | translate }}</option>
+          <option value="Other">{{ 'Other / อื่นๆ' | translate }}</option>
         </select>
       </div>
 
       <!-- Capacity Input -->
       <div class="space-y-2">
         <label for="capacity" class="text-sm font-bold text-gray-700 block"
-          >Seats (Capacity) / จำนวนที่นั่ง</label
+          >{{ 'Seats (Capacity) / จำนวนที่นั่ง' | translate }}</label
         >
         <input
           type="number"
@@ -185,7 +182,7 @@
           [(ngModel)]="capacity"
           required
           min="1"
-          placeholder="e.g. 4"
+          [placeholder]="'e.g. 4' | translate"
           class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors"
         />
       </div>
@@ -198,7 +195,7 @@
       <!-- Total Mileage Input -->
       <div class="space-y-2">
         <label for="total_mile" class="text-sm font-bold text-gray-700 block"
-          >Total Mileage (km) / ไมล์สะสม (กม.)</label
+          >{{ 'Total Mileage (km) / ไมล์สะสม (กม.)' | translate }}</label
         >
         <input
           type="number"
@@ -207,7 +204,7 @@
           [(ngModel)]="total_mile"
           required
           min="0"
-          placeholder="e.g. 1500"
+          [placeholder]="'e.g. 1500' | translate"
           class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors"
         />
       </div>
@@ -216,7 +213,7 @@
       @if (isEditMode) {
       <div class="space-y-2">
         <label for="status" class="text-sm font-bold text-gray-700 block"
-          >Availability Status / สถานะการใช้งาน</label
+          >{{ 'Availability Status / สถานะการใช้งาน' | translate }}</label
         >
         <select
           id="status"
@@ -224,8 +221,8 @@
           [(ngModel)]="status"
           class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors"
         >
-          <option value="available">Available / ว่าง</option>
-          <option value="unavailable">Unavailable / ไม่ว่าง</option>
+          <option value="available">{{ 'Available / ว่าง' | translate }}</option>
+          <option value="unavailable">{{ 'Unavailable / ไม่ว่าง' | translate }}</option>
         </select>
       </div>
       }
@@ -244,7 +241,7 @@
         for="re_fuel"
         class="text-sm font-bold text-gray-700 cursor-pointer select-none"
       >
-        Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน
+        {{ 'Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน' | translate }}
       </label>
     </div>
 
@@ -263,7 +260,7 @@
           class="w-full sm:w-auto"
         >
           <span class="material-icons text-sm mr-1 leading-none">delete_outline</span>
-          Delete Vehicle
+          {{ 'Delete Vehicle' | translate }}
         </component-button>
         }
       </div>
@@ -277,7 +274,7 @@
           size="md"
           class="w-full sm:w-auto"
         >
-          Cancel
+          {{ 'Cancel' | translate }}
         </component-button>
         <component-button
           type="submit"
@@ -291,9 +288,9 @@
             <span
               class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
             ></span>
-            Saving...
+            {{ 'Saving...' | translate }}
           </span>
-          } @else { Save Vehicle }
+          } @else { {{ 'Save Vehicle' | translate }} }
         </component-button>
       </div>
     </div>

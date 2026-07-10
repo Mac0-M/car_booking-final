@@ -76,7 +76,7 @@
             <button
               (click)="toggleActiveTab()"
               class="relative z-10 flex-1 flex items-center justify-center text-[11px] md:text-xs font-bold text-gray-900 transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
-              [title]="activeTab() === 'active' ? 'Switch to History' : 'Switch to Active Bookings'"
+              [title]="activeTab() === 'active' ? ('Switch to History' | translate) : ('Switch to Active Bookings' | translate)"
             >
               @if (activeTab() === 'active') {
               <span
@@ -85,14 +85,14 @@
                 <span class="material-icons text-xs md:text-sm"
                   >bookmark_border</span
                 >
-                Active
+                {{ 'Active' | translate }}
               </span>
               } @else {
               <div
                 class="flex items-center justify-center gap-1 md:gap-1.5 animate-slide-in-right w-full"
               >
                 <span class="material-icons text-xs md:text-sm">history</span>
-                History
+                {{ 'History' | translate }}
               </div>
               }
             </button>
@@ -153,7 +153,7 @@
               <span class="material-icons text-sm sm:text-base"
                 >calendar_today</span
               >
-              <span>Calendar</span>
+              <span>{{ 'Calendar' | translate }}</span>
             </button>
 
             <button
@@ -163,7 +163,7 @@
               class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
             >
               <span class="material-icons text-sm sm:text-base">grid_view</span>
-              <span>Grid</span>
+              <span>{{ 'Grid' | translate }}</span>
             </button>
 
             <button
@@ -173,7 +173,7 @@
               class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
             >
               <span class="material-icons text-base">format_list_bulleted</span>
-              <span>List</span>
+              <span>{{ 'List' | translate }}</span>
             </button>
           </div>
           }
@@ -205,7 +205,7 @@
             class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0"
           >
             <span class="material-icons text-sm">filter_list</span>
-            <span>Filters</span>
+            <span>{{ 'Filters' | translate }}</span>
             @if (activeFiltersCount() > 0) {
             <span
               class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
@@ -240,7 +240,7 @@
             (resetFilters)="resetFilters()"
           />
           }
-
+ 
           <!-- Add Booking Button -->
           <button
             (click)="openBooking()"
@@ -248,7 +248,7 @@
             title="Add new booking"
           >
             <span class="material-icons text-sm sm:text-base">add</span>
-            <span>Add Booking</span>
+            <span>{{ 'Add Booking' | translate }}</span>
           </button>
         </div>
       </div>
@@ -277,8 +277,8 @@
 
 <!-- Detail Modal Dialog popup -->
 <app-booking-detail-modal
-  [title]="'Booking Details'"
-  [description]="'Summary of vehicle bookings and usage in the system'"
+  [title]="'Booking Details' | translate"
+  [description]="'Summary of vehicle bookings and usage in the system' | translate"
   [bookingDate]="selectedBooking()?.bookingDate || ''"
   [startTime]="selectedBooking()?.startTime || ''"
   [endTime]="selectedBooking()?.endTime || ''"

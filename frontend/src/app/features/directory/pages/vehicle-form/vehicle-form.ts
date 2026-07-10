@@ -7,6 +7,7 @@ import { VehicleService } from '../../../../core/services/vehicle.service';
 import { Vehicle } from '../../../../core/models/vehicle.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { environment } from '../../../../../environments/environment';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -20,6 +21,7 @@ export class VehicleFormComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   readonly dialogRef = inject(DialogRef, { optional: true });
   private readonly dialogData = inject(DIALOG_DATA, { optional: true }) as { id?: string } | null;
+  private readonly langService = inject(LanguageService);
 
   get isDialog(): boolean {
     return !!this.dialogRef;
@@ -83,7 +85,7 @@ export class VehicleFormComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert('Requested vehicle not found.');
+        alert(this.langService.translate('Requested vehicle not found.'));
         this.closeForm();
       }
     });
@@ -127,7 +129,7 @@ export class VehicleFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(err.error?.message || 'An error occurred while saving the vehicle data.');
+          alert(this.langService.translate(err.error?.message || 'An error occurred while saving the vehicle data.'));
         }
       });
     } else {
@@ -142,7 +144,7 @@ export class VehicleFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(err.error?.message || 'An error occurred while registering the new vehicle.');
+          alert(this.langService.translate(err.error?.message || 'An error occurred while registering the new vehicle.'));
         }
       });
     }
@@ -150,7 +152,7 @@ export class VehicleFormComponent implements OnInit {
 
   deleteVehicle(): void {
     if (!this.vehicleId) return;
-    if (confirm('Are you sure you want to delete this vehicle from the system?')) {
+    if (confirm(this.langService.translate('Are you sure you want to delete this vehicle from the system?'))) {
       this.isLoading.set(true);
       this.vehicleService.delete(this.vehicleId).subscribe({
         next: () => {
@@ -159,7 +161,7 @@ export class VehicleFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(err.error?.message || 'An error occurred while deleting the vehicle.');
+          alert(this.langService.translate(err.error?.message || 'An error occurred while deleting the vehicle.'));
         }
       });
     }
@@ -191,7 +193,7 @@ export class VehicleFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(err.error?.message || 'Vehicle details saved successfully, but image upload failed.');
+        alert(this.langService.translate(err.error?.message || 'Vehicle details saved successfully, but image upload failed.'));
         this.onActionSuccess();
       }
     });

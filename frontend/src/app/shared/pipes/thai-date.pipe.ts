@@ -13,15 +13,19 @@ export const THAI_MONTHS = [
   standalone: true
 })
 export class ThaiDatePipe implements PipeTransform {
-  transform(value: any): string {
+  transform(value: any, format: 'monthYear' | 'full' = 'full'): string {
     if (!value) return '';
     const date = new Date(value);
     if (isNaN(date.getTime())) return '';
 
-    const day = date.getDate();
     const month = THAI_MONTHS[date.getMonth()];
     const year = date.getFullYear() + 543;
 
+    if (format === 'monthYear') {
+      return `${month} ${year}`;
+    }
+
+    const day = date.getDate();
     return `${day} ${month} ${year}`;
   }
 }

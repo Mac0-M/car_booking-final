@@ -4,9 +4,9 @@
     class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
   >
     <h3 class="text-xl font-bold text-gray-800">
-      @if (isConfirmed()) { Booking Confirmed! } @else if (currentStep() === 1)
-      { Book New Vehicle } @else if (currentStep() === 2) { Select a Vehicle }
-      @else if (currentStep() === 3) { Confirm Travel Details }
+      @if (isConfirmed()) { {{ 'Booking Confirmed!' | translate }} } @else if (currentStep() === 1)
+      { {{ 'Book New Vehicle' | translate }} } @else if (currentStep() === 2) { {{ 'Select a Vehicle' | translate }} }
+      @else if (currentStep() === 3) { {{ 'Confirm Travel Details' | translate }} }
     </h3>
     <component-button
       variant="plain"
@@ -43,7 +43,7 @@
 
     <!-- STEP 3: REVIEW AND CONFIRM (handles success internally) -->
     @if (currentStep() === 3 || isConfirmed()) {
-      <app-booking-confirm [isDialog]="true" (confirmed)="onStep3Confirmed($event)" (back)="onStep3Back()" class="flex flex-col flex-1"></app-booking-confirm>
+      <app-booking-confirm [isDialog]="true" (confirmed)="onStep3Confirmed($event)" (back)="onStep3Back()" (bookAnother)="onBookAnother()" class="flex flex-col flex-1"></app-booking-confirm>
     }
   </div>
 </div>

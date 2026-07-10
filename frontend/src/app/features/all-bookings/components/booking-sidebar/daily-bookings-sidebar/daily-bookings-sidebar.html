@@ -4,7 +4,7 @@
 >
   <div class="flex items-center gap-3">
     <p class="text-sm text-gray-700 font-bold">
-      รายการจองยานพาหนะประจำวันที่ {{ selectedDailyDate | thaiDate }}
+      {{ 'Daily Bookings for' | translate }} {{ selectedDailyDate | appDate }}
     </p>
   </div>
   <component-button
@@ -38,8 +38,8 @@
     class="h-full flex items-center justify-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200 p-8"
   >
     <component-empty-state
-      title="ไม่มีรายการจองในวันนี้"
-      description="ไม่มีรถยนต์คันใดถูกจองในวันที่คุณเลือก"
+      [title]="'No bookings for this day' | translate"
+      [description]="'No vehicles booked on this day / ไม่มีรถยนต์คันใดถูกจองในวันที่คุณเลือก' | translate"
       icon="calendar"
       variant="default"
     ></component-empty-state>

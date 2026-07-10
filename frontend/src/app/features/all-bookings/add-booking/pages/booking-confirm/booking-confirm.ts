@@ -8,6 +8,7 @@ import { BookingDetailModal } from '../../../components/booking-detail-modal/boo
 import { BookingService } from '../../../../../core/services/booking.service';
 import { AvailabilityService } from '../../../../../core/services/availability.service';
 import { AuthService } from '../../../../../core/services/auth.service';
+import { LanguageService } from '../../../../../core/services/language.service';
 
 /**
  * BookingConfirmComponent:
@@ -24,6 +25,7 @@ export class BookingConfirmComponent {
   @Input() isDialog = false;
   @Output() confirmed = new EventEmitter<string>();
   @Output() back = new EventEmitter<void>();
+  @Output() bookAnother = new EventEmitter<void>();
 
   protected readonly store = inject(BookingStore);
   private readonly router = inject(Router);
@@ -31,6 +33,7 @@ export class BookingConfirmComponent {
   private readonly bookingService = inject(BookingService);
   private readonly availabilityService = inject(AvailabilityService);
   private readonly authService = inject(AuthService);
+  private readonly langService = inject(LanguageService);
 
 
   readonly isSubmitting = signal(false);
@@ -76,7 +79,7 @@ export class BookingConfirmComponent {
   onBackToForm(): void {
     this.store.clear();
     if (this.isDialog) {
-      this.back.emit();
+      this.bookAnother.emit();
     } else {
       this.router.navigate(['/booking/form']);
     }
@@ -118,7 +121,7 @@ export class BookingConfirmComponent {
       error: (err: any) => {
         this.isSubmitting.set(false);
         if (err.status === 409) {
-          alert('This vehicle is already booked. Please select another vehicle.');
+          alert(this.langService.translate('This vehicle is already booked. Please select another vehicle.'));
           
           this.availabilityService.search(
             this.store.depart(),
@@ -142,7 +145,7 @@ export class BookingConfirmComponent {
             }
           });
         } else {
-          alert(err.error?.message || 'An error occurred while booking the vehicle. Please try again.');
+          alert(this.langService.translate(err.error?.message || 'An error occurred while booking the vehicle. Please try again.'));
         }
       }
     });

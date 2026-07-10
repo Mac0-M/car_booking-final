@@ -14,6 +14,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { AllSharedUi } from "../../../../../shared/shared";
 import { BookingStore } from "../../state/booking.store";
 import { AvailabilityService } from "../../../../../core/services/availability.service";
+import { LanguageService } from "../../../../../core/services/language.service";
 import { AuthService } from "../../../../../core/services/auth.service";
 import { UserService } from "../../../../../core/services/user.service";
 import { User } from "../../../../../core/models/user.model";
@@ -33,6 +34,7 @@ export class BookingFormComponent implements OnInit {
   private readonly availabilityService = inject(AvailabilityService);
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
+  private readonly langService = inject(LanguageService);
 
   // Form Fields
   depart = "";
@@ -161,8 +163,10 @@ export class BookingFormComponent implements OnInit {
       error: (err: any) => {
         this.isLoading.set(false);
         this.errorMessage.set(
-          err.error?.message ||
-            "An error occurred while checking vehicle availability. Please try again.",
+          this.langService.translate(
+            err.error?.message ||
+              "An error occurred while checking vehicle availability. Please try again."
+          )
         );
         alert(this.errorMessage());
       },
@@ -171,11 +175,11 @@ export class BookingFormComponent implements OnInit {
 
   submitPhone(): void {
     if (!this.phoneInput) {
-      this.phoneError = "Phone number is required.";
+      this.phoneError = this.langService.translate("Phone number is required.");
       return;
     }
     if (this.phoneInput.length !== 10 || !/^\d+$/.test(this.phoneInput)) {
-      this.phoneError = "Phone number must be 10 digits.";
+      this.phoneError = this.langService.translate("Phone number must be 10 digits.");
       return;
     }
     this.phoneError = "";

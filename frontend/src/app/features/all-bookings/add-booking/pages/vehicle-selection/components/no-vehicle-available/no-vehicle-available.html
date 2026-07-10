@@ -1,7 +1,7 @@
 <component-empty-state
   icon="search"
   variant="card"
-  title="No Vehicles Available"
-  description="Sorry, no vehicles are available for your selected time slot. Please try a different date or time."
+  [title]="'No Vehicles Available' | translate"
+  [description]="'Sorry, no vehicles are available for your selected time slot. Please try a different date or time.' | translate"
   (actionClick)="onGoBack()">
 </component-empty-state>

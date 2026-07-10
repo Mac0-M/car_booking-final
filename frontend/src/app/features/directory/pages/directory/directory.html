@@ -52,7 +52,7 @@
       class="w-full"
     >
       <span class="material-icons text-sm">add</span>
-      Add New Vehicle
+      {{ 'Add New Vehicle' | translate }}
     </component-button>
     } @else if (activeTab() === 'users') {
     <component-button
@@ -62,7 +62,7 @@
       class="w-full"
     >
       <span class="material-icons text-sm pr-2">person_add</span>
-      Add New {{ isSuperAdmin() ? 'Admin' : 'User' }}
+      {{ (isSuperAdmin() ? 'Register New Admin' : 'Register New User') | translate }}
     </component-button>
     }
   </div>

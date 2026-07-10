@@ -31,7 +31,7 @@
         class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center"
       >
         <span class="material-icons text-xl px-1">list_alt</span>
-        Bookings
+        {{ 'Bookings' | translate }}
       </a>
       <a
         routerLink="/directory"
@@ -39,12 +39,27 @@
         class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center"
       >
         <span class="material-icons text-xl px-1">folder_shared</span>
-        {{ isAdmin ? 'Management' : 'Directory' }}
+        {{ (isAdmin ? 'Management' : 'Directory') | translate }}
       </a>
     </nav>
 
     <!-- User Section (hidden on auth pages) -->
     <div class="flex items-center gap-2 sm:gap-4">
+      <!-- Language Switcher (desktop only) -->
+      <div class="hidden md:block">
+        <button
+          (click)="toggleLanguage()"
+          class="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-150 p-0.5 rounded-lg shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
+          [title]="'Switch Language' | translate"
+        >
+          <div
+            class="flex items-center justify-center w-full h-full bg-white shadow-sm rounded-md text-gray-800 text-xs font-bold font-mono"
+          >
+            {{ currentLang() | uppercase }}
+          </div>
+        </button>
+      </div>
+
       <!-- User Info Badge Container with Dropdown (desktop only) -->
       <div class="relative hidden md:block">
         <button
@@ -88,7 +103,7 @@
             class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-gray-700 rounded-none hover:bg-gray-200 transition-colors text-decoration-none"
           >
             <span class="material-icons text-lg text-gray-400">person</span>
-            View Profile
+            {{ 'View Profile' | translate }}
           </a>
 
           <!-- Divider -->
@@ -100,7 +115,7 @@
             class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-red-500 rounded-none hover:bg-red-100 transition-colors border-0 bg-transparent text-left cursor-pointer"
           >
             <span class="material-icons text-lg text-red-400">logout</span>
-            Logout
+            {{ 'Logout' | translate }}
           </button>
         </div>
         }
@@ -135,7 +150,7 @@
         aria-label="Toggle Filters"
       >
         <span class="material-icons text-base">filter_list</span>
-        <span>Filter</span>
+        <span>{{ 'Filter' | translate }}</span>
         @if (headerService.activeFiltersCount() > 0) {
         <span
           class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-0.5"
@@ -150,7 +165,7 @@
       <button
         (click)="toggleMobileMenu()"
         class="flex md:hidden items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-800 active:scale-90 transition-all cursor-pointer bg-transparent shrink-0 border-0 ml-1"
-        [title]="isMobileMenuOpen() ? 'Close Menu' : 'Open Menu'"
+        [title]="(isMobileMenuOpen() ? 'Close Menu' : 'Open Menu') | translate"
       >
         <span class="material-icons text-2xl sm:text-3xl">
           {{ isMobileMenuOpen() ? 'close' : 'menu' }}
@@ -187,6 +202,19 @@
     >
       <!-- Right: Profile Box and Close Button grouped -->
       <div class="flex items-center gap-1.5">
+        <!-- Language Switcher (mobile drawer) -->
+        <button
+          (click)="toggleLanguage()"
+          class="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-150 p-0.5 rounded-lg shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
+          [title]="'Switch Language' | translate"
+        >
+          <div
+            class="flex items-center justify-center w-full h-full bg-white shadow-sm rounded-md text-gray-800 text-[10px] font-bold font-mono"
+          >
+            {{ currentLang() | uppercase }}
+          </div>
+        </button>
+
         <!-- User Profile Box -->
         <a
           routerLink="/profile"
@@ -232,7 +260,7 @@
         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
       >
         <span class="material-icons text-xl">list_alt</span>
-        Bookings
+        {{ 'Bookings' | translate }}
       </a>
       <a
         routerLink="/directory"
@@ -240,7 +268,7 @@
         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
       >
         <span class="material-icons text-xl">folder_shared</span>
-        {{ isAdmin ? 'Management' : 'Directory' }}
+        {{ (isAdmin ? 'Management' : 'Directory') | translate }}
       </a>
     </nav>
   </div>
@@ -254,7 +282,7 @@
       class="w-full font-sans"
     >
       <span class="material-icons text-lg mr-2">logout</span>
-      Logout
+      {{ 'Logout' | translate }}
     </component-button>
   </div>
 </div>

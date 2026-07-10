@@ -1,10 +1,11 @@
 import { Component, Input } from "@angular/core";
 import { NgClass } from "@angular/common";
+import { AllSharedUi } from "../../shared";
 
 @Component({
   selector: "component-process",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, ...AllSharedUi],
   templateUrl: "./process.html",
 })
 export class ComponentProcess {

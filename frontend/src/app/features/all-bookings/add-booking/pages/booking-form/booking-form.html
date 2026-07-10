@@ -15,7 +15,7 @@
       <div [class]="isDialog ? 'space-y-3' : 'space-y-5'">
         <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
           <span class="material-icons text-gray-800">directions_car</span>
-          Car Booking Details
+          {{ 'Car Booking Details' | translate }}
         </h2>
 
         <!-- DateTime Picker Section -->
@@ -25,7 +25,7 @@
             <label
               for="depart"
               class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >Departure Date & Time / ออกเดินทาง</label
+              >{{ 'Departure Date & Time / ออกเดินทาง' | translate }}</label
             >
             <div class="relative">
               <span
@@ -48,7 +48,7 @@
             <label
               for="returnTime"
               class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >Return Date & Time /เดินทางกลับ</label
+              >{{ 'Return Date & Time /เดินทางกลับ' | translate }}</label
             >
             <div class="relative">
               <span
@@ -73,12 +73,12 @@
             <label
               for="destination"
               class="text-xs font-bold text-gray-500 uppercase tracking-wider block font-sans"
-              >Destination / จุดหมาย</label
+              >{{ 'Destination / จุดหมาย' | translate }}</label
             >
             <component-input-ui
               type="textarea"
               icon="place"
-              placeholder="e.g. branch office..."
+              [placeholder]="'e.g. branch office...' | translate"
               [(ngModel)]="destination"
               name="destination"
             ></component-input-ui>
@@ -89,12 +89,12 @@
             <label
               for="purpose"
               class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >Purpose of Use / วัตถุประสงค์</label
+              >{{ 'Purpose of Use / วัตถุประสงค์' | translate }}</label
             >
             <component-input-ui
               type="textarea"
               icon="assignment"
-              placeholder="e.g. client meeting..."
+              [placeholder]="'e.g. client meeting...' | translate"
               [(ngModel)]="purpose"
               name="purpose"
             ></component-input-ui>
@@ -105,7 +105,7 @@
             <label
               for="booked_for"
               class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >Book for / จองให้</label
+              >{{ 'Book for / จองให้' | translate }}</label
             >
             <div class="relative">
               <span
@@ -145,11 +145,11 @@
         <span
           [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-lg font-semibold py-1'"
         >
-          @if (isLoading()) { Checking vehicle availability...
+          @if (isLoading()) { {{ 'Checking vehicle availability...' | translate }}
           <span class="material-icons text-base sm:text-xl animate-spin"
             >sync</span
           >
-          } @else { Find Available Vehicles
+          } @else { {{ 'Find Available Vehicles' | translate }}
           <span class="material-icons text-base sm:text-xl">arrow_forward</span>
           }
         </span>
@@ -172,20 +172,19 @@
       >
         <span class="material-icons text-3xl">phone_iphone</span>
         <h2 class="text-xl font-bold text-gray-900">
-          Please enter phone number
+          {{ 'Please enter phone number' | translate }}
         </h2>
       </div>
 
       <p class="text-sm text-gray-500 mb-4">
-        Please enter your mobile phone number so that the coordinator can
-        contact you about this trip.
+        {{ 'Please enter your mobile phone number so that the coordinator can contact you about this trip.' | translate }}
       </p>
 
       <div class="space-y-3">
         <component-input-ui
           type="tel"
           icon="phone"
-          placeholder="e.g. 0812345678"
+          [placeholder]="'e.g. 0812345678' | translate"
           [(ngModel)]="phoneInput"
           name="phoneInput"
         ></component-input-ui>
@@ -205,7 +204,7 @@
           class="px-6"
           (click)="submitPhone()"
         >
-          Save Phone Number
+          {{ 'Save Phone Number' | translate }}
         </component-button>
       </div>
     </component-card>

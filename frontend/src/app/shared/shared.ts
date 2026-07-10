@@ -9,6 +9,11 @@ import { ComponentFilterPill } from "./components/filter-pill/filter-pill";
 
 import { ThaiDatePipe } from "./pipes/thai-date.pipe";
 import { ThaiTimePipe } from "./pipes/thai-time.pipe";
+import { TranslatePipe } from "./pipes/translate.pipe";
+import { EngDatePipe } from "./pipes/eng-date.pipe";
+import { EngTimePipe } from "./pipes/eng-time.pipe";
+import { AppDatePipe } from "./pipes/app-date.pipe";
+import { AppTimePipe } from "./pipes/app-time.pipe";
 
 export const AllComponentUi = [
   ComponentBadge,
@@ -23,7 +28,12 @@ export const AllComponentUi = [
 
 export const AllPipes = [
   ThaiDatePipe,
-  ThaiTimePipe
+  ThaiTimePipe,
+  TranslatePipe,
+  EngDatePipe,
+  EngTimePipe,
+  AppDatePipe,
+  AppTimePipe
 ];
 
 export const AllSharedUi = [
