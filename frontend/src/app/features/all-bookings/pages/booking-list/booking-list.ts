@@ -205,6 +205,13 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     this.headerService.reset();
   }
 
+  toggleActiveTab(): void {
+    const nextTab = this.activeTab() === 'active' ? 'history' : 'active';
+    this.activeTab.set(nextTab);
+    this.selectedStatusFilter.set('');
+    this.loadBookings();
+  }
+
   setActiveTab(tab: 'active' | 'history'): void {
     if (tab === this.activeTab()) {
       const nextTab = this.activeTab() === 'active' ? 'history' : 'active';
@@ -265,6 +272,12 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
       return 'COMPLETED';
     }
     return 'CONFIRMED';
+  }
+
+  toggleViewMode(): void {
+    const nextMode = this.viewMode() === 'calendar' ? 'grid' : 'calendar';
+    this.viewMode.set(nextMode);
+    this.onFilterChange();
   }
 
   setViewMode(mode: 'calendar' | 'grid' | 'list'): void {
