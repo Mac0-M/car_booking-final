@@ -123,6 +123,9 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
             this.mobileFiltersComponent.openMobileFilters();
           }
         });
+        this.headerService.clearFilterAction.set(() => {
+          this.resetFilters();
+        });
         this.headerService.activeFiltersCount.set(count);
       } else {
         this.headerService.reset();
