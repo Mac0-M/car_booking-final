@@ -68,15 +68,28 @@
     >
       <div class="flex items-center justify-between gap-2 md:gap-4">
         <!-- Left Side: Tabs Switcher + View Switcher -->
-        <div class="flex items-center gap-2 md:gap-4 min-w-0">
+        <div class="flex items-center gap-2 md:gap-2 min-w-0">
           <!-- Tab Switcher (Active / History) -->
           <div
-            class="flex gap-3 md:gap-4 border-b border-gray-100 mr-0 md:mr-4 select-none shrink-0"
+            class="relative flex bg-transparent select-none shrink-0 border-b border-gray-100 w-36 md:w-40 pb-2 mr-2 md:mr-4"
           >
+            <!-- Sliding Underline Indicator -->
+            <div
+              class="absolute bottom-0 h-0.5 bg-gray-900 transition-all duration-200 ease-out w-[50%]"
+              [style.transform]="
+                activeTab() === 'active'
+                  ? 'translateX(0)'
+                  : 'translateX(100%)'
+              "
+            ></div>
+
             <button
               (click)="setActiveTab('active')"
-              [ngClass]="activeTab() === 'active' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
-              class="pb-2 text-[11px] md:text-xs flex items-center gap-1 md:gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+              [class.text-gray-900]="activeTab() === 'active'"
+              [class.font-bold]="activeTab() === 'active'"
+              [class.text-gray-400]="activeTab() !== 'active'"
+              [class.hover:text-gray-600]="activeTab() !== 'active'"
+              class="relative z-10 flex-1 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
             >
               <span class="material-icons text-xs md:text-sm"
                 >bookmark_border</span
@@ -85,8 +98,11 @@
             </button>
             <button
               (click)="setActiveTab('history')"
-              [ngClass]="activeTab() === 'history' ? 'border-b-2 border-gray-900 text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-600'"
-              class="pb-2 text-[11px] md:text-xs flex items-center gap-1 md:gap-1.5 transition-all duration-200 border-0 bg-transparent cursor-pointer select-none shrink-0"
+              [class.text-gray-900]="activeTab() === 'history'"
+              [class.font-bold]="activeTab() === 'history'"
+              [class.text-gray-400]="activeTab() !== 'history'"
+              [class.hover:text-gray-600]="activeTab() !== 'history'"
+              class="relative z-10 flex-1 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
             >
               <span class="material-icons text-xs md:text-sm">history</span>
               History
@@ -150,7 +166,7 @@
         </div>
 
         <!-- Right Side: Filter + Add Button -->
-        <div class="flex items-center gap-1 shrink-0">
+        <div class="flex items-center gap-2 shrink-0">
           <!-- Clear Filters Button -->
           @if (!isMobile() && activeFiltersCount() > 0) {
           <button
@@ -235,7 +251,7 @@
 
     <!-- Content Area -->
     <div
-      class="flex-1 min-h-0 w-full flex flex-col py-1 md:p-3 overflow-hidden"
+      class="flex-1 min-h-0 w-full flex flex-col py-2 md:p-6 overflow-hidden"
     >
       <app-booking-views
         class="flex-1 min-h-0 w-full flex flex-col overflow-hidden"

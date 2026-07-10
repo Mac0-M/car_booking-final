@@ -84,6 +84,9 @@ export class DirectoryComponent implements OnInit, OnDestroy {
             this.leftSidebar.mobileFilters.openMobileFilters();
           }
         });
+        this.headerService.clearFilterAction.set(() => {
+          this.resetFilters();
+        });
         this.headerService.activeFiltersCount.set(count);
       } else {
         this.headerService.reset();
@@ -114,11 +117,14 @@ export class DirectoryComponent implements OnInit, OnDestroy {
   });
 
   readonly pageTitle = computed(() => {
-    return this.isAdmin() ? 'Manage' : 'Directory';
+    return this.isAdmin() ? 'Management' : 'Directory';
   });
 
   ngOnInit(): void {
     this.checkScreenSize();
+    if (!this.isAdmin()) {
+      this.activeTab.set('vehicles');
+    }
   }
 
   ngOnDestroy(): void {

@@ -1,12 +1,20 @@
-import { Routes } from '@angular/router';
+import { Routes, ResolveFn } from '@angular/router';
+import { inject } from '@angular/core';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { AuthService } from './core/services/auth.service';
 
 /**
  * appRoutes: การตั้งค่าเส้นทางหลักของทั้งแอปพลิเคชัน
  * - จัดการ Lazy Loading สำหรับ Feature Modules ต่างๆ
  * - ควบคุมการเปลี่ยนเส้นทางเริ่มต้น (Redirect) กรณีระบุ URL ไม่ตรง
  */
+const directoryTitleResolver: ResolveFn<string> = () => {
+  const auth = inject(AuthService);
+  const role = auth.currentUser()?.role;
+  return role === 'Admin' || role === 'Super_Admin' ? 'Management' : 'Directory';
+};
+
 export const routes: Routes = [
   {
     path: 'auth',
@@ -37,8 +45,8 @@ export const routes: Routes = [
   },
   {
     path: 'directory',
-    canActivate: [authGuard, adminGuard],
-    title: 'Directory & Management',
+    canActivate: [authGuard],
+    title: directoryTitleResolver,
     loadComponent: () =>
       import('./features/directory/pages/directory/directory').then(
         (m) => m.DirectoryComponent

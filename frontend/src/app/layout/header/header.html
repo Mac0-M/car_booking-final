@@ -33,16 +33,14 @@
         <span class="material-icons text-xl px-1">list_alt</span>
         Bookings
       </a>
-      @if (isAdmin) {
       <a
         routerLink="/directory"
         [ngClass]="isRouteActive('/directory') ? 'bg-gray-700 text-white shadow-md' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-300'"
         class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center"
       >
         <span class="material-icons text-xl px-1">folder_shared</span>
-        Manage
+        {{ isAdmin ? 'Management' : 'Directory' }}
       </a>
-      }
     </nav>
 
     <!-- User Section (hidden on auth pages) -->
@@ -51,7 +49,7 @@
       <div class="relative hidden md:block">
         <button
           (click)="toggleProfileDropdown(); $event.stopPropagation()"
-          class="flex items-center gap-1.5 sm:gap-2 bg-gray-200 hover:bg-gray-300 border border-gray-300 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
+          class="flex items-center gap-1.5 sm:gap-2 bg-gray-200 hover:bg-gray-200 border border-gray-200 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
         >
           <div
             class="flex items-center justify-center w-7 h-7 rounded-full overflow-hidden bg-linear-to-tr from-gray-700 to-gray-500 text-white font-bold text-xs uppercase shadow-sm shrink-0"
@@ -109,7 +107,9 @@
       </div>
 
       <!-- Clear Filters Button (mobile only) -->
-      @if (headerService.isMobileFilterVisible() && headerService.clearFilterAction() && headerService.activeFiltersCount() > 0) {
+      @if (headerService.isMobileFilterVisible() &&
+      headerService.clearFilterAction() && headerService.activeFiltersCount() >
+      0) {
       <button
         (click)="headerService.clearFilterAction()?.()"
         class="flex md:hidden items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-red-200 bg-white text-red-600 hover:bg-red-100 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in zoom-in duration-200"
@@ -188,7 +188,7 @@
         <a
           routerLink="/profile"
           (click)="closeMobileMenu()"
-          class="flex items-center gap-1.5 sm:gap-2 bg-gray-200 hover:bg-gray-300 border border-gray-300 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
+          class="flex items-center gap-1.5 sm:gap-2 bg-gray-200 hover:bg-gray-200 border border-gray-200 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
         >
           <div
             class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden bg-linear-to-tr from-gray-700 to-gray-500 text-white font-bold text-[10px] sm:text-xs uppercase shadow-sm shrink-0"
@@ -231,16 +231,14 @@
         <span class="material-icons text-xl">list_alt</span>
         Bookings
       </a>
-      @if (isAdmin) {
       <a
         routerLink="/directory"
         [ngClass]="isRouteActive('/directory') ? 'bg-gray-700 text-white shadow-md' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-300'"
         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
       >
         <span class="material-icons text-xl">folder_shared</span>
-        Manage
+        {{ isAdmin ? 'Management' : 'Directory' }}
       </a>
-      }
     </nav>
   </div>
 
