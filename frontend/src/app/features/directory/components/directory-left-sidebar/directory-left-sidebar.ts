@@ -33,7 +33,7 @@ export class DirectoryLeftSidebarComponent {
 
   // Filters inputs
   @Input() searchQuery = "";
-  @Input() selectedType = "";
+  @Input() selectedTypes: string[] = [];
   @Input() selectedStatus = "";
   @Input() selectedReFuel = "";
   @Input() activeFiltersCount = 0;
@@ -41,7 +41,7 @@ export class DirectoryLeftSidebarComponent {
   // Outputs
   @Output() activeTabChange = new EventEmitter<"vehicles" | "users">();
   @Output() searchQueryChange = new EventEmitter<string>();
-  @Output() selectedTypeChange = new EventEmitter<string>();
+  @Output() selectedTypesChange = new EventEmitter<string[]>();
   @Output() selectedStatusChange = new EventEmitter<string>();
   @Output() selectedReFuelChange = new EventEmitter<string>();
   @Output() resetFilters = new EventEmitter<void>();
@@ -51,10 +51,11 @@ export class DirectoryLeftSidebarComponent {
   readonly vehicleTypes = VEHICLE_TYPES;
 
   toggleVehicleType(typeVal: string): void {
-    if (this.selectedType === typeVal) {
-      this.selectedTypeChange.emit("");
+    const current = this.selectedTypes || [];
+    if (current.includes(typeVal)) {
+      this.selectedTypesChange.emit(current.filter((t) => t !== typeVal));
     } else {
-      this.selectedTypeChange.emit(typeVal);
+      this.selectedTypesChange.emit([...current, typeVal]);
     }
   }
 }

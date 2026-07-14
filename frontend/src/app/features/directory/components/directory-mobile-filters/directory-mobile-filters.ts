@@ -26,14 +26,14 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
   private dialogRef: DialogRef<any> | null = null;
 
   @Input() searchQuery = "";
-  @Input() selectedType = "";
+  @Input() selectedTypes: string[] = [];
   @Input() selectedStatus = "";
   @Input() selectedReFuel = "";
   @Input() activeFiltersCount = 0;
   @Input() showTrigger = true;
 
   @Output() searchQueryChange = new EventEmitter<string>();
-  @Output() selectedTypeChange = new EventEmitter<string>();
+  @Output() selectedTypesChange = new EventEmitter<string[]>();
   @Output() selectedStatusChange = new EventEmitter<string>();
   @Output() selectedReFuelChange = new EventEmitter<string>();
   @Output() resetFilters = new EventEmitter<void>();
@@ -42,21 +42,22 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
 
   // Local drafts for buffering changes before Apply is clicked
   localSearchQuery = "";
-  localSelectedType = "";
+  localSelectedTypes: string[] = [];
   localSelectedStatus = "";
   localSelectedReFuel = "";
 
   toggleLocalVehicleType(typeVal: string): void {
-    if (this.localSelectedType === typeVal) {
-      this.localSelectedType = "";
+    const current = this.localSelectedTypes || [];
+    if (current.includes(typeVal)) {
+      this.localSelectedTypes = current.filter((t) => t !== typeVal);
     } else {
-      this.localSelectedType = typeVal;
+      this.localSelectedTypes = [...current, typeVal];
     }
   }
 
   openMobileFilters(): void {
     this.localSearchQuery = this.searchQuery;
-    this.localSelectedType = this.selectedType;
+    this.localSelectedTypes = [...(this.selectedTypes || [])];
     this.localSelectedStatus = this.selectedStatus;
     this.localSelectedReFuel = this.selectedReFuel;
 
@@ -95,7 +96,7 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
 
   applyFilters(): void {
     this.searchQueryChange.emit(this.localSearchQuery);
-    this.selectedTypeChange.emit(this.localSelectedType);
+    this.selectedTypesChange.emit(this.localSelectedTypes);
     this.selectedStatusChange.emit(this.localSelectedStatus);
     this.selectedReFuelChange.emit(this.localSelectedReFuel);
     this.closeMobileFilters();
@@ -103,7 +104,7 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
 
   clearAllFilters(): void {
     this.localSearchQuery = "";
-    this.localSelectedType = "";
+    this.localSelectedTypes = [];
     this.localSelectedStatus = "";
     this.localSelectedReFuel = "";
     this.resetFilters.emit();

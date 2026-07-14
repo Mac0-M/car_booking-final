@@ -50,7 +50,7 @@
           class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider"
           >{{ 'License Plate / ทะเบียนรถ' | translate }}</label
         >
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-col items-start gap-1.5">
           @for (vehicle of filteredVehiclesForPills; track vehicle.id) {
           <button
             component-filter-pill

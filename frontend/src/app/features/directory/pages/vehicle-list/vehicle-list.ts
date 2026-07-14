@@ -24,8 +24,8 @@ export class VehicleListComponent implements OnInit {
     this.searchQuery.set(val);
     this.onFilterChange();
   }
-  @Input() set selectedTypeInput(val: string) {
-    this.selectedType.set(val);
+  @Input() set selectedTypesInput(val: string[]) {
+    this.selectedTypes.set(val || []);
     this.onFilterChange();
   }
   @Input() set selectedStatusInput(val: string) {
@@ -97,7 +97,7 @@ export class VehicleListComponent implements OnInit {
   }
 
   // Filters
-  readonly selectedType = signal<string>("");
+  readonly selectedTypes = signal<string[]>([]);
   readonly selectedStatus = signal<string>("");
   readonly selectedReFuel = signal<string>("");
   readonly searchQuery = signal<string>("");
@@ -122,7 +122,8 @@ export class VehicleListComponent implements OnInit {
     }
 
     const filters = {
-      type: this.selectedType() || undefined,
+      // Do not pass type to backend since the backend only matches a single type.
+      // We will filter by multiple selected types on the frontend.
       status: this.selectedStatus() || undefined,
       re_fuel: reFuelParam,
       search: this.searchQuery().trim() || undefined,
@@ -130,7 +131,42 @@ export class VehicleListComponent implements OnInit {
 
     this.vehicleService.findAll(filters).subscribe({
       next: (res) => {
-        this.vehicles.set(res);
+        const selectedTypes = this.selectedTypes();
+        const filtered = selectedTypes.length > 0
+          ? res.filter((v) => {
+              const type = v.vehicleTypeId || "Sedan";
+              if (selectedTypes.includes("Sedan")) {
+                if (
+                  type === "Sedan" ||
+                  !type ||
+                  (type !== "Pickup" &&
+                    type !== "Van" &&
+                    type !== "SUV" &&
+                    type !== "Other")
+                ) {
+                  return true;
+                }
+              }
+              return selectedTypes.includes(type);
+            })
+          : res;
+
+        const typeOrder = ["Sedan", "Pickup", "Van", "SUV", "Other"];
+        const sorted = filtered.sort((a, b) => {
+          const typeA = a.vehicleTypeId || "Sedan";
+          const typeB = b.vehicleTypeId || "Sedan";
+          const idxA = typeOrder.indexOf(typeA);
+          const idxB = typeOrder.indexOf(typeB);
+          
+          const actualIdxA = idxA !== -1 ? idxA : typeOrder.length;
+          const actualIdxB = idxB !== -1 ? idxB : typeOrder.length;
+          
+          if (actualIdxA !== actualIdxB) {
+            return actualIdxA - actualIdxB;
+          }
+          return (a.model || "").localeCompare(b.model || "", "th");
+        });
+        this.vehicles.set(sorted);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -142,6 +178,12 @@ export class VehicleListComponent implements OnInit {
 
   onFilterChange(): void {
     this.loadVehicles();
+  }
+
+  onDropdownTypeChange(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.selectedTypes.set(val ? [val] : []);
+    this.onFilterChange();
   }
 
   getVehicleImgUrl(vehicle: Vehicle): string {

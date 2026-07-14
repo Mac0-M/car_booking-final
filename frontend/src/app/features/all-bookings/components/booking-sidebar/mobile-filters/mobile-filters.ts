@@ -87,7 +87,7 @@ export class MobileFilters implements OnDestroy {
     const selectedTypes = this.localSelectedVehicleTypeFilter;
     if (selectedTypes.length === 0) return [];
 
-    return this.vehicles.filter((v) => {
+    const filtered = this.vehicles.filter((v) => {
       const type = v.vehicleTypeId || "Sedan";
       if (selectedTypes.includes("Sedan")) {
         if (
@@ -102,6 +102,22 @@ export class MobileFilters implements OnDestroy {
         }
       }
       return selectedTypes.includes(type);
+    });
+
+    const typeOrder = ["Sedan", "Pickup", "Van", "SUV", "Other"];
+    return filtered.sort((a, b) => {
+      const typeA = a.vehicleTypeId || "Sedan";
+      const typeB = b.vehicleTypeId || "Sedan";
+      const idxA = typeOrder.indexOf(typeA);
+      const idxB = typeOrder.indexOf(typeB);
+      
+      const actualIdxA = idxA !== -1 ? idxA : typeOrder.length;
+      const actualIdxB = idxB !== -1 ? idxB : typeOrder.length;
+      
+      if (actualIdxA !== actualIdxB) {
+        return actualIdxA - actualIdxB;
+      }
+      return (a.model || "").localeCompare(b.model || "", "th");
     });
   }
 
@@ -189,8 +205,8 @@ export class MobileFilters implements OnDestroy {
     if (this.startDate) count++;
     if (this.endDate) count++;
     if (this.selectedStatusFilter) count++;
-    if (this.selectedVehicleTypeFilter.length > 0) count++;
-    if (this.selectedVehiclePlates.length > 0) count++;
+    count += this.selectedVehicleTypeFilter.length;
+    count += this.selectedVehiclePlates.length;
     if (this.selectedDate) count++;
     return count;
   }

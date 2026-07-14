@@ -39,7 +39,7 @@ export class DirectoryComponent implements OnInit, OnDestroy {
 
   // Vehicle filters state
   readonly searchQuery = signal('');
-  readonly selectedType = signal('');
+  readonly selectedTypes = signal<string[]>([]);
   readonly selectedStatus = signal('');
   readonly selectedReFuel = signal('');
 
@@ -50,7 +50,11 @@ export class DirectoryComponent implements OnInit, OnDestroy {
       try {
         const filters = JSON.parse(cached);
         if (filters.searchQuery !== undefined) this.searchQuery.set(filters.searchQuery);
-        if (filters.selectedType !== undefined) this.selectedType.set(filters.selectedType);
+        if (filters.selectedTypes !== undefined) this.selectedTypes.set(filters.selectedTypes);
+        // Fallback for older single string key if selectedTypes is missing
+        if (filters.selectedTypes === undefined && filters.selectedType !== undefined) {
+          this.selectedTypes.set(filters.selectedType ? [filters.selectedType] : []);
+        }
         if (filters.selectedStatus !== undefined) this.selectedStatus.set(filters.selectedStatus);
         if (filters.selectedReFuel !== undefined) this.selectedReFuel.set(filters.selectedReFuel);
         if (filters.activeTab !== undefined) this.activeTab.set(filters.activeTab);
@@ -63,7 +67,7 @@ export class DirectoryComponent implements OnInit, OnDestroy {
     effect(() => {
       const filters = {
         searchQuery: this.searchQuery(),
-        selectedType: this.selectedType(),
+        selectedTypes: this.selectedTypes(),
         selectedStatus: this.selectedStatus(),
         selectedReFuel: this.selectedReFuel(),
         activeTab: this.activeTab()
@@ -97,7 +101,7 @@ export class DirectoryComponent implements OnInit, OnDestroy {
   readonly activeFiltersCount = computed(() => {
     let count = 0;
     if (this.searchQuery().trim()) count++;
-    if (this.selectedType()) count++;
+    count += this.selectedTypes().length;
     if (this.selectedStatus()) count++;
     if (this.selectedReFuel()) count++;
     return count;
@@ -158,7 +162,7 @@ export class DirectoryComponent implements OnInit, OnDestroy {
 
   resetFilters(): void {
     this.searchQuery.set('');
-    this.selectedType.set('');
+    this.selectedTypes.set([]);
     this.selectedStatus.set('');
     this.selectedReFuel.set('');
   }

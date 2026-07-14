@@ -1,0 +1,172 @@
+<!-- Trip Details Card -->
+<component-card variant="default">
+  <div class="space-y-2 lg:space-y-5">
+    <div class="grid grid-cols-2 gap-1.5 lg:gap-4">
+      <!-- Destination -->
+      <component-card variant="flat" size="sm" class="col-span-2">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >location_on</span
+          >
+          <div class="min-w-0 flex-1">
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Destination / จุดหมาย' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+            >
+              {{ destination || '-' }}
+            </div>
+          </div>
+        </div>
+      </component-card>
+
+      <!-- Purpose -->
+      <component-card variant="flat" size="sm" class="col-span-2">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >assignment</span
+          >
+          <div class="min-w-0 flex-1">
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Purpose of Use / วัตถุประสงค์' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+            >
+              {{ purpose || '-' }}
+            </div>
+          </div>
+        </div>
+      </component-card>
+
+      <!-- Date/Time Depart -->
+      <component-card variant="flat" size="sm" class="col-span-2 sm:col-span-1">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >calendar_today</span
+          >
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Departure Date/Time / ออกเดินทาง' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans"
+            >
+              {{ depart ? (depart | appDate) + ' ' + (depart | appTime) :
+              (bookingDate | appDate) }}
+            </div>
+          </div>
+        </div>
+      </component-card>
+
+      <!-- Date/Time Return -->
+      <component-card variant="flat" size="sm" class="col-span-2 sm:col-span-1">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >schedule</span
+          >
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Return Date/Time / เดินทางกลับ' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans"
+            >
+              {{ returnTime ? (returnTime | appDate) + ' ' + (returnTime |
+              appTime) : (endTime | appTime) }} @if (totalDuration) {
+              <span class="text-xs text-gray-500 font-normal ml-1"
+                >({{ totalDuration }})</span
+              >
+              }
+            </div>
+          </div>
+        </div>
+      </component-card>
+
+      <!-- Booker -->
+      <component-card variant="flat" size="sm" class="col-span-1">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >person</span
+          >
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Booker / ผู้จอง' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 truncate max-w-full block"
+            >
+              {{ bookedByUser?.user_name || userName }}
+            </div>
+          </div>
+        </div>
+      </component-card>
+
+      <!-- Contact Number -->
+      <component-card variant="flat" size="sm" class="col-span-1">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >phone</span
+          >
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Phone / เบอร์ติดต่อ' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 truncate max-w-full block"
+            >
+              {{ bookedByUser?.phone || userPhone }}
+            </div>
+          </div>
+        </div>
+      </component-card>
+
+      <!-- Proxy Booker User (if any) -->
+      @if (bookedForUser && bookedForUser.user_id !== bookedByUser?.user_id) {
+      <component-card
+        variant="flat"
+        size="sm"
+        class="border-indigo-100 bg-indigo-50/20 col-span-2"
+      >
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span
+            class="material-icons text-indigo-500 mt-0.5 text-base sm:text-lg"
+            >badge</span
+          >
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-indigo-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Passenger / ผู้โดยสาร' | translate }}
+            </div>
+            <div class="text-sm sm:text-base font-bold text-indigo-900 mt-0.5">
+              {{ bookedForUser.user_name }}
+            </div>
+            <div class="text-[9px] sm:text-[10px] text-indigo-500 font-mono">
+              Tel: {{ bookedForUser.phone || 'N/A' }}
+            </div>
+          </div>
+        </div>
+      </component-card>
+      }
+    </div>
+  </div>
+</component-card>
+<div class="pt-2">
+  @if (vehicle) {
+  <app-vehicle-card [vehicle]="vehicle" [readonly]="true" type="mini" />
+  }
+</div>

@@ -57,8 +57,8 @@
     <!-- Type Filter -->
     <div class="w-full md:w-48">
       <select
-        [value]="selectedType()"
-        (change)="selectedType.set($any($event.target).value); onFilterChange()"
+        [value]="selectedTypes().length === 1 ? selectedTypes()[0] : ''"
+        (change)="onDropdownTypeChange($event)"
         class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400"
       >
         <option value="">{{ 'All Vehicle Types' | translate }}</option>
