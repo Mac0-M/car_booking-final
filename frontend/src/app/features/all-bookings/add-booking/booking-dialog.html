@@ -4,9 +4,10 @@
     class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
   >
     <h3 class="text-xl font-bold text-gray-800">
-      @if (isConfirmed()) { {{ 'Booking Confirmed!' | translate }} } @else if (currentStep() === 1)
-      { {{ 'Book New Vehicle' | translate }} } @else if (currentStep() === 2) { {{ 'Select a Vehicle' | translate }} }
-      @else if (currentStep() === 3) { {{ 'Confirm Travel Details' | translate }} }
+      @if (isConfirmed()) { {{ 'Booking Confirmed!' | translate }} } @else if
+      (currentStep() === 1) { {{ 'Book New Vehicle' | translate }} } @else if
+      (currentStep() === 2) { {{ 'Select a Vehicle' | translate }} } @else if
+      (currentStep() === 3) { {{ 'Confirm Travel Details' | translate }} }
     </h3>
     <component-button
       variant="plain"
@@ -33,17 +34,32 @@
 
     <!-- STEP 1: FORM -->
     @if (currentStep() === 1 && !isConfirmed()) {
-      <app-booking-form [isDialog]="true" (submitSuccess)="onStep1Success()" class="flex flex-col flex-1"></app-booking-form>
+    <app-booking-form
+      [isDialog]="true"
+      (submitSuccess)="onStep1Success()"
+      class="flex flex-col flex-1"
+    ></app-booking-form>
     }
 
     <!-- STEP 2: VEHICLE SELECTION -->
     @if (currentStep() === 2 && !isConfirmed()) {
-      <app-vehicle-selection [isDialog]="true" (selected)="onStep2Success()" (back)="onStep2Back()" class="block"></app-vehicle-selection>
+    <app-vehicle-selection
+      [isDialog]="true"
+      (selected)="onStep2Success()"
+      (back)="onStep2Back()"
+      class="block"
+    ></app-vehicle-selection>
     }
 
     <!-- STEP 3: REVIEW AND CONFIRM (handles success internally) -->
     @if (currentStep() === 3 || isConfirmed()) {
-      <app-booking-confirm [isDialog]="true" (confirmed)="onStep3Confirmed($event)" (back)="onStep3Back()" (bookAnother)="onBookAnother()" class="flex flex-col flex-1"></app-booking-confirm>
+    <app-booking-confirm
+      [isDialog]="true"
+      (confirmed)="onStep3Confirmed($event)"
+      (back)="onStep3Back()"
+      (bookAnother)="onBookAnother()"
+      class="flex flex-col flex-1"
+    ></app-booking-confirm>
     }
   </div>
 </div>

@@ -145,7 +145,8 @@
         <span
           [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-lg font-semibold py-1'"
         >
-          @if (isLoading()) { {{ 'Checking vehicle availability...' | translate }}
+          @if (isLoading()) { {{ 'Checking vehicle availability...' | translate
+          }}
           <span class="material-icons text-base sm:text-xl animate-spin"
             >sync</span
           >
@@ -177,7 +178,8 @@
       </div>
 
       <p class="text-sm text-gray-500 mb-4">
-        {{ 'Please enter your mobile phone number so that the coordinator can contact you about this trip.' | translate }}
+        {{ 'Please enter your mobile phone number so that the coordinator can
+        contact you about this trip.' | translate }}
       </p>
 
       <div class="space-y-3">

@@ -131,7 +131,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   onMonthInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.value && this.calendarInstance) {
-      const parts = input.value.split('-');
+      const parts = input.value.split("-");
       if (parts.length >= 2) {
         const year = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10) - 1;
@@ -145,7 +145,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
   triggerMonthPicker(event: Event, input: HTMLInputElement): void {
     event.preventDefault();
-    if (input && typeof input.showPicker === 'function') {
+    if (input && typeof input.showPicker === "function") {
       input.showPicker();
     }
   }
@@ -243,19 +243,25 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         const target = event.target as HTMLElement;
 
         // Ignore clicks on event elements so clickEvent details listener takes priority
-        if (target.closest(".toastui-calendar-weekday-event") || target.closest(".toastui-calendar-event-item")) {
+        if (
+          target.closest(".toastui-calendar-weekday-event") ||
+          target.closest(".toastui-calendar-event-item")
+        ) {
           return;
         }
 
         const cell = target.closest(".toastui-calendar-daygrid-cell");
         if (cell) {
-          const cells = Array.from(container.querySelectorAll(".toastui-calendar-daygrid-cell"));
+          const cells = Array.from(
+            container.querySelectorAll(".toastui-calendar-daygrid-cell"),
+          );
           const index = cells.indexOf(cell);
           if (index !== -1) {
             const rangeStartObj = this.calendarInstance.getDateRangeStart();
-            const rangeStartDate = typeof rangeStartObj.toDate === "function"
-              ? rangeStartObj.toDate()
-              : new Date(rangeStartObj);
+            const rangeStartDate =
+              typeof rangeStartObj.toDate === "function"
+                ? rangeStartObj.toDate()
+                : new Date(rangeStartObj);
 
             const clickedDate = new Date(rangeStartDate.getTime());
             clickedDate.setDate(clickedDate.getDate() + index);
@@ -332,7 +338,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     const events = this.bookings.map((b) => {
       const isOld = this.isOldBooking(b);
 
-      let color = "#0ea5e9"; // Premium blue-500 for Sedan
+      let color = "#0ea5e9"; // Premium blue for Sedan
       let borderColor = "#0284c7"; // Premium blue-600
       let icon = "directions_car";
 

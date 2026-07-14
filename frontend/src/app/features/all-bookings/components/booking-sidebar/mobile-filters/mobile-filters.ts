@@ -1,7 +1,20 @@
-import { Component, Input, Output, EventEmitter, signal, ViewChild, TemplateRef, inject, OnDestroy } from "@angular/core";
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  ViewChild,
+  TemplateRef,
+  inject,
+  OnDestroy,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { Vehicle, VEHICLE_TYPES } from "../../../../../core/models/vehicle.model";
+import {
+  Vehicle,
+  VEHICLE_TYPES,
+} from "../../../../../core/models/vehicle.model";
 import { User } from "../../../../../core/models/user.model";
 import { AllSharedUi } from "../../../../../shared/shared";
 import { FilterSidebar } from "../filter-sidebar/filter-sidebar";
@@ -10,18 +23,26 @@ import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
 @Component({
   selector: "app-mobile-filters",
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, FilterSidebar, DialogModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ...AllSharedUi,
+    FilterSidebar,
+    DialogModule,
+  ],
   templateUrl: "./mobile-filters.html",
 })
 export class MobileFilters implements OnDestroy {
   private readonly dialog = inject(Dialog);
-  @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
+  @ViewChild("dialogTemplate") dialogTemplate!: TemplateRef<any>;
   private dialogRef: DialogRef<any> | null = null;
 
   getVehicleColor(vehicle: Vehicle): { dotColor: string; ringClass: string } {
-    const type = vehicle.vehicleTypeId || 'Sedan';
-    const found = VEHICLE_TYPES.find(t => t.value === type);
-    return found ? { dotColor: found.dotColor, ringClass: found.ringClass } : { dotColor: 'bg-gray-400', ringClass: 'ring-gray-400' };
+    const type = vehicle.vehicleTypeId || "Sedan";
+    const found = VEHICLE_TYPES.find((t) => t.value === type);
+    return found
+      ? { dotColor: found.dotColor, ringClass: found.ringClass }
+      : { dotColor: "bg-gray-400", ringClass: "ring-gray-400" };
   }
   @Input() isMobileHeader = false;
   @Input() vehicles: Vehicle[] = [];
@@ -52,25 +73,31 @@ export class MobileFilters implements OnDestroy {
   @Output() resetFilters = new EventEmitter<void>();
   @Output() filterChange = new EventEmitter<void>();
 
-
   // Local drafts for buffering changes before Apply is clicked
   localSelectedDate: Date | string = "";
-  localSearchQuery = '';
-  localSelectedUserId = '';
-  localStartDate = '';
-  localEndDate = '';
-  localSelectedStatusFilter = '';
+  localSearchQuery = "";
+  localSelectedUserId = "";
+  localStartDate = "";
+  localEndDate = "";
+  localSelectedStatusFilter = "";
   localSelectedVehicleTypeFilter: string[] = [];
   localSelectedVehiclePlates: string[] = [];
 
   get localFilteredVehiclesForPills(): Vehicle[] {
     const selectedTypes = this.localSelectedVehicleTypeFilter;
     if (selectedTypes.length === 0) return [];
-    
-    return this.vehicles.filter(v => {
-      const type = v.vehicleTypeId || 'Sedan';
-      if (selectedTypes.includes('Sedan')) {
-        if (type === 'Sedan' || (!type || type !== 'Pickup' && type !== 'Van' && type !== 'SUV' && type !== 'Other')) {
+
+    return this.vehicles.filter((v) => {
+      const type = v.vehicleTypeId || "Sedan";
+      if (selectedTypes.includes("Sedan")) {
+        if (
+          type === "Sedan" ||
+          !type ||
+          (type !== "Pickup" &&
+            type !== "Van" &&
+            type !== "SUV" &&
+            type !== "Other")
+        ) {
           return true;
         }
       }
@@ -80,20 +107,31 @@ export class MobileFilters implements OnDestroy {
 
   toggleLocalVehicleType(type: string): void {
     if (this.localSelectedVehicleTypeFilter.includes(type)) {
-      this.localSelectedVehicleTypeFilter = this.localSelectedVehicleTypeFilter.filter(t => t !== type);
+      this.localSelectedVehicleTypeFilter =
+        this.localSelectedVehicleTypeFilter.filter((t) => t !== type);
     } else {
-      this.localSelectedVehicleTypeFilter = [...this.localSelectedVehicleTypeFilter, type];
+      this.localSelectedVehicleTypeFilter = [
+        ...this.localSelectedVehicleTypeFilter,
+        type,
+      ];
     }
     // Auto-update selected license plates to match the updated type selection
-    const availableIds = this.localFilteredVehiclesForPills.map(v => v.id);
-    this.localSelectedVehiclePlates = this.localSelectedVehiclePlates.filter(id => availableIds.includes(id));
+    const availableIds = this.localFilteredVehiclesForPills.map((v) => v.id);
+    this.localSelectedVehiclePlates = this.localSelectedVehiclePlates.filter(
+      (id) => availableIds.includes(id),
+    );
   }
 
   toggleLocalVehiclePlate(vehicleId: string): void {
     if (this.localSelectedVehiclePlates.includes(vehicleId)) {
-      this.localSelectedVehiclePlates = this.localSelectedVehiclePlates.filter(id => id !== vehicleId);
+      this.localSelectedVehiclePlates = this.localSelectedVehiclePlates.filter(
+        (id) => id !== vehicleId,
+      );
     } else {
-      this.localSelectedVehiclePlates = [...this.localSelectedVehiclePlates, vehicleId];
+      this.localSelectedVehiclePlates = [
+        ...this.localSelectedVehiclePlates,
+        vehicleId,
+      ];
     }
   }
 
@@ -106,13 +144,17 @@ export class MobileFilters implements OnDestroy {
     this.localSelectedStatusFilter = this.selectedStatusFilter;
     this.localSelectedVehicleTypeFilter = [...this.selectedVehicleTypeFilter];
     this.localSelectedVehiclePlates = [...this.selectedVehiclePlates];
-    
+
     if (this.dialogRef || !this.dialogTemplate) return;
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
       width: "100vw",
       maxWidth: "100vw",
       maxHeight: "80dvh",
-      backdropClass: ["bg-gray-900/60", "backdrop-blur-sm", "animate-backdrop-fade"],
+      backdropClass: [
+        "bg-gray-900/60",
+        "backdrop-blur-sm",
+        "animate-backdrop-fade",
+      ],
       panelClass: [
         "w-full",
         "max-w-full",
@@ -160,22 +202,24 @@ export class MobileFilters implements OnDestroy {
     this.startDateChange.emit(this.localStartDate);
     this.endDateChange.emit(this.localEndDate);
     this.selectedStatusFilterChange.emit(this.localSelectedStatusFilter);
-    this.selectedVehicleTypeFilterChange.emit(this.localSelectedVehicleTypeFilter);
+    this.selectedVehicleTypeFilterChange.emit(
+      this.localSelectedVehicleTypeFilter,
+    );
     this.selectedVehiclePlatesChange.emit(this.localSelectedVehiclePlates);
     this.filterChange.emit();
     this.closeMobileFilters();
   }
 
   clearAllFilters(): void {
-    this.localSelectedDate = '';
-    this.localSearchQuery = '';
-    this.localSelectedUserId = '';
-    this.localStartDate = '';
-    this.localEndDate = '';
-    this.localSelectedStatusFilter = '';
+    this.localSelectedDate = "";
+    this.localSearchQuery = "";
+    this.localSelectedUserId = "";
+    this.localStartDate = "";
+    this.localEndDate = "";
+    this.localSelectedStatusFilter = "";
     this.localSelectedVehicleTypeFilter = [];
     this.localSelectedVehiclePlates = [];
-    
+
     this.resetFilters.emit();
     this.closeMobileFilters();
   }

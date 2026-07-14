@@ -29,6 +29,8 @@ import { MobileFilters } from "../../components/booking-sidebar/mobile-filters/m
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { DailyBookingsSidebar } from "../../components/booking-sidebar/daily-bookings-sidebar/daily-bookings-sidebar";
 import { LanguageService } from "../../../../core/services/language.service";
+import { BookingViewSwitcher } from "../../components/booking-view-switcher/booking-view-switcher";
+import { BookingTabSwitcher } from "../../components/booking-tab-switcher/booking-tab-switcher";
 
 @Component({
   selector: "app-booking-list",
@@ -43,6 +45,8 @@ import { LanguageService } from "../../../../core/services/language.service";
     MobileFilters,
     MatSidenavModule,
     DailyBookingsSidebar,
+    BookingViewSwitcher,
+    BookingTabSwitcher,
   ],
   templateUrl: "./booking-list.html",
 })
@@ -265,13 +269,6 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.headerService.reset();
-  }
-
-  toggleActiveTab(): void {
-    const nextTab = this.activeTab() === "active" ? "history" : "active";
-    this.activeTab.set(nextTab);
-    this.selectedStatusFilter.set("");
-    this.loadBookings();
   }
 
   setActiveTab(tab: "active" | "history"): void {

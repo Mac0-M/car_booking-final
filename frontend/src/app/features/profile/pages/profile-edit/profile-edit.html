@@ -1,4 +1,4 @@
-<div class="h-[calc(100dvh-4rem)] w-full overflow-y-auto bg-gray-100/40">
+<div class="h-[calc(100dvh-4rem)] w-full overflow-y-auto bg-container-low">
   <div
     class="profile-edit-page max-w-xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6"
   >
@@ -7,10 +7,11 @@
       <h1
         class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-2"
       >
-        <span class="material-icons text-gray-700 font-bold"
+        <span class="material-icons text-gray-800 font-bold"
           >person_outline</span
         >
-        {{ (isEditing() ? 'Edit Profile / แก้ไขโปรไฟล์' : 'My Profile / โปรไฟล์ของฉัน') | translate }}
+        {{ (isEditing() ? 'Edit Profile / แก้ไขโปรไฟล์' : 'My Profile /
+        โปรไฟล์ของฉัน') | translate }}
       </h1>
     </div>
 
@@ -25,7 +26,7 @@
         >
           <div
             [class.pointer-events-none]="!isEditing()"
-            class="relative w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-white shadow-md overflow-hidden group cursor-pointer bg-linear-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl md:text-3xl font-bold"
+            class="relative w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-white shadow-md overflow-hidden group cursor-pointer bg-linear-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white text-2xl md:text-3xl font-bold"
           >
             @if (isEditing()) {
             <input
@@ -69,7 +70,7 @@
             [disabled]="!isEditing()"
             required
             [placeholder]="'Enter your full name' | translate"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -88,7 +89,7 @@
             [disabled]="!isEditing()"
             required
             [placeholder]="'Enter your email address' | translate"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -97,7 +98,8 @@
           <label
             for="phone"
             class="text-xs md:text-sm font-bold text-gray-700 block"
-            >{{ 'Mobile Phone Number / เบอร์โทรศัพท์มือถือ' | translate }}</label
+            >{{ 'Mobile Phone Number / เบอร์โทรศัพท์มือถือ' | translate
+            }}</label
           >
           <input
             type="tel"
@@ -106,7 +108,7 @@
             [(ngModel)]="phone"
             [disabled]="!isEditing()"
             [placeholder]="'Enter mobile phone number' | translate"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -124,7 +126,7 @@
             [(ngModel)]="newPassword"
             [disabled]="!isEditing()"
             [placeholder]="isEditing() ? ('Enter new password (min. 6 characters)' | translate) : '••••••••'"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-gray-400 transition-colors disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -154,7 +156,7 @@
           } @else {
           <component-button
             type="button"
-            variant="cancel"
+            variant="danger-outline"
             size="sm"
             (click)="cancelEdit()"
             class="w-full sm:w-auto"

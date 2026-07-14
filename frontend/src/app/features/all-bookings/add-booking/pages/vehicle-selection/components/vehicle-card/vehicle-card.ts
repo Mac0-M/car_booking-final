@@ -1,11 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TitleCasePipe } from '@angular/common';
-import { Vehicle } from '../../../../../../../core/models/vehicle.model';
-import { ComponentCard } from '../../../../../../../shared/components/card/card';
-import { ComponentBadge } from '../../../../../../../shared/components/badge/badge';
-import { ComponentButton } from '../../../../../../../shared/components/button/button';
-import { TranslatePipe } from '../../../../../../../shared/pipes/translate.pipe';
-import { environment } from '../../../../../../../../environments/environment';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { TitleCasePipe } from "@angular/common";
+import { Vehicle } from "../../../../../../../core/models/vehicle.model";
+import { ComponentCard } from "../../../../../../../shared/components/card/card";
+import { ComponentBadge } from "../../../../../../../shared/components/badge/badge";
+import { ComponentButton } from "../../../../../../../shared/components/button/button";
+import { TranslatePipe } from "../../../../../../../shared/pipes/translate.pipe";
+import { environment } from "../../../../../../../../environments/environment";
 
 /**
  * VehicleCardComponent: การ์ดแสดงข้อมูลรถยนต์ที่ให้เลือก
@@ -14,27 +14,38 @@ import { environment } from '../../../../../../../../environments/environment';
  * - ใช้ shared component-button สำหรับปุ่มเลือก
  */
 @Component({
-  selector: 'app-vehicle-card',
+  selector: "app-vehicle-card",
   standalone: true,
-  imports: [ComponentCard, ComponentBadge, ComponentButton, TranslatePipe, TitleCasePipe],
-  templateUrl: './vehicle-card.html',
+  imports: [
+    ComponentCard,
+    ComponentBadge,
+    ComponentButton,
+    TranslatePipe,
+    TitleCasePipe,
+  ],
+  templateUrl: "./vehicle-card.html",
 })
 export class VehicleCardComponent {
   @Input({ required: true }) vehicle!: Vehicle;
   @Input() isAvailable = true;
   @Input() readonly = false;
-  @Input() type: 'full' | 'mini' = 'full';
+  @Input() type: "full" | "mini" = "full";
   @Output() selectVehicle = new EventEmitter<Vehicle>();
 
   get vehicleImgUrl(): string {
     if (!this.vehicle || !this.vehicle.vehicleImg) {
-      return '';
+      return "";
     }
-    if (this.vehicle.vehicleImg.startsWith('http') || this.vehicle.vehicleImg.startsWith('blob:')) {
+    if (
+      this.vehicle.vehicleImg.startsWith("http") ||
+      this.vehicle.vehicleImg.startsWith("blob:")
+    ) {
       return this.vehicle.vehicleImg;
     }
-    const baseUrl = environment.apiUrl.replace('/api/v1', '');
-    const imgPath = this.vehicle.vehicleImg.startsWith('/') ? this.vehicle.vehicleImg : `/${this.vehicle.vehicleImg}`;
+    const baseUrl = environment.apiUrl.replace("/api/v1", "");
+    const imgPath = this.vehicle.vehicleImg.startsWith("/")
+      ? this.vehicle.vehicleImg
+      : `/${this.vehicle.vehicleImg}`;
     return `${baseUrl}${imgPath}`;
   }
 
@@ -42,25 +53,29 @@ export class VehicleCardComponent {
     return !this.isAvailable;
   }
 
-  get statusVariant(): 'available' | 'booked' | 'unavailable' {
+  get statusVariant(): "available" | "booked" | "unavailable" {
     if (this.vehicle.vehicleState) {
       return this.vehicle.vehicleState;
     }
-    const status = (this.vehicle.status || '').toLowerCase();
-    if (status === 'available' || status === 'booked' || status === 'unavailable') {
+    const status = (this.vehicle.status || "").toLowerCase();
+    if (
+      status === "available" ||
+      status === "booked" ||
+      status === "unavailable"
+    ) {
       return status;
     }
-    return 'unavailable';
+    return "unavailable";
   }
 
   /** Overlay tint classes per status */
   get overlayClasses(): string {
     const map: Record<string, string> = {
-      available: '',
-      booked: 'bg-gray-100/60',
-      unavailable: 'bg-red-50/60',
+      available: "",
+      booked: "bg-gray-100/60",
+      unavailable: "bg-red-50/60",
     };
-    return map[this.statusVariant] ?? '';
+    return map[this.statusVariant] ?? "";
   }
 
   onSelect(): void {

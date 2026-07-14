@@ -1,50 +1,48 @@
 <div [ngClass]="[baseClasses, sizeClasses[size]]">
   <div class="flex items-center justify-between w-full relative">
-    
     <!-- Background Connecting Line -->
-    <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-gray-200 z-0"></div>
-    
+    <div
+      class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-primary-container z-0"
+    ></div>
+
     <!-- Active Connecting Line Progress -->
-    <div 
-      class="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-gray-900 transition-all duration-300 z-0"
+    <div
+      class="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-primary transition-all duration-300 z-0"
       [style.width.%]="progressWidth"
     ></div>
 
     <!-- Stepper Steps -->
     @for (step of steps; track step; let idx = $index) {
-      <div class="flex flex-col items-center z-10 relative">
-        <!-- Step Circle -->
-        <div 
-          [ngClass]="[
+    <div class="flex flex-col items-center z-10 relative">
+      <!-- Step Circle -->
+      <div
+        [ngClass]="[
             'flex items-center justify-center rounded-full font-semibold transition-all duration-300',
             circleSizeClasses[size],
             idx + 1 < currentStep 
-              ? 'bg-gray-900 text-white border-2 border-gray-900' 
+              ? 'bg-primary text-white border-2 border-primary' 
               : (idx + 1 === currentStep 
-                  ? 'bg-white text-gray-900 border-2 border-gray-900 ring-4 ring-gray-100' 
-                  : 'bg-white text-gray-400 border-2 border-gray-200')
+                  ? 'bg-white text-primary border-2 border-primary ring-4 ring-primary-container' 
+                  : 'bg-white text-gray-400 border-2 border-primary-container')
           ]"
-        >
-          @if (idx + 1 < currentStep) {
-            <!-- Checkmark for completed steps -->
-            <span class="material-icons text-sm md:text-base font-bold">check</span>
-          } @else {
-            {{ idx + 1 }}
-          }
-        </div>
+      >
+        @if (idx + 1 < currentStep) {
+        <!-- Checkmark for completed steps -->
+        <span class="material-icons text-sm md:text-base font-bold">check</span>
+        } @else { {{ idx + 1 }} }
+      </div>
 
-        <!-- Step Label (Responsive) -->
-        <span 
-          [ngClass]="[
+      <!-- Step Label (Responsive) -->
+      <span
+        [ngClass]="[
             'absolute top-full mt-2 font-medium text-xs whitespace-nowrap transition-colors duration-300',
-            idx + 1 === currentStep ? 'text-gray-900 font-semibold' : 'text-gray-400',
+            idx + 1 === currentStep ? 'text-primary font-semibold' : 'text-gray-400',
             idx + 1 !== currentStep ? 'hidden md:block' : 'block'
           ]"
-        >
-          {{ step | translate }}
-        </span>
-      </div>
+      >
+        {{ step | translate }}
+      </span>
+    </div>
     }
-
   </div>
 </div>

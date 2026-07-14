@@ -29,11 +29,12 @@ export class ComponentButton {
     "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 active:scale-95 w-full cursor-pointer select-none";
 
   protected readonly variantClasses = {
-    submit: "bg-gray-700 text-white shadow-md shadow-gray-700/30 border-0",
+    submit:
+      "btn-purple-theme bg-primary text-white shadow-md shadow-primary/30 border-0 hover:bg-primary-hover",
     cancel:
-      "border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-200",
+      "border border-primary bg-transparent text-primary hover:bg-primary-container hover:text-primary-hover hover:border-primary-hover",
     secondary:
-      "border border-gray-200 bg-white text-gray-600 hover:bg-gray-200",
+      "border border-gray-200 bg-white text-gray-600 hover:bg-surface-dim hover:text-gray-800 hover:border-surface-dim",
     "danger-outline":
       "border border-red-200 bg-white text-red-600 hover:bg-red-100",
     "success-outline":

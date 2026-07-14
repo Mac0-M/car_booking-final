@@ -1,150 +1,219 @@
-<div [class]="isDialog ? 'flex flex-col flex-1 h-full' : 'booking-confirm-page max-w-2xl mx-auto p-4 md:p-6 space-y-6'">
-
+<div
+  [class]="isDialog ? 'flex flex-col flex-1 h-full' : 'booking-confirm-page max-w-2xl mx-auto p-4 md:p-6 space-y-6'"
+>
   <!-- Stepper Indicator -->
   @if (!isDialog && !isConfirmed()) {
-    <component-process [currentStep]="3" size="base"></component-process>
-  }
-
-  @if (!store.selectedVehicle() && !isConfirmed()) {
-    <!-- Empty State (when opened without a selected vehicle) -->
-    <div class="max-w-md mx-auto py-10">
-      <component-empty-state
-        [title]="'Booking Information Not Found' | translate"
-        [description]="'Please fill out the booking form and select a vehicle first.' | translate"
-        icon="error"
-        variant="card">
-      </component-empty-state>
-      <div class="mt-6 flex justify-center">
-        <component-button variant="submit" size="lg" class="max-w-xs" (click)="onBackToForm()">
-          <span class="flex items-center gap-2">
-            <span class="material-icons">directions_car</span>
-            {{ 'Start New Booking' | translate }}
-          </span>
-        </component-button>
-      </div>
+  <component-process [currentStep]="3" size="base"></component-process>
+  } @if (!store.selectedVehicle() && !isConfirmed()) {
+  <!-- Empty State (when opened without a selected vehicle) -->
+  <div class="max-w-md mx-auto py-10">
+    <component-empty-state
+      [title]="'Booking Information Not Found' | translate"
+      [description]="'Please fill out the booking form and select a vehicle first.' | translate"
+      icon="error"
+      variant="card"
+    >
+    </component-empty-state>
+    <div class="mt-6 flex justify-center">
+      <component-button
+        variant="submit"
+        size="lg"
+        class="max-w-xs"
+        (click)="onBackToForm()"
+      >
+        <span class="flex items-center gap-2">
+          <span class="material-icons">directions_car</span>
+          {{ 'Start New Booking' | translate }}
+        </span>
+      </component-button>
     </div>
-  } @else {
+  </div>
+  } @else { @if (!isConfirmed()) {
+  <!-- STEP 3: Review and Confirm (Summary and confirmation) -->
+  <div
+    [class]="isDialog ? 'flex flex-col flex-1 h-full justify-between gap-6' : 'space-y-6'"
+  >
+    <app-booking-detail-modal
+      [bookingDate]="store.bookingDate()"
+      [startTime]="store.startTime()"
+      [endTime]="store.endTime()"
+      [destination]="store.destination()"
+      [purpose]="store.purpose()"
+      [userName]="currentUser()?.name"
+      [userPhone]="currentUser()?.phone"
+      [vehicle]="store.selectedVehicle()"
+    />
+    <!-- Actions -->
+    <div
+      [class]="isDialog ? 'flex flex-col sm:flex-row gap-3 pt-2 mt-auto' : 'flex flex-col sm:flex-row gap-3 pt-2'"
+    >
+      <component-button
+        variant="cancel"
+        [size]="isDialog ? 'md' : 'lg'"
+        class="sm:flex-1"
+        (click)="onBack()"
+        [disabled]="isSubmitting()"
+      >
+        <span
+          [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'"
+        >
+          <span class="material-icons text-sm sm:text-lg">arrow_back</span>
+          {{ 'Back' | translate }}
+        </span>
+      </component-button>
 
-    @if (!isConfirmed()) {
-      <!-- STEP 3: Review and Confirm (Summary and confirmation) -->
-      <div [class]="isDialog ? 'flex flex-col flex-1 h-full justify-between gap-6' : 'space-y-6'">
-        <app-booking-detail-modal
-          [bookingDate]="store.bookingDate()"
-          [startTime]="store.startTime()"
-          [endTime]="store.endTime()"
-          [destination]="store.destination()"
-          [purpose]="store.purpose()"
-          [userName]="currentUser()?.name"
-          [userPhone]="currentUser()?.phone"
-          [vehicle]="store.selectedVehicle()"
-        />
+      <component-button
+        variant="submit"
+        [size]="isDialog ? 'md' : 'lg'"
+        class="sm:flex-1"
+        (click)="onConfirm()"
+        [disabled]="isSubmitting()"
+      >
+        <span
+          [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'"
+        >
+          @if (isSubmitting()) {
+          <span
+            class="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent"
+          ></span>
+          {{ 'Processing...' | translate }} } @else {
+          <span class="material-icons text-sm sm:text-lg">done_all</span>
+          {{ 'Confirm Booking' | translate }} }
+        </span>
+      </component-button>
+    </div>
+  </div>
+
+  } @else {
+  <!-- Booking Confirmed Successfully -->
+  <div class="space-y-6">
+    <component-card variant="default" size="lg">
+      <div class="flex flex-col items-center text-center py-6 space-y-5">
+        <!-- Success Icon -->
+        <div
+          class="flex items-center justify-center w-20 h-20 rounded-full bg-green-50 text-green-500 shadow-inner"
+        >
+          <span class="material-icons text-5xl">check_circle</span>
+        </div>
+
+        <div class="space-y-2">
+          <h1 class="text-2xl md:text-3xl font-black text-gray-800">
+            {{ 'Booking Confirmed!' | translate }}
+          </h1>
+          <p class="text-sm md:text-base text-gray-500 max-w-md mx-auto">
+            {{ 'Your booking request has been processed and your vehicle is
+            reserved.' | translate }}
+          </p>
+        </div>
+
+        <!-- Booking Summary Card / Receipt -->
+        <div
+          class="w-full max-w-md bg-container-low rounded-2xl border border-container p-5 space-y-4 text-left shadow-sm overflow-hidden"
+        >
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-3 gap-1"
+          >
+            <span
+              class="text-sm text-gray-400 font-semibold uppercase tracking-wider"
+              >{{ 'Booking Number / เลขที่จอง' | translate }}</span
+            >
+            <span class="text-base font-mono font-bold text-gray-800"
+              >{{ bookingId() }}</span
+            >
+          </div>
+
+          <!-- Details Grid -->
+          <div class="space-y-3 text-sm">
+            @if (store.selectedVehicle(); as vehicle) {
+            <div class="space-y-0.5">
+              <span class="text-gray-400 text-xs block"
+                >{{ 'Vehicle / ยานพาหนะ' | translate }}</span
+              >
+              <span class="font-bold text-gray-800 break-words">
+                {{ vehicle.model }} ({{ vehicle.plateNumber }})
+              </span>
+            </div>
+            }
+            <div class="space-y-0.5">
+              <span class="text-gray-400 text-xs block"
+                >{{ 'Destination / จุดหมาย' | translate }}</span
+              >
+              <span class="font-semibold text-gray-800 break-words"
+                >{{ store.destination() }}</span
+              >
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-gray-400 text-xs block"
+                >{{ 'Travel Date / วันเดินทาง' | translate }}</span
+              >
+              <span class="font-semibold text-gray-800">
+                {{ store.bookingDate() | appDate }}
+              </span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-gray-400 text-xs block"
+                >{{ 'Travel Time / เวลา' | translate }}</span
+              >
+              <span class="font-semibold text-gray-800">
+                {{ store.startTime() | appTime }} - {{ store.endTime() | appTime
+                }} @if (totalDuration()) {
+                <span class="text-xs text-gray-500 font-normal ml-1"
+                  >({{ totalDuration() }})</span
+                >
+                }
+              </span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-gray-400 text-xs block"
+                >{{ 'User / ผู้ใช้' | translate }}</span
+              >
+              <span class="font-semibold text-gray-800 break-words"
+                >{{ currentUser()?.name }}</span
+              >
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-gray-400 text-xs block"
+                >{{ 'Contact / เบอร์ติดต่อ' | translate }}</span
+              >
+              <span class="font-semibold text-gray-800"
+                >{{ currentUser()?.phone }}</span
+              >
+            </div>
+          </div>
+        </div>
+
         <!-- Actions -->
-        <div [class]="isDialog ? 'flex flex-col sm:flex-row gap-3 pt-2 mt-auto' : 'flex flex-col sm:flex-row gap-3 pt-2'">
-          <component-button variant="cancel" [size]="isDialog ? 'md' : 'lg'" class="sm:flex-1" (click)="onBack()" [disabled]="isSubmitting()">
-            <span [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'">
-              <span class="material-icons text-sm sm:text-lg">arrow_back</span>
-              {{ 'Back' | translate }}
+        <div class="w-full max-w-md pt-4 flex flex-col sm:flex-row gap-3">
+          <component-button
+            variant="cancel"
+            size="lg"
+            class="sm:flex-1"
+            (click)="onViewBookingHistory()"
+          >
+            <span
+              class="flex items-center justify-center gap-2 text-base font-semibold py-1"
+            >
+              <span class="material-icons text-lg">history</span>
+              {{ 'View Booking History' | translate }}
             </span>
           </component-button>
- 
-          <component-button variant="submit" [size]="isDialog ? 'md' : 'lg'" class="sm:flex-1" (click)="onConfirm()" [disabled]="isSubmitting()">
-            <span [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'">
-              @if (isSubmitting()) {
-                <span class="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent"></span>
-                {{ 'Processing...' | translate }}
-              } @else {
-                <span class="material-icons text-sm sm:text-lg">done_all</span>
-                {{ 'Confirm Booking' | translate }}
-              }
+
+          <component-button
+            variant="submit"
+            size="lg"
+            class="sm:flex-1"
+            (click)="onBackToForm()"
+          >
+            <span
+              class="flex items-center justify-center gap-2 text-base font-semibold py-1"
+            >
+              <span class="material-icons text-lg">add</span>
+              {{ 'Book Another Vehicle' | translate }}
             </span>
           </component-button>
         </div>
       </div>
-
-    } @else {
-      <!-- Booking Confirmed Successfully -->
-      <div class="space-y-6">
-        <component-card variant="default" size="lg">
-          <div class="flex flex-col items-center text-center py-6 space-y-5">
-            <!-- Success Icon -->
-            <div class="flex items-center justify-center w-20 h-20 rounded-full bg-green-50 text-green-500 shadow-inner">
-              <span class="material-icons text-5xl">check_circle</span>
-            </div>
-
-            <div class="space-y-2">
-              <h1 class="text-2xl md:text-3xl font-black text-gray-800">{{ 'Booking Confirmed!' | translate }}</h1>
-              <p class="text-sm md:text-base text-gray-500 max-w-md mx-auto">
-                {{ 'Your booking request has been processed and your vehicle is reserved.' | translate }}
-              </p>
-            </div>
-
-            <!-- Booking Summary Card / Receipt -->
-            <div class="w-full max-w-md bg-gray-50 rounded-2xl border border-gray-100 p-5 space-y-4 text-left shadow-sm overflow-hidden">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-3 gap-1">
-                <span class="text-sm text-gray-400 font-semibold uppercase tracking-wider">{{ 'Booking Number / เลขที่จอง' | translate }}</span>
-                <span class="text-base font-mono font-bold text-gray-800">{{ bookingId() }}</span>
-              </div>
- 
-              <!-- Details Grid -->
-              <div class="space-y-3 text-sm">
-                @if (store.selectedVehicle(); as vehicle) {
-                  <div class="space-y-0.5">
-                    <span class="text-gray-400 text-xs block">{{ 'Vehicle / ยานพาหนะ' | translate }}</span>
-                    <span class="font-bold text-gray-800 break-words">
-                      {{ vehicle.model }} ({{ vehicle.plateNumber }})
-                    </span>
-                  </div>
-                }
-                <div class="space-y-0.5">
-                  <span class="text-gray-400 text-xs block">{{ 'Destination / จุดหมาย' | translate }}</span>
-                  <span class="font-semibold text-gray-800 break-words">{{ store.destination() }}</span>
-                </div>
-                <div class="space-y-0.5">
-                  <span class="text-gray-400 text-xs block">{{ 'Travel Date / วันเดินทาง' | translate }}</span>
-                  <span class="font-semibold text-gray-800">
-                    {{ store.bookingDate() | appDate }}
-                  </span>
-                </div>
-                <div class="space-y-0.5">
-                  <span class="text-gray-400 text-xs block">{{ 'Travel Time / เวลา' | translate }}</span>
-                  <span class="font-semibold text-gray-800">
-                    {{ store.startTime() | appTime }} - {{ store.endTime() | appTime }}
-                    @if (totalDuration()) {
-                      <span class="text-xs text-gray-500 font-normal ml-1">({{ totalDuration() }})</span>
-                    }
-                  </span>
-                </div>
-                <div class="space-y-0.5">
-                  <span class="text-gray-400 text-xs block">{{ 'User / ผู้ใช้' | translate }}</span>
-                  <span class="font-semibold text-gray-800 break-words">{{ currentUser()?.name }}</span>
-                </div>
-                <div class="space-y-0.5">
-                  <span class="text-gray-400 text-xs block">{{ 'Contact / เบอร์ติดต่อ' | translate }}</span>
-                  <span class="font-semibold text-gray-800">{{ currentUser()?.phone }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="w-full max-w-md pt-4 flex flex-col sm:flex-row gap-3">
-              <component-button variant="cancel" size="lg" class="sm:flex-1" (click)="onViewBookingHistory()">
-                <span class="flex items-center justify-center gap-2 text-base font-semibold py-1">
-                  <span class="material-icons text-lg">history</span>
-                  {{ 'View Booking History' | translate }}
-                </span>
-              </component-button>
-
-              <component-button variant="submit" size="lg" class="sm:flex-1" (click)="onBackToForm()">
-                <span class="flex items-center justify-center gap-2 text-base font-semibold py-1">
-                  <span class="material-icons text-lg">add</span>
-                  {{ 'Book Another Vehicle' | translate }}
-                </span>
-              </component-button>
-            </div>
-          </div>
-        </component-card>
-      </div>
-    }
-
-  }
+    </component-card>
+  </div>
+  } }
 </div>

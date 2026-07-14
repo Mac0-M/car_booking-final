@@ -1,6 +1,6 @@
 <mat-drawer-container
   [hasBackdrop]="true"
-  class="booking-drawer-container h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
+  class="booking-drawer-container h-[calc(100dvh-4rem)] w-full bg-container-low overflow-hidden!"
 >
   <mat-drawer
     #dailyDrawer
@@ -60,7 +60,7 @@
 
   <!-- Main Sidenav Content -->
   <mat-drawer-content
-    class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
+    class="h-full flex! flex-col! bg-container-low relative overflow-hidden!"
   >
     <!-- Top Header Bar -->
     <div
@@ -70,113 +70,22 @@
         <!-- Left Side: Tabs Switcher + View Switcher -->
         <div class="flex items-center gap-2 md:gap-2 min-w-0">
           <!-- Tab Switcher (Active / History) -->
-          <div
-            class="relative flex bg-transparent select-none shrink-0 border-b border-gray-100 w-[72px] md:w-[80px] pb-2"
-          >
-            <button
-              (click)="toggleActiveTab()"
-              class="relative z-10 flex-1 flex items-center justify-center text-[11px] md:text-xs font-bold text-gray-900 transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
-              [title]="activeTab() === 'active' ? ('Switch to History' | translate) : ('Switch to Active Bookings' | translate)"
-            >
-              @if (activeTab() === 'active') {
-              <span
-                class="flex items-center justify-center gap-1 md:gap-1.5 animate-slide-in-left w-full"
-              >
-                <span class="material-icons text-xs md:text-sm"
-                  >bookmark_border</span
-                >
-                {{ 'Active' | translate }}
-              </span>
-              } @else {
-              <div
-                class="flex items-center justify-center gap-1 md:gap-1.5 animate-slide-in-right w-full"
-              >
-                <span class="material-icons text-xs md:text-sm">history</span>
-                {{ 'History' | translate }}
-              </div>
-              }
-            </button>
-            <!-- Active Underline Indicator (Constant width cover) -->
-            <div
-              class="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 transition-all duration-200"
-            ></div>
-          </div>
+          <app-booking-tab-switcher
+            [activeTab]="activeTab()"
+            (activeTabChange)="setActiveTab($event)"
+          ></app-booking-tab-switcher>
 
           <!-- Vertical Divider -->
           <div
             class="h-8 w-[1px] bg-gray-300 mx-1.5 md:mx-2 self-center shrink-0"
           ></div>
 
-          <!-- View Mode Switcher -->
-          @if (isMobile()) {
-          <!-- View Mode Toggle Button (Mobile only) -->
-          <button
-            (click)="toggleViewMode()"
-            class="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-150 p-0.5 rounded-lg shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
-            [title]="viewMode() === 'calendar' ? 'Switch to Grid View' : 'Switch to Calendar View'"
-          >
-            <div
-              class="flex items-center justify-center w-full h-full bg-white shadow-sm rounded-md text-gray-800"
-            >
-              @if (viewMode() === 'calendar') {
-              <span class="material-icons text-base animate-fade-zoom-in"
-                >calendar_today</span
-              >
-              } @else {
-              <i
-                class="material-icons text-base animate-fade-zoom-in not-italic"
-                >grid_view</i
-              >
-              }
-            </div>
-          </button>
-          } @else {
-          <!-- View Mode Switcher (Desktop only) -->
-          <div
-            class="relative grid grid-cols-3 w-72 bg-gray-100 p-0.5 rounded-lg shrink-0 select-none"
-          >
-            <!-- Sliding Background Indicator -->
-            <div
-              class="absolute top-0.5 bottom-0.5 left-0.5 bg-white shadow-sm rounded-md transition-transform duration-200 ease-out"
-              style="width: calc(33.33% - 2px)"
-              [style.transform]="
-                viewMode() === 'calendar' ? 'translateX(0)' : (viewMode() === 'grid' ? 'translateX(calc(100% + 2px))' : 'translateX(calc(200% + 4px))')
-              "
-            ></div>
-
-            <button
-              (click)="setViewMode('calendar')"
-              [class.text-gray-800]="viewMode() === 'calendar'"
-              [class.text-gray-500]="viewMode() !== 'calendar'"
-              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
-            >
-              <span class="material-icons text-sm sm:text-base"
-                >calendar_today</span
-              >
-              <span>{{ 'Calendar' | translate }}</span>
-            </button>
-
-            <button
-              (click)="setViewMode('grid')"
-              [class.text-gray-800]="viewMode() === 'grid'"
-              [class.text-gray-500]="viewMode() !== 'grid'"
-              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
-            >
-              <span class="material-icons text-sm sm:text-base">grid_view</span>
-              <span>{{ 'Grid' | translate }}</span>
-            </button>
-
-            <button
-              (click)="setViewMode('list')"
-              [class.text-gray-800]="viewMode() === 'list'"
-              [class.text-gray-500]="viewMode() !== 'list'"
-              class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
-            >
-              <span class="material-icons text-base">format_list_bulleted</span>
-              <span>{{ 'List' | translate }}</span>
-            </button>
-          </div>
-          }
+          <!-- View Mode Switcher Component -->
+          <app-booking-view-switcher
+            [viewMode]="viewMode()"
+            [isMobile]="isMobile()"
+            (viewModeChange)="setViewMode($event)"
+          ></app-booking-view-switcher>
         </div>
 
         <!-- Right Side: Filter + Add Button -->
@@ -196,12 +105,12 @@
           @if (!isMobile()) {
           <button
             (click)="leftDrawerOpened.set(!leftDrawerOpened())"
-            [class.bg-gray-800]="leftDrawerOpened() || activeFiltersCount() > 0"
+            [class.bg-primary]="leftDrawerOpened() || activeFiltersCount() > 0"
             [class.text-white]="leftDrawerOpened() || activeFiltersCount() > 0"
-            [class.border-gray-800]="leftDrawerOpened() || activeFiltersCount() > 0"
-            [class.bg-gray-100]="!leftDrawerOpened() && activeFiltersCount() === 0"
-            [class.text-gray-800]="!leftDrawerOpened() && activeFiltersCount() === 0"
-            [class.border-gray-200]="!leftDrawerOpened() && activeFiltersCount() === 0"
+            [class.border-primary]="leftDrawerOpened() || activeFiltersCount() > 0"
+            [class.bg-primary-container]="!leftDrawerOpened() && activeFiltersCount() === 0"
+            [class.text-primary]="!leftDrawerOpened() && activeFiltersCount() === 0"
+            [class.border-primary-fixed-dim/30]="!leftDrawerOpened() && activeFiltersCount() === 0"
             class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0"
           >
             <span class="material-icons text-sm">filter_list</span>
@@ -240,11 +149,11 @@
             (resetFilters)="resetFilters()"
           />
           }
- 
+
           <!-- Add Booking Button -->
           <button
             (click)="openBooking()"
-            class="flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border border-gray-700 bg-gray-700 text-white shadow-sm active:scale-95 shrink-0"
+            class="btn-purple-theme flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary hover:bg-primary-hover text-white shadow-sm active:scale-95 shrink-0"
             title="Add new booking"
           >
             <span class="material-icons text-sm sm:text-base">add</span>

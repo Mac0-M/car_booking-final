@@ -24,9 +24,13 @@
           >{{ 'Upcoming' | translate }}</component-badge
         >
         } @else if (getBookingStatusVariant(booking) === 'pending') {
-        <component-badge variant="pending" size="xs">{{ 'Ongoing' | translate }}</component-badge>
+        <component-badge variant="pending" size="xs"
+          >{{ 'Ongoing' | translate }}</component-badge
+        >
         } @else if (getBookingStatusVariant(booking) === 'booked') {
-        <component-badge variant="booked" size="xs">{{ 'Completed' | translate }}</component-badge>
+        <component-badge variant="booked" size="xs"
+          >{{ 'Completed' | translate }}</component-badge
+        >
         } @else {
         <component-badge variant="unavailable" size="xs"
           >{{ 'Cancelled' | translate }}</component-badge
@@ -44,11 +48,13 @@
             >location_on</span
           >
           <span class="line-clamp-1"
-            >{{ booking.destination || ('No destination specified / ไม่ได้ระบุจุดหมาย' | translate) }}</span
+            >{{ booking.destination || ('No destination specified /
+            ไม่ได้ระบุจุดหมาย' | translate) }}</span
           >
         </h3>
         <p class="text-xs text-gray-500 mt-1 line-clamp-2 pl-5">
-          {{ booking.purpose || ('No purpose specified / ไม่ได้ระบุวัตถุประสงค์' | translate) }}
+          {{ booking.purpose || ('No purpose specified / ไม่ได้ระบุวัตถุประสงค์'
+          | translate) }}
         </p>
       </div>
 
@@ -60,7 +66,8 @@
           {{ 'Reserved Vehicle / ยานพาหนะที่จอง' | translate }}
         </div>
         <div class="text-xs font-bold text-gray-700">
-          {{ booking.vehicle?.model || ('No vehicle specified / ไม่ได้ระบุยานพาหนะ' | translate) }}
+          {{ booking.vehicle?.model || ('No vehicle specified /
+          ไม่ได้ระบุยานพาหนะ' | translate) }}
         </div>
         @if (showPlateNumber && booking.vehicle?.plateNumber) {
         <div
@@ -85,11 +92,17 @@
           <span class="material-icons text-gray-400 text-sm"
             >calendar_today</span
           >
-          <span>{{ 'Depart / เดินทาง' | translate }}: {{ booking.depart | appDate }} {{ booking.depart | appTime }}</span>
+          <span
+            >{{ 'Depart / เดินทาง' | translate }}: {{ booking.depart | appDate
+            }} {{ booking.depart | appTime }}</span
+          >
         </div>
         <div class="flex items-center gap-1.5">
           <span class="material-icons text-gray-400 text-sm">schedule</span>
-          <span>{{ 'Return / กลับ' | translate }}: {{ booking.return | appDate }} {{ booking.return | appTime }}</span>
+          <span
+            >{{ 'Return / กลับ' | translate }}: {{ booking.return | appDate }}
+            {{ booking.return | appTime }}</span
+          >
         </div>
       </div>
     </div>

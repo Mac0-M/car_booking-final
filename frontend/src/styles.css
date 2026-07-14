@@ -5,31 +5,59 @@
 @theme {
   --breakpoint-md: 1024px;
 
-  /* Premium Custom Cool Slate-Blue palette centered on rgb(54, 65, 83) at gray-700 */
-  --color-gray-50: #f5f7fa;
-  --color-gray-100: #e8ecf1;
-  --color-gray-150: #dee2ea;
-  --color-gray-200: #ccd4e0;
-  --color-gray-300: #afbcd0;
-  --color-gray-400: #7c8fa6;
-  --color-gray-500: #52647c;
-  --color-gray-600: #425164;
-  --color-gray-700: rgb(54, 65, 83); /* #364153 */
-  --color-gray-800: #252d3a;
-  --color-gray-900: #181d26;
-  --color-gray-950: #0f1217;
+  /* --- Material Design 3 Color Palette (Updated: Lighter & Yellower Eggshell) --- */
 
-  /* Premium forest/mint green palette for success/available state */
-  --color-green-50: #f2faf6;
-  --color-green-100: #e1f5ec;
-  --color-green-200: #bfead6;
-  --color-green-300: #8cd6b2;
-  --color-green-400: #50c08b;
-  --color-green-500: #37a471;
-  --color-green-600: #2c835a;
-  --color-green-700: #226545;
-  --color-green-800: #184731;
-  --color-green-900: #102f21;
+  --color-white: #fffef8;
+
+  /* Neutral Surface & Gray Palette — Cream/Stone Eggshell Theme */
+  --color-gray-50: #fffef8;       /* Lowest Container / Card Background (brightest) */
+  --color-gray-100: #f7f4e6;      /* Surface / Page Background (warm cream) */
+  --color-gray-150: #efeada;      /* Container background */
+  --color-gray-200: #e4ddc8;      /* Container High / Active Borders */
+  --color-gray-300: #d5cdb2;      /* Outline Variant */
+  --color-gray-400: #726751;      /* Outline */
+  --color-gray-500: #615743;      /* On Surface Variant */
+  --color-gray-600: #514939;      /* Inverse Surface */
+  --color-gray-700: #3e382c;      /* Dark Gray — On Surface secondary text */
+  --color-gray-800: #2b271f;      /* Dark Gray — heading text */
+  --color-gray-900: #1b1914;      /* Near Black — primary text */
+  --color-gray-950: #0f0e0b;      /* Scrim / Shadow */
+
+  /* Premium blue palette (Slate Blue - 30% Secondary) */
+  --color-blue-50: #f0f4f8;
+  --color-blue-100: #e2e8f1;
+  --color-blue-200: #cbd6e5;
+  --color-blue-300: #a8bdd8;
+  --color-blue-400: #84a1ca;
+  --color-blue-500: #6f8ab7;      /* Secondary brand color */
+  --color-blue-600: #59739c;      /* Primary Blue / hover state */
+  --color-blue-700: #475c7e;
+  --color-blue-800: #35455f;
+  --color-blue-900: #212b3b;
+
+  /* Secondary Palette (Purple-Blue/Indigo - 30% Secondary) */
+  --color-indigo-50: #f0f3f8;
+  --color-indigo-100: #e1e7f1;
+  --color-indigo-200: #c8d4e5;
+  --color-indigo-300: #a4b9d8;
+  --color-indigo-400: #839dca;
+  --color-indigo-500: #6f8ab7;    /* Slate Blue */
+  --color-indigo-600: #59739c;
+  --color-indigo-700: #475c7e;
+  --color-indigo-800: #35455f;
+  --color-indigo-900: #212b3b;
+
+  /* Premium violet/purple palette for 10% Accent */
+  --color-violet-50: #f5f0fa;
+  --color-violet-100: #ebdcf7;
+  --color-violet-200: #d3b8ed;
+  --color-violet-300: #b48ee0;
+  --color-violet-400: #8f5ed1;
+  --color-violet-500: #6f38bd;
+  --color-violet-600: #5725a3;
+  --color-violet-700: #421485;
+  --color-violet-800: #320d6d;    /* Deep purple base accent */
+  --color-violet-900: #220551;
 
   /* Premium crimson/coral red palette for danger/unavailable state */
   --color-red-50: #fdf2f4;
@@ -43,43 +71,31 @@
   --color-red-800: #511522;
   --color-red-900: #360e17;
 
-  /* Premium warm amber palette for pending state */
-  --color-yellow-50: #fef8eb;
-  --color-yellow-100: #fdefd1;
-  --color-yellow-200: #fbdda1;
-  --color-yellow-300: #f8c364;
-  --color-yellow-400: #f5a725;
-  --color-yellow-500: #cf8514;
-  --color-yellow-600: #a56a10;
-  --color-yellow-700: #7f510c;
-  --color-yellow-800: #593908;
-  --color-yellow-900: #3c2605;
+  /* Warm Amber/Yellow for Pending states */
+  --color-yellow-50: #fffbeb;
+  --color-yellow-100: #fef4cb;
+  --color-yellow-200: #fde89c;
+  --color-yellow-300: #f7dd8c;    /* Accent Yellow */
+  --color-yellow-400: #e3c054;
+  --color-yellow-500: #be9c33;
+  --color-yellow-600: #987a28;
+  --color-yellow-700: #755d1f;
+  --color-yellow-800: #514015;
+  --color-yellow-900: #362a0e;
 
-  /* Premium blue palette */
-  --color-blue-50: #f0f7ff;
-  --color-blue-100: #e0effe;
-  --color-blue-200: #bae0fd;
-  --color-blue-300: #7cc7fc;
-  --color-blue-400: #38a9f8;
-  --color-blue-500: #0ea5e9;
-  --color-blue-600: #0284c7;
-  --color-blue-700: #0369a1;
-  --color-blue-800: #075985;
-  --color-blue-900: #0c4a6e;
+  /* Premium forest/mint green palette for success/available state */
+  --color-green-50: #f2faf6;
+  --color-green-100: #e1f5ec;
+  --color-green-200: #bfead6;
+  --color-green-300: #8cd6b2;
+  --color-green-400: #50c08b;
+  --color-green-500: #37a471;
+  --color-green-600: #2c835a;
+  --color-green-700: #226545;
+  --color-green-800: #184731;
+  --color-green-900: #102f21;
 
-  /* Premium indigo/violet palette */
-  --color-indigo-50: #f4f6fe;
-  --color-indigo-100: #eaedfc;
-  --color-indigo-200: #d8ddfb;
-  --color-indigo-300: #b9c1f7;
-  --color-indigo-400: #929df2;
-  --color-indigo-500: #6b77eb;
-  --color-indigo-600: #4f58d9;
-  --color-indigo-700: #3e44b8;
-  --color-indigo-800: #2f338f;
-  --color-indigo-900: #212463;
-
-  /* Premium orange palette for Van type */
+  /* Premium orange palette for Van type (kept for compatibility) */
   --color-orange-50: #fef6f0;
   --color-orange-100: #fde7d4;
   --color-orange-200: #fbcbad;
@@ -90,18 +106,7 @@
   --color-orange-700: #823007;
   --color-orange-800: #5b2003;
 
-  /* Premium violet/purple palette for Other type */
-  --color-violet-50: #faf7fe;
-  --color-violet-100: #f1eafd;
-  --color-violet-200: #ddccfa;
-  --color-violet-300: #c0a2f7;
-  --color-violet-400: #9a6bf3;
-  --color-violet-500: #7542d9;
-  --color-violet-600: #5c30b2;
-  --color-violet-700: #442286;
-  --color-violet-800: #2f165e;
-
-  /* Premium emerald palette for SUV type */
+  /* Premium emerald palette for SUV type (kept for compatibility) */
   --color-emerald-50: #f1fbf7;
   --color-emerald-100: #dcf6eb;
   --color-emerald-200: #b0ecd0;
@@ -111,6 +116,48 @@
   --color-emerald-600: #207a54;
   --color-emerald-700: #16563a;
   --color-emerald-800: #0d3423;
+
+  /* --- Semantic Material Design 3 Design Tokens --- */
+  --color-primary: #006ba6;           /* Vibrant Blue Accent for Page Elements */
+  --color-on-primary: #ffffff;
+  --color-primary-container: #e0f0ff;
+  --color-on-primary-container: #002033;
+  --color-primary-fixed: #e0f0ff;
+  --color-primary-fixed-dim: #b3dbff;
+  --color-primary-hover: #005584;     /* Darker blue hover */
+
+  --color-secondary: #6f8ab7;         /* Slate Blue */
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e2e8f1;
+  --color-on-secondary-container: #212b3b;
+
+  --color-tertiary: #320d6d;          /* Purple/Violet */
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #ebdcf7;
+  --color-on-tertiary-container: #220551;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #410002;
+
+  --color-surface-dim: #e4ddc8;
+  --color-surface: #f7f4e6;           /* Page Background — warm cream */
+  --color-surface-bright: #fffef8;
+  --color-inverse-surface: #3d392e;
+  --color-inverse-on-surface: #fffef8;
+  --color-inverse-primary: #d3b8ed;
+
+  --color-container-lowest: #fffef8;  /* Card Background — brightest eggshell */
+  --color-container-low: #f7f4e6;     /* Page background level */
+  --color-container: #efeada;
+  --color-container-high: #e4ddc8;
+  --color-container-highest: #d5cdb2;
+
+  --color-on-surface: #1b1914;
+  --color-on-surface-variant: #615743;
+  --color-outline: #726751;
+  --color-outline-variant: #d5cdb2;
 }
 
 html, body {
@@ -317,4 +364,51 @@ component-card.cursor-pointer:hover > div {
 
 .animate-fade-zoom-in {
   animation: fade-zoom-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Global theme overrides to match Eggshell Theme */
+body {
+  background-color: var(--color-surface) !important;
+}
+
+mat-drawer,
+.mat-drawer {
+  background-color: var(--color-white) !important;
+}
+
+.mat-drawer-container {
+  background-color: var(--color-surface) !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface,
+.cdk-dialog-container {
+  background-color: var(--color-white) !important;
+}
+
+/* Toast UI Calendar Overrides to match Eggshell Theme */
+.toastui-calendar-layout,
+.toastui-calendar-daygrid-cell,
+.toastui-calendar-weekday,
+.toastui-calendar-panel,
+.toastui-calendar-timegrid-left,
+.toastui-calendar-timegrid-right,
+.toastui-calendar-timegrid-container,
+.toastui-calendar-month,
+.toastui-calendar-day-name-container {
+  background-color: var(--color-white) !important;
+}
+
+.toastui-calendar-daygrid-cell-header.toastui-calendar-near-today,
+.toastui-calendar-daygrid-cell-header.toastui-calendar-today {
+  background-color: var(--color-primary-container) !important;
+}
+
+/* Custom utility class to force elements to use the deep purple accent theme */
+.btn-purple-theme {
+  --color-primary: #320d6d !important;
+  --color-primary-container: #ebdcf7 !important;
+  --color-on-primary-container: #220551 !important;
+  --color-primary-fixed: #ebdcf7 !important;
+  --color-primary-fixed-dim: #d3b8ed !important;
+  --color-primary-hover: #220551 !important;
 }

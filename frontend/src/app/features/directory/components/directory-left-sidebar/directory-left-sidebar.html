@@ -1,13 +1,15 @@
 <div class="w-full h-full flex flex-col">
   <!-- Tabs Switcher -->
   @if (isAdmin) {
-  <div class="px-4 pt-4 pb-2 flex items-center shrink-0">
+  <div [class]="isMobile ? 'px-0 pt-3 flex items-center shrink-0 w-full' : 'px-4 pt-4 pb-2 flex items-center shrink-0'">
     <div
-      class="relative flex bg-transparent select-none shrink-0 border-b border-gray-100 w-full pb-2"
+      [class.border-b]="!isMobile"
+      [class.border-gray-200]="!isMobile"
+      class="relative flex bg-transparent select-none shrink-0 w-full pb-2.5"
     >
       <!-- Sliding Underline Indicator -->
       <div
-        class="absolute bottom-0 h-0.5 bg-gray-900 transition-all duration-200 ease-out w-[50%]"
+        class="absolute bottom-0 h-0.5 bg-primary transition-all duration-200 ease-out w-[50%]"
         [style.transform]="
           activeTab === 'vehicles'
             ? 'translateX(0)'
@@ -17,11 +19,10 @@
 
       <button
         (click)="activeTabChange.emit('vehicles')"
-        [class.text-gray-900]="activeTab === 'vehicles'"
-        [class.font-bold]="activeTab === 'vehicles'"
-        [class.text-gray-400]="activeTab !== 'vehicles'"
-        [class.hover:text-gray-600]="activeTab !== 'vehicles'"
-        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
+        [class.text-primary]="activeTab === 'vehicles'"
+        [class.text-gray-500]="activeTab !== 'vehicles'"
+        [class.hover:text-gray-900]="activeTab !== 'vehicles'"
+        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent"
       >
         <span class="material-icons text-sm">directions_car</span>
         {{ 'Vehicles' | translate }}
@@ -29,11 +30,10 @@
 
       <button
         (click)="activeTabChange.emit('users')"
-        [class.text-gray-900]="activeTab === 'users'"
-        [class.font-bold]="activeTab === 'users'"
-        [class.text-gray-400]="activeTab !== 'users'"
-        [class.hover:text-gray-600]="activeTab !== 'users'"
-        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs transition-colors cursor-pointer select-none border-0 bg-transparent"
+        [class.text-primary]="activeTab === 'users'"
+        [class.text-gray-500]="activeTab !== 'users'"
+        [class.hover:text-gray-900]="activeTab !== 'users'"
+        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent"
       >
         <span class="material-icons text-sm">people_outline</span>
         {{ 'Users' | translate }}
@@ -110,8 +110,12 @@
         class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
       >
         <option value="">{{ 'All Status / สถานะทั้งหมด' | translate }}</option>
-        <option value="available">{{ 'Available / พร้อมใช้งาน' | translate }}</option>
-        <option value="unavailable">{{ 'Unavailable / ไม่พร้อมใช้งาน' | translate }}</option>
+        <option value="available">
+          {{ 'Available / พร้อมใช้งาน' | translate }}
+        </option>
+        <option value="unavailable">
+          {{ 'Unavailable / ไม่พร้อมใช้งาน' | translate }}
+        </option>
       </select>
     </div>
 
@@ -125,9 +129,15 @@
         (change)="selectedReFuelChange.emit($any($event.target).value)"
         class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
       >
-        <option value="">{{ 'All Fuel Statuses / สถานะน้ำมันทั้งหมด' | translate }}</option>
-        <option value="true">{{ 'Refueled / เติมน้ำมันแล้ว' | translate }}</option>
-        <option value="false">{{ 'Needs Refuel / ต้องเติมน้ำมัน' | translate }}</option>
+        <option value="">
+          {{ 'All Fuel Statuses / สถานะน้ำมันทั้งหมด' | translate }}
+        </option>
+        <option value="true">
+          {{ 'Refueled / เติมน้ำมันแล้ว' | translate }}
+        </option>
+        <option value="false">
+          {{ 'Needs Refuel / ต้องเติมน้ำมัน' | translate }}
+        </option>
       </select>
     </div>
 
@@ -165,7 +175,7 @@
       (click)="addVehicle.emit()"
       variant="submit"
       size="lg"
-      class="w-full"
+      class="w-full btn-purple-theme"
     >
       <span class="material-icons text-sm">add</span>
       {{ 'Add New Vehicle' | translate }}
@@ -178,7 +188,8 @@
       class="w-full"
     >
       <span class="material-icons text-sm pr-2">person_add</span>
-      {{ (isSuperAdmin ? 'Register New Admin' : 'Register New User') | translate }}
+      {{ (isSuperAdmin ? 'Register New Admin' : 'Register New User') | translate
+      }}
     </component-button>
     }
   </div>

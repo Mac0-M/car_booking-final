@@ -1,7 +1,7 @@
 @if (isMobile()) {
 <!-- Mobile layout: Controls on top, Lists in middle, Add Action at bottom -->
 <div
-  class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-gray-100/40 overflow-hidden"
+  class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-container-low overflow-hidden"
 >
   <!-- Top Area: Switchers & Filters Trigger -->
   <div class="w-full bg-white border-b border-gray-200 shrink-0">
@@ -9,6 +9,8 @@
       class="w-full block"
       [activeTab]="activeTab()"
       [isMobile]="isMobile()"
+      [isAdmin]="isAdmin()"
+      [isSuperAdmin]="isSuperAdmin()"
       [isMobileHeader]="true"
       [searchQuery]="searchQuery()"
       [selectedType]="selectedType()"
@@ -49,7 +51,7 @@
       (click)="openAddVehicleModal()"
       variant="submit"
       size="lg"
-      class="w-full"
+      class="w-full btn-purple-theme"
     >
       <span class="material-icons text-sm">add</span>
       {{ 'Add New Vehicle' | translate }}
@@ -62,7 +64,8 @@
       class="w-full"
     >
       <span class="material-icons text-sm pr-2">person_add</span>
-      {{ (isSuperAdmin() ? 'Register New Admin' : 'Register New User') | translate }}
+      {{ (isSuperAdmin() ? 'Register New Admin' : 'Register New User') |
+      translate }}
     </component-button>
     }
   </div>
@@ -72,7 +75,7 @@
 <!-- Desktop Layout -->
 <mat-drawer-container
   [hasBackdrop]="isMobile()"
-  class="h-[calc(100dvh-4rem)] w-full bg-gray-100/40 overflow-hidden!"
+  class="h-[calc(100dvh-4rem)] w-full bg-container-low overflow-hidden!"
 >
   <!-- Left Sidebar Drawer -->
   <mat-drawer
@@ -107,7 +110,7 @@
   <!-- Center Content Area -->
   <mat-drawer-content
     [class.z-20!]="!isMobile()"
-    class="h-full flex! flex-col! bg-gray-100/40 relative overflow-hidden!"
+    class="h-full flex! flex-col! bg-container-low relative overflow-hidden!"
   >
     <!-- Main Dynamic Views Section -->
     <div class="flex-1 min-h-0 w-full overflow-y-auto p-4 md:p-6">

@@ -8,7 +8,7 @@
   >
     <div>
       <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
-        <span class="material-icons text-gray-700 font-bold"
+        <span class="material-icons text-primary font-bold"
           >directions_car</span
         >
         All Vehicles
@@ -22,7 +22,7 @@
     <component-button
       variant="submit"
       size="sm"
-      class="sm:w-auto"
+      class="sm:w-auto btn-purple-theme"
       (click)="openAddModal()"
     >
       <span class="flex items-center gap-2 text-sm font-semibold">
@@ -91,8 +91,12 @@
         class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400"
       >
         <option value="">{{ 'All Fuel Statuses' | translate }}</option>
-        <option value="true">{{ 'Refueled / เติมน้ำมันแล้ว' | translate }}</option>
-        <option value="false">{{ 'Needs Refuel / ต้องเติมน้ำมัน' | translate }}</option>
+        <option value="true">
+          {{ 'Refueled / เติมน้ำมันแล้ว' | translate }}
+        </option>
+        <option value="false">
+          {{ 'Needs Refuel / ต้องเติมน้ำมัน' | translate }}
+        </option>
       </select>
     </div>
   </div>
@@ -110,7 +114,7 @@
       <div>
         <!-- Vehicle Image Section -->
         <div
-          class="relative w-full h-44 rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-100"
+          class="relative w-full h-44 rounded-xl overflow-hidden bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-100"
         >
           @if (getVehicleImgUrl(vehicle); as url) {
           <img
@@ -160,7 +164,8 @@
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-gray-400">people</span>
               <span
-                >{{ vehicle.capacity }} {{ 'seats / ที่นั่ง' | translate }}</span
+                >{{ vehicle.capacity }} {{ 'seats / ที่นั่ง' | translate
+                }}</span
               >
             </div>
             <div class="flex items-center gap-1.5">
@@ -168,7 +173,8 @@
                 >local_gas_station</span
               >
               <span
-                >{{ vehicle.reFuel ? ('Refueled / เติมแล้ว' | translate) : ('Needs Refuel / ต้องเติม' | translate) }}</span
+                >{{ vehicle.reFuel ? ('Refueled / เติมแล้ว' | translate) :
+                ('Needs Refuel / ต้องเติม' | translate) }}</span
               >
             </div>
             <div class="flex items-center gap-1.5">
@@ -179,7 +185,10 @@
               <span class="material-icons text-base text-gray-400"
                 >calendar_today</span
               >
-              <span>{{ 'Booked' | translate }} {{ vehicle.totalBookBy || 0 }} {{ 'times' | translate }}</span>
+              <span
+                >{{ 'Booked' | translate }} {{ vehicle.totalBookBy || 0 }} {{
+                'times' | translate }}</span
+              >
             </div>
           </div>
         </div>

@@ -7,10 +7,12 @@
   >
     <div>
       <h3 class="text-xl font-bold text-gray-800">
-        {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate }}
+        {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate
+        }}
       </h3>
       <p class="text-xs text-gray-500 mt-1">
-        {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the details to register a new vehicle.') | translate }}
+        {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the
+        details to register a new vehicle.') | translate }}
       </p>
     </div>
     <component-button
@@ -52,10 +54,12 @@
         </component-button>
         <div>
           <h1 class="text-xl font-bold text-gray-800">
-            {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate }}
+            {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') |
+            translate }}
           </h1>
           <p class="text-xs text-gray-500 mt-1">
-            {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the details to register a new vehicle.') | translate }}
+            {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in
+            the details to register a new vehicle.') | translate }}
           </p>
         </div>
       </div>
@@ -118,13 +122,15 @@
             class="text-gray-500 font-medium"
             [ngClass]="isDialog ? 'text-xs' : 'text-sm'"
           >
-            {{ 'Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ' | translate }}
+            {{ 'Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ' |
+            translate }}
           </div>
           <div
             class="text-gray-400"
             [ngClass]="isDialog ? 'text-[10px]' : 'text-xs'"
           >
-            {{ 'Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG ขนาดไม่เกิน 5MB' | translate }}
+            {{ 'Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG
+            ขนาดไม่เกิน 5MB' | translate }}
           </div>
         </div>
         }
@@ -134,7 +140,8 @@
     <!-- Vehicle Name Input -->
     <div class="space-y-2">
       <label for="vehicle_name" class="text-sm font-bold text-gray-700 block"
-        >{{ 'Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)' | translate }}</label
+        >{{ 'Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)' | translate
+        }}</label
       >
       <input
         type="text"
@@ -143,7 +150,7 @@
         [(ngModel)]="vehicle_name"
         required
         [placeholder]="'e.g. Toyota Hilux Revo (AB-1234)' | translate"
-        class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors"
+        class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
       />
     </div>
 
@@ -160,7 +167,7 @@
           id="type"
           name="type"
           [(ngModel)]="type"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors"
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
         >
           <option value="Sedan">{{ 'Sedan / เก๋ง' | translate }}</option>
           <option value="Pickup">{{ 'Pickup / กระบะ' | translate }}</option>
@@ -183,7 +190,7 @@
           required
           min="1"
           [placeholder]="'e.g. 4' | translate"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors"
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
         />
       </div>
     </div>
@@ -205,7 +212,7 @@
           required
           min="0"
           [placeholder]="'e.g. 1500' | translate"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors"
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
         />
       </div>
 
@@ -219,10 +226,14 @@
           id="status"
           name="status"
           [(ngModel)]="status"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-gray-400 transition-colors"
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
         >
-          <option value="available">{{ 'Available / ว่าง' | translate }}</option>
-          <option value="unavailable">{{ 'Unavailable / ไม่ว่าง' | translate }}</option>
+          <option value="available">
+            {{ 'Available / ว่าง' | translate }}
+          </option>
+          <option value="unavailable">
+            {{ 'Unavailable / ไม่ว่าง' | translate }}
+          </option>
         </select>
       </div>
       }
@@ -241,7 +252,8 @@
         for="re_fuel"
         class="text-sm font-bold text-gray-700 cursor-pointer select-none"
       >
-        {{ 'Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน' | translate }}
+        {{ 'Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน' |
+        translate }}
       </label>
     </div>
 
@@ -259,7 +271,9 @@
           [disabled]="isLoading()"
           class="w-full sm:w-auto"
         >
-          <span class="material-icons text-sm mr-1 leading-none">delete_outline</span>
+          <span class="material-icons text-sm mr-1 leading-none"
+            >delete_outline</span
+          >
           {{ 'Delete Vehicle' | translate }}
         </component-button>
         }
@@ -270,7 +284,7 @@
         <component-button
           type="button"
           (click)="closeForm()"
-          variant="cancel"
+          variant="danger-outline"
           size="md"
           class="w-full sm:w-auto"
         >

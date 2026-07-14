@@ -6,7 +6,8 @@
       {{ (title || 'Booking Summary') | translate }}
     </h1>
     <p class="text-sm text-gray-500 mt-1">
-      {{ (description || 'Please review your travel details before confirming the booking.') | translate }}
+      {{ (description || 'Please review your travel details before confirming
+      the booking.') | translate }}
     </p>
   </div>
   }
@@ -46,7 +47,7 @@
 
     <!-- Modal Footer -->
     <div
-      class="px-3 lg:px-6 pb-4 lg:pb-6 pt-4 lg:pt-4 bg-gray-50 border-t border-gray-100 flex flex-col gap-2 lg:gap-3 shrink-0"
+      class="px-3 lg:px-6 pb-4 lg:pb-6 pt-4 lg:pt-4 bg-container-low border-t border-container flex flex-col gap-2 lg:gap-3 shrink-0"
     >
       @if (showMileInput()) {
       <div
@@ -58,7 +59,7 @@
             [value]="mileDistanceValue()"
             (input)="mileDistanceValue.set($any($event.target).value)"
             [placeholder]="'Enter Return Odometer Mileage' | translate"
-            class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-white"
+            class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
           />
           <span
             class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400"
@@ -67,7 +68,7 @@
         </div>
         <div class="flex flex-row sm:justify-end gap-2.5 w-full sm:w-auto">
           <component-button
-            variant="cancel"
+            variant="danger-outline"
             size="sm"
             class="w-auto"
             (click)="cancelComplete()"

@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter, inject, ViewChild, TemplateRef, OnDestroy } from "@angular/core";
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  inject,
+  ViewChild,
+  TemplateRef,
+  OnDestroy,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { AllSharedUi } from "../../../../shared/shared";
@@ -13,7 +22,7 @@ import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
 })
 export class DirectoryMobileFiltersComponent implements OnDestroy {
   private readonly dialog = inject(Dialog);
-  @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
+  @ViewChild("dialogTemplate") dialogTemplate!: TemplateRef<any>;
   private dialogRef: DialogRef<any> | null = null;
 
   @Input() searchQuery = "";
@@ -32,14 +41,14 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
   readonly vehicleTypes = VEHICLE_TYPES;
 
   // Local drafts for buffering changes before Apply is clicked
-  localSearchQuery = '';
-  localSelectedType = '';
-  localSelectedStatus = '';
-  localSelectedReFuel = '';
+  localSearchQuery = "";
+  localSelectedType = "";
+  localSelectedStatus = "";
+  localSelectedReFuel = "";
 
   toggleLocalVehicleType(typeVal: string): void {
     if (this.localSelectedType === typeVal) {
-      this.localSelectedType = '';
+      this.localSelectedType = "";
     } else {
       this.localSelectedType = typeVal;
     }
@@ -56,7 +65,11 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
       width: "100vw",
       maxWidth: "100vw",
       maxHeight: "80dvh",
-      backdropClass: ["bg-gray-900/60", "backdrop-blur-sm", "animate-backdrop-fade"],
+      backdropClass: [
+        "bg-gray-900/60",
+        "backdrop-blur-sm",
+        "animate-backdrop-fade",
+      ],
       panelClass: [
         "w-full",
         "max-w-full",
@@ -89,10 +102,10 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
   }
 
   clearAllFilters(): void {
-    this.localSearchQuery = '';
-    this.localSelectedType = '';
-    this.localSelectedStatus = '';
-    this.localSelectedReFuel = '';
+    this.localSearchQuery = "";
+    this.localSelectedType = "";
+    this.localSelectedStatus = "";
+    this.localSelectedReFuel = "";
     this.resetFilters.emit();
     this.closeMobileFilters();
   }
@@ -101,4 +114,3 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
     this.closeMobileFilters();
   }
 }
-

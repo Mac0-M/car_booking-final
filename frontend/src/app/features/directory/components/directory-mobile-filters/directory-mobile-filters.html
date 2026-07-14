@@ -35,7 +35,7 @@
       <h3
         class="text-sm font-bold text-gray-900 flex items-center gap-1.5 font-sans"
       >
-        <span class="material-icons text-base text-gray-500">search</span>
+        <span class="material-icons text-base text-primary">search</span>
         <span>{{ 'Search & Filters / ค้นหาและกรอง' | translate }}</span>
       </h3>
       <component-button
@@ -107,9 +107,15 @@
           (ngModelChange)="localSelectedStatus = $event"
           class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
         >
-          <option value="">{{ 'All Status / สถานะทั้งหมด' | translate }}</option>
-          <option value="available">{{ 'Available / พร้อมใช้งาน' | translate }}</option>
-          <option value="unavailable">{{ 'Unavailable / ไม่พร้อมใช้งาน' | translate }}</option>
+          <option value="">
+            {{ 'All Status / สถานะทั้งหมด' | translate }}
+          </option>
+          <option value="available">
+            {{ 'Available / พร้อมใช้งาน' | translate }}
+          </option>
+          <option value="unavailable">
+            {{ 'Unavailable / ไม่พร้อมใช้งาน' | translate }}
+          </option>
         </select>
       </div>
 
@@ -124,9 +130,15 @@
           (ngModelChange)="localSelectedReFuel = $event"
           class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs bg-gray-50/50 focus:outline-none focus:border-gray-400 font-sans"
         >
-          <option value="">{{ 'All Fuel Statuses / สถานะน้ำมันทั้งหมด' | translate }}</option>
-          <option value="true">{{ 'Refueled / เติมน้ำมันแล้ว' | translate }}</option>
-          <option value="false">{{ 'Needs Refuel / ต้องเติมน้ำมัน' | translate }}</option>
+          <option value="">
+            {{ 'All Fuel Statuses / สถานะน้ำมันทั้งหมด' | translate }}
+          </option>
+          <option value="true">
+            {{ 'Refueled / เติมน้ำมันแล้ว' | translate }}
+          </option>
+          <option value="false">
+            {{ 'Needs Refuel / ต้องเติมน้ำมัน' | translate }}
+          </option>
         </select>
       </div>
     </div>
@@ -154,4 +166,3 @@
     </div>
   </div>
 </ng-template>
-
