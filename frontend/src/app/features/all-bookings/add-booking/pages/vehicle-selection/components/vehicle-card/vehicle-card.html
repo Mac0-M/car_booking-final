@@ -1,10 +1,10 @@
 <div class="relative">
   <!-- Color Overlay covering entire card -->
   @if (isDisabled && !readonly) {
-  <div [class]="'absolute inset-0 rounded-2xl z-10 ' + overlayClasses"></div>
+  <div [class]="'absolute inset-0 z-10 rounded-' + rounded + ' ' + overlayClasses"></div>
   }
 
-  <component-card variant="default" size="sm">
+  <component-card variant="default" size="sm" [rounded]="rounded">
     @if (type === 'mini') {
     <div class="flex items-center gap-3">
       <!-- Vehicle Image -->

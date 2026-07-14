@@ -10,9 +10,10 @@ import { NgClass } from "@angular/common";
 export class ComponentCard {
   @Input() variant: "default" | "flat" | "outline" = "default";
   @Input() size: "sm" | "base" | "lg" = "base";
+  @Input() rounded: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full" = "2xl";
 
   protected readonly baseClasses =
-    "block w-full rounded-2xl border border-solid transition-all duration-200";
+    "block w-full border border-solid transition-all duration-200";
 
   protected readonly variantClasses = {
     default: "bg-white border-gray-200 shadow-sm",

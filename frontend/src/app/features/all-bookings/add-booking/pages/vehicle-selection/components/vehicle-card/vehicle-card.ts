@@ -30,6 +30,7 @@ export class VehicleCardComponent {
   @Input() isAvailable = true;
   @Input() readonly = false;
   @Input() type: "full" | "mini" = "full";
+  @Input() rounded: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full" = "2xl";
   @Output() selectVehicle = new EventEmitter<Vehicle>();
 
   get vehicleImgUrl(): string {
