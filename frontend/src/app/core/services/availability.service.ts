@@ -17,16 +17,19 @@ export class AvailabilityService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
 
-  search(depart: string, returnTime: string): Observable<Vehicle[]> {
+  search(depart: string, returnTime: string, excludeBookingId?: number | string): Observable<Vehicle[]> {
     const departStr = depart.replace('T', ' ') + ':00';
     const returnStr = returnTime.replace('T', ' ') + ':00';
 
-    return this.http.get<any>(`${this.apiUrl}/vehicles/available`, {
-      params: {
-        depart: departStr,
-        return: returnStr
-      }
-    }).pipe(
+    const params: any = {
+      depart: departStr,
+      return: returnStr
+    };
+    if (excludeBookingId) {
+      params.excludeBookingId = String(excludeBookingId);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}/vehicles/available`, { params }).pipe(
       map(res => {
         const list = res.data || res || [];
         return list.map((vehicle: any) => ({

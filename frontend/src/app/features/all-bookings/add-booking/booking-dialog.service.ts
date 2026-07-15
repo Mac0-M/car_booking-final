@@ -1,6 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { Dialog } from "@angular/cdk/dialog";
 import { BookingDialogComponent } from "./booking-dialog";
+import { BookingEditDialogComponent } from "../components/booking-edit-dialog/booking-edit-dialog";
+import { Booking } from "../../../core/models/booking.model";
 
 @Injectable({
   providedIn: "root",
@@ -8,8 +10,9 @@ import { BookingDialogComponent } from "./booking-dialog";
 export class BookingDialogService {
   private readonly dialog = inject(Dialog);
 
-  open(): void {
-    this.dialog.open(BookingDialogComponent, {
+  open(bookingToEdit?: Booking): void {
+    const component = bookingToEdit ? BookingEditDialogComponent : BookingDialogComponent;
+    const config: any = {
       width: "672px",
       maxWidth: "95vw",
       maxHeight: "95vh",
@@ -26,6 +29,12 @@ export class BookingDialogService {
         "overflow-hidden",
         "animate-modal-zoom",
       ],
-    });
+    };
+
+    if (bookingToEdit) {
+      config.data = bookingToEdit;
+    }
+
+    this.dialog.open(component as any, config);
   }
 }

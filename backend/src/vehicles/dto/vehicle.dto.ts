@@ -91,6 +91,11 @@ export class VehicleFilterDto {
   @IsNotEmpty({ message: 'Return time is required.' })
   @IsString()
   return: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  excludeBookingId?: number;
 }
 
 export class VehicleListFilterDto {

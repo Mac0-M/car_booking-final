@@ -115,8 +115,8 @@ export class BookingConfirmComponent {
         this.isSubmitting.set(false);
         this.isConfirmed.set(true);
         const savedBooking = res.data || res;
-        this.bookingId.set(savedBooking.id);
-        this.confirmed.emit(savedBooking.id);
+        this.bookingId.set(savedBooking.book_id || savedBooking.id);
+        this.confirmed.emit(savedBooking.book_id || savedBooking.id);
       },
       error: (err: any) => {
         this.isSubmitting.set(false);

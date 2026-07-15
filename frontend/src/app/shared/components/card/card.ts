@@ -6,17 +6,28 @@ import { NgClass } from "@angular/common";
   standalone: true,
   imports: [NgClass],
   templateUrl: "./card.html",
+  host: {
+    class: "block w-full",
+  },
 })
 export class ComponentCard {
   @Input() variant: "default" | "flat" | "outline" = "default";
   @Input() size: "sm" | "base" | "lg" = "base";
-  @Input() rounded: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full" = "2xl";
+  @Input() rounded:
+    | "none"
+    | "sm"
+    | "md"
+    | "lg"
+    | "xl"
+    | "2xl"
+    | "3xl"
+    | "full" = "2xl";
 
   protected readonly baseClasses =
     "block w-full border border-solid transition-all duration-200";
 
   protected readonly variantClasses = {
-    default: "bg-white border-gray-200 shadow-sm",
+    default: "bg-white border-gray-200 shadow-sm shadow-gray-200/30",
     flat: "bg-container-low border-container",
     outline: "bg-transparent border-gray-300",
   };

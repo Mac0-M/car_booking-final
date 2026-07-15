@@ -14,7 +14,7 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../common/roles.decorator';
 import { CurrentUser } from '../common/current-user.decorator';
-import { CreateBookingDto, BookingFilterDto } from './dto/booking.dto';
+import { CreateBookingDto, BookingFilterDto, UpdateBookingDto } from './dto/booking.dto';
 
 @Controller('bookings')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -44,6 +44,16 @@ export class BookingController {
   @Post()
   async create(@CurrentUser() currentUser: any, @Body() dto: CreateBookingDto) {
     return this.bookingService.create(currentUser.user_id, dto);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @CurrentUser() currentUser: any,
+    @Body() dto: UpdateBookingDto,
+  ) {
+    const bookId = parseInt(id, 10);
+    return this.bookingService.update(bookId, currentUser, dto);
   }
 
   @Patch(':id/cancel')

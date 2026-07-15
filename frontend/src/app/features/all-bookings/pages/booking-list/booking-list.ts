@@ -609,6 +609,16 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  onEditBooking(booking: Booking | null): void {
+    if (!booking) return;
+    if (this.getBookingEffectiveStatus(booking) !== 'CONFIRMED') {
+      alert(this.langService.translate('Only upcoming and ongoing bookings can be edited.'));
+      return;
+    }
+    this.closeDetail();
+    this.bookingDialogService.open(booking);
+  }
+
   onDailyDrawerOpened(): void {
     setTimeout(() => {
       window.dispatchEvent(new Event("resize"));

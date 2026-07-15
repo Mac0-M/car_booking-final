@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Booking } from './booking.entity';
 import { Vehicle } from '../vehicles/vehicles.entity';
 import { User } from '../users/user.entity';
-import { CreateBookingDto, BookingFilterDto } from './dto/booking.dto';
+import { CreateBookingDto, BookingFilterDto, UpdateBookingDto } from './dto/booking.dto';
 
 @Injectable()
 export class BookingService {
@@ -209,6 +209,99 @@ export class BookingService {
       await this.vehicleRepo.increment({ vehicle_id: booking.vehicle_id }, 'total_mile', mileDistance);
     }
 
+    await this.bookingRepo.update(book_id, updateData);
+
+    return (await this.findById(book_id))!;
+  }
+
+  async update(book_id: number, currentUser: any, dto: UpdateBookingDto): Promise<Booking> {
+    const booking = await this.findById(book_id);
+    if (!booking) {
+      throw new NotFoundException('Booking not found.');
+    }
+
+    // 1. Authorization: Creator, Passenger, Admin, Super Admin
+    if (
+      currentUser.role !== 'Admin' &&
+      currentUser.role !== 'Super_Admin' &&
+      booking.booked_by !== currentUser.user_id &&
+      booking.booked_for !== currentUser.user_id
+    ) {
+      throw new ForbiddenException('You do not have permission to edit this booking.');
+    }
+
+    // 2. Status & Time restrictions: Only booked/upcoming/ongoing can be edited
+    const now = new Date();
+    const returnTime = new Date(booking.return.replace(' ', 'T'));
+    if (booking.status !== 'booked' || returnTime < now) {
+      throw new BadRequestException('Only upcoming and ongoing bookings can be edited.');
+    }
+
+    // 3. Vehicle existence and status checks (if vehicle is changed)
+    const targetVehicleId = dto.vehicle_id !== undefined ? dto.vehicle_id : booking.vehicle_id;
+    if (dto.vehicle_id !== undefined && dto.vehicle_id !== booking.vehicle_id) {
+      const vehicle = await this.vehicleRepo.findOne({ where: { vehicle_id: dto.vehicle_id } });
+      if (!vehicle) {
+        throw new NotFoundException('Requested vehicle not found.');
+      }
+      if (vehicle.status !== 'available') {
+        throw new BadRequestException('This vehicle is currently unavailable.');
+      }
+    }
+
+    // 4. Role restrictions validation
+    const targetBookedFor = dto.booked_for !== undefined ? dto.booked_for : booking.booked_for;
+    const targetBookedBy = dto.booked_by !== undefined ? dto.booked_by : booking.booked_by;
+
+    if (targetBookedFor) {
+      const bookedFor = await this.userRepo.findOne({ where: { user_id: targetBookedFor } });
+      // 1. Nobody can book for a Super Admin (except the Super Admin themselves)
+      if (bookedFor && bookedFor.role === 'Super_Admin' && targetBookedBy !== targetBookedFor) {
+        throw new BadRequestException('Cannot book vehicles for other Super Admins.');
+      }
+
+      // 2. Passenger (User) cannot book for Admin
+      const bookedBy = await this.userRepo.findOne({ where: { user_id: targetBookedBy } });
+      if (bookedBy && bookedBy.role === 'User' && targetBookedFor !== targetBookedBy) {
+        if (bookedFor && bookedFor.role === 'Admin') {
+          throw new BadRequestException('Passengers cannot book vehicles for Admins.');
+        }
+      }
+    }
+
+    // 5. Prevent Overlapping Bookings (Double Booking Validation)
+    const targetDepart = dto.depart !== undefined ? dto.depart : booking.depart;
+    const targetReturn = dto.return !== undefined ? dto.return : booking.return;
+
+    const overlapping = await this.bookingRepo.createQueryBuilder('b')
+      .where('b.vehicle_id = :vehicleId', { vehicleId: targetVehicleId })
+      .andWhere('b.status = :activeStatus', { activeStatus: 'booked' })
+      .andWhere('b.book_id != :bookId', { bookId: booking.book_id }) // EXCLUDE current booking
+      .andWhere('b.depart < :returnTime AND b.return > :depart', {
+        depart: targetDepart,
+        returnTime: targetReturn,
+      })
+      .getOne();
+
+    if (overlapping) {
+      throw new BadRequestException('This vehicle is already booked for the selected time range.');
+    }
+
+    // 6. Update user/vehicle counts if changed
+    if (dto.vehicle_id !== undefined && dto.vehicle_id !== booking.vehicle_id) {
+      await this.vehicleRepo.decrement({ vehicle_id: booking.vehicle_id }, 'total_bookby', 1);
+      await this.vehicleRepo.increment({ vehicle_id: dto.vehicle_id }, 'total_bookby', 1);
+    }
+    if (dto.booked_by !== undefined && dto.booked_by !== booking.booked_by) {
+      await this.userRepo.decrement({ user_id: booking.booked_by }, 'total_booked', 1);
+      await this.userRepo.increment({ user_id: dto.booked_by }, 'total_booked', 1);
+    }
+
+    // 7. Save updates
+    const updateData: any = {
+      ...dto,
+      last_update: new Date().toISOString().replace('T', ' ').substring(0, 19),
+    };
     await this.bookingRepo.update(book_id, updateData);
 
     return (await this.findById(book_id))!;

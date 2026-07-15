@@ -185,10 +185,11 @@ component-card.cursor-pointer:hover > div {
   @apply !border-gray-300 !shadow-md;
 }
 
+
 /* TUI Calendar: Styling for the +X exceed badge to prevent overlaps, positioned bottom-right */
 .toastui-calendar-grid-cell-more-events,
 .toastui-calendar-weekday-grid-more-events {
-  @apply !bg-blue-100 !text-blue-700 text-[13px] font-bold py-1 px-2.5 rounded-lg leading-none absolute bottom-1 right-1 m-0 h-auto w-auto inline-flex items-center justify-center !border !border-blue-300;
+  @apply !bg-blue-100 !text-blue-700 text-[13px] font-bold py-1 px-2.5 rounded-lg leading-none absolute bottom-1 right-1 !z-10 m-0 h-auto w-auto inline-flex items-center justify-center !border !border-blue-300;
 }
 
 /* Hide default TUI calendar see-more popup */

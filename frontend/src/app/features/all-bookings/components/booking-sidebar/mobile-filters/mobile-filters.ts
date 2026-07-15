@@ -237,6 +237,5 @@ export class MobileFilters implements OnDestroy {
     this.localSelectedVehiclePlates = [];
 
     this.resetFilters.emit();
-    this.closeMobileFilters();
   }
 }

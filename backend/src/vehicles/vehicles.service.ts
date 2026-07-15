@@ -41,25 +41,30 @@ export class VehiclesService {
   }
 
   async findAvailable(dto: VehicleFilterDto): Promise<Vehicle[]> {
-    const { depart, return: returnTime } = dto;
+    const { depart, return: returnTime, excludeBookingId } = dto;
 
     const qb = this.vehicleRepo.createQueryBuilder('v');
 
     return qb
       .where('v.status = :status', { status: 'available' })
       .andWhere((sub) => {
-        const subQuery = sub
+        let subQueryBuilder = sub
           .subQuery()
           .select('b.vehicle_id')
           .from(Booking, 'b')
           .where('b.status = :activeStatus')
-          .andWhere('b.depart < :returnTime AND b.return > :depart')
-          .getQuery();
-        return 'v.vehicle_id NOT IN ' + subQuery;
+          .andWhere('b.depart < :returnTime AND b.return > :depart');
+
+        if (excludeBookingId) {
+          subQueryBuilder = subQueryBuilder.andWhere('b.book_id != :excludeBookingId');
+        }
+
+        return 'v.vehicle_id NOT IN ' + subQueryBuilder.getQuery();
       })
       .setParameter('activeStatus', 'booked')
       .setParameter('depart', depart)
       .setParameter('returnTime', returnTime)
+      .setParameter('excludeBookingId', excludeBookingId)
       .getMany();
   }
 

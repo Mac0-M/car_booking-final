@@ -198,9 +198,9 @@
   <div class="flex flex-col p-3 space-y-6 flex-1">
     <!-- Close button / Header inside drawer -->
     <div
-      class="flex justify-end items-center border-b border-gray-100 pb-3 mb-1"
+      class="flex justify-between items-center border-b border-gray-100 pb-3 mb-1 w-full"
     >
-      <!-- Right: Profile Box and Close Button grouped -->
+      <!-- Left: Language Switcher and Profile Box -->
       <div class="flex items-center gap-1.5">
         <!-- Language Switcher (mobile drawer) -->
         <button
@@ -240,16 +240,17 @@
             </div>
           </div>
         </a>
-
-        <component-button
-          (click)="closeMobileMenu()"
-          variant="plain"
-          size="xs"
-          class="w-auto"
-        >
-          <span class="material-icons text-xl">close</span>
-        </component-button>
       </div>
+
+      <!-- Right: Close Button -->
+      <component-button
+        (click)="closeMobileMenu()"
+        variant="plain"
+        size="xs"
+        class="w-auto text-gray-400 hover:text-gray-650 -mr-3"
+      >
+        <span class="material-icons text-xl">close</span>
+      </component-button>
     </div>
 
     <!-- Navigation Links -->

@@ -271,11 +271,20 @@ export class LanguageService {
       th: "สลับไปยังจองปัจจุบัน",
       en: "Switch to Active Bookings",
     },
-    "Edit Vehicle Details": { th: "แก้ไขรายละเอียดรถยนต์", en: "Edit Vehicle Details" },
-    "Edit vehicle details in the system.": { th: "แก้ไขรายละเอียดรถยนต์ในระบบ", en: "Edit vehicle details in the system." },
-    "Fill in the details to register a new vehicle.": { th: "กรอกรายละเอียดเพื่อลงทะเบียนรถยนต์ใหม่", en: "Fill in the details to register a new vehicle." },
+    "Edit Vehicle Details": {
+      th: "แก้ไขรายละเอียดรถยนต์",
+      en: "Edit Vehicle Details",
+    },
+    "Edit vehicle details in the system.": {
+      th: "แก้ไขรายละเอียดรถยนต์ในระบบ",
+      en: "Edit vehicle details in the system.",
+    },
+    "Fill in the details to register a new vehicle.": {
+      th: "กรอกรายละเอียดเพื่อลงทะเบียนรถยนต์ใหม่",
+      en: "Fill in the details to register a new vehicle.",
+    },
     "Delete Vehicle": { th: "ลบรถยนต์", en: "Delete Vehicle" },
-    "Cancel": { th: "ยกเลิก", en: "Cancel" },
+    Cancel: { th: "ยกเลิก", en: "Cancel" },
     "Save Vehicle": { th: "บันทึกข้อมูลรถ", en: "Save Vehicle" },
     "Saving...": { th: "กำลังบันทึก...", en: "Saving..." },
     "Search & Filters / ค้นหาและกรอง": {
@@ -418,10 +427,11 @@ export class LanguageService {
       th: "ไม่มีรถยนต์ว่างในขณะนี้",
       en: "No Vehicles Available",
     },
-    "Sorry, no vehicles are available for your selected time slot. Please try a different date or time.": {
-      th: "ขออภัย ไม่มีรถยนต์ว่างในช่วงเวลาที่คุณเลือก กรุณาลองเปลี่ยนวันหรือเวลาอื่น",
-      en: "Sorry, no vehicles are available for your selected time slot. Please try a different date or time.",
-    },
+    "Sorry, no vehicles are available for your selected time slot. Please try a different date or time.":
+      {
+        th: "ขออภัย ไม่มีรถยนต์ว่างในช่วงเวลาที่คุณเลือก กรุณาลองเปลี่ยนวันหรือเวลาอื่น",
+        en: "Sorry, no vehicles are available for your selected time slot. Please try a different date or time.",
+      },
   };
 
   public setLanguage(lang: "th" | "en"): void {

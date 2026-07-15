@@ -14,6 +14,9 @@ import { LanguageService } from '../../../../core/services/language.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ...AllSharedUi],
   templateUrl: './vehicle-form.html',
+  host: {
+    class: 'block w-full h-full'
+  }
 })
 export class VehicleFormComponent implements OnInit {
   private readonly vehicleService = inject(VehicleService);

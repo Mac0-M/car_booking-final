@@ -32,7 +32,7 @@ export class ComponentButton {
     submit:
       "btn-purple-theme bg-primary text-white shadow-md shadow-primary/30 border border-transparent hover:bg-primary-hover",
     cancel:
-      "border border-primary bg-transparent text-primary hover:bg-primary-container hover:text-primary-hover hover:border-primary-hover",
+      "border border-primary bg-white text-primary hover:bg-primary-container hover:text-primary-hover hover:border-primary-hover",
     secondary:
       "border border-gray-200 bg-white text-gray-600 hover:bg-surface-dim hover:text-gray-800 hover:border-surface-dim",
     "danger-outline":
@@ -43,8 +43,10 @@ export class ComponentButton {
       "bg-green-500 text-white shadow-md shadow-green-500/20 hover:bg-green-650 border border-transparent",
     danger:
       "bg-red-500 text-white shadow-md shadow-red-500/20 hover:bg-red-650 border border-transparent",
-    plain: "border border-transparent bg-transparent text-gray-400 hover:text-gray-600",
-    "danger-text": "border border-transparent bg-transparent text-red-500 hover:bg-red-100",
+    plain:
+      "border border-transparent bg-transparent text-gray-400 hover:text-gray-600",
+    "danger-text":
+      "border border-transparent bg-transparent text-red-500 hover:bg-red-100",
   };
 
   protected readonly sizeClasses = {

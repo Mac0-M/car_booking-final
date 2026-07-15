@@ -38,6 +38,42 @@ export class CreateBookingDto {
   use_for?: string;
 }
 
+export class UpdateBookingDto {
+  @IsOptional()
+  @IsNumber({}, { message: 'Vehicle ID must be a number.' })
+  @Min(1)
+  @Type(() => Number)
+  vehicle_id?: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'Booker ID must be a number.' })
+  @Min(1)
+  @Type(() => Number)
+  booked_by?: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'Passenger ID must be a number.' })
+  @Min(1)
+  @Type(() => Number)
+  booked_for?: number;
+
+  @IsOptional()
+  @IsString()
+  depart?: string;
+
+  @IsOptional()
+  @IsString()
+  return?: string;
+
+  @IsOptional()
+  @IsString()
+  destination?: string;
+
+  @IsOptional()
+  @IsString()
+  use_for?: string;
+}
+
 export class BookingFilterDto {
   @IsOptional()
   @IsString()

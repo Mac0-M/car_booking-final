@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Vehicle } from "../../../../core/models/vehicle.model";
 import { AllSharedUi } from "../../../../shared/shared";
@@ -9,8 +9,23 @@ import { VehicleCardComponent } from "../../add-booking/pages/vehicle-selection/
   standalone: true,
   imports: [CommonModule, ...AllSharedUi, VehicleCardComponent],
   templateUrl: "./booking-details.html",
+  styles: [
+    `
+      ::ng-deep component-button.square-btn button {
+        padding: 0 !important;
+        min-width: 0 !important;
+        width: 3.75rem !important;
+        height: 3.75rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+    `,
+  ],
 })
 export class BookingDetailsComponent {
+  @Input() canEdit = false;
+  @Output() edit = new EventEmitter<void>();
   @Input() bookingDate = "";
   @Input() startTime = "";
   @Input() endTime = "";

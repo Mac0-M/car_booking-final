@@ -42,10 +42,11 @@
       [userName]="currentUser()?.name"
       [userPhone]="currentUser()?.phone"
       [vehicle]="store.selectedVehicle()"
+      [canEdit]="false"
     />
     <!-- Actions -->
     <div
-      [class]="isDialog ? 'flex flex-col sm:flex-row gap-3 pt-2 mt-auto' : 'flex flex-col sm:flex-row gap-3 pt-2'"
+      [class]="isDialog ? 'flex flex-col sm:flex-row gap-3 pb-4 mt-auto' : 'flex flex-col sm:flex-row gap-3'"
     >
       <component-button
         variant="cancel"
@@ -87,133 +88,125 @@
   } @else {
   <!-- Booking Confirmed Successfully -->
   <div class="space-y-6">
-    <component-card variant="default" size="lg">
-      <div class="flex flex-col items-center text-center py-6 space-y-5">
-        <!-- Success Icon -->
-        <div
-          class="flex items-center justify-center w-20 h-20 rounded-full bg-green-50 text-green-500 shadow-inner"
-        >
-          <span class="material-icons text-5xl">check_circle</span>
-        </div>
+    <div class="flex flex-col items-center text-center space-y-5 py-4">
+      <!-- Success Icon -->
+      <span class="material-icons text-green-500" style="font-size: 3rem"
+        >check_circle</span
+      >
 
-        <div class="space-y-2">
-          <h1 class="text-2xl md:text-3xl font-black text-gray-800">
-            {{ 'Booking Confirmed!' | translate }}
-          </h1>
-          <p class="text-sm md:text-base text-gray-500 max-w-md mx-auto">
-            {{ 'Your booking request has been processed and your vehicle is
-            reserved.' | translate }}
-          </p>
-        </div>
+      <div class="space-y-2">
+        <h1 class="text-2xl md:text-3xl font-black text-gray-800">
+          {{ 'Booking Confirmed!' | translate }}
+        </h1>
+      </div>
 
-        <!-- Booking Summary Card / Receipt -->
+      <!-- Booking Summary Card / Receipt -->
+      <div
+        class="w-full max-w-md bg-container-low rounded-2xl border border-container p-5 space-y-4 text-left shadow-sm overflow-hidden"
+      >
         <div
-          class="w-full max-w-md bg-container-low rounded-2xl border border-container p-5 space-y-4 text-left shadow-sm overflow-hidden"
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-3 gap-1"
         >
-          <div
-            class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-3 gap-1"
+          <span
+            class="text-sm text-gray-400 font-semibold uppercase tracking-wider"
+            >{{ 'Booking Number / เลขที่จอง' | translate }}</span
           >
-            <span
-              class="text-sm text-gray-400 font-semibold uppercase tracking-wider"
-              >{{ 'Booking Number / เลขที่จอง' | translate }}</span
+          <span class="text-base font-mono font-bold text-gray-800"
+            >{{ bookingId() }}</span
+          >
+        </div>
+
+        <!-- Details Grid -->
+        <div class="space-y-3 text-sm">
+          @if (store.selectedVehicle(); as vehicle) {
+          <div class="space-y-0.5">
+            <span class="text-gray-400 text-xs block"
+              >{{ 'Vehicle / ยานพาหนะ' | translate }}</span
             >
-            <span class="text-base font-mono font-bold text-gray-800"
-              >{{ bookingId() }}</span
+            <span class="font-bold text-gray-800 break-words">
+              {{ vehicle.model }} ({{ vehicle.plateNumber }})
+            </span>
+          </div>
+          }
+          <div class="space-y-0.5">
+            <span class="text-gray-400 text-xs block"
+              >{{ 'Destination / จุดหมาย' | translate }}</span
+            >
+            <span class="font-semibold text-gray-800 break-words"
+              >{{ store.destination() }}</span
             >
           </div>
-
-          <!-- Details Grid -->
-          <div class="space-y-3 text-sm">
-            @if (store.selectedVehicle(); as vehicle) {
-            <div class="space-y-0.5">
-              <span class="text-gray-400 text-xs block"
-                >{{ 'Vehicle / ยานพาหนะ' | translate }}</span
-              >
-              <span class="font-bold text-gray-800 break-words">
-                {{ vehicle.model }} ({{ vehicle.plateNumber }})
-              </span>
-            </div>
-            }
-            <div class="space-y-0.5">
-              <span class="text-gray-400 text-xs block"
-                >{{ 'Destination / จุดหมาย' | translate }}</span
-              >
-              <span class="font-semibold text-gray-800 break-words"
-                >{{ store.destination() }}</span
-              >
-            </div>
-            <div class="space-y-0.5">
-              <span class="text-gray-400 text-xs block"
-                >{{ 'Travel Date / วันเดินทาง' | translate }}</span
-              >
-              <span class="font-semibold text-gray-800">
-                {{ store.bookingDate() | appDate }}
-              </span>
-            </div>
-            <div class="space-y-0.5">
-              <span class="text-gray-400 text-xs block"
-                >{{ 'Travel Time / เวลา' | translate }}</span
-              >
-              <span class="font-semibold text-gray-800">
-                {{ store.startTime() | appTime }} - {{ store.endTime() | appTime
-                }} @if (totalDuration()) {
-                <span class="text-xs text-gray-500 font-normal ml-1"
-                  >({{ totalDuration() }})</span
-                >
-                }
-              </span>
-            </div>
-            <div class="space-y-0.5">
-              <span class="text-gray-400 text-xs block"
-                >{{ 'User / ผู้ใช้' | translate }}</span
-              >
-              <span class="font-semibold text-gray-800 break-words"
-                >{{ currentUser()?.name }}</span
-              >
-            </div>
-            <div class="space-y-0.5">
-              <span class="text-gray-400 text-xs block"
-                >{{ 'Contact / เบอร์ติดต่อ' | translate }}</span
-              >
-              <span class="font-semibold text-gray-800"
-                >{{ currentUser()?.phone }}</span
-              >
-            </div>
+          <div class="space-y-0.5">
+            <span class="text-gray-400 text-xs block"
+              >{{ 'Travel Date / วันเดินทาง' | translate }}</span
+            >
+            <span class="font-semibold text-gray-800">
+              {{ store.bookingDate() | appDate }}
+            </span>
           </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="w-full max-w-md pt-4 flex flex-col sm:flex-row gap-3">
-          <component-button
-            variant="cancel"
-            size="lg"
-            class="sm:flex-1"
-            (click)="onViewBookingHistory()"
-          >
-            <span
-              class="flex items-center justify-center gap-2 text-base font-semibold py-1"
+          <div class="space-y-0.5">
+            <span class="text-gray-400 text-xs block"
+              >{{ 'Travel Time / เวลา' | translate }}</span
             >
-              <span class="material-icons text-lg">history</span>
-              {{ 'View Booking History' | translate }}
+            <span class="font-semibold text-gray-800">
+              {{ store.startTime() | appTime }} - {{ store.endTime() | appTime
+              }} @if (totalDuration()) {
+              <span class="text-xs text-gray-500 font-normal ml-1"
+                >({{ totalDuration() }})</span
+              >
+              }
             </span>
-          </component-button>
-
-          <component-button
-            variant="submit"
-            size="lg"
-            class="sm:flex-1"
-            (click)="onBackToForm()"
-          >
-            <span
-              class="flex items-center justify-center gap-2 text-base font-semibold py-1"
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-gray-400 text-xs block"
+              >{{ 'User / ผู้ใช้' | translate }}</span
             >
-              <span class="material-icons text-lg">add</span>
-              {{ 'Book Another Vehicle' | translate }}
-            </span>
-          </component-button>
+            <span class="font-semibold text-gray-800 break-words"
+              >{{ currentUser()?.name }}</span
+            >
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-gray-400 text-xs block"
+              >{{ 'Contact / เบอร์ติดต่อ' | translate }}</span
+            >
+            <span class="font-semibold text-gray-800"
+              >{{ currentUser()?.phone }}</span
+            >
+          </div>
         </div>
       </div>
-    </component-card>
+
+      <!-- Actions -->
+      <div class="w-full max-w-md pt-4 flex flex-col sm:flex-row gap-3">
+        <component-button
+          variant="cancel"
+          size="lg"
+          class="sm:flex-1"
+          (click)="onViewBookingHistory()"
+        >
+          <span
+            class="flex items-center justify-center gap-2 text-base font-semibold py-1"
+          >
+            <span class="material-icons text-lg">history</span>
+            {{ 'View Booking History' | translate }}
+          </span>
+        </component-button>
+
+        <component-button
+          variant="submit"
+          size="lg"
+          class="sm:flex-1"
+          (click)="onBackToForm()"
+        >
+          <span
+            class="flex items-center justify-center gap-2 text-base font-semibold py-1"
+          >
+            <span class="material-icons text-lg">add</span>
+            {{ 'Book Another Vehicle' | translate }}
+          </span>
+        </component-button>
+      </div>
+    </div>
   </div>
   } }
 </div>

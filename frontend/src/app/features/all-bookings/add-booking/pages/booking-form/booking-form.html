@@ -1,5 +1,5 @@
 <div
-  [class]="isDialog ? 'flex flex-col flex-1 h-full' : 'booking-form-page max-w-lg mx-auto p-6 space-y-6'"
+  [class]="isDialog ? 'flex flex-col flex-1' : 'booking-form-page max-w-lg mx-auto p-6 space-y-6'"
 >
   <!-- Stepper Indicator -->
   @if (!isDialog) {
@@ -8,131 +8,125 @@
 
   <form
     (ngSubmit)="onSubmit()"
-    [class]="isDialog ? 'flex flex-col flex-1 justify-between h-full' : 'space-y-3 sm:space-y-6'"
+    [class]="isDialog ? 'flex flex-col flex-1 justify-between' : 'space-y-3 sm:space-y-6'"
   >
     <!-- Main Card containing Date, Time and Destination Selection -->
     <component-card variant="default" [size]="isDialog ? 'sm' : 'base'">
       <div [class]="isDialog ? 'space-y-3' : 'space-y-5'">
-        <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-          <span class="material-icons text-gray-800">directions_car</span>
-          {{ 'Car Booking Details' | translate }}
-        </h2>
-
         <!-- DateTime Picker Section -->
-        <div class="grid grid-cols-1 gap-4">
-          <!-- Start Datetime -->
-          <div class="space-y-2">
-            <label
-              for="depart"
-              class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >{{ 'Departure Date & Time / ออกเดินทาง' | translate }}</label
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 sm:gap-y-1.5 sm:items-end"
+        >
+          <!-- Departure Label -->
+          <label
+            for="depart"
+            class="text-xs font-bold text-gray-500 uppercase tracking-wider block order-1 sm:order-1"
+            >{{ 'Departure Date & Time / ออกเดินทาง' | translate }}</label
+          >
+          <!-- Return Label -->
+          <label
+            for="returnTime"
+            class="text-xs font-bold text-gray-500 uppercase tracking-wider block order-3 sm:order-2"
+            >{{ 'Return Date & Time /เดินทางกลับ' | translate }}</label
+          >
+
+          <!-- Departure Input -->
+          <div class="relative w-full order-2 sm:order-3">
+            <span
+              class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
+              >event</span
             >
-            <div class="relative">
-              <span
-                class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
-                >event</span
-              >
-              <input
-                type="datetime-local"
-                id="depart"
-                name="depart"
-                [(ngModel)]="depart"
-                required
-                class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
-              />
-            </div>
+            <input
+              type="datetime-local"
+              id="depart"
+              name="depart"
+              [(ngModel)]="depart"
+              required
+              class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
+            />
           </div>
 
-          <!-- End Datetime -->
-          <div class="space-y-2">
-            <label
-              for="returnTime"
-              class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >{{ 'Return Date & Time /เดินทางกลับ' | translate }}</label
+          <!-- Return Input -->
+          <div class="relative w-full order-4 sm:order-4">
+            <span
+              class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
+              >event</span
             >
-            <div class="relative">
-              <span
-                class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
-                >event</span
-              >
-              <input
-                type="datetime-local"
-                id="returnTime"
-                name="returnTime"
-                [(ngModel)]="returnTime"
-                required
-                class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
-              />
-            </div>
+            <input
+              type="datetime-local"
+              id="returnTime"
+              name="returnTime"
+              [(ngModel)]="returnTime"
+              required
+              class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
+            />
           </div>
         </div>
 
-        <div class="flex flex-col gap-4 w-full">
-          <!-- Destination (Optional) -->
-          <div class="space-y-2">
-            <label
-              for="destination"
-              class="text-xs font-bold text-gray-500 uppercase tracking-wider block font-sans"
-              >{{ 'Destination / จุดหมาย' | translate }}</label
-            >
-            <component-input-ui
-              type="textarea"
-              icon="place"
-              [placeholder]="'e.g. branch office...' | translate"
-              [(ngModel)]="destination"
-              name="destination"
-            ></component-input-ui>
-          </div>
+        <!-- Destination (Optional) -->
+        <div class="space-y-2">
+          <label
+            for="destination"
+            class="text-xs font-bold text-gray-500 uppercase tracking-wider block font-sans"
+            >{{ 'Destination / จุดหมาย' | translate }}</label
+          >
+          <component-input-ui
+            type="textarea"
+            icon="place"
+            [placeholder]="'e.g. branch office...' | translate"
+            [(ngModel)]="destination"
+            name="destination"
+          ></component-input-ui>
+        </div>
 
-          <!-- Purpose of Use (Optional) -->
-          <div class="space-y-2">
-            <label
-              for="purpose"
-              class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >{{ 'Purpose of Use / วัตถุประสงค์' | translate }}</label
-            >
-            <component-input-ui
-              type="textarea"
-              icon="assignment"
-              [placeholder]="'e.g. client meeting...' | translate"
-              [(ngModel)]="purpose"
-              name="purpose"
-            ></component-input-ui>
-          </div>
+        <!-- Purpose of Use (Optional) -->
+        <div class="space-y-2">
+          <label
+            for="purpose"
+            class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
+            >{{ 'Purpose of Use / วัตถุประสงค์' | translate }}</label
+          >
+          <component-input-ui
+            type="textarea"
+            icon="assignment"
+            [placeholder]="'e.g. client meeting...' | translate"
+            [(ngModel)]="purpose"
+            name="purpose"
+          ></component-input-ui>
+        </div>
 
-          <!-- User Selector (person who will use the car) -->
-          <div class="space-y-2">
-            <label
-              for="booked_for"
-              class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
-              >{{ 'Book for / จองให้' | translate }}</label
+        <!-- User Selector (person who will use the car) -->
+        <div class="space-y-2">
+          <label
+            for="booked_for"
+            class="text-xs font-bold text-gray-500 uppercase tracking-wider block"
+            >{{ 'Book for / จองให้' | translate }}</label
+          >
+          <div class="relative">
+            <span
+              class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
+              >person</span
             >
-            <div class="relative">
-              <span
-                class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
-                >person</span
-              >
-              <select
-                id="booked_for"
-                name="booked_for"
-                [(ngModel)]="booked_for"
-                required
-                class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
-              >
-                @for (u of filteredUsersList(); track u.userId) {
-                <option [value]="u.userId">
-                  {{ u.userName }} ({{ u.email }})
-                </option>
-                }
-              </select>
-            </div>
+            <select
+              id="booked_for"
+              name="booked_for"
+              [(ngModel)]="booked_for"
+              required
+              class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
+            >
+              @for (u of filteredUsersList(); track u.userId) {
+              <option [value]="u.userId">
+                {{ u.userName }} ({{ u.email }})
+              </option>
+              }
+            </select>
           </div>
         </div>
       </div>
     </component-card>
 
     <!-- Navigation / Submission Actions -->
-    <div [class]="isDialog ? 'pt-1 mt-auto' : 'pt-1'">
+    <div [class]="isDialog ? 'pt-6 pb-4 mt-auto' : 'pt-6'">
       <component-button
         type="submit"
         variant="submit"

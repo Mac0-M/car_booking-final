@@ -1,130 +1,149 @@
 <div class="pb-6">
   @if (vehicle) {
-  <app-vehicle-card [vehicle]="vehicle" [readonly]="true" type="mini" rounded="xl" />
+  <app-vehicle-card
+    [vehicle]="vehicle"
+    [readonly]="true"
+    type="mini"
+    rounded="xl"
+  />
   }
 </div>
 
 <!-- Trip Details Card -->
-<component-card variant="default" rounded="xl">
-  <div class="space-y-2 lg:space-y-5">
-    <div class="flex flex-col gap-4 w-full">
-      <!-- Date/Time Depart -->
-      <div class="flex items-start gap-2.5 sm:gap-3">
-        <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
-          >calendar_today</span
-        >
-        <div>
-          <div
-            class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+<div class="relative">
+  <component-card variant="default" rounded="xl">
+    <div class="space-y-2 lg:space-y-5">
+      <div class="flex flex-col gap-4 w-full">
+        <!-- Date/Time Depart -->
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >calendar_today</span
           >
-            {{ 'Departure-Return Date/Time / ออกเดินทาง' | translate }}
-          </div>
-          <div
-            class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans"
-          >
-            <div>
-              {{ depart ? (depart | appDate) + ' ' + (depart | appTime) :
-              (bookingDate | appDate) }}
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Departure-Return Date/Time / ออกเดินทาง' | translate }}
             </div>
-            <span
-              class="material-icons text-gray-400 text-sm sm:text-base rotate-90 sm:rotate-0 my-0.5 sm:my-0 self-start sm:self-auto"
+            <div
+              class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans"
             >
-              arrow_forward</span
-            >
-            <div>
-              {{ returnTime ? (returnTime | appDate) + ' ' + (returnTime |
-              appTime) : (endTime | appTime) }} @if (totalDuration) {
-              <span class="text-xs text-gray-500 font-normal ml-1"
-                >({{ totalDuration }})</span
+              <div>
+                {{ depart ? (depart | appDate) + ' ' + (depart | appTime) :
+                (bookingDate | appDate) }}
+              </div>
+              <span
+                class="material-icons text-gray-400 text-sm sm:text-base rotate-90 sm:rotate-0 my-0.5 sm:my-0 self-start sm:self-auto"
               >
+                arrow_forward</span
+              >
+              <div>
+                {{ returnTime ? (returnTime | appDate) + ' ' + (returnTime |
+                appTime) : (endTime | appTime) }} @if (totalDuration) {
+                <span class="text-xs text-gray-500 font-normal ml-1"
+                  >({{ totalDuration }})</span
+                >
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Destination -->
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >location_on</span
+          >
+          <div class="min-w-0 flex-1">
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Destination / จุดหมาย' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+            >
+              {{ destination || '-' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Purpose -->
+
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >assignment</span
+          >
+          <div class="min-w-0 flex-1">
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Purpose of Use / วัตถุประสงค์' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+            >
+              {{ purpose || '-' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Booker & Contact -->
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+            >person</span
+          >
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Booker / ผู้จอง' | translate }}
+            </div>
+            <div
+              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+            >
+              {{ bookedByUser?.user_name || userName }} @if (bookedByUser?.phone
+              || userPhone) {
+              <span> ({{ bookedByUser?.phone || userPhone }}) </span>
               }
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Destination -->
-      <div class="flex items-start gap-2.5 sm:gap-3">
-        <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
-          >location_on</span
-        >
-        <div class="min-w-0 flex-1">
-          <div
-            class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+        <!-- Proxy Booker User (if any) -->
+        @if (bookedForUser && bookedForUser.user_id !== bookedByUser?.user_id) {
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <span
+            class="material-icons text-indigo-500 mt-0.5 text-base sm:text-lg"
+            >badge</span
           >
-            {{ 'Destination / จุดหมาย' | translate }}
-          </div>
-          <div
-            class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
-          >
-            {{ destination || '-' }}
+          <div>
+            <div
+              class="text-[10px] sm:text-xs text-indigo-400 font-semibold uppercase tracking-wider"
+            >
+              {{ 'Passenger / ผู้โดยสาร' | translate }}
+            </div>
+            <div class="text-sm sm:text-base font-bold text-indigo-900 mt-0.5">
+              {{ bookedForUser.user_name }}
+            </div>
+            <div class="text-[9px] sm:text-[10px] text-indigo-500 font-mono">
+              Tel: {{ bookedForUser.phone || 'N/A' }}
+            </div>
           </div>
         </div>
+        }
       </div>
-
-      <!-- Purpose -->
-
-      <div class="flex items-start gap-2.5 sm:gap-3">
-        <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
-          >assignment</span
-        >
-        <div class="min-w-0 flex-1">
-          <div
-            class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
-          >
-            {{ 'Purpose of Use / วัตถุประสงค์' | translate }}
-          </div>
-          <div
-            class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
-          >
-            {{ purpose || '-' }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Booker & Contact -->
-      <div class="flex items-start gap-2.5 sm:gap-3">
-        <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
-          >person</span
-        >
-        <div>
-          <div
-            class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
-          >
-            {{ 'Booker / ผู้จอง' | translate }}
-          </div>
-          <div
-            class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
-          >
-            {{ bookedByUser?.user_name || userName }} @if (bookedByUser?.phone
-            || userPhone) {
-            <span> ({{ bookedByUser?.phone || userPhone }}) </span>
-            }
-          </div>
-        </div>
-      </div>
-
-      <!-- Proxy Booker User (if any) -->
-      @if (bookedForUser && bookedForUser.user_id !== bookedByUser?.user_id) {
-      <div class="flex items-start gap-2.5 sm:gap-3">
-        <span class="material-icons text-indigo-500 mt-0.5 text-base sm:text-lg"
-          >badge</span
-        >
-        <div>
-          <div
-            class="text-[10px] sm:text-xs text-indigo-400 font-semibold uppercase tracking-wider"
-          >
-            {{ 'Passenger / ผู้โดยสาร' | translate }}
-          </div>
-          <div class="text-sm sm:text-base font-bold text-indigo-900 mt-0.5">
-            {{ bookedForUser.user_name }}
-          </div>
-          <div class="text-[9px] sm:text-[10px] text-indigo-500 font-mono">
-            Tel: {{ bookedForUser.phone || 'N/A' }}
-          </div>
-        </div>
-      </div>
-      }
     </div>
-  </div>
-</component-card>
+  </component-card>
+  @if (canEdit) {
+  <component-button
+    variant="secondary"
+    size="xs"
+    class="square-btn absolute bottom-8 right-8 font-sans z-10"
+    style="width: 2.75rem; height: 2.75rem"
+    (click)="edit.emit()"
+  >
+    <span class="material-icons text-3xl">edit</span>
+  </component-button>
+  }
+</div>

@@ -165,4 +165,20 @@ export class BookingService {
       })
     );
   }
+
+  updateBooking(id: string | number, bookingData: any): Observable<any> {
+    const { purpose, ...rest } = bookingData;
+    const payload = {
+      ...rest,
+      use_for: purpose
+    };
+    return this.http.patch<any>(`${this.apiUrl}/bookings/${id}`, payload).pipe(
+      tap(res => {
+        const updated = res.data || res;
+        this.bookingsList.update(current =>
+          current.map(b => (b.id === String(id) ? mapBooking(updated) : b))
+        );
+      })
+    );
+  }
 }

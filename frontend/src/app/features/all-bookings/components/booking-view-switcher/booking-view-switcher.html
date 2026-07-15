@@ -2,11 +2,11 @@
 <!-- View Mode Toggle Button (Mobile only) -->
 <button
   (click)="toggle()"
-  class="flex items-center justify-center w-10 h-10 bg-primary-container hover:bg-primary-fixed-dim p-0.5 rounded-lg shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
+  class="flex items-center justify-center w-10 h-10 bg-primary-container hover:bg-primary-fixed-dim p-0.5 rounded-xl shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
   [title]="viewMode === 'calendar' ? ('Switch to Grid View' | translate) : ('Switch to Calendar View' | translate)"
 >
   <div
-    class="flex items-center justify-center w-full h-full bg-primary shadow-sm rounded-md text-white"
+    class="flex items-center justify-center w-full h-full bg-primary shadow-sm rounded-lg text-white"
   >
     @if (viewMode === 'calendar') {
     <span class="material-icons text-base animate-fade-zoom-in"
@@ -22,11 +22,11 @@
 } @else {
 <!-- View Mode Switcher (Desktop only) -->
 <div
-  class="relative grid grid-cols-3 w-72 bg-primary-container p-0.5 rounded-lg shrink-0 select-none"
+  class="relative grid grid-cols-3 w-72 bg-primary-container p-0.5 rounded-xl shrink-0 select-none"
 >
   <!-- Sliding Background Indicator -->
   <div
-    class="absolute top-0.5 bottom-0.5 left-0.5 bg-primary rounded-md transition-transform duration-200 ease-out"
+    class="absolute top-0.5 bottom-0.5 left-0.5 bg-primary rounded-lg transition-transform duration-200 ease-out"
     style="width: calc(33.33% - 2px)"
     [style.transform]="
       viewMode === 'calendar' ? 'translateX(0)' : (viewMode === 'grid' ? 'translateX(calc(100% + 2px))' : 'translateX(calc(200% + 4px))')
@@ -37,7 +37,7 @@
     (click)="setViewMode('calendar')"
     [class.text-white]="viewMode === 'calendar'"
     [class.text-primary]="viewMode !== 'calendar'"
-    class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
+    class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-sm sm:text-base">calendar_today</span>
     <span>{{ 'Calendar' | translate }}</span>
@@ -47,7 +47,7 @@
     (click)="setViewMode('grid')"
     [class.text-white]="viewMode === 'grid'"
     [class.text-primary]="viewMode !== 'grid'"
-    class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
+    class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-sm sm:text-base">grid_view</span>
     <span>{{ 'Grid' | translate }}</span>
@@ -57,7 +57,7 @@
     (click)="setViewMode('list')"
     [class.text-white]="viewMode === 'list'"
     [class.text-primary]="viewMode !== 'list'"
-    class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
+    class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-base">format_list_bulleted</span>
     <span>{{ 'List' | translate }}</span>

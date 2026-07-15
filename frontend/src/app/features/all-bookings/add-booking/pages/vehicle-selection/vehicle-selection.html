@@ -1,50 +1,58 @@
-<div [class]="isDialog ? 'flex flex-col gap-3' : 'max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6'">
-
+<div
+  [class]="isDialog ? 'flex flex-col gap-3' : 'max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6'"
+>
   <!-- Stepper Indicator -->
   @if (!isDialog) {
   <component-process [currentStep]="2" size="base"></component-process>
 
   <h1 class="text-2xl font-bold text-gray-800">Select a Vehicle</h1>
-  <p class="text-sm text-gray-500 -mt-4">Choose an available vehicle for your trip.</p>
+  <p class="text-sm text-gray-500 -mt-4">
+    Choose an available vehicle for your trip.
+  </p>
   }
 
   <!-- Loading -->
   @if (isLoading()) {
-    <component-loading message="Searching for available vehicles..." size="base" />
+  <component-loading
+    message="Searching for available vehicles..."
+    size="base"
+  />
   }
 
   <!-- Vehicle Cards -->
   @if (!isLoading() && vehicles().length > 0) {
-    <div class="flex flex-col gap-3">
-      @for (vehicle of vehicles(); track vehicle.id) {
-        <app-vehicle-card
-          [vehicle]="vehicle"
-          [isAvailable]="vehicle.status === 'available'"
-          (selectVehicle)="onSelectVehicle($event)" />
-      }
-    </div>
+  <div class="flex flex-col gap-3">
+    @for (vehicle of vehicles(); track vehicle.id) {
+    <app-vehicle-card
+      [vehicle]="vehicle"
+      [isAvailable]="vehicle.status === 'available'"
+      (selectVehicle)="onSelectVehicle($event)"
+    />
+    }
+  </div>
   }
 
   <!-- No Vehicles Available -->
   @if (!isLoading() && vehicles().length === 0) {
-    <app-no-vehicle-available (goBack)="onGoBack()" />
+  <app-no-vehicle-available (goBack)="onGoBack()" />
   }
 
   <!-- Back Button (shown in dialog mode or always at the bottom) -->
   @if (isDialog && vehicles().length > 0) {
-    <div class="pt-1 flex justify-start">
-      <component-button
-        (click)="onGoBack()"
-        variant="cancel"
-        size="sm"
-        class="w-auto"
-      >
-        <span class="flex items-center gap-1.5 py-0.5 font-sans">
-          <span class="material-icons text-sm">arrow_back</span>
-          {{ 'Back' | translate }}
-        </span>
-      </component-button>
-    </div>
+  <div
+    [class]="isDialog ? 'pt-2 pb-4 mt-auto flex justify-start' : 'pt-2 flex justify-start'"
+  >
+    <component-button
+      (click)="onGoBack()"
+      variant="cancel"
+      size="sm"
+      class="w-auto"
+    >
+      <span class="flex items-center gap-1.5 py-0.5 font-sans">
+        <span class="material-icons text-sm">arrow_back</span>
+        {{ 'Back' | translate }}
+      </span>
+    </component-button>
+  </div>
   }
-
 </div>

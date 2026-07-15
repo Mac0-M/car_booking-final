@@ -44,6 +44,7 @@ export class BookingDetailModal implements OnChanges {
   @Input() userPhone = "";
   @Input() vehicle: Vehicle | null = null;
   @Input() status: "CONFIRMED" | "CANCELLED" | "COMPLETED" = "CONFIRMED";
+  @Input() canEdit: boolean | null = null;
 
   @Input() depart = "";
   @Input() returnTime = "";
@@ -60,6 +61,7 @@ export class BookingDetailModal implements OnChanges {
   @Output() close = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
   @Output() complete = new EventEmitter<number>();
+  @Output() edit = new EventEmitter<void>();
 
   readonly showMileInput = signal(false);
   readonly mileDistanceValue = signal<string>("");
@@ -79,6 +81,11 @@ export class BookingDetailModal implements OnChanges {
       this.bookedByUser?.user_id === currentUserId ||
       this.bookedForUser?.user_id === currentUserId
     );
+  }
+
+  get effectiveCanEdit(): boolean {
+    if (this.canEdit !== null) return this.canEdit;
+    return this.status === 'CONFIRMED' && this.canManage;
   }
 
   onCompleteClick(): void {

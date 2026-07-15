@@ -3,22 +3,16 @@
 <div class="relative w-full h-full md:max-h-[90vh] flex flex-col bg-white">
   <!-- Header -->
   <div
-    class="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
+    class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
   >
-    <div>
-      <h3 class="text-xl font-bold text-gray-800">
-        {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate
-        }}
-      </h3>
-      <p class="text-xs text-gray-500 mt-1">
-        {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in the
-        details to register a new vehicle.') | translate }}
-      </p>
-    </div>
+    <h3 class="text-xl font-bold text-gray-800">
+      {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate
+      }}
+    </h3>
     <component-button
       variant="plain"
       size="xs"
-      class="w-auto p-1 text-gray-400 hover:text-gray-600"
+      class="w-auto text-gray-400 hover:text-gray-600 -mr-3"
       (click)="closeForm()"
     >
       <span class="material-icons">close</span>
