@@ -113,15 +113,24 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   }
 
   prev(): void {
-    if (this.calendarInstance) this.calendarInstance.prev();
+    if (this.calendarInstance) {
+      this.calendarInstance.prev();
+      this.dateSelect.emit(parseTuiDate(this.calendarInstance.getDate()));
+    }
   }
 
   next(): void {
-    if (this.calendarInstance) this.calendarInstance.next();
+    if (this.calendarInstance) {
+      this.calendarInstance.next();
+      this.dateSelect.emit(parseTuiDate(this.calendarInstance.getDate()));
+    }
   }
 
   today(): void {
-    if (this.calendarInstance) this.calendarInstance.today();
+    if (this.calendarInstance) {
+      this.calendarInstance.today();
+      this.dateSelect.emit(parseTuiDate(this.calendarInstance.getDate()));
+    }
   }
 
   onMonthInputChange(event: Event): void {

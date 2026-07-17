@@ -7,7 +7,6 @@ import {
   HostListener,
   effect,
   OnDestroy,
-  AfterViewInit,
   ViewChild,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -50,7 +49,7 @@ import { BookingTabSwitcher } from "../../components/booking-tab-switcher/bookin
   ],
   templateUrl: "./booking-list.html",
 })
-export class BookingList implements OnInit, OnDestroy, AfterViewInit {
+export class BookingList implements OnInit, OnDestroy {
   private readonly bookingService = inject(BookingService);
   private readonly vehicleService = inject(VehicleService);
   private readonly userService = inject(UserService);
@@ -279,9 +278,7 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     this.loadBookings();
   }
 
-  ngAfterViewInit(): void {
-    // Triggers view child queries resolution update if needed
-  }
+
 
   ngOnDestroy(): void {
     this.headerService.reset();
@@ -341,12 +338,7 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     }, 50);
   }
 
-  /** Check if a booking is past its return time (auto-complete) */
-  private isAutoComplete(booking: Booking): boolean {
-    if (booking.status !== "CONFIRMED") return false;
-    const returnTime = new Date((booking.return || "").replace(" ", "T"));
-    return !isNaN(returnTime.getTime()) && returnTime < new Date();
-  }
+
 
   getBookingEffectiveStatus(
     b: Booking,
@@ -432,71 +424,63 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
       );
     }
 
-    // Filter by Date Range locally (overlapping check) for Grid and List views
-    if (this.viewMode() !== "calendar") {
-      if (this.startDate() && this.endDate()) {
-        const filterStart = new Date(
-          this.startDate().replace(" ", "T"),
-        ).getTime();
-        const filterEnd = new Date(this.endDate().replace(" ", "T")).getTime();
+    // Filter by Custom Date Range or Quick Month
+    const customStartStr = this.startDate();
+    const customEndStr = this.endDate();
+    const quickMonthVal = this.selectedDate();
+
+    if (customStartStr || customEndStr) {
+      const customStart = customStartStr ? new Date(customStartStr.replace(" ", "T")).getTime() : null;
+      const customEnd = customEndStr ? new Date(customEndStr.replace(" ", "T")).getTime() : null;
+
+      result = result.filter((b) => {
+        if (!b.depart || !b.return) return false;
+        const bookingStart = new Date(b.depart.replace(" ", "T")).getTime();
+        const bookingEnd = new Date(b.return.replace(" ", "T")).getTime();
+
+        // If both are provided, checking if they overlap with the range
+        if (customStart !== null && customEnd !== null) {
+          return bookingStart <= customEnd && bookingEnd >= customStart;
+        }
+
+        // If only start is provided, booking must not end before customStart
+        if (customStart !== null) {
+          return bookingEnd >= customStart;
+        }
+
+        // If only end is provided, booking must not start after customEnd
+        if (customEnd !== null) {
+          return bookingStart <= customEnd;
+        }
+
+        return true;
+      });
+
+    } else if (quickMonthVal) {
+      const date = new Date(quickMonthVal);
+      if (!isNaN(date.getTime())) {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const filterStart = new Date(year, month, 1, 0, 0, 0).getTime();
+        const filterEnd = new Date(year, month + 1, 0, 23, 59, 59, 999).getTime();
 
         result = result.filter((b) => {
           if (!b.depart || !b.return) return false;
           const bookingStart = new Date(b.depart.replace(" ", "T")).getTime();
           const bookingEnd = new Date(b.return.replace(" ", "T")).getTime();
-
           return bookingStart <= filterEnd && bookingEnd >= filterStart;
         });
-      } else if (this.selectedDate()) {
-        const date =
-          this.selectedDate() instanceof Date
-            ? (this.selectedDate() as Date)
-            : new Date(this.selectedDate() as string);
-        if (!isNaN(date.getTime())) {
-          const year = date.getFullYear();
-          const month = date.getMonth();
-          const pad = (n: number) => n.toString().padStart(2, "0");
-          const lastDay = new Date(year, month + 1, 0).getDate();
-
-          const filterStart = new Date(
-            `${year}-${pad(month + 1)}-01T00:00`,
-          ).getTime();
-          const filterEnd = new Date(
-            `${year}-${pad(month + 1)}-${pad(lastDay)}T23:59`,
-          ).getTime();
-
-          result = result.filter((b) => {
-            if (!b.depart || !b.return) return false;
-            const bookingStart = new Date(b.depart.replace(" ", "T")).getTime();
-            const bookingEnd = new Date(b.return.replace(" ", "T")).getTime();
-
-            return bookingStart <= filterEnd && bookingEnd >= filterStart;
-          });
-        }
       }
     }
 
+
+
     // Filter by activeTab:
-    if (this.activeTab() === "active") {
-      result = result.filter((b) => {
-        if (b.status === "CANCELLED" || b.status === "COMPLETED") return false;
-        // Auto-complete: hide CONFIRMED bookings past return time
-        const returnTime = new Date((b.return || "").replace(" ", "T"));
-        if (!isNaN(returnTime.getTime()) && returnTime < now) return false;
-        return true;
-      });
-    } else if (this.activeTab() === "history") {
-      result = result.filter((b) => {
-        // CANCELLED and COMPLETED bookings are always history
-        if (b.status === "CANCELLED" || b.status === "COMPLETED") return true;
-        // CONFIRMED bookings past return time are effectively COMPLETED, so they belong to history
-        if (b.status === "CONFIRMED") {
-          const returnTime = new Date((b.return || "").replace(" ", "T"));
-          return !isNaN(returnTime.getTime()) && returnTime < now;
-        }
-        return false;
-      });
-    }
+    const active = this.activeTab() === "active";
+    result = result.filter((b) => {
+      const effStatus = this.getBookingEffectiveStatus(b);
+      return active ? effStatus === "CONFIRMED" : (effStatus === "COMPLETED" || effStatus === "CANCELLED");
+    });
 
     // Filter by Search Query
     if (query) {
