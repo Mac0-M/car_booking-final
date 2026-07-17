@@ -1,4 +1,9 @@
-<div [ngClass]="[baseClasses, variantClasses[variant], sizeClasses[size]]">
+<div [ngClass]="[
+  baseClasses, 
+  variantClasses[variant], 
+  sizeClasses[size],
+  'rounded-' + round
+]">
   <ng-content>
     @switch (variant) {
       @case ("available") {

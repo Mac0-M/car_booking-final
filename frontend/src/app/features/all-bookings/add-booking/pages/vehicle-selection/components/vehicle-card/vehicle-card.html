@@ -1,10 +1,12 @@
 <div class="relative w-full">
   <!-- Color Overlay covering entire card -->
   @if (isDisabled && !readonly) {
-  <div [class]="'absolute inset-0 z-10 rounded-' + rounded + ' ' + overlayClasses"></div>
+  <div
+    [class]="'absolute inset-0 z-10 rounded-' + rounded + ' ' + overlayClasses"
+  ></div>
   }
 
-  <component-card variant="default" size="sm" [rounded]="rounded">
+  <component-card variant="default" size="sm" rounded="xl">
     @if (type === 'mini') {
     <div class="flex items-center gap-3">
       <!-- Vehicle Image -->
@@ -85,8 +87,8 @@
               >people</span
             >
             <span
-              >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"/></span
-            >
+              >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"
+            /></span>
           </div>
         </div>
       </div>
@@ -99,16 +101,17 @@
           class="w-full sm:w-auto block"
           variant="submit"
           size="sm"
+          round="lg"
           (click)="onSelect()"
         >
-          <translate-fixed key="Select"/>
+          <translate-fixed key="Select" align="center" />
         </component-button>
         } @else {
         <span
           class="inline-flex items-center gap-1 text-sm text-sand-400 font-medium"
         >
           <span class="material-icons text-sm sm:text-base">block</span>
-          <translate-fixed [key]="statusVariant"/>
+          <translate-fixed [key]="statusVariant" />
         </span>
         }
       </div>

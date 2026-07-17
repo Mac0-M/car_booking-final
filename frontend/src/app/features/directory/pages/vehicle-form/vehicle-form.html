@@ -6,7 +6,9 @@
     class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-sand-100 flex items-center justify-between bg-white shrink-0"
   >
     <h3 class="text-xl font-bold text-sand-800">
-      <translate-fixed [key]="isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle'"/>
+      <translate-fixed
+        [key]="isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle'"
+      />
     </h3>
     <component-button
       variant="plain"
@@ -47,11 +49,15 @@
         </component-button>
         <div>
           <h1 class="text-xl font-bold text-sand-800">
-            <translate-fixed [key]="isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle'"/>
+            <translate-fixed
+              [key]="isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle'"
+            />
           </h1>
           <p class="text-xs text-sand-500 mt-1">
-            <translate-fixed [key]="isEditMode ? 'Edit vehicle details in the system.' : 'Fill in
-            the details to register a new vehicle.'"/>
+            <translate-fixed
+              [key]="isEditMode ? 'Edit vehicle details in the system.' : 'Fill in
+            the details to register a new vehicle.'"
+            />
           </p>
         </div>
       </div>
@@ -76,11 +82,11 @@
     <!-- Image Upload Field -->
     <div class="space-y-2">
       <label class="text-sm font-bold text-sand-700 block"
-        ><translate-fixed key="Vehicle Image / รูปภาพยานพาหนะ"/></label
-      >
+        ><translate-fixed key="Vehicle Image / รูปภาพยานพาหนะ"
+      /></label>
 
       <div
-        [class]="isDialog ? 'flex flex-col items-center justify-center border-2 border-dashed border-sand-200 hover:border-sand-400 rounded-2xl p-4 bg-sand-50/50 cursor-pointer relative transition-colors overflow-hidden group h-32' : 'flex flex-col items-center justify-center border-2 border-dashed border-sand-200 hover:border-sand-400 rounded-2xl p-6 bg-sand-50/50 cursor-pointer relative transition-colors overflow-hidden group min-h-48'"
+        [class]="isDialog ? 'flex flex-col items-center justify-center border-2 border-dashed border-sand-200 hover:border-sand-400 rounded-xl p-4 bg-sand-50/50 cursor-pointer relative transition-colors overflow-hidden group h-32' : 'flex flex-col items-center justify-center border-2 border-dashed border-sand-200 hover:border-sand-400 rounded-xl p-6 bg-sand-50/50 cursor-pointer relative transition-colors overflow-hidden group min-h-48'"
       >
         <input
           type="file"
@@ -100,7 +106,7 @@
         >
           <span class="text-white text-xs font-bold flex items-center gap-1">
             <span class="material-icons text-base">photo_camera</span>
-            <translate-fixed key="Change Image / เปลี่ยนรูปภาพ"/>
+            <translate-fixed key="Change Image / เปลี่ยนรูปภาพ" />
           </span>
         </div>
         } @else {
@@ -114,14 +120,20 @@
             class="text-sand-500 font-medium"
             [ngClass]="isDialog ? 'text-xs' : 'text-sm'"
           >
-            <translate-fixed key="Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ" align="center"/>
+            <translate-fixed
+              key="Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ"
+              align="center"
+            />
           </div>
           <div
             class="text-sand-400"
             [ngClass]="isDialog ? 'text-[10px]' : 'text-xs'"
           >
-            <translate-fixed key="Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG
-            ขนาดไม่เกิน 5MB" align="center"/>
+            <translate-fixed
+              key="Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG
+            ขนาดไม่เกิน 5MB"
+              align="center"
+            />
           </div>
         </div>
         }
@@ -131,8 +143,9 @@
     <!-- Vehicle Name Input -->
     <div class="space-y-2">
       <label for="vehicle_name" class="text-sm font-bold text-sand-700 block"
-        ><translate-fixed key="Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)"/></label
-      >
+        ><translate-fixed
+          key="Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)"
+      /></label>
       <input
         type="text"
         id="vehicle_name"
@@ -151,8 +164,8 @@
       <!-- Type Select -->
       <div class="space-y-2">
         <label for="type" class="text-sm font-bold text-sand-700 block"
-          ><translate-fixed key="Vehicle Type / ประเภทรถ"/></label
-        >
+          ><translate-fixed key="Vehicle Type / ประเภทรถ"
+        /></label>
         <select
           id="type"
           name="type"
@@ -170,8 +183,8 @@
       <!-- Capacity Input -->
       <div class="space-y-2">
         <label for="capacity" class="text-sm font-bold text-sand-700 block"
-          ><translate-fixed key="Seats (Capacity) / จำนวนที่นั่ง"/></label
-        >
+          ><translate-fixed key="Seats (Capacity) / จำนวนที่นั่ง"
+        /></label>
         <input
           type="number"
           id="capacity"
@@ -192,8 +205,8 @@
       <!-- Total Mileage Input -->
       <div class="space-y-2">
         <label for="total_mile" class="text-sm font-bold text-sand-700 block"
-          ><translate-fixed key="Total Mileage (km) / ไมล์สะสม (กม.)"/></label
-        >
+          ><translate-fixed key="Total Mileage (km) / ไมล์สะสม (กม.)"
+        /></label>
         <input
           type="number"
           id="total_mile"
@@ -210,8 +223,8 @@
       @if (isEditMode) {
       <div class="space-y-2">
         <label for="status" class="text-sm font-bold text-sand-700 block"
-          ><translate-fixed key="Availability Status / สถานะการใช้งาน"/></label
-        >
+          ><translate-fixed key="Availability Status / สถานะการใช้งาน"
+        /></label>
         <select
           id="status"
           name="status"
@@ -242,7 +255,9 @@
         for="re_fuel"
         class="text-sm font-bold text-sand-700 cursor-pointer select-none"
       >
-        <translate-fixed key="Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน"/>
+        <translate-fixed
+          key="Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน"
+        />
       </label>
     </div>
 
@@ -263,38 +278,42 @@
           <span class="material-icons text-sm mr-1 leading-none"
             >delete_outline</span
           >
-          <translate-fixed key="Delete Vehicle" align="center"/>
+          <translate-fixed key="Delete Vehicle" align="center" />
         </component-button>
         }
       </div>
       <div
-        class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-end"
+        class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-end w-full sm:w-auto"
       >
-        <component-button
-          type="button"
-          (click)="closeForm()"
-          variant="danger-outline"
-          size="md"
-          class="w-full sm:w-auto"
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full sm:w-auto sm:min-w-[320px]"
         >
-          <translate-fixed key="Cancel" align="center"/>
-        </component-button>
-        <component-button
-          type="submit"
-          variant="submit"
-          size="md"
-          [disabled]="!isFormValid || isLoading()"
-          class="w-full sm:w-auto"
-        >
-          @if (isLoading()) {
-          <span class="flex items-center gap-2 justify-center">
-            <span
-              class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
-            ></span>
-            <translate-fixed key="Saving..." align="center"/>
-          </span>
-          } @else { <translate-fixed key="Save Vehicle" align="center"/> }
-        </component-button>
+          <component-button
+            type="button"
+            (click)="closeForm()"
+            variant="danger-outline"
+            size="md"
+            class="w-full"
+          >
+            <translate-fixed key="Cancel" align="center" />
+          </component-button>
+          <component-button
+            type="submit"
+            variant="submit"
+            size="md"
+            [disabled]="!isFormValid || isLoading()"
+            class="w-full"
+          >
+            @if (isLoading()) {
+            <span class="flex items-center gap-2 justify-center">
+              <span
+                class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
+              ></span>
+              <translate-fixed key="Saving..." align="center" />
+            </span>
+            } @else { <translate-fixed key="Save Vehicle" align="center" /> }
+          </component-button>
+        </div>
       </div>
     </div>
   </form>

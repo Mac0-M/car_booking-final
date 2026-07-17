@@ -4,7 +4,7 @@
     class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-sand-100 flex items-center justify-between bg-white shrink-0"
   >
     <h3 class="text-xl font-bold text-sand-800">
-      <translate-fixed key="Edit Booking"/>
+      <translate-fixed key="Edit Booking" />
     </h3>
     <component-button
       variant="plain"
@@ -29,14 +29,14 @@
             <label
               for="depart"
               class="text-xs font-bold text-sand-500 uppercase tracking-wider block order-1 sm:order-1"
-              ><translate-fixed key="Departure Date & Time / ออกเดินทาง"/></label
-            >
+              ><translate-fixed key="Departure Date & Time / ออกเดินทาง"
+            /></label>
             <!-- Return Label -->
             <label
               for="returnTime"
               class="text-xs font-bold text-sand-500 uppercase tracking-wider block order-3 sm:order-2"
-              ><translate-fixed key="Return Date & Time /เดินทางกลับ"/></label
-            >
+              ><translate-fixed key="Return Date & Time /เดินทางกลับ"
+            /></label>
 
             <!-- Departure Input -->
             <div class="relative w-full order-2 sm:order-3">
@@ -78,8 +78,8 @@
             <label
               for="destination"
               class="text-xs font-bold text-sand-500 uppercase tracking-wider block font-sans"
-              ><translate-fixed key="Destination / จุดหมาย"/></label
-            >
+              ><translate-fixed key="Destination / จุดหมาย"
+            /></label>
             <component-input-ui
               type="textarea"
               icon="place"
@@ -94,8 +94,8 @@
             <label
               for="purpose"
               class="text-xs font-bold text-sand-500 uppercase tracking-wider block"
-              ><translate-fixed key="Purpose of Use / วัตถุประสงค์"/></label
-            >
+              ><translate-fixed key="Purpose of Use / วัตถุประสงค์"
+            /></label>
             <component-input-ui
               type="textarea"
               icon="assignment"
@@ -110,8 +110,8 @@
             <label
               for="booked_for"
               class="text-xs font-bold text-sand-500 uppercase tracking-wider block"
-              ><translate-fixed key="Book for / จองให้"/></label
-            >
+              ><translate-fixed key="Book for / จองให้"
+            /></label>
             <div class="relative">
               <span
                 class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-sand-400 text-lg"
@@ -138,8 +138,8 @@
             <label
               for="vehicle_id"
               class="text-xs font-bold text-sand-500 uppercase tracking-wider block"
-              ><translate-fixed key="Vehicle / ยานพาหนะ"/></label
-            >
+              ><translate-fixed key="Vehicle / ยานพาหนะ"
+            /></label>
             <div class="relative">
               <span
                 class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-sand-400 text-lg"
@@ -162,7 +162,8 @@
                 </option>
                 } @else { @for (v of availableVehicles(); track v.id) {
                 <option [value]="v.id">
-                  {{ v.model }} ({{ v.plateNumber }}) - {{ 'Capacity' | translate }}: {{ v.capacity }}
+                  {{ v.model }} ({{ v.plateNumber }}) - {{ 'Capacity' |
+                  translate }}: {{ v.capacity }}
                 </option>
                 } } }
               </select>
@@ -174,19 +175,18 @@
 
     <!-- Action Buttons -->
     <div
-      class="p-6 border-t border-sand-100 bg-white shrink-0 flex flex-col sm:flex-row gap-3"
+      class="p-6 pt-0 bg-white shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-3"
     >
       <component-button
         variant="danger-outline"
         size="md"
-        class="sm:flex-1"
         (click)="onClose()"
         [disabled]="isSaving()"
       >
         <span
           class="flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1"
         >
-          <translate-fixed key="Cancel"/>
+          <translate-fixed key="Cancel" />
         </span>
       </component-button>
 
@@ -194,7 +194,6 @@
         type="submit"
         variant="submit"
         size="md"
-        class="sm:flex-1"
         [disabled]="!isFormValid || isSaving()"
       >
         <span
@@ -204,7 +203,8 @@
           <span
             class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"
           ></span>
-          <translate-fixed key="Saving..."/> } @else { <translate-fixed key="Save Changes"/> }
+          <translate-fixed key="Saving..." /> } @else {
+          <translate-fixed key="Save Changes" /> }
         </span>
       </component-button>
     </div>

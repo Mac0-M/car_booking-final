@@ -23,7 +23,7 @@
       >
         <span class="flex items-center gap-2">
           <span class="material-icons">directions_car</span>
-          <translate-fixed key="Start New Booking"/>
+          <translate-fixed key="Start New Booking" align="center" />
         </span>
       </component-button>
     </div>
@@ -46,12 +46,11 @@
     />
     <!-- Actions -->
     <div
-      [class]="isDialog ? 'flex flex-col sm:flex-row gap-3 pb-4 mt-auto' : 'flex flex-col sm:flex-row gap-3'"
+      [class]="isDialog ? 'grid grid-cols-1 sm:grid-cols-2 gap-3 pb-4 mt-auto' : 'grid grid-cols-1 sm:grid-cols-2 gap-3'"
     >
       <component-button
         variant="cancel"
         [size]="isDialog ? 'md' : 'lg'"
-        class="sm:flex-1"
         (click)="onBack()"
         [disabled]="isSubmitting()"
       >
@@ -59,14 +58,13 @@
           [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'"
         >
           <span class="material-icons text-sm sm:text-lg">arrow_back</span>
-          <translate-fixed key="Back"/>
+          <translate-fixed key="Back" align="center" />
         </span>
       </component-button>
 
       <component-button
         variant="submit"
         [size]="isDialog ? 'md' : 'lg'"
-        class="sm:flex-1"
         (click)="onConfirm()"
         [disabled]="isSubmitting()"
       >
@@ -77,9 +75,9 @@
           <span
             class="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent"
           ></span>
-          <translate-fixed key="Processing..."/> } @else {
+          <translate-fixed key="Processing..." align="center" /> } @else {
           <span class="material-icons text-sm sm:text-lg">done_all</span>
-          <translate-fixed key="Confirm Booking"/> }
+          <translate-fixed key="Confirm Booking" align="center" /> }
         </span>
       </component-button>
     </div>
@@ -96,21 +94,21 @@
 
       <div class="space-y-2">
         <h1 class="text-2xl md:text-3xl font-black text-sand-800">
-          <translate-fixed key="Booking Confirmed!" align="center"/>
+          <translate-fixed key="Booking Confirmed!" align="center" />
         </h1>
       </div>
 
       <!-- Booking Summary Card / Receipt -->
       <div
-        class="w-full max-w-md bg-container-low rounded-2xl border border-container p-5 space-y-4 text-left shadow-sm overflow-hidden"
+        class="w-full max-w-md bg-container-low rounded-xl border border-container p-5 space-y-4 text-left shadow-sm overflow-hidden"
       >
         <div
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-sand-200 pb-3 gap-1"
         >
           <span
             class="text-sm text-sand-400 font-semibold uppercase tracking-wider"
-            ><translate-fixed key="Booking Number / เลขที่จอง"/></span
-          >
+            ><translate-fixed key="Booking Number / เลขที่จอง"
+          /></span>
           <span class="text-base font-mono font-bold text-sand-800"
             >{{ bookingId() }}</span
           >
@@ -121,8 +119,8 @@
           @if (store.selectedVehicle(); as vehicle) {
           <div class="space-y-0.5">
             <span class="text-sand-400 text-xs block"
-              ><translate-fixed key="Vehicle / ยานพาหนะ"/></span
-            >
+              ><translate-fixed key="Vehicle / ยานพาหนะ"
+            /></span>
             <span class="font-bold text-sand-800 break-words">
               {{ vehicle.model }} ({{ vehicle.plateNumber }})
             </span>
@@ -130,24 +128,24 @@
           }
           <div class="space-y-0.5">
             <span class="text-sand-400 text-xs block"
-              ><translate-fixed key="Destination / จุดหมาย"/></span
-            >
+              ><translate-fixed key="Destination / จุดหมาย"
+            /></span>
             <span class="font-semibold text-sand-800 break-words"
               >{{ store.destination() }}</span
             >
           </div>
           <div class="space-y-0.5">
             <span class="text-sand-400 text-xs block"
-              ><translate-fixed key="Travel Date / วันเดินทาง"/></span
-            >
+              ><translate-fixed key="Travel Date / วันเดินทาง"
+            /></span>
             <span class="font-semibold text-sand-800">
               {{ store.bookingDate() | appDate }}
             </span>
           </div>
           <div class="space-y-0.5">
             <span class="text-sand-400 text-xs block"
-              ><translate-fixed key="Travel Time / เวลา"/></span
-            >
+              ><translate-fixed key="Travel Time / เวลา"
+            /></span>
             <span class="font-semibold text-sand-800">
               {{ store.startTime() | appTime }} - {{ store.endTime() | appTime
               }} @if (totalDuration()) {
@@ -159,16 +157,16 @@
           </div>
           <div class="space-y-0.5">
             <span class="text-sand-400 text-xs block"
-              ><translate-fixed key="User / ผู้ใช้"/></span
-            >
+              ><translate-fixed key="Booker / ผู้จอง"
+            /></span>
             <span class="font-semibold text-sand-800 break-words"
               >{{ currentUser()?.name }}</span
             >
           </div>
           <div class="space-y-0.5">
             <span class="text-sand-400 text-xs block"
-              ><translate-fixed key="Contact / เบอร์ติดต่อ"/></span
-            >
+              ><translate-fixed key="Contact / เบอร์ติดต่อ"
+            /></span>
             <span class="font-semibold text-sand-800"
               >{{ currentUser()?.phone }}</span
             >
@@ -177,32 +175,26 @@
       </div>
 
       <!-- Actions -->
-      <div class="w-full max-w-md pt-4 flex flex-col sm:flex-row gap-3">
+      <div class="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3">
         <component-button
           variant="cancel"
           size="lg"
-          class="sm:flex-1"
           (click)="onViewBookingHistory()"
         >
           <span
             class="flex items-center justify-center gap-2 text-base font-semibold py-1"
           >
             <span class="material-icons text-lg">history</span>
-            <translate-fixed key="View Booking History"/>
+            <translate-fixed key="View Booking History" align="center" />
           </span>
         </component-button>
 
-        <component-button
-          variant="submit"
-          size="lg"
-          class="sm:flex-1"
-          (click)="onBackToForm()"
-        >
+        <component-button variant="submit" size="lg" (click)="onBackToForm()">
           <span
             class="flex items-center justify-center gap-2 text-base font-semibold py-1"
           >
             <span class="material-icons text-lg">add</span>
-            <translate-fixed key="Book Another Vehicle"/>
+            <translate-fixed key="Book Another Vehicle" align="center" />
           </span>
         </component-button>
       </div>

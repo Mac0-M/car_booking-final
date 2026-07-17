@@ -23,7 +23,10 @@
             <div
               class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              <translate-fixed key="Departure-Return Date/Time / ออกเดินทาง" align="start"/>
+              <translate-fixed
+                key="Departure-Return Date/Time / ออกเดินทาง"
+                align="start"
+              />
             </div>
             <div
               class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 text-sm sm:text-base font-semibold text-sand-800 mt-0.5 font-sans"
@@ -58,7 +61,7 @@
             <div
               class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              <translate-fixed key="Destination / จุดหมาย" align="start"/>
+              <translate-fixed key="Destination / จุดหมาย" align="start" />
             </div>
             <div
               class="text-sm sm:text-base font-semibold text-sand-800 mt-0.5 break-words"
@@ -78,7 +81,10 @@
             <div
               class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              <translate-fixed key="Purpose of Use / วัตถุประสงค์" align="start"/>
+              <translate-fixed
+                key="Purpose of Use / วัตถุประสงค์"
+                align="start"
+              />
             </div>
             <div
               class="text-sm sm:text-base font-semibold text-sand-800 mt-0.5 break-words"
@@ -97,7 +103,7 @@
             <div
               class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              <translate-fixed key="Booker / ผู้จอง" align="start"/>
+              <translate-fixed key="Booker / ผู้จอง" align="start" />
             </div>
             <div
               class="text-sm sm:text-base font-semibold text-sand-800 mt-0.5 break-words"
@@ -121,13 +127,13 @@
             <div
               class="text-[10px] sm:text-xs text-indigo-400 font-semibold uppercase tracking-wider"
             >
-              <translate-fixed key="Passenger / ผู้โดยสาร" align="start"/>
+              <translate-fixed key="Passenger / ผู้โดยสาร" align="start" />
             </div>
-            <div class="text-sm sm:text-base font-bold text-indigo-900 mt-0.5">
+            <div
+              class="text-sm sm:text-base font-semibold text-indigo-800 mt-0.5"
+            >
               {{ bookedForUser.user_name }}
-            </div>
-            <div class="text-[9px] sm:text-[10px] text-indigo-500 font-mono">
-              Tel: {{ bookedForUser.phone || 'N/A' }}
+              <span>({{ bookedForUser.phone || 'N/A' }}) </span>
             </div>
           </div>
         </div>

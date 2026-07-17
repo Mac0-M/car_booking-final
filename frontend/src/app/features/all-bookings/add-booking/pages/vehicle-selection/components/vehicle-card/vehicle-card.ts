@@ -1,10 +1,7 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { TitleCasePipe } from "@angular/common";
 import { Vehicle } from "../../../../../../../core/models/vehicle.model";
-import { ComponentCard } from "../../../../../../../shared/components/card/card";
-import { ComponentBadge } from "../../../../../../../shared/components/badge/badge";
-import { ComponentButton } from "../../../../../../../shared/components/button/button";
-import { TranslateFixed } from "../../../../../../../shared/components/translate-fixed/translate-fixed";
+import { AllSharedUi } from "../../../../../../../shared/shared";
 import { environment } from "../../../../../../../../environments/environment";
 
 /**
@@ -17,10 +14,7 @@ import { environment } from "../../../../../../../../environments/environment";
   selector: "app-vehicle-card",
   standalone: true,
   imports: [
-    ComponentCard,
-    ComponentBadge,
-    ComponentButton,
-    TranslateFixed,
+    AllSharedUi,
     TitleCasePipe,
   ],
   templateUrl: "./vehicle-card.html",

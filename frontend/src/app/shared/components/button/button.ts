@@ -24,15 +24,8 @@ export class ComponentButton {
     | "danger-text" = "submit";
   @Input() size: "xs" | "sm" | "md" | "lg" | "xxl" = "xxl";
   @Input() disabled: boolean = false;
-  @Input() round:
-    | "none"
-    | "sm"
-    | "md"
-    | "lg"
-    | "xl"
-    | "2xl"
-    | "3xl"
-    | "full" = "xl";
+  @Input() round: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full" =
+    "xl";
 
   protected readonly baseClasses =
     "inline-flex items-center justify-center font-medium transition-all duration-200 active:scale-95 w-full cursor-pointer select-none";
