@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import {
@@ -27,8 +27,6 @@ export class FilterSidebar {
   }
   @Input() vehicles: Vehicle[] = [];
   @Input() users: User[] = [];
-  @Input() viewModes: string[] = [];
-  @Input() currentViewMode = "";
 
   @Input() selectedDate: Date | string = "";
   @Input() searchQuery = "";
@@ -42,7 +40,6 @@ export class FilterSidebar {
 
   @Input() showStatusFilter = false;
   @Input() placeholder = "Search...";
-  @Input() forceExpanded = false;
   @Input() showHeader = false;
   @Input() showQuickFilters = false;
 
@@ -52,41 +49,12 @@ export class FilterSidebar {
   @Output() startDateChange = new EventEmitter<string>();
   @Output() endDateChange = new EventEmitter<string>();
   @Output() selectedStatusFilterChange = new EventEmitter<string>();
-  @Output() viewModeChange = new EventEmitter<any>();
   @Output() toggleVehicleType = new EventEmitter<string>();
   @Output() toggleVehiclePlate = new EventEmitter<string>();
   @Output() reset = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
 
-  // Internal state
-  readonly showAdvancedFilters = signal(false);
   readonly vehicleTypes = VEHICLE_TYPES;
-
-  getModeIcon(mode: string): string {
-    switch (mode) {
-      case "calendar":
-        return "calendar_today";
-      case "grid":
-        return "grid_view";
-      case "list":
-        return "format_list_bulleted";
-      default:
-        return "help_outline";
-    }
-  }
-
-  getModeLabel(mode: string): string {
-    switch (mode) {
-      case "calendar":
-        return "Calendar";
-      case "grid":
-        return "Grid";
-      case "list":
-        return "List";
-      default:
-        return mode;
-    }
-  }
 
   get currentMonthValue(): string {
     if (this.selectedDate) {
