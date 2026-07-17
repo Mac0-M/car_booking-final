@@ -22,20 +22,20 @@
       <div class="absolute top-3 right-3">
         @if (getBookingStatusVariant(booking) === 'available') {
         <component-badge variant="available" size="xs"
-          ><translate-fixed key="Upcoming"/></component-badge
-        >
+          ><translate-fixed key="Upcoming"
+        /></component-badge>
         } @else if (getBookingStatusVariant(booking) === 'pending') {
         <component-badge variant="pending" size="xs"
-          ><translate-fixed key="Ongoing"/></component-badge
-        >
+          ><translate-fixed key="Ongoing"
+        /></component-badge>
         } @else if (getBookingStatusVariant(booking) === 'booked') {
         <component-badge variant="booked" size="xs"
-          ><translate-fixed key="Completed"/></component-badge
-        >
+          ><translate-fixed key="Completed"
+        /></component-badge>
         } @else {
         <component-badge variant="unavailable" size="xs"
-          ><translate-fixed key="Cancelled"/></component-badge
-        >
+          ><translate-fixed key="Cancelled"
+        /></component-badge>
         }
       </div>
     </div>
@@ -52,22 +52,21 @@
       </div>
 
       <!-- 2. Reserved Vehicle -->
-      <div class="flex items-start gap-2 text-sm text-sand-700">
+      <div class="flex items-start gap-2 text-base text-sand-700">
         <span
           class="material-icons text-sand-400 w-5 text-center shrink-0 mt-0.5"
           >directions_car</span
         >
         <div class="space-y-0.5">
           <div class="font-bold line-clamp-1">
-            @if (booking.vehicle?.model) {
-              {{ booking.vehicle?.model }}
-            } @else {
-              <translate-fixed key="No vehicle specified / ไม่ได้ระบุยานพาหนะ"/>
+            @if (booking.vehicle?.model) { {{ booking.vehicle?.model }} } @else
+            {
+            <translate-fixed key="No vehicle specified / ไม่ได้ระบุยานพาหนะ" />
             }
           </div>
           @if (showPlateNumber && booking.vehicle?.plateNumber) {
           <div
-            class="text-[10px] font-mono font-bold text-sand-500 bg-sand-50 px-1.5 py-0.5 rounded border border-sand-100 inline-block"
+            class="text-xs font-mono font-bold text-sand-500 bg-sand-100 px-1.5 py-0.5 rounded border border-sand-100 inline-block"
           >
             {{ booking.vehicle?.plateNumber }}
           </div>
@@ -89,10 +88,8 @@
           >location_on</span
         >
         <span class="line-clamp-1 italic">
-          @if (booking.destination) {
-            {{ booking.destination }}
-          } @else {
-            <translate-fixed key="No destination specified / ไม่ได้ระบุจุดหมาย"/>
+          @if (booking.destination) { {{ booking.destination }} } @else {
+          <translate-fixed key="No destination specified / ไม่ได้ระบุจุดหมาย" />
           }
         </span>
       </div>
@@ -103,10 +100,10 @@
           >description</span
         >
         <span class="line-clamp-1 italic">
-          @if (booking.purpose) {
-            {{ booking.purpose }}
-          } @else {
-            <translate-fixed key="No purpose specified / ไม่ได้ระบุวัตถุประสงค์"/>
+          @if (booking.purpose) { {{ booking.purpose }} } @else {
+          <translate-fixed
+            key="No purpose specified / ไม่ได้ระบุวัตถุประสงค์"
+          />
           }
         </span>
       </div>

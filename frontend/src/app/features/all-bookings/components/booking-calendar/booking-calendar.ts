@@ -7,13 +7,16 @@ import {
   AfterViewInit,
   OnDestroy,
   HostListener,
+  inject,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Booking } from "../../../../core/models/booking.model";
 import { VEHICLE_TYPES } from "../../../../core/models/vehicle.model";
 import { AllSharedUi } from "../../../../shared/shared";
-import { inject } from "@angular/core";
 import { LanguageService } from "../../../../core/services/language.service";
+
+import { VEHICLE_STYLES } from "./booking-calendar.constants";
+import { parseTuiDate, getCellDate } from "./booking-calendar.utils";
 
 @Component({
   selector: "app-booking-calendar",
@@ -23,9 +26,9 @@ import { LanguageService } from "../../../../core/services/language.service";
 })
 export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   private _bookings: Booking[] = [];
+  private _currentDate: Date | string = "";
 
-  @Input() calendarId =
-    "calendar-container-" + Math.random().toString(36).substring(2, 9);
+  @Input() calendarId = "calendar-container-" + Math.random().toString(36).substring(2, 9);
   @Input() defaultView: "month" | "week" | "day" = "month";
   @Input() showViewSwitcher = true;
   @Input() showControls = true;
@@ -33,6 +36,9 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   @Input() showLegend = true;
   @Input() height = "720px";
   @Input() minHeight = "850px";
+  @Input() showQuickFilters = false;
+  @Input() selectedVehicleTypeFilter: string[] = [];
+  @Input() showOldBookings = false;
 
   @Input()
   set bookings(value: Booking[]) {
@@ -43,14 +49,11 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     return this._bookings;
   }
 
-  private _currentDate: Date | string = "";
-
   @Input()
   set currentDate(value: Date | string) {
     this._currentDate = value;
     if (this.calendarInstance && value) {
       this.calendarInstance.setDate(value);
-      this.updateMonthYearLabel();
     }
   }
   get currentDate(): Date | string {
@@ -60,9 +63,6 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   @Output() bookingClick = new EventEmitter<Booking>();
   @Output() dateSelect = new EventEmitter<Date>();
   @Output() clickMore = new EventEmitter<Date>();
-  @Input() showQuickFilters = false;
-  @Input() selectedVehicleTypeFilter: string[] = [];
-  @Input() showOldBookings = false;
   @Output() toggleVehicleType = new EventEmitter<string>();
 
   readonly vehicleTypes = VEHICLE_TYPES;
@@ -70,7 +70,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
   private calendarInstance: any = null;
   private resizeObserver: any = null;
-  private resizeRafId: number | null = null; // เพิ่ม
+  private resizeRafId: number | null = null;
   private wasMobile = window.innerWidth < 1024;
   calendarView: "month" | "week" | "day" = "month";
 
@@ -79,9 +79,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     if (this.calendarInstance) {
       try {
         d = this.calendarInstance.getDate();
-      } catch (e) {
-        // Fallback
-      }
+      } catch (e) {}
     }
     return d;
   }
@@ -99,33 +97,31 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     this.calendarView = this.defaultView;
   }
 
+  ngAfterViewInit(): void {
+    this.initCalendar();
+  }
+
+  ngOnDestroy(): void {
+    if (this.calendarInstance) this.calendarInstance.destroy();
+    if (this.resizeObserver) this.resizeObserver.disconnect();
+    if (this.resizeRafId !== null) cancelAnimationFrame(this.resizeRafId);
+  }
+
   changeView(viewName: "month" | "week" | "day"): void {
     this.calendarView = viewName;
-    if (this.calendarInstance) {
-      this.calendarInstance.changeView(viewName);
-      this.updateMonthYearLabel();
-    }
+    if (this.calendarInstance) this.calendarInstance.changeView(viewName);
   }
 
   prev(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.prev();
-      this.updateMonthYearLabel();
-    }
+    if (this.calendarInstance) this.calendarInstance.prev();
   }
 
   next(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.next();
-      this.updateMonthYearLabel();
-    }
+    if (this.calendarInstance) this.calendarInstance.next();
   }
 
   today(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.today();
-      this.updateMonthYearLabel();
-    }
+    if (this.calendarInstance) this.calendarInstance.today();
   }
 
   onMonthInputChange(event: Event): void {
@@ -133,11 +129,8 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     if (input.value && this.calendarInstance) {
       const parts = input.value.split("-");
       if (parts.length >= 2) {
-        const year = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1;
-        const selectedDate = new Date(year, month, 1);
+        const selectedDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, 1);
         this.calendarInstance.setDate(selectedDate);
-        this.updateMonthYearLabel();
         this.dateSelect.emit(selectedDate);
       }
     }
@@ -150,35 +143,12 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  updateMonthYearLabel(): void {
-    // Dynamically computed by monthYearLabel getter
-  }
-
-  ngAfterViewInit(): void {
-    this.initCalendar();
-  }
-
-  ngOnDestroy(): void {
-    if (this.calendarInstance) {
-      this.calendarInstance.destroy();
-    }
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-    }
-    if (this.resizeRafId !== null) {
-      // เพิ่ม - กัน leak
-      cancelAnimationFrame(this.resizeRafId);
-    }
-  }
-
   private initCalendar(): void {
     setTimeout(() => {
       const container = document.getElementById(this.calendarId);
       if (!container) return;
 
-      if (this.calendarInstance) {
-        this.calendarInstance.destroy();
-      }
+      if (this.calendarInstance) this.calendarInstance.destroy();
 
       const tuiCalendar = (window as any).tui?.Calendar;
       if (!tuiCalendar) {
@@ -192,125 +162,68 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         useFormPopup: false,
         useDetailPopup: false,
         isReadOnly: true,
-        month: {
-          visibleEventCount: isMobileScreen ? 0 : 1,
-        },
-        gridSelection: {
-          enableClick: true,
-        },
-        week: {
-          taskView: false,
-        },
+        month: { visibleEventCount: isMobileScreen ? 0 : 1 },
+        gridSelection: { enableClick: true },
+        week: { taskView: false },
         template: {
-          time(event: any) {
+          time: (event: any) => {
             const icon = event.raw?.icon || "directions_car";
             return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
           },
-          allday(event: any) {
+          allday: (event: any) => {
             const icon = event.raw?.icon || "directions_car";
             return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
           },
-          monthGridHeaderExceed(hiddenSchedules: number) {
-            return `+${hiddenSchedules}`;
+          monthGridHeaderExceed: (hiddenSchedules: number) => {
+            return `<span class="custom-exceed-btn font-bold text-xs" style="display: block; width: 100%; height: 100%; cursor: pointer;">+${hiddenSchedules}</span>`;
           },
         },
       });
 
-      if (this._currentDate) {
-        this.calendarInstance.setDate(this._currentDate);
-      }
-      this.updateMonthYearLabel();
+      if (this._currentDate) this.calendarInstance.setDate(this._currentDate);
 
-      // Handle event click to view details
       this.calendarInstance.on("clickEvent", (eventInfo: any) => {
-        const bookingId = eventInfo.event.id;
-        const booking = this.bookings.find((b) => b.id === bookingId);
-        if (booking) {
-          this.bookingClick.emit(booking);
-        }
+        const booking = this.bookings.find((b) => b.id === eventInfo.event.id);
+        if (booking) this.bookingClick.emit(booking);
       });
 
-      // Handle click on month grid cell natively to allow cell clicks with isReadOnly: true
       container.addEventListener("click", (event: MouseEvent) => {
         if (!this.calendarInstance) return;
 
-        // Only handle cell clicks on mobile screen widths (< 1024px)
-        const isMobileScreen = window.innerWidth < 1024;
-        if (!isMobileScreen) {
-          return;
-        }
-
         const target = event.target as HTMLElement;
+        const exceedBtn = target.closest(".custom-exceed-btn") || target.closest(".toastui-calendar-month-grid-header-exceed");
+        const cell = target.closest(".toastui-calendar-daygrid-cell");
 
-        // Ignore clicks on event elements so clickEvent details listener takes priority
-        if (
-          target.closest(".toastui-calendar-weekday-event") ||
-          target.closest(".toastui-calendar-event-item")
-        ) {
+        if (exceedBtn) {
+          event.stopPropagation();
+          event.preventDefault();
+          if (cell) {
+            const date = getCellDate(cell, container, this.calendarInstance);
+            if (date) this.clickMore.emit(date);
+          }
           return;
         }
 
-        const cell = target.closest(".toastui-calendar-daygrid-cell");
+        if (window.innerWidth >= 1024 || target.closest(".toastui-calendar-weekday-event") || target.closest(".toastui-calendar-event-item")) {
+          return;
+        }
+
         if (cell) {
-          const cells = Array.from(
-            container.querySelectorAll(".toastui-calendar-daygrid-cell"),
-          );
-          const index = cells.indexOf(cell);
-          if (index !== -1) {
-            const rangeStartObj = this.calendarInstance.getDateRangeStart();
-            const rangeStartDate =
-              typeof rangeStartObj.toDate === "function"
-                ? rangeStartObj.toDate()
-                : new Date(rangeStartObj);
-
-            const clickedDate = new Date(rangeStartDate.getTime());
-            clickedDate.setDate(clickedDate.getDate() + index);
-            this.clickMore.emit(clickedDate);
-          }
+          const date = getCellDate(cell, container, this.calendarInstance);
+          if (date) this.clickMore.emit(date);
         }
       });
 
-      // Handle click on the exceed (+N) button to notify and prevent default
       this.calendarInstance.on("clickMoreEventsBtn", (eventInfo: any) => {
-        console.log("clickMoreEventsBtn triggered:", eventInfo);
-        if (eventInfo && eventInfo.nativeEvent) {
-          eventInfo.nativeEvent.preventDefault();
-        }
-
-        let date: Date;
-        if (eventInfo && eventInfo.date) {
-          if (eventInfo.date instanceof Date) {
-            date = eventInfo.date;
-          } else if (typeof eventInfo.date.toDate === "function") {
-            date = eventInfo.date.toDate();
-          } else if (typeof eventInfo.date.getTime === "function") {
-            date = new Date(eventInfo.date.getTime());
-          } else if (eventInfo.date.d instanceof Date) {
-            date = eventInfo.date.d;
-          } else {
-            date = new Date(eventInfo.date);
-          }
-        } else {
-          date = new Date();
-        }
-
-        this.clickMore.emit(date);
+        this.clickMore.emit(parseTuiDate(eventInfo?.date));
       });
 
-      // Observe container size changes to render calendar correctly
-      if (this.resizeObserver) {
-        this.resizeObserver.disconnect();
-      }
+      if (this.resizeObserver) this.resizeObserver.disconnect();
       if (typeof ResizeObserver !== "undefined") {
         this.resizeObserver = new ResizeObserver(() => {
-          // รวม event ที่ถี่เกินไปตอนลาก ให้ render แค่ครั้งเดียวต่อ 1 เฟรม
-          if (this.resizeRafId !== null) {
-            cancelAnimationFrame(this.resizeRafId);
-          }
+          if (this.resizeRafId !== null) cancelAnimationFrame(this.resizeRafId);
           this.resizeRafId = requestAnimationFrame(() => {
-            if (this.calendarInstance) {
-              this.calendarInstance.render();
-            }
+            if (this.calendarInstance) this.calendarInstance.render();
             this.resizeRafId = null;
           });
         });
@@ -321,13 +234,11 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     }, 50);
   }
 
-  /** Check if booking is old (completed, cancelled, or auto-complete past return time) */
   private isOldBooking(b: Booking): boolean {
     if (b.status === "COMPLETED" || b.status === "CANCELLED") return true;
-    // Auto-complete: CONFIRMED but past return time
-    if (b.status === "CONFIRMED") {
-      const returnTime = new Date((b.return || "").replace(" ", "T"));
-      if (!isNaN(returnTime.getTime()) && returnTime < new Date()) return true;
+    if (b.status === "CONFIRMED" && b.return) {
+      const returnTime = new Date(b.return.replace(" ", "T"));
+      return !isNaN(returnTime.getTime()) && returnTime < new Date();
     }
     return false;
   }
@@ -337,34 +248,13 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
 
     const events = this.bookings.map((b) => {
       const isOld = this.isOldBooking(b);
+      const type = b.vehicle?.vehicleTypeId || "Sedan";
+      
+      let { color, borderColor, icon } = VEHICLE_STYLES[type] || VEHICLE_STYLES["Sedan"];
 
-      let color = "#0ea5e9"; // Premium blue for Sedan
-      let borderColor = "#0284c7"; // Premium blue-600
-      let icon = "directions_car";
-
-      const type = b.vehicle?.vehicleTypeId;
-      if (type === "Pickup") {
-        color = "#be3350"; // Premium red-500
-        borderColor = "#982840"; // Premium red-600
-        icon = "local_shipping";
-      } else if (type === "Van") {
-        color = "#d25414"; // Premium orange-500
-        borderColor = "#aa410d"; // Premium orange-600
-        icon = "airport_shuttle";
-      } else if (type === "SUV") {
-        color = "#2b9f6f"; // Premium emerald-500
-        borderColor = "#207a54"; // Premium emerald-600
-        icon = "time_to_leave";
-      } else if (type === "Other") {
-        color = "#7542d9"; // Premium violet-500
-        borderColor = "#5c30b2"; // Premium violet-600
-        icon = "commute";
-      }
-
-      // Old bookings get sand background
       if (isOld) {
-        color = "#726751"; // Premium sand-400
-        borderColor = "#615743"; // Premium sand-500
+        color = "#726751";
+        borderColor = "#615743";
       }
 
       return {
@@ -378,9 +268,7 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         borderColor: borderColor,
         color: "#ffffff",
         isReadOnly: true,
-        raw: {
-          icon: icon,
-        },
+        raw: { icon },
       };
     });
 

@@ -332,6 +332,15 @@ export class BookingList implements OnInit, OnDestroy, AfterViewInit {
     this.rightDrawerOpened.set(true);
   }
 
+  closeDailyDrawer(): void {
+    this.rightDrawerOpened.set(false);
+    // Programmatically dispatch a click event to reset the calendar's internal state
+    setTimeout(() => {
+      document.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    }, 50);
+  }
+
   /** Check if a booking is past its return time (auto-complete) */
   private isAutoComplete(booking: Booking): boolean {
     if (booking.status !== "CONFIRMED") return false;
