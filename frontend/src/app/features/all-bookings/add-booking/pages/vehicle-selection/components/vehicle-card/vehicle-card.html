@@ -9,7 +9,7 @@
     <div class="flex items-center gap-3">
       <!-- Vehicle Image -->
       <div
-        class="flex items-center justify-center w-20 h-14 rounded-lg bg-gray-100 overflow-hidden shrink-0 border border-gray-100"
+        class="flex items-center justify-center w-20 h-14 rounded-lg bg-sand-100 overflow-hidden shrink-0 border border-sand-100"
       >
         @if (vehicleImgUrl) {
         <img
@@ -18,14 +18,14 @@
           class="w-full h-full object-contain"
         />
         } @else {
-        <span class="material-icons text-3xl text-gray-300"
+        <span class="material-icons text-3xl text-sand-300"
           >directions_car</span
         >
         }
       </div>
       <!-- Vehicle Details -->
       <div class="min-w-0 flex-1">
-        <h3 class="text-sm font-semibold text-gray-800 truncate">
+        <h3 class="text-sm font-semibold text-sand-800 truncate">
           {{ vehicle.model }}
         </h3>
       </div>
@@ -38,7 +38,7 @@
     >
       <!-- Vehicle Image -->
       <div
-        class="flex items-center justify-center w-full sm:w-32 h-20 sm:h-22 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100"
+        class="flex items-center justify-center w-full sm:w-32 h-20 sm:h-22 rounded-xl bg-sand-100 overflow-hidden shrink-0 border border-sand-100"
       >
         @if (vehicleImgUrl) {
         <img
@@ -47,7 +47,7 @@
           class="w-full h-full object-contain"
         />
         } @else {
-        <span class="material-icons text-4xl text-gray-300"
+        <span class="material-icons text-4xl text-sand-300"
           >directions_car</span
         >
         }
@@ -56,7 +56,7 @@
       <!-- Vehicle Details -->
       <div class="flex-1 flex flex-col gap-1 sm:gap-1.5">
         <div class="flex items-center gap-2 flex-wrap">
-          <h3 class="text-base font-semibold text-gray-800">
+          <h3 class="text-base font-semibold text-sand-800">
             {{ vehicle.model }}
           </h3>
           @if (!readonly) {
@@ -67,25 +67,25 @@
           }
         </div>
 
-        <div class="flex flex-col gap-0.5 text-xs sm:text-sm text-gray-500">
+        <div class="flex flex-col gap-0.5 text-xs sm:text-sm text-sand-500">
           <div class="flex items-center gap-1.5">
-            <span class="material-icons text-sm sm:text-base text-gray-400"
+            <span class="material-icons text-sm sm:text-base text-sand-400"
               >pin</span
             >
             <span>{{ vehicle.plateNumber }}</span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="material-icons text-sm sm:text-base text-gray-400"
+            <span class="material-icons text-sm sm:text-base text-sand-400"
               >category</span
             >
             <span>{{ vehicle.vehicleTypeId | titlecase }}</span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="material-icons text-sm sm:text-base text-gray-400"
+            <span class="material-icons text-sm sm:text-base text-sand-400"
               >people</span
             >
             <span
-              >{{ vehicle.capacity }} {{ 'seats / ที่นั่ง' | translate }}</span
+              >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"/></span
             >
           </div>
         </div>
@@ -101,14 +101,14 @@
           size="sm"
           (click)="onSelect()"
         >
-          {{ 'Select' | translate }}
+          <translate-fixed key="Select"/>
         </component-button>
         } @else {
         <span
-          class="inline-flex items-center gap-1 text-sm text-gray-400 font-medium"
+          class="inline-flex items-center gap-1 text-sm text-sand-400 font-medium"
         >
           <span class="material-icons text-sm sm:text-base">block</span>
-          {{ statusVariant | translate }}
+          <translate-fixed [key]="statusVariant"/>
         </span>
         }
       </div>

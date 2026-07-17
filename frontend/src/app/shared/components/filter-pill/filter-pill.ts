@@ -18,15 +18,15 @@ import { CommonModule } from "@angular/common";
 export class ComponentFilterPill {
   @Input() label = "";
   @Input() active = false;
-  @Input() dotColor = "bg-gray-400";
-  @Input() ringClass = "ring-gray-400";
+  @Input() dotColor = "bg-sand-400";
+  @Input() ringClass = "ring-sand-400";
   @Input() size: "sm" | "md" = "sm";
 
   @Output() click = new EventEmitter<void>();
 
   get hostClasses(): string {
     const base =
-      "inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white text-xs font-semibold text-gray-700 cursor-pointer select-none transition-all active:scale-95 duration-100";
+      "inline-flex items-center gap-1.5 rounded-full border border-sand-200 bg-white text-xs font-semibold text-sand-700 cursor-pointer select-none transition-all active:scale-95 duration-100";
     const padding = this.size === "sm" ? "px-2 py-1" : "px-2.5 py-1.5";
     const activeRing = this.active ? this.ringClass : "";
     return `${base} ${padding} ${activeRing}`;

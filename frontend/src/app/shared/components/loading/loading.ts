@@ -15,7 +15,7 @@ export class ComponentLoading {
   protected readonly containerClasses = {
     default: "flex flex-col items-center justify-center p-6 w-full",
     overlay:
-      "fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-900/40 backdrop-blur-xs",
+      "fixed inset-0 z-50 flex flex-col items-center justify-center bg-sand-900/40 backdrop-blur-xs",
   };
 
   protected readonly spinnerSizeClasses = {

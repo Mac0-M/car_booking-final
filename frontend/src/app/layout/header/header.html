@@ -1,5 +1,5 @@
 <header
-  class="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md transition-all duration-300"
+  class="sticky top-0 z-40 w-full border-b border-sand-200 bg-white/80 backdrop-blur-md transition-all duration-300"
 >
   <div
     class="w-full px-3 sm:px-4 md:px-6 h-16 flex items-center justify-between"
@@ -28,18 +28,18 @@
       <a
         routerLink="/bookings"
         [ngClass]="isRouteActive('/bookings') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
-        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center"
+        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center min-w-[120px]"
       >
         <span class="material-icons text-xl px-1">list_alt</span>
-        {{ 'Bookings' | translate }}
+        <translate-fixed key="Bookings" />
       </a>
       <a
         routerLink="/directory"
         [ngClass]="isRouteActive('/directory') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
-        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center"
+        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center min-w-[120px]"
       >
         <span class="material-icons text-xl px-1">folder_shared</span>
-        {{ (isAdmin ? 'Management' : 'Directory') | translate }}
+        <translate-fixed [key]="isAdmin ? 'Management' : 'Directory'" />
       </a>
     </nav>
 
@@ -53,7 +53,7 @@
           [title]="'Switch Language' | translate"
         >
           <div
-            class="flex items-center justify-center w-full h-full bg-primary-container shadow-sm rounded-md text-gray-800 text-xs font-bold font-mono"
+            class="flex items-center justify-center w-full h-full bg-primary-container shadow-sm rounded-md text-sand-800 text-xs font-bold font-mono"
           >
             {{ currentLang() | uppercase }}
           </div>
@@ -94,7 +94,7 @@
         <!-- Dropdown Menu overlay -->
         @if (isProfileDropdownOpen()) {
         <div
-          class="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-gray-150/80 shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+          class="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-sand-150/80 shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150"
         >
           <!-- View Profile Link -->
           <a
@@ -103,7 +103,7 @@
             class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-primary rounded-none hover:bg-primary-container transition-colors text-decoration-none"
           >
             <span class="material-icons text-lg text-primary">person</span>
-            {{ 'View Profile' | translate }}
+            <translate-fixed key="View Profile" align="start" />
           </a>
 
           <!-- Divider -->
@@ -115,7 +115,7 @@
             class="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-red-500 rounded-none hover:bg-red-100 transition-colors border-0 bg-transparent text-left cursor-pointer"
           >
             <span class="material-icons text-lg text-red-400">logout</span>
-            {{ 'Logout' | translate }}
+            <translate-fixed key="Logout" align="start" />
           </button>
         </div>
         }
@@ -146,11 +146,11 @@
         [class.text-primary]="headerService.activeFiltersCount() === 0"
         [class.hover:bg-primary-fixed-dim]="headerService.activeFiltersCount() === 0"
         [class.border-primary-fixed-dim/30]="headerService.activeFiltersCount() === 0"
-        class="relative flex md:hidden items-center justify-center gap-1.5 px-3 h-10 sm:h-11 rounded-xl border transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs text-xs font-bold font-sans"
+        class="relative flex md:hidden items-center justify-center gap-1.5 px-3 h-10 sm:h-11 rounded-xl border transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs text-xs font-bold font-sans min-w-[80px]"
         aria-label="Toggle Filters"
       >
         <span class="material-icons text-base">filter_list</span>
-        <span>{{ 'Filter' | translate }}</span>
+        <translate-fixed key="Filter" align="center" />
         @if (headerService.activeFiltersCount() > 0) {
         <span
           class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-0.5"
@@ -164,7 +164,7 @@
       <!-- Menu Button (mobile only) -->
       <button
         (click)="toggleMobileMenu()"
-        class="flex md:hidden items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-800 active:scale-90 transition-all cursor-pointer bg-transparent shrink-0 border-0 ml-1"
+        class="flex md:hidden items-center justify-center w-8 h-8 text-sand-500 hover:text-sand-800 active:scale-90 transition-all cursor-pointer bg-transparent shrink-0 border-0 ml-1"
         [title]="(isMobileMenuOpen() ? 'Close Menu' : 'Open Menu') | translate"
       >
         <span class="material-icons text-2xl sm:text-3xl">
@@ -185,44 +185,47 @@
   [class.opacity-0]="!isMobileMenuOpen()"
   [class.pointer-events-none]="!isMobileMenuOpen()"
   (click)="closeMobileMenu()"
-  class="fixed inset-0 bg-gray-900/50 backdrop-blur-xs z-50 md:hidden transition-all duration-300 ease-in-out"
+  class="fixed inset-0 bg-sand-900/50 backdrop-blur-xs z-50 md:hidden transition-all duration-300 ease-in-out"
 ></div>
 
 <!-- Drawer Panel -->
 <div
   [class.translate-x-0]="isMobileMenuOpen()"
   [class.translate-x-full]="!isMobileMenuOpen()"
-  class="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-white shadow-2xl z-50 md:hidden flex flex-col transition-transform duration-300 ease-in-out border-l border-gray-100"
+  class="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-white shadow-2xl z-50 md:hidden flex flex-col transition-transform duration-300 ease-in-out border-l border-sand-100"
 >
   <!-- Top Area: Profile Info & Nav Links -->
   <div class="flex flex-col p-3 space-y-6 flex-1">
     <!-- Close button / Header inside drawer -->
     <div
-      class="flex justify-between items-center border-b border-gray-100 pb-3 mb-1 w-full"
+      class="flex justify-between items-center border-b border-sand-100 pb-3 mb-1 w-full"
     >
-      <!-- Left: Language Switcher and Profile Box -->
+      <!-- Left: Language Switcher -->
       <div class="flex items-center gap-1.5">
         <!-- Language Switcher (mobile drawer) -->
         <button
           (click)="toggleLanguage()"
-          class="flex items-center justify-center w-8 h-8 bg-primary-fixed-dim p-0.5 rounded-lg shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
+          class="flex items-center justify-center w-10 h-10 bg-primary-fixed-dim p-0.5 rounded-xl shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
           [title]="'Switch Language' | translate"
         >
           <div
-            class="flex items-center justify-center w-full h-full bg-primary-container shadow-sm rounded-md text-gray-800 text-[10px] font-bold font-mono"
+            class="flex items-center justify-center w-full h-full bg-primary-container shadow-sm rounded-lg text-sand-800 text-xs font-bold font-mono"
           >
             {{ currentLang() | uppercase }}
           </div>
         </button>
+      </div>
 
+      <!-- Right: Profile Box & Close Button -->
+      <div class="flex items-center gap-1">
         <!-- User Profile Box -->
         <a
           routerLink="/profile"
           (click)="closeMobileMenu()"
-          class="flex items-center gap-1.5 sm:gap-2 bg-primary-container hover:bg-primary-fixed-dim border border-primary-fixed-dim/30 px-3 py-1.5 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
+          class="flex items-center gap-2 bg-primary-container hover:bg-primary-fixed-dim border border-primary-fixed-dim/30 px-4 py-2 rounded-full select-none shrink-0 transition-colors cursor-pointer text-decoration-none"
         >
           <div
-            class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden bg-linear-to-tr from-blue-700 to-blue-500 text-white font-bold text-[10px] sm:text-xs uppercase shadow-sm shrink-0"
+            class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden bg-linear-to-tr from-blue-700 to-blue-500 text-white font-bold text-xs sm:text-sm uppercase shadow-sm shrink-0"
           >
             @if (profileImage) {
             <img
@@ -234,23 +237,23 @@
           </div>
           <div class="text-left select-none">
             <div
-              class="text-[11px] sm:text-xs font-bold text-primary line-clamp-1 leading-none"
+              class="text-xs sm:text-sm font-bold text-primary line-clamp-1 leading-none"
             >
               {{ userName }}
             </div>
           </div>
         </a>
-      </div>
 
-      <!-- Right: Close Button -->
-      <component-button
-        (click)="closeMobileMenu()"
-        variant="plain"
-        size="xs"
-        class="w-auto text-gray-400 hover:text-gray-650 -mr-3"
-      >
-        <span class="material-icons text-xl">close</span>
-      </component-button>
+        <!-- Close Button -->
+        <component-button
+          (click)="closeMobileMenu()"
+          variant="plain"
+          size="sm"
+          class="w-auto -mr-2"
+        >
+          <span class="material-icons text-2xl">close</span>
+        </component-button>
+      </div>
     </div>
 
     <!-- Navigation Links -->
@@ -258,10 +261,10 @@
       <a
         routerLink="/bookings"
         [ngClass]="isRouteActive('/bookings') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
-        class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
+        class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none min-w-[160px]"
       >
         <span class="material-icons text-xl">list_alt</span>
-        {{ 'Bookings' | translate }}
+        <translate-fixed key="Bookings" align="start" />
       </a>
       <a
         routerLink="/directory"
@@ -269,7 +272,7 @@
         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
       >
         <span class="material-icons text-xl">folder_shared</span>
-        {{ (isAdmin ? 'Management' : 'Directory') | translate }}
+        <translate-fixed [key]="isAdmin ? 'Management' : 'Directory'" align="start" />
       </a>
     </nav>
   </div>
@@ -283,7 +286,7 @@
       class="w-full font-sans"
     >
       <span class="material-icons text-lg mr-2">logout</span>
-      {{ 'Logout' | translate }}
+      <translate-fixed key="Logout" align="start" />
     </component-button>
   </div>
 </div>

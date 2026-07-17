@@ -16,31 +16,31 @@
       <div class="flex flex-col gap-4 w-full">
         <!-- Date/Time Depart -->
         <div class="flex items-start gap-2.5 sm:gap-3">
-          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+          <span class="material-icons text-sand-400 mt-0.5 text-base sm:text-lg"
             >calendar_today</span
           >
           <div>
             <div
-              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              {{ 'Departure-Return Date/Time / ออกเดินทาง' | translate }}
+              <translate-fixed key="Departure-Return Date/Time / ออกเดินทาง" align="start"/>
             </div>
             <div
-              class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 text-sm sm:text-base font-semibold text-gray-800 mt-0.5 font-sans"
+              class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 text-sm sm:text-base font-semibold text-sand-800 mt-0.5 font-sans"
             >
               <div>
                 {{ depart ? (depart | appDate) + ' ' + (depart | appTime) :
                 (bookingDate | appDate) }}
               </div>
               <span
-                class="material-icons text-gray-400 text-sm sm:text-base rotate-90 sm:rotate-0 my-0.5 sm:my-0 self-start sm:self-auto"
+                class="material-icons text-sand-400 text-sm sm:text-base rotate-90 sm:rotate-0 my-0.5 sm:my-0 self-start sm:self-auto"
               >
                 arrow_forward</span
               >
               <div>
                 {{ returnTime ? (returnTime | appDate) + ' ' + (returnTime |
                 appTime) : (endTime | appTime) }} @if (totalDuration) {
-                <span class="text-xs text-gray-500 font-normal ml-1"
+                <span class="text-xs text-sand-500 font-normal ml-1"
                   >({{ totalDuration }})</span
                 >
                 }
@@ -51,17 +51,17 @@
 
         <!-- Destination -->
         <div class="flex items-start gap-2.5 sm:gap-3">
-          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+          <span class="material-icons text-sand-400 mt-0.5 text-base sm:text-lg"
             >location_on</span
           >
           <div class="min-w-0 flex-1">
             <div
-              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              {{ 'Destination / จุดหมาย' | translate }}
+              <translate-fixed key="Destination / จุดหมาย" align="start"/>
             </div>
             <div
-              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+              class="text-sm sm:text-base font-semibold text-sand-800 mt-0.5 break-words"
             >
               {{ destination || '-' }}
             </div>
@@ -71,17 +71,17 @@
         <!-- Purpose -->
 
         <div class="flex items-start gap-2.5 sm:gap-3">
-          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+          <span class="material-icons text-sand-400 mt-0.5 text-base sm:text-lg"
             >assignment</span
           >
           <div class="min-w-0 flex-1">
             <div
-              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              {{ 'Purpose of Use / วัตถุประสงค์' | translate }}
+              <translate-fixed key="Purpose of Use / วัตถุประสงค์" align="start"/>
             </div>
             <div
-              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+              class="text-sm sm:text-base font-semibold text-sand-800 mt-0.5 break-words"
             >
               {{ purpose || '-' }}
             </div>
@@ -90,17 +90,17 @@
 
         <!-- Booker & Contact -->
         <div class="flex items-start gap-2.5 sm:gap-3">
-          <span class="material-icons text-gray-400 mt-0.5 text-base sm:text-lg"
+          <span class="material-icons text-sand-400 mt-0.5 text-base sm:text-lg"
             >person</span
           >
           <div>
             <div
-              class="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider"
+              class="text-[10px] sm:text-xs text-sand-400 font-semibold uppercase tracking-wider"
             >
-              {{ 'Booker / ผู้จอง' | translate }}
+              <translate-fixed key="Booker / ผู้จอง" align="start"/>
             </div>
             <div
-              class="text-sm sm:text-base font-semibold text-gray-800 mt-0.5 break-words"
+              class="text-sm sm:text-base font-semibold text-sand-800 mt-0.5 break-words"
             >
               {{ bookedByUser?.user_name || userName }} @if (bookedByUser?.phone
               || userPhone) {
@@ -121,7 +121,7 @@
             <div
               class="text-[10px] sm:text-xs text-indigo-400 font-semibold uppercase tracking-wider"
             >
-              {{ 'Passenger / ผู้โดยสาร' | translate }}
+              <translate-fixed key="Passenger / ผู้โดยสาร" align="start"/>
             </div>
             <div class="text-sm sm:text-base font-bold text-indigo-900 mt-0.5">
               {{ bookedForUser.user_name }}
@@ -139,6 +139,7 @@
   <component-button
     variant="secondary"
     size="xs"
+    round="lg"
     class="square-btn absolute bottom-8 right-8 font-sans z-10"
     style="width: 2.75rem; height: 2.75rem"
     (click)="edit.emit()"

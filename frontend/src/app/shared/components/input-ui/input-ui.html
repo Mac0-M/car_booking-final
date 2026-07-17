@@ -3,7 +3,7 @@
   @if (label) {
     <label 
       [attr.for]="inputId" 
-      class="mb-1.5 text-sm font-medium text-gray-700"
+      class="mb-1.5 text-sm font-medium text-sand-700"
     >
       {{ label }}
     </label>
@@ -14,7 +14,7 @@
     <!-- Icon Left (Optional) -->
     @if (icon) {
       <span 
-        class="material-icons absolute left-3.5 text-gray-400 pointer-events-none select-none text-xl"
+        class="material-icons absolute left-3.5 text-sand-400 pointer-events-none select-none text-xl"
         [ngClass]="(type === 'textarea' && rows > 1) ? 'top-3' : 'top-1/2 -translate-y-1/2'"
       >
         {{ icon }}

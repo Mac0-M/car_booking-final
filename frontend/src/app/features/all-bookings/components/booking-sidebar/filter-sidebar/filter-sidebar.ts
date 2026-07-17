@@ -23,7 +23,7 @@ export class FilterSidebar {
     const found = VEHICLE_TYPES.find((t) => t.value === type);
     return found
       ? { dotColor: found.dotColor, ringClass: found.ringClass }
-      : { dotColor: "bg-gray-400", ringClass: "ring-gray-400" };
+      : { dotColor: "bg-sand-400", ringClass: "ring-sand-400" };
   }
   @Input() vehicles: Vehicle[] = [];
   @Input() users: User[] = [];

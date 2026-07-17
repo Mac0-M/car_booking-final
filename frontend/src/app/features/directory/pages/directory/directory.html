@@ -4,7 +4,7 @@
   class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-container-low overflow-hidden"
 >
   <!-- Top Area: Switchers & Filters Trigger -->
-  <div class="w-full bg-white border-b border-gray-200 shrink-0">
+  <div class="w-full bg-white border-b border-sand-200 shrink-0">
     <app-directory-left-sidebar
       class="w-full block"
       [activeTab]="activeTab()"
@@ -45,7 +45,7 @@
 
   <!-- Bottom Area: Sticky Add Button (Admins only) -->
   @if (isAdmin()) {
-  <div class="p-4 border-t border-gray-200 bg-white shrink-0">
+  <div class="p-4 border-t border-sand-200 bg-white shrink-0">
     @if (activeTab() === 'vehicles') {
     <component-button
       (click)="openAddVehicleModal()"
@@ -54,7 +54,7 @@
       class="w-full btn-purple-theme"
     >
       <span class="material-icons text-sm">add</span>
-      {{ 'Add New Vehicle' | translate }}
+      <translate-fixed key="Add New Vehicle"/>
     </component-button>
     } @else if (activeTab() === 'users') {
     <component-button
@@ -83,7 +83,7 @@
     [mode]="isMobile() ? 'over' : 'side'"
     [opened]="leftDrawerOpened()"
     (closedStart)="leftDrawerOpened.set(false)"
-    class="w-72 min-w-[20rem] max-w-[20rem] border-r border-gray-200 bg-white shadow-sm flex flex-col"
+    class="w-72 min-w-[20rem] max-w-[20rem] border-r border-sand-200 bg-white shadow-sm flex flex-col"
   >
     <app-directory-left-sidebar
       class="w-full h-full flex flex-col"

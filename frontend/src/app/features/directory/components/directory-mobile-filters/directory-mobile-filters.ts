@@ -67,7 +67,7 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
       maxWidth: "100vw",
       maxHeight: "80dvh",
       backdropClass: [
-        "bg-gray-900/60",
+        "bg-sand-900/60",
         "backdrop-blur-sm",
         "animate-backdrop-fade",
       ],

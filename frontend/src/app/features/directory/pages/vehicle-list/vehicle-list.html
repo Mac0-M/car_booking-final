@@ -7,13 +7,13 @@
     class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
   >
     <div>
-      <h1 class="text-2xl font-black text-gray-800 flex items-center gap-2">
+      <h1 class="text-2xl font-black text-sand-800 flex items-center gap-2">
         <span class="material-icons text-primary font-bold"
           >directions_car</span
         >
         All Vehicles
       </h1>
-      <p class="text-sm text-gray-500 mt-1">
+      <p class="text-sm text-sand-500 mt-1">
         View vehicle lists and activation status in the system.
       </p>
     </div>
@@ -37,12 +37,12 @@
   <!-- Filter Bar -->
   @if (!hideFilters) {
   <div
-    class="flex flex-col md:flex-row gap-4 items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm"
+    class="flex flex-col md:flex-row gap-4 items-center bg-white p-4 rounded-2xl border border-sand-100 shadow-sm"
   >
     <!-- Search Bar -->
     <div class="relative w-full md:flex-1">
       <span
-        class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"
+        class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-sand-400 text-lg"
         >search</span
       >
       <input
@@ -50,7 +50,7 @@
         [value]="searchQuery()"
         (input)="searchQuery.set($any($event.target).value); onFilterChange()"
         placeholder="Search vehicle model..."
-        class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors bg-gray-50/50"
+        class="w-full pl-10 pr-4 py-2 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-sand-400 transition-colors bg-sand-50/50"
       />
     </div>
 
@@ -59,7 +59,7 @@
       <select
         [value]="selectedTypes().length === 1 ? selectedTypes()[0] : ''"
         (change)="onDropdownTypeChange($event)"
-        class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400"
+        class="w-full px-3 py-2 border border-sand-200 rounded-xl text-sm bg-sand-50/50 focus:outline-none focus:border-sand-400"
       >
         <option value="">{{ 'All Vehicle Types' | translate }}</option>
         <option value="Sedan">{{ 'Sedan / เก๋ง' | translate }}</option>
@@ -75,7 +75,7 @@
       <select
         [value]="selectedStatus()"
         (change)="selectedStatus.set($any($event.target).value); onFilterChange()"
-        class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400"
+        class="w-full px-3 py-2 border border-sand-200 rounded-xl text-sm bg-sand-50/50 focus:outline-none focus:border-sand-400"
       >
         <option value="">{{ 'All Status' | translate }}</option>
         <option value="available">{{ 'Available' | translate }}</option>
@@ -88,7 +88,7 @@
       <select
         [value]="selectedReFuel()"
         (change)="selectedReFuel.set($any($event.target).value); onFilterChange()"
-        class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50/50 focus:outline-none focus:border-gray-400"
+        class="w-full px-3 py-2 border border-sand-200 rounded-xl text-sm bg-sand-50/50 focus:outline-none focus:border-sand-400"
       >
         <option value="">{{ 'All Fuel Statuses' | translate }}</option>
         <option value="true">
@@ -114,7 +114,7 @@
       <div>
         <!-- Vehicle Image Section -->
         <div
-          class="relative w-full h-44 rounded-xl overflow-hidden bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-100"
+          class="relative w-full h-44 rounded-xl overflow-hidden bg-linear-to-br from-sand-100 to-sand-200 flex items-center justify-center border border-sand-100"
         >
           @if (getVehicleImgUrl(vehicle); as url) {
           <img
@@ -123,7 +123,7 @@
             class="w-full h-full object-contain"
           />
           } @else {
-          <span class="material-icons text-6xl text-gray-300"
+          <span class="material-icons text-6xl text-sand-300"
             >directions_car</span
           >
           }
@@ -132,11 +132,11 @@
           <div class="absolute top-3 right-3">
             @if (vehicle.status === 'available') {
             <component-badge variant="available" size="sm"
-              >{{ 'Available' | translate }}</component-badge
+              ><translate-fixed key="Available"/></component-badge
             >
             } @else {
             <component-badge variant="unavailable" size="sm"
-              >{{ 'Unavailable' | translate }}</component-badge
+              ><translate-fixed key="Unavailable"/></component-badge
             >
             }
           </div>
@@ -145,12 +145,12 @@
         <!-- Vehicle Details -->
         <div class="p-1 pt-4 space-y-3">
           <div>
-            <h3 class="text-lg font-bold text-gray-800 line-clamp-1">
+            <h3 class="text-lg font-bold text-sand-800 line-clamp-1">
               {{ vehicle.model }}
             </h3>
             <div class="flex items-center gap-2 mt-1">
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-150"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-sand-100 text-sand-600 border border-sand-150"
               >
                 {{ vehicle.vehicleTypeId }}
               </span>
@@ -159,35 +159,32 @@
 
           <!-- Info Grid -->
           <div
-            class="grid grid-cols-2 gap-3 pt-2 text-xs text-gray-500 border-t border-gray-50"
+            class="grid grid-cols-2 gap-3 pt-2 text-xs text-sand-500 border-t border-sand-50"
           >
             <div class="flex items-center gap-1.5">
-              <span class="material-icons text-base text-gray-400">people</span>
+              <span class="material-icons text-base text-sand-400">people</span>
               <span
-                >{{ vehicle.capacity }} {{ 'seats / ที่นั่ง' | translate
-                }}</span
+                >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"/></span
               >
             </div>
             <div class="flex items-center gap-1.5">
-              <span class="material-icons text-base text-gray-400"
+              <span class="material-icons text-base text-sand-400"
                 >local_gas_station</span
               >
               <span
-                >{{ vehicle.reFuel ? ('Refueled / เติมแล้ว' | translate) :
-                ('Needs Refuel / ต้องเติม' | translate) }}</span
+                ><translate-fixed [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"/></span
               >
             </div>
             <div class="flex items-center gap-1.5">
-              <span class="material-icons text-base text-gray-400">speed</span>
+              <span class="material-icons text-base text-sand-400">speed</span>
               <span>{{ vehicle.totalMile | number }} km</span>
             </div>
             <div class="flex items-center gap-1.5">
-              <span class="material-icons text-base text-gray-400"
+              <span class="material-icons text-base text-sand-400"
                 >calendar_today</span
               >
               <span
-                >{{ 'Booked' | translate }} {{ vehicle.totalBookBy || 0 }} {{
-                'times' | translate }}</span
+                ><translate-fixed key="Booked"/> {{ vehicle.totalBookBy || 0 }} <translate-fixed key="times"/></span
               >
             </div>
           </div>
@@ -197,7 +194,7 @@
       <!-- Admin Actions Footer -->
       @if (isAdmin) {
       <div
-        class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-gray-100"
+        class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-sand-100"
       >
         <component-button
           (click)="openEditModal(vehicle.id)"
@@ -206,7 +203,7 @@
           class="w-auto"
         >
           <span class="material-icons text-sm mr-1">edit</span>
-          {{ 'Edit Vehicle' | translate }}
+          <translate-fixed key="Edit Vehicle"/>
         </component-button>
       </div>
       }

@@ -46,73 +46,73 @@
 <div class="flex-1 overflow-y-auto px-3 py-2 md:p-6">
   @if (bookings.length > 0) {
   <div
-    class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-200"
+    class="bg-white rounded-2xl border border-sand-100 shadow-sm overflow-hidden animate-in fade-in duration-200"
   >
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead>
           <tr
-            class="bg-[#fafbfc] border-b border-container text-xs font-bold text-gray-500 uppercase tracking-wider"
+            class="bg-[#fafbfc] border-b border-container text-xs font-bold text-sand-500 uppercase tracking-wider"
           >
-            <th class="px-6 py-4">ID</th>
-            <th class="px-6 py-4">{{ 'Booker / ผู้จอง' | translate }}</th>
-            <th class="px-6 py-4">{{ 'Vehicle / ยานพาหนะ' | translate }}</th>
-            <th class="px-6 py-4">{{ 'Destination / จุดหมาย' | translate }}</th>
-            <th class="px-6 py-4">{{ 'Depart Date / เดินทาง' | translate }}</th>
-            <th class="px-6 py-4">{{ 'Return Date / กลับ' | translate }}</th>
-            <th class="px-6 py-4">{{ 'Status / สถานะ' | translate }}</th>
+            <th class="px-6 py-4 w-[6%]">ID</th>
+            <th class="px-6 py-4 w-[14%]"><translate-fixed key="Booker / ผู้จอง" align="start"/></th>
+            <th class="px-6 py-4 w-[22%]"><translate-fixed key="Vehicle / ยานพาหนะ" align="start"/></th>
+            <th class="px-6 py-4 w-[22%]"><translate-fixed key="Destination / จุดหมาย" align="start"/></th>
+            <th class="px-6 py-4 w-[15%]"><translate-fixed key="Depart Date / เดินทาง" align="start"/></th>
+            <th class="px-6 py-4 w-[15%]"><translate-fixed key="Return Date / กลับ" align="start"/></th>
+            <th class="px-6 py-4 w-[6%]"><translate-fixed key="Status / สถานะ" align="start"/></th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+        <tbody class="divide-y divide-sand-100 text-sm text-sand-700">
           @for (booking of bookings; track booking.id) {
           <tr
-            class="hover:bg-gray-200 transition-colors cursor-pointer"
+            class="hover:bg-sand-200 transition-colors cursor-pointer"
             (click)="bookingClick.emit(booking)"
           >
-            <td class="px-6 py-4 font-mono text-xs font-bold text-gray-400">
+            <td class="px-6 py-4 font-mono text-xs font-bold text-sand-400">
               #{{ booking.id }}
             </td>
-            <td class="px-6 py-4 font-bold text-gray-800">
+            <td class="px-6 py-4 font-bold text-sand-800">
               {{ booking.userName }}
             </td>
-            <td class="px-6 py-4 font-semibold text-gray-600">
+            <td class="px-6 py-4 font-semibold text-sand-600">
               <div>{{ booking.vehicle?.model || 'N/A' }}</div>
               @if (booking.vehicle?.plateNumber) {
-              <div class="text-[10px] text-gray-400 font-normal font-mono">
+              <div class="text-[10px] text-sand-400 font-normal font-mono">
                 {{ booking.vehicle?.plateNumber }}
               </div>
               }
             </td>
-            <td class="px-6 py-4 text-gray-600 line-clamp-1 max-w-xs">
+            <td class="px-6 py-4 text-sand-600 line-clamp-1 max-w-xs">
               {{ booking.destination || 'N/A' }}
             </td>
-            <td class="px-6 py-4 text-xs font-mono text-gray-600">
+            <td class="px-6 py-4 text-xs font-mono text-sand-600">
               {{ booking.depart | appDate }} {{ booking.depart | appTime }}
             </td>
-            <td class="px-6 py-4 text-xs font-mono text-gray-600">
+            <td class="px-6 py-4 text-xs font-mono text-sand-600">
               {{ booking.return | appDate }} {{ booking.return | appTime }}
             </td>
             <td class="px-6 py-4">
               @if (booking.status === 'CONFIRMED') { @if
               (getBookingStatusVariant(booking) === 'booked') {
               <component-badge variant="booked" size="xs"
-                >{{ 'Completed' | translate }}</component-badge
+                ><translate-fixed key="Completed"/></component-badge
               >
               } @else if (getBookingStatusVariant(booking) === 'pending') {
               <component-badge variant="pending" size="xs"
-                >{{ 'Ongoing' | translate }}</component-badge
+                ><translate-fixed key="Ongoing"/></component-badge
               >
               } @else {
               <component-badge variant="available" size="xs"
-                >{{ 'Upcoming' | translate }}</component-badge
+                ><translate-fixed key="Upcoming"/></component-badge
               >
               } } @else if (booking.status === 'COMPLETED') {
               <component-badge variant="booked" size="xs"
-                >{{ 'Completed' | translate }}</component-badge
+                ><translate-fixed key="Completed"/></component-badge
               >
               } @else {
               <component-badge variant="unavailable" size="xs"
-                >{{ 'Cancelled' | translate }}</component-badge
+                ><translate-fixed key="Cancelled"/></component-badge
               >
               }
             </td>

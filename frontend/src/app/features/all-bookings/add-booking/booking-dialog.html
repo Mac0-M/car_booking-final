@@ -1,18 +1,18 @@
 <div class="relative w-full h-full md:max-h-[95vh] flex flex-col bg-white">
   <!-- Header -->
   <div
-    class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
+    class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-sand-100 flex items-center justify-between bg-white shrink-0"
   >
-    <h3 class="text-xl font-bold text-gray-800">
-      @if (isConfirmed()) { {{ 'Booking Confirmed!' | translate }} } @else if
-      (currentStep() === 1) { {{ 'Book New Vehicle' | translate }} } @else if
-      (currentStep() === 2) { {{ 'Select a Vehicle' | translate }} } @else if
-      (currentStep() === 3) { {{ 'Confirm Travel Details' | translate }} }
+    <h3 class="text-xl font-bold text-sand-800">
+      @if (isConfirmed()) { <translate-fixed key="Booking Confirmed!"/> } @else if
+      (currentStep() === 1) { <translate-fixed key="Book New Vehicle"/> } @else if
+      (currentStep() === 2) { <translate-fixed key="Select a Vehicle"/> } @else if
+      (currentStep() === 3) { <translate-fixed key="Confirm Travel Details"/> }
     </h3>
     <component-button
       variant="plain"
       size="xs"
-      class="w-auto text-gray-400 hover:text-gray-600 -mr-3"
+      class="w-auto -mr-3"
       (click)="onClose()"
     >
       <span class="material-icons">close</span>

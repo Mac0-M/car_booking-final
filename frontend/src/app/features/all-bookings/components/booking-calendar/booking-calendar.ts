@@ -361,10 +361,10 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         icon = "commute";
       }
 
-      // Old bookings get gray background
+      // Old bookings get sand background
       if (isOld) {
-        color = "#7c8fa6"; // Premium gray-400
-        borderColor = "#52647c"; // Premium gray-500
+        color = "#726751"; // Premium sand-400
+        borderColor = "#615743"; // Premium sand-500
       }
 
       return {

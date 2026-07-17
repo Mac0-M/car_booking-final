@@ -21,7 +21,7 @@ export class ComponentEmptyState {
 
   protected readonly variantClasses = {
     default: "bg-transparent py-10 px-4",
-    card: "bg-white border border-gray-200 shadow-sm p-8 md:p-12",
+    card: "bg-white border border-sand-200 shadow-sm p-8 md:p-12",
   };
 
   protected readonly iconMap = {

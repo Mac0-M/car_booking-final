@@ -43,5 +43,5 @@ export function getVehicleTypeColor(vehicleTypeId: string): { dotColor: string; 
     return { dotColor: found.dotColor, ringClass: found.ringClass };
   }
   // Fallback for custom or undefined types to Sedan (or Other)
-  return { dotColor: 'bg-gray-400', ringClass: 'ring-gray-400' };
+  return { dotColor: 'bg-sand-400', ringClass: 'ring-sand-400' };
 }

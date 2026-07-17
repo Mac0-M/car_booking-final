@@ -147,7 +147,7 @@ export class UserListComponent implements OnInit {
       width: "448px",
       maxWidth: "95vw",
       backdropClass: [
-        "bg-gray-900/60",
+        "bg-sand-900/60",
         "backdrop-blur-sm",
         "animate-backdrop-fade",
       ],

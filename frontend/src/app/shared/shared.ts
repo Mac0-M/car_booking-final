@@ -6,6 +6,7 @@ import { ComponentInputUi } from "./components/input-ui/input-ui";
 import { ComponentLoading } from "./components/loading/loading";
 import { ComponentProcess } from "./components/process/process";
 import { ComponentFilterPill } from "./components/filter-pill/filter-pill";
+import { TranslateFixed } from "./components/translate-fixed/translate-fixed";
 
 import { ThaiDatePipe } from "./pipes/thai-date.pipe";
 import { ThaiTimePipe } from "./pipes/thai-time.pipe";
@@ -23,7 +24,8 @@ export const AllComponentUi = [
   ComponentInputUi,
   ComponentLoading,
   ComponentProcess,
-  ComponentFilterPill
+  ComponentFilterPill,
+  TranslateFixed
 ];
 
 export const AllPipes = [

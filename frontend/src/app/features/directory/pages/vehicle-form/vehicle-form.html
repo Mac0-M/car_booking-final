@@ -3,16 +3,15 @@
 <div class="relative w-full h-full md:max-h-[90vh] flex flex-col bg-white">
   <!-- Header -->
   <div
-    class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0"
+    class="px-4 sm:px-6 py-2.5 sm:py-4 border-b border-sand-100 flex items-center justify-between bg-white shrink-0"
   >
-    <h3 class="text-xl font-bold text-gray-800">
-      {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') | translate
-      }}
+    <h3 class="text-xl font-bold text-sand-800">
+      <translate-fixed [key]="isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle'"/>
     </h3>
     <component-button
       variant="plain"
       size="xs"
-      class="w-auto text-gray-400 hover:text-gray-600 -mr-3"
+      class="w-auto -mr-3"
       (click)="closeForm()"
     >
       <span class="material-icons">close</span>
@@ -34,7 +33,7 @@
   >
     <!-- Header -->
     <div
-      class="flex items-center justify-between border-b border-gray-100 pb-4"
+      class="flex items-center justify-between border-b border-sand-100 pb-4"
     >
       <div class="flex items-center gap-3">
         <component-button
@@ -47,13 +46,12 @@
           <span class="material-icons text-sm">arrow_back</span>
         </component-button>
         <div>
-          <h1 class="text-xl font-bold text-gray-800">
-            {{ (isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle') |
-            translate }}
+          <h1 class="text-xl font-bold text-sand-800">
+            <translate-fixed [key]="isEditMode ? 'Edit Vehicle Details' : 'Add New Vehicle'"/>
           </h1>
-          <p class="text-xs text-gray-500 mt-1">
-            {{ (isEditMode ? 'Edit vehicle details in the system.' : 'Fill in
-            the details to register a new vehicle.') | translate }}
+          <p class="text-xs text-sand-500 mt-1">
+            <translate-fixed [key]="isEditMode ? 'Edit vehicle details in the system.' : 'Fill in
+            the details to register a new vehicle.'"/>
           </p>
         </div>
       </div>
@@ -77,12 +75,12 @@
   >
     <!-- Image Upload Field -->
     <div class="space-y-2">
-      <label class="text-sm font-bold text-gray-700 block"
-        >{{ 'Vehicle Image / รูปภาพยานพาหนะ' | translate }}</label
+      <label class="text-sm font-bold text-sand-700 block"
+        ><translate-fixed key="Vehicle Image / รูปภาพยานพาหนะ"/></label
       >
 
       <div
-        [class]="isDialog ? 'flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-gray-400 rounded-2xl p-4 bg-gray-50/50 cursor-pointer relative transition-colors overflow-hidden group h-32' : 'flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-gray-400 rounded-2xl p-6 bg-gray-50/50 cursor-pointer relative transition-colors overflow-hidden group min-h-48'"
+        [class]="isDialog ? 'flex flex-col items-center justify-center border-2 border-dashed border-sand-200 hover:border-sand-400 rounded-2xl p-4 bg-sand-50/50 cursor-pointer relative transition-colors overflow-hidden group h-32' : 'flex flex-col items-center justify-center border-2 border-dashed border-sand-200 hover:border-sand-400 rounded-2xl p-6 bg-sand-50/50 cursor-pointer relative transition-colors overflow-hidden group min-h-48'"
       >
         <input
           type="file"
@@ -102,29 +100,28 @@
         >
           <span class="text-white text-xs font-bold flex items-center gap-1">
             <span class="material-icons text-base">photo_camera</span>
-            {{ 'Change Image / เปลี่ยนรูปภาพ' | translate }}
+            <translate-fixed key="Change Image / เปลี่ยนรูปภาพ"/>
           </span>
         </div>
         } @else {
         <div class="text-center space-y-1">
           <span
-            class="material-icons text-gray-300"
+            class="material-icons text-sand-300"
             [ngClass]="isDialog ? 'text-3xl' : 'text-5xl'"
             >add_photo_alternate</span
           >
           <div
-            class="text-gray-500 font-medium"
+            class="text-sand-500 font-medium"
             [ngClass]="isDialog ? 'text-xs' : 'text-sm'"
           >
-            {{ 'Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ' |
-            translate }}
+            <translate-fixed key="Click to upload vehicle photo / คลิกเพื่ออัปโหลดรูปภาพรถ" align="center"/>
           </div>
           <div
-            class="text-gray-400"
+            class="text-sand-400"
             [ngClass]="isDialog ? 'text-[10px]' : 'text-xs'"
           >
-            {{ 'Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG
-            ขนาดไม่เกิน 5MB' | translate }}
+            <translate-fixed key="Supports PNG, JPG images up to 5MB / รองรับภาพ PNG, JPG
+            ขนาดไม่เกิน 5MB" align="center"/>
           </div>
         </div>
         }
@@ -133,9 +130,8 @@
 
     <!-- Vehicle Name Input -->
     <div class="space-y-2">
-      <label for="vehicle_name" class="text-sm font-bold text-gray-700 block"
-        >{{ 'Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)' | translate
-        }}</label
+      <label for="vehicle_name" class="text-sm font-bold text-sand-700 block"
+        ><translate-fixed key="Vehicle Model (Plate Number) / รุ่นรถ (เลขทะเบียน)"/></label
       >
       <input
         type="text"
@@ -144,7 +140,7 @@
         [(ngModel)]="vehicle_name"
         required
         [placeholder]="'e.g. Toyota Hilux Revo (AB-1234)' | translate"
-        class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
+        class="w-full px-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
       />
     </div>
 
@@ -154,14 +150,14 @@
     >
       <!-- Type Select -->
       <div class="space-y-2">
-        <label for="type" class="text-sm font-bold text-gray-700 block"
-          >{{ 'Vehicle Type / ประเภทรถ' | translate }}</label
+        <label for="type" class="text-sm font-bold text-sand-700 block"
+          ><translate-fixed key="Vehicle Type / ประเภทรถ"/></label
         >
         <select
           id="type"
           name="type"
           [(ngModel)]="type"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
+          class="w-full px-4 py-2.5 border border-sand-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
         >
           <option value="Sedan">{{ 'Sedan / เก๋ง' | translate }}</option>
           <option value="Pickup">{{ 'Pickup / กระบะ' | translate }}</option>
@@ -173,8 +169,8 @@
 
       <!-- Capacity Input -->
       <div class="space-y-2">
-        <label for="capacity" class="text-sm font-bold text-gray-700 block"
-          >{{ 'Seats (Capacity) / จำนวนที่นั่ง' | translate }}</label
+        <label for="capacity" class="text-sm font-bold text-sand-700 block"
+          ><translate-fixed key="Seats (Capacity) / จำนวนที่นั่ง"/></label
         >
         <input
           type="number"
@@ -184,7 +180,7 @@
           required
           min="1"
           [placeholder]="'e.g. 4' | translate"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
+          class="w-full px-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
         />
       </div>
     </div>
@@ -195,8 +191,8 @@
     >
       <!-- Total Mileage Input -->
       <div class="space-y-2">
-        <label for="total_mile" class="text-sm font-bold text-gray-700 block"
-          >{{ 'Total Mileage (km) / ไมล์สะสม (กม.)' | translate }}</label
+        <label for="total_mile" class="text-sm font-bold text-sand-700 block"
+          ><translate-fixed key="Total Mileage (km) / ไมล์สะสม (กม.)"/></label
         >
         <input
           type="number"
@@ -206,21 +202,21 @@
           required
           min="0"
           [placeholder]="'e.g. 1500' | translate"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
+          class="w-full px-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
         />
       </div>
 
       <!-- Status Select -->
       @if (isEditMode) {
       <div class="space-y-2">
-        <label for="status" class="text-sm font-bold text-gray-700 block"
-          >{{ 'Availability Status / สถานะการใช้งาน' | translate }}</label
+        <label for="status" class="text-sm font-bold text-sand-700 block"
+          ><translate-fixed key="Availability Status / สถานะการใช้งาน"/></label
         >
         <select
           id="status"
           name="status"
           [(ngModel)]="status"
-          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
+          class="w-full px-4 py-2.5 border border-sand-200 rounded-xl text-sm bg-white focus:outline-none focus:border-primary transition-colors"
         >
           <option value="available">
             {{ 'Available / ว่าง' | translate }}
@@ -240,20 +236,19 @@
         id="re_fuel"
         name="re_fuel"
         [(ngModel)]="re_fuel"
-        class="h-4 w-4 rounded border-gray-300 focus:ring-black cursor-pointer"
+        class="h-4 w-4 rounded border-sand-300 focus:ring-black cursor-pointer"
       />
       <label
         for="re_fuel"
-        class="text-sm font-bold text-gray-700 cursor-pointer select-none"
+        class="text-sm font-bold text-sand-700 cursor-pointer select-none"
       >
-        {{ 'Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน' |
-        translate }}
+        <translate-fixed key="Fuel is fully loaded / Ready / น้ำมันเต็มถัง / พร้อมใช้งาน"/>
       </label>
     </div>
 
     <!-- Form Actions -->
     <div
-      class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-gray-100"
+      class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-sand-100"
     >
       <div>
         @if (isEditMode) {
@@ -268,7 +263,7 @@
           <span class="material-icons text-sm mr-1 leading-none"
             >delete_outline</span
           >
-          {{ 'Delete Vehicle' | translate }}
+          <translate-fixed key="Delete Vehicle" align="center"/>
         </component-button>
         }
       </div>
@@ -282,7 +277,7 @@
           size="md"
           class="w-full sm:w-auto"
         >
-          {{ 'Cancel' | translate }}
+          <translate-fixed key="Cancel" align="center"/>
         </component-button>
         <component-button
           type="submit"
@@ -296,9 +291,9 @@
             <span
               class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
             ></span>
-            {{ 'Saving...' | translate }}
+            <translate-fixed key="Saving..." align="center"/>
           </span>
-          } @else { {{ 'Save Vehicle' | translate }} }
+          } @else { <translate-fixed key="Save Vehicle" align="center"/> }
         </component-button>
       </div>
     </div>

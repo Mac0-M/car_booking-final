@@ -17,7 +17,7 @@ export class BookingDialogService {
       maxWidth: "95vw",
       maxHeight: "95vh",
       backdropClass: [
-        "bg-gray-900/60",
+        "bg-sand-900/60",
         "backdrop-blur-sm",
         "animate-backdrop-fade",
       ],

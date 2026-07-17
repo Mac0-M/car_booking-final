@@ -1,12 +1,12 @@
 <component-card
   variant="default"
   rounded="xl"
-  class="group overflow-hidden flex flex-col justify-between hover:shadow-md hover:rounded-2xl hover:border-gray-300 transition-all duration-200 cursor-pointer w-full max-w-[380px] mx-auto"
+  class="group overflow-hidden flex flex-col justify-between hover:shadow-md hover:rounded-2xl hover:border-sand-300 transition-all duration-200 cursor-pointer w-full max-w-[380px] mx-auto"
 >
   <div>
     <!-- Vehicle Image Section -->
     <div
-      class="relative w-full h-40 rounded-2xl overflow-hidden bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-100"
+      class="relative w-full h-40 rounded-2xl overflow-hidden bg-linear-to-br from-sand-100 to-sand-200 flex items-center justify-center border border-sand-100"
     >
       @if (getVehicleImgUrl(booking.vehicle); as url) {
       <img
@@ -15,26 +15,26 @@
         class="w-full h-full object-contain"
       />
       } @else {
-      <span class="material-icons text-5xl text-gray-300">directions_car</span>
+      <span class="material-icons text-5xl text-sand-300">directions_car</span>
       }
 
       <!-- Status Badge overlay -->
       <div class="absolute top-3 right-3">
         @if (getBookingStatusVariant(booking) === 'available') {
         <component-badge variant="available" size="xs"
-          >{{ 'Upcoming' | translate }}</component-badge
+          ><translate-fixed key="Upcoming"/></component-badge
         >
         } @else if (getBookingStatusVariant(booking) === 'pending') {
         <component-badge variant="pending" size="xs"
-          >{{ 'Ongoing' | translate }}</component-badge
+          ><translate-fixed key="Ongoing"/></component-badge
         >
         } @else if (getBookingStatusVariant(booking) === 'booked') {
         <component-badge variant="booked" size="xs"
-          >{{ 'Completed' | translate }}</component-badge
+          ><translate-fixed key="Completed"/></component-badge
         >
         } @else {
         <component-badge variant="unavailable" size="xs"
-          >{{ 'Cancelled' | translate }}</component-badge
+          ><translate-fixed key="Cancelled"/></component-badge
         >
         }
       </div>
@@ -43,26 +43,31 @@
     <!-- Booking Details Body -->
     <div class="pt-4 pb-2 space-y-4">
       <!-- 1. Travel Dates (Depart - Return) -->
-      <div class="flex justify-center gap-2 text-lg text-gray-800">
+      <div
+        class="flex justify-center gap-2 text-lg text-sand-800 border-b-1 border-sand-300 pb-2"
+      >
         <span class="font-bold">
           {{ booking.depart | appDate }} - {{ booking.return | appDate }}
         </span>
       </div>
 
       <!-- 2. Reserved Vehicle -->
-      <div class="flex items-start gap-2 text-sm text-gray-700">
+      <div class="flex items-start gap-2 text-sm text-sand-700">
         <span
-          class="material-icons text-gray-400 text-base w-5 text-center shrink-0 mt-0.5"
+          class="material-icons text-sand-400 w-5 text-center shrink-0 mt-0.5"
           >directions_car</span
         >
         <div class="space-y-0.5">
           <div class="font-bold line-clamp-1">
-            {{ booking.vehicle?.model || ('No vehicle specified /
-            ไม่ได้ระบุยานพาหนะ' | translate) }}
+            @if (booking.vehicle?.model) {
+              {{ booking.vehicle?.model }}
+            } @else {
+              <translate-fixed key="No vehicle specified / ไม่ได้ระบุยานพาหนะ"/>
+            }
           </div>
           @if (showPlateNumber && booking.vehicle?.plateNumber) {
           <div
-            class="text-[10px] font-mono font-bold text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100 inline-block"
+            class="text-[10px] font-mono font-bold text-sand-500 bg-sand-50 px-1.5 py-0.5 rounded border border-sand-100 inline-block"
           >
             {{ booking.vehicle?.plateNumber }}
           </div>
@@ -71,35 +76,38 @@
       </div>
 
       <!-- 3. Booking User -->
-      <div class="flex items-center gap-2 text-xs text-gray-500">
-        <span
-          class="material-icons text-gray-400 text-base w-5 text-center shrink-0"
+      <div class="flex items-center gap-2 text-xs text-sand-500">
+        <span class="material-icons text-sand-400 w-5 text-center shrink-0"
           >person</span
         >
-        <span class="font-semibold line-clamp-1">{{ booking.userName }}</span>
+        <span class="font-medium line-clamp-1">{{ booking.userName }}</span>
       </div>
 
       <!-- 4. Destination -->
-      <div class="flex items-center gap-2 text-xs text-gray-400">
-        <span
-          class="material-icons text-gray-400 text-base w-5 text-center shrink-0"
+      <div class="flex items-center gap-2 text-xs text-sand-400">
+        <span class="material-icons text-sand-400 w-5 text-center shrink-0"
           >location_on</span
         >
         <span class="line-clamp-1 italic">
-          {{ booking.destination || ('No destination specified /
-          ไม่ได้ระบุจุดหมาย' | translate) }}
+          @if (booking.destination) {
+            {{ booking.destination }}
+          } @else {
+            <translate-fixed key="No destination specified / ไม่ได้ระบุจุดหมาย"/>
+          }
         </span>
       </div>
 
       <!-- 5. Purpose -->
-      <div class="flex items-center gap-2 text-xs text-gray-400">
-        <span
-          class="material-icons text-gray-300 text-base w-5 text-center shrink-0"
+      <div class="flex items-center gap-2 text-xs text-sand-400">
+        <span class="material-icons text-sand-300 w-5 text-center shrink-0"
           >description</span
         >
         <span class="line-clamp-1 italic">
-          {{ booking.purpose || ('No purpose specified / ไม่ได้ระบุวัตถุประสงค์'
-          | translate) }}
+          @if (booking.purpose) {
+            {{ booking.purpose }}
+          } @else {
+            <translate-fixed key="No purpose specified / ไม่ได้ระบุวัตถุประสงค์"/>
+          }
         </span>
       </div>
     </div>

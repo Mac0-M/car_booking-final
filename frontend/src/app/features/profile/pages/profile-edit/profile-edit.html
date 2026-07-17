@@ -5,13 +5,12 @@
     <!-- Header -->
     <div>
       <h1
-        class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-2"
+        class="text-xl md:text-2xl font-black text-sand-800 flex items-center gap-2"
       >
-        <span class="material-icons text-gray-800 font-bold"
+        <span class="material-icons text-sand-800 font-bold"
           >person_outline</span
         >
-        {{ (isEditing() ? 'Edit Profile / แก้ไขโปรไฟล์' : 'My Profile /
-        โปรไฟล์ของฉัน') | translate }}
+        <translate-fixed [key]="isEditing() ? 'Edit Profile / แก้ไขโปรไฟล์' : 'My Profile / โปรไฟล์ของฉัน'"/>
       </h1>
     </div>
 
@@ -59,8 +58,8 @@
         <div class="space-y-1.5 md:space-y-2">
           <label
             for="user_name"
-            class="text-xs md:text-sm font-bold text-gray-700 block"
-            >{{ 'Full Name / ชื่อ-นามสกุล' | translate }}</label
+            class="text-xs md:text-sm font-bold text-sand-700 block"
+            ><translate-fixed key="Full Name / ชื่อ-นามสกุล"/></label
           >
           <input
             type="text"
@@ -70,7 +69,7 @@
             [disabled]="!isEditing()"
             required
             [placeholder]="'Enter your full name' | translate"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-sand-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-sand-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -78,8 +77,8 @@
         <div class="space-y-1.5 md:space-y-2">
           <label
             for="email"
-            class="text-xs md:text-sm font-bold text-gray-700 block"
-            >{{ 'Email Address / อีเมล' | translate }}</label
+            class="text-xs md:text-sm font-bold text-sand-700 block"
+            ><translate-fixed key="Email Address / อีเมล"/></label
           >
           <input
             type="email"
@@ -89,7 +88,7 @@
             [disabled]="!isEditing()"
             required
             [placeholder]="'Enter your email address' | translate"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-sand-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-sand-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -97,9 +96,8 @@
         <div class="space-y-1.5 md:space-y-2">
           <label
             for="phone"
-            class="text-xs md:text-sm font-bold text-gray-700 block"
-            >{{ 'Mobile Phone Number / เบอร์โทรศัพท์มือถือ' | translate
-            }}</label
+            class="text-xs md:text-sm font-bold text-sand-700 block"
+            ><translate-fixed key="Mobile Phone Number / เบอร์โทรศัพท์มือถือ"/></label
           >
           <input
             type="tel"
@@ -108,7 +106,7 @@
             [(ngModel)]="phone"
             [disabled]="!isEditing()"
             [placeholder]="'Enter mobile phone number' | translate"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-sand-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-sand-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -116,8 +114,8 @@
         <div class="space-y-1.5 md:space-y-2">
           <label
             for="password"
-            class="text-xs md:text-sm font-bold text-gray-700 block"
-            >{{ 'Password / รหัสผ่าน' | translate }}</label
+            class="text-xs md:text-sm font-bold text-sand-700 block"
+            ><translate-fixed key="Password / รหัสผ่าน"/></label
           >
           <input
             type="password"
@@ -126,13 +124,13 @@
             [(ngModel)]="newPassword"
             [disabled]="!isEditing()"
             [placeholder]="isEditing() ? ('Enter new password (min. 6 characters)' | translate) : '••••••••'"
-            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-gray-500 disabled:cursor-not-allowed"
+            class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-sand-200 rounded-xl text-xs md:text-sm focus:outline-none focus:border-primary transition-colors disabled:bg-container disabled:text-sand-500 disabled:cursor-not-allowed"
           />
         </div>
 
         <!-- Form Actions -->
         <div
-          class="flex items-center justify-end gap-2 md:gap-3 pt-3 md:pt-4 border-t border-gray-100"
+          class="flex items-center justify-end gap-2 md:gap-3 pt-3 md:pt-4 border-t border-sand-100"
         >
           @if (!isEditing()) {
           <component-button
@@ -140,18 +138,18 @@
             variant="cancel"
             size="sm"
             (click)="goBack()"
-            class="w-full sm:w-auto"
+            class="w-full sm:w-30"
           >
-            {{ 'Back' | translate }}
+            <translate-fixed key="Back" align="center"/>
           </component-button>
           <component-button
             type="button"
             variant="submit"
             size="sm"
             (click)="startEdit()"
-            class="w-full sm:w-auto"
+            class="w-full sm:w-30"
           >
-            {{ 'Edit Profile' | translate }}
+            <translate-fixed key="Edit Profile" align="center"/>
           </component-button>
           } @else {
           <component-button
@@ -159,25 +157,25 @@
             variant="danger-outline"
             size="sm"
             (click)="cancelEdit()"
-            class="w-full sm:w-auto"
+            class="w-full sm:w-30"
           >
-            {{ 'Cancel' | translate }}
+            <translate-fixed key="Cancel" align="center"/>
           </component-button>
           <component-button
             type="submit"
             variant="submit"
             size="sm"
             [disabled]="!isFormValid || isLoading()"
-            class="w-full sm:w-auto"
+            class="w-full sm:w-30"
           >
             @if (isLoading()) {
             <span class="flex items-center gap-2 justify-center">
               <span
                 class="w-3.5 h-3.5 md:w-4 md:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
               ></span>
-              {{ 'Saving...' | translate }}
+              <translate-fixed key="Saving..." align="center"/>
             </span>
-            } @else { {{ 'Save Profile' | translate }} }
+            } @else { <translate-fixed key="Save Profile" align="center"/> }
           </component-button>
           }
         </div>

@@ -24,16 +24,16 @@
   >
     <!-- Drag Indicator / Accent bar at top of bottom-sheet -->
     <div class="flex justify-center py-2 shrink-0">
-      <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+      <div class="w-10 h-1 bg-sand-300 rounded-full"></div>
     </div>
 
     <!-- Header -->
     <div
-      class="px-4 pb-2 border-b border-gray-100 flex items-center justify-between shrink-0"
+      class="px-4 pb-2 border-b border-sand-100 flex items-center justify-between shrink-0"
     >
-      <h3 class="text-sm font-bold text-gray-900 flex items-center gap-1.5">
-        <span class="material-icons text-base text-gray-500">search</span>
-        <span>{{ 'Search & Filters / ค้นหาและกรอง' | translate }}</span>
+      <h3 class="text-sm font-bold text-sand-900 flex items-center gap-1.5">
+        <span class="material-icons text-base text-sand-500">search</span>
+        <span><translate-fixed key="Search & Filters / ค้นหาและกรอง"/></span>
       </h3>
       <component-button
         (click)="closeMobileFilters()"
@@ -51,8 +51,8 @@
       @if (showLegend) {
       <div class="space-y-1.5">
         <label
-          class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider"
-          >{{ 'Vehicle Type / ประเภทรถ' | translate }}</label
+          class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+          ><translate-fixed key="Vehicle Type / ประเภทรถ"/></label
         >
         <div class="flex flex-wrap items-center gap-2">
           @for (type of vehicleTypes; track type.value) {
@@ -76,8 +76,8 @@
         class="space-y-1.5 pt-1.5 animate-in fade-in slide-in-from-top-1 duration-150"
       >
         <label
-          class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider"
-          >{{ 'License Plate / ทะเบียนรถ' | translate }}</label
+          class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+          ><translate-fixed key="License Plate / ทะเบียนรถ"/></label
         >
         <div class="flex flex-wrap items-center gap-2">
           @for (vehicle of localFilteredVehiclesForPills; track vehicle.id) {
@@ -118,7 +118,7 @@
 
     <!-- Footer / Actions -->
     <div
-      class="px-4 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between gap-2.5 shrink-0"
+      class="px-4 py-3 border-t border-sand-100 bg-sand-50/50 flex items-center justify-between gap-2.5 shrink-0"
     >
       <component-button
         (click)="clearAllFilters()"
@@ -126,7 +126,7 @@
         size="sm"
         class="flex-1"
       >
-        {{ 'Clear Filters' | translate }}
+        <translate-fixed key="Clear Filters" align="center"/>
       </component-button>
       <component-button
         (click)="applyFilters()"
@@ -134,7 +134,7 @@
         size="sm"
         class="flex-1"
       >
-        {{ 'Apply' | translate }}
+        <translate-fixed key="Apply" align="center"/>
       </component-button>
     </div>
   </div>

@@ -23,7 +23,7 @@
       >
         <span class="flex items-center gap-2">
           <span class="material-icons">directions_car</span>
-          {{ 'Start New Booking' | translate }}
+          <translate-fixed key="Start New Booking"/>
         </span>
       </component-button>
     </div>
@@ -59,7 +59,7 @@
           [class]="isDialog ? 'flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1' : 'flex items-center justify-center gap-2 text-base font-semibold py-1'"
         >
           <span class="material-icons text-sm sm:text-lg">arrow_back</span>
-          {{ 'Back' | translate }}
+          <translate-fixed key="Back"/>
         </span>
       </component-button>
 
@@ -77,9 +77,9 @@
           <span
             class="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent"
           ></span>
-          {{ 'Processing...' | translate }} } @else {
+          <translate-fixed key="Processing..."/> } @else {
           <span class="material-icons text-sm sm:text-lg">done_all</span>
-          {{ 'Confirm Booking' | translate }} }
+          <translate-fixed key="Confirm Booking"/> }
         </span>
       </component-button>
     </div>
@@ -95,8 +95,8 @@
       >
 
       <div class="space-y-2">
-        <h1 class="text-2xl md:text-3xl font-black text-gray-800">
-          {{ 'Booking Confirmed!' | translate }}
+        <h1 class="text-2xl md:text-3xl font-black text-sand-800">
+          <translate-fixed key="Booking Confirmed!" align="center"/>
         </h1>
       </div>
 
@@ -105,13 +105,13 @@
         class="w-full max-w-md bg-container-low rounded-2xl border border-container p-5 space-y-4 text-left shadow-sm overflow-hidden"
       >
         <div
-          class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-3 gap-1"
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-sand-200 pb-3 gap-1"
         >
           <span
-            class="text-sm text-gray-400 font-semibold uppercase tracking-wider"
-            >{{ 'Booking Number / เลขที่จอง' | translate }}</span
+            class="text-sm text-sand-400 font-semibold uppercase tracking-wider"
+            ><translate-fixed key="Booking Number / เลขที่จอง"/></span
           >
-          <span class="text-base font-mono font-bold text-gray-800"
+          <span class="text-base font-mono font-bold text-sand-800"
             >{{ bookingId() }}</span
           >
         </div>
@@ -120,56 +120,56 @@
         <div class="space-y-3 text-sm">
           @if (store.selectedVehicle(); as vehicle) {
           <div class="space-y-0.5">
-            <span class="text-gray-400 text-xs block"
-              >{{ 'Vehicle / ยานพาหนะ' | translate }}</span
+            <span class="text-sand-400 text-xs block"
+              ><translate-fixed key="Vehicle / ยานพาหนะ"/></span
             >
-            <span class="font-bold text-gray-800 break-words">
+            <span class="font-bold text-sand-800 break-words">
               {{ vehicle.model }} ({{ vehicle.plateNumber }})
             </span>
           </div>
           }
           <div class="space-y-0.5">
-            <span class="text-gray-400 text-xs block"
-              >{{ 'Destination / จุดหมาย' | translate }}</span
+            <span class="text-sand-400 text-xs block"
+              ><translate-fixed key="Destination / จุดหมาย"/></span
             >
-            <span class="font-semibold text-gray-800 break-words"
+            <span class="font-semibold text-sand-800 break-words"
               >{{ store.destination() }}</span
             >
           </div>
           <div class="space-y-0.5">
-            <span class="text-gray-400 text-xs block"
-              >{{ 'Travel Date / วันเดินทาง' | translate }}</span
+            <span class="text-sand-400 text-xs block"
+              ><translate-fixed key="Travel Date / วันเดินทาง"/></span
             >
-            <span class="font-semibold text-gray-800">
+            <span class="font-semibold text-sand-800">
               {{ store.bookingDate() | appDate }}
             </span>
           </div>
           <div class="space-y-0.5">
-            <span class="text-gray-400 text-xs block"
-              >{{ 'Travel Time / เวลา' | translate }}</span
+            <span class="text-sand-400 text-xs block"
+              ><translate-fixed key="Travel Time / เวลา"/></span
             >
-            <span class="font-semibold text-gray-800">
+            <span class="font-semibold text-sand-800">
               {{ store.startTime() | appTime }} - {{ store.endTime() | appTime
               }} @if (totalDuration()) {
-              <span class="text-xs text-gray-500 font-normal ml-1"
+              <span class="text-xs text-sand-500 font-normal ml-1"
                 >({{ totalDuration() }})</span
               >
               }
             </span>
           </div>
           <div class="space-y-0.5">
-            <span class="text-gray-400 text-xs block"
-              >{{ 'User / ผู้ใช้' | translate }}</span
+            <span class="text-sand-400 text-xs block"
+              ><translate-fixed key="User / ผู้ใช้"/></span
             >
-            <span class="font-semibold text-gray-800 break-words"
+            <span class="font-semibold text-sand-800 break-words"
               >{{ currentUser()?.name }}</span
             >
           </div>
           <div class="space-y-0.5">
-            <span class="text-gray-400 text-xs block"
-              >{{ 'Contact / เบอร์ติดต่อ' | translate }}</span
+            <span class="text-sand-400 text-xs block"
+              ><translate-fixed key="Contact / เบอร์ติดต่อ"/></span
             >
-            <span class="font-semibold text-gray-800"
+            <span class="font-semibold text-sand-800"
               >{{ currentUser()?.phone }}</span
             >
           </div>
@@ -188,7 +188,7 @@
             class="flex items-center justify-center gap-2 text-base font-semibold py-1"
           >
             <span class="material-icons text-lg">history</span>
-            {{ 'View Booking History' | translate }}
+            <translate-fixed key="View Booking History"/>
           </span>
         </component-button>
 
@@ -202,7 +202,7 @@
             class="flex items-center justify-center gap-2 text-base font-semibold py-1"
           >
             <span class="material-icons text-lg">add</span>
-            {{ 'Book Another Vehicle' | translate }}
+            <translate-fixed key="Book Another Vehicle"/>
           </span>
         </component-button>
       </div>

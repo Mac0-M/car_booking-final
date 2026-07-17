@@ -166,8 +166,8 @@ export class LanguageService {
       th: "ไม่พบรายการจองตามตัวกรองที่เลือกในขณะนี้",
       en: "There are currently no vehicle bookings matching the selected filters.",
     },
-    Ongoing: { th: "กำลังเดินทาง", en: "Ongoing" },
-    Upcoming: { th: "กำลังจะมาถึง", en: "Upcoming" },
+    Ongoing: { th: "เดินทาง", en: "Ongoing" },
+    Upcoming: { th: "รอเดินทาง", en: "Upcoming" },
     Completed: { th: "เสร็จสิ้น", en: "Completed" },
     Cancelled: { th: "ยกเลิกแล้ว", en: "Cancelled" },
     "No users found": { th: "ไม่พบผู้ใช้งาน", en: "No users found" },
@@ -443,9 +443,11 @@ export class LanguageService {
     this.setLanguage(this.currentLang() === "th" ? "en" : "th");
   }
 
-  public translate(key: string): string {
+  public translate(
+    key: string,
+    lang: "th" | "en" = this.currentLang(),
+  ): string {
     if (!key) return "";
-    const lang = this.currentLang();
 
     // 1. Check dictionary exact match
     if (this.dictionary[key]) {

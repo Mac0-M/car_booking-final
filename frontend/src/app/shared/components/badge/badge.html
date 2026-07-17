@@ -2,16 +2,16 @@
   <ng-content>
     @switch (variant) {
       @case ("available") {
-        {{ 'Available' | translate }}
+        <translate-fixed key="Available" align="center"/>
       }
       @case ("booked") {
-        {{ 'Booked' | translate }}
+        <translate-fixed key="Booked" align="center"/>
       }
       @case ("unavailable") {
-        {{ 'Unavailable' | translate }}
+        <translate-fixed key="Unavailable" align="center"/>
       }
       @case ("pending") {
-        {{ 'PENDING' | translate }}
+        <translate-fixed key="PENDING" align="center"/>
       }
     }
   </ng-content>

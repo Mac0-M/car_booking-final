@@ -22,7 +22,7 @@
 } @else {
 <!-- View Mode Switcher (Desktop only) -->
 <div
-  class="relative grid grid-cols-3 w-72 bg-primary-container p-0.5 rounded-xl shrink-0 select-none"
+  class="relative grid grid-cols-3 w-80 bg-primary-container p-0.5 rounded-xl shrink-0 select-none"
 >
   <!-- Sliding Background Indicator -->
   <div
@@ -40,7 +40,7 @@
     class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-sm sm:text-base">calendar_today</span>
-    <span>{{ 'Calendar' | translate }}</span>
+    <translate-fixed key="Calendar" align="center"/>
   </button>
 
   <button
@@ -50,7 +50,7 @@
     class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-sm sm:text-base">grid_view</span>
-    <span>{{ 'Grid' | translate }}</span>
+    <translate-fixed key="Grid" align="center"/>
   </button>
 
   <button
@@ -60,7 +60,7 @@
     class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-base">format_list_bulleted</span>
-    <span>{{ 'List' | translate }}</span>
+    <translate-fixed key="List" align="center"/>
   </button>
 </div>
 }

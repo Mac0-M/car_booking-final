@@ -94,7 +94,7 @@ export class ComponentInputUi implements ControlValueAccessor {
   }
 
   protected readonly baseClasses =
-    "w-full rounded-xl border border-solid transition-all duration-200 focus:outline-none focus:ring-4 outline-none text-gray-800 bg-white placeholder-gray-400";
+    "w-full rounded-xl border border-solid transition-all duration-200 focus:outline-none focus:ring-4 outline-none text-sand-800 bg-white placeholder-sand-400";
 
   protected readonly sizeClasses = {
     sm: "px-3 py-2 text-sm",
@@ -103,9 +103,9 @@ export class ComponentInputUi implements ControlValueAccessor {
   };
 
   protected readonly stateClasses = {
-    normal: "border-gray-200 focus:border-primary focus:ring-primary-container",
+    normal: "border-sand-200 focus:border-primary focus:ring-primary-container",
     error:
       "border-red-400 focus:border-red-500 focus:ring-red-100 bg-red-50/10",
-    disabled: "bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed",
+    disabled: "bg-sand-50 border-sand-200 text-sand-400 cursor-not-allowed",
   };
 }

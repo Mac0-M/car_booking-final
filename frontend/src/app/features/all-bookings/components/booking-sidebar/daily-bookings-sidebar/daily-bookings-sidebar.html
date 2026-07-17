@@ -1,17 +1,17 @@
 <!-- Sidebar Header -->
 <div
-  class="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between shrink-0 select-none bg-white font-sans"
+  class="px-4 py-2.5 border-b border-sand-100 flex items-center justify-between shrink-0 select-none bg-white font-sans"
 >
   <div class="flex items-center gap-3">
-    <p class="text-sm text-gray-700 font-bold">
-      {{ 'Daily Bookings for' | translate }} {{ selectedDailyDate | appDate }}
+    <p class="text-sm text-sand-700 font-bold">
+      <translate-fixed key="Daily Bookings for"/> {{ selectedDailyDate | appDate }}
     </p>
   </div>
   <component-button
     (click)="close.emit()"
     variant="plain"
     size="xs"
-    class="w-auto p-1 text-gray-400 hover:text-gray-600"
+    class="w-auto -mr-3"
   >
     <span class="material-icons">close</span>
   </component-button>
@@ -35,7 +35,7 @@
   />
   } @else {
   <div
-    class="h-full flex items-center justify-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200 p-8"
+    class="h-full flex items-center justify-center bg-sand-50/50 rounded-2xl border border-dashed border-sand-200 p-8"
   >
     <component-empty-state
       [title]="'No bookings for this day' | translate"

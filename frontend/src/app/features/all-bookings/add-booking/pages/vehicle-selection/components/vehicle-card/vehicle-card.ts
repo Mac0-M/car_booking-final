@@ -4,7 +4,7 @@ import { Vehicle } from "../../../../../../../core/models/vehicle.model";
 import { ComponentCard } from "../../../../../../../shared/components/card/card";
 import { ComponentBadge } from "../../../../../../../shared/components/badge/badge";
 import { ComponentButton } from "../../../../../../../shared/components/button/button";
-import { TranslatePipe } from "../../../../../../../shared/pipes/translate.pipe";
+import { TranslateFixed } from "../../../../../../../shared/components/translate-fixed/translate-fixed";
 import { environment } from "../../../../../../../../environments/environment";
 
 /**
@@ -20,7 +20,7 @@ import { environment } from "../../../../../../../../environments/environment";
     ComponentCard,
     ComponentBadge,
     ComponentButton,
-    TranslatePipe,
+    TranslateFixed,
     TitleCasePipe,
   ],
   templateUrl: "./vehicle-card.html",
@@ -73,7 +73,7 @@ export class VehicleCardComponent {
   get overlayClasses(): string {
     const map: Record<string, string> = {
       available: "",
-      booked: "bg-gray-100/60",
+      booked: "bg-sand-100/60",
       unavailable: "bg-red-50/60",
     };
     return map[this.statusVariant] ?? "";

@@ -1,5 +1,5 @@
 <div
-  class="relative flex bg-transparent select-none shrink-0 border-b border-gray-200 w-[72px] md:w-[80px] pb-2"
+  class="relative flex bg-transparent select-none shrink-0 border-b border-sand-200 w-[80px] md:w-[90px] pb-2"
 >
   <button
     (click)="toggleActiveTab()"
@@ -13,7 +13,7 @@
       <span class="material-icons text-primary text-xs md:text-sm"
         >bookmark_border</span
       >
-      {{ 'Active' | translate }}
+      <translate-fixed key="Active"/>
     </span>
     } @else {
     <div
@@ -22,7 +22,7 @@
       <span class="material-icons text-primary text-xs md:text-sm"
         >history</span
       >
-      {{ 'History' | translate }}
+      <translate-fixed key="History"/>
     </div>
     }
   </button>

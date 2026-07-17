@@ -5,8 +5,8 @@
   @if (!isDialog) {
   <component-process [currentStep]="2" size="base"></component-process>
 
-  <h1 class="text-2xl font-bold text-gray-800">Select a Vehicle</h1>
-  <p class="text-sm text-gray-500 -mt-4">
+  <h1 class="text-2xl font-bold text-sand-800">Select a Vehicle</h1>
+  <p class="text-sm text-sand-500 -mt-4">
     Choose an available vehicle for your trip.
   </p>
   }
@@ -50,7 +50,7 @@
     >
       <span class="flex items-center gap-1.5 py-0.5 font-sans">
         <span class="material-icons text-sm">arrow_back</span>
-        {{ 'Back' | translate }}
+        <translate-fixed key="Back"/>
       </span>
     </component-button>
   </div>

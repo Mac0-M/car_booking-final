@@ -26,15 +26,15 @@
   >
     <!-- Modal Header -->
     <div
-      class="p-3 border-b border-gray-200 flex items-center justify-between bg-white shrink-0"
+      class="p-3 border-b border-sand-200 flex items-center justify-between bg-white shrink-0"
     >
-      <h3 class="text-lg lg:text-xl font-bold text-gray-800 px-3">
-        {{ (title || 'Booking Details') | translate }}
+      <h3 class="text-lg lg:text-xl font-bold text-sand-800 px-3">
+        <translate-fixed [key]="title || 'Booking Details'"/>
       </h3>
       <component-button
         variant="plain"
         size="xs"
-        class="w-auto p-1 text-gray-400 hover:text-gray-600"
+        class="w-auto p-1"
         (click)="close.emit()"
       >
         <span class="material-icons">close</span>
@@ -77,10 +77,10 @@
             [value]="mileDistanceValue()"
             (input)="mileDistanceValue.set($any($event.target).value)"
             [placeholder]="'Enter Return Odometer Mileage' | translate"
-            class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
+            class="w-full px-4 py-2 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
           />
           <span
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-sand-400"
             >km</span
           >
         </div>
@@ -90,14 +90,14 @@
           class="w-auto"
           (click)="cancelComplete()"
         >
-          {{ 'Cancel' | translate }}
+          <translate-fixed key="Cancel"/>
         </component-button>
         <component-button
           variant="submit"
           size="sm"
           (click)="confirmComplete()"
         >
-          {{ 'Confirm Complete' | translate }}
+          <translate-fixed key="Confirm Complete"/>
         </component-button>
       </div>
       } @else {
@@ -112,7 +112,7 @@
           <span
             class="flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1"
           >
-            {{ 'Cancel Booking' | translate }}
+            <translate-fixed key="Cancel Booking"/>
           </span>
         </component-button>
         <component-button
@@ -124,7 +124,7 @@
           <span
             class="flex items-center justify-center gap-2 text-sm sm:text-base font-semibold py-0.5 sm:py-1"
           >
-            {{ 'Complete Booking' | translate }}
+            <translate-fixed key="Complete Booking"/>
           </span>
         </component-button>
         }

@@ -50,7 +50,7 @@ export class VehicleListComponent implements OnInit {
       width: "672px",
       maxWidth: "95vw",
       backdropClass: [
-        "bg-gray-900/60",
+        "bg-sand-900/60",
         "backdrop-blur-sm",
         "animate-backdrop-fade",
       ],
@@ -75,7 +75,7 @@ export class VehicleListComponent implements OnInit {
       width: "672px",
       maxWidth: "95vw",
       backdropClass: [
-        "bg-gray-900/60",
+        "bg-sand-900/60",
         "backdrop-blur-sm",
         "animate-backdrop-fade",
       ],

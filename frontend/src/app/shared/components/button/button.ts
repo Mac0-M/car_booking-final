@@ -24,9 +24,18 @@ export class ComponentButton {
     | "danger-text" = "submit";
   @Input() size: "xs" | "sm" | "md" | "lg" | "xxl" = "xxl";
   @Input() disabled: boolean = false;
+  @Input() round:
+    | "none"
+    | "sm"
+    | "md"
+    | "lg"
+    | "xl"
+    | "2xl"
+    | "3xl"
+    | "full" = "xl";
 
   protected readonly baseClasses =
-    "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 active:scale-95 w-full cursor-pointer select-none";
+    "inline-flex items-center justify-center font-medium transition-all duration-200 active:scale-95 w-full cursor-pointer select-none";
 
   protected readonly variantClasses = {
     submit:
@@ -34,7 +43,7 @@ export class ComponentButton {
     cancel:
       "border border-primary bg-white text-primary hover:bg-primary-container hover:text-primary-hover hover:border-primary-hover",
     secondary:
-      "border border-gray-200 bg-white text-gray-600 hover:bg-surface-dim hover:text-gray-800 hover:border-surface-dim",
+      "border border-sand-400 bg-white text-sand-600 hover:bg-surface-dim hover:text-sand-800 hover:border-sand-400",
     "danger-outline":
       "border border-red-200 bg-white text-red-600 hover:bg-red-100",
     "success-outline":
@@ -43,8 +52,7 @@ export class ComponentButton {
       "bg-green-500 text-white shadow-md shadow-green-500/20 hover:bg-green-650 border border-transparent",
     danger:
       "bg-red-500 text-white shadow-md shadow-red-500/20 hover:bg-red-650 border border-transparent",
-    plain:
-      "border border-transparent bg-transparent text-gray-400 hover:text-gray-600",
+    plain: "border border-transparent bg-transparent text-sand-600",
     "danger-text":
       "border border-transparent bg-transparent text-red-500 hover:bg-red-100",
   };

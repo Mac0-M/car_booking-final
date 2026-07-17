@@ -27,9 +27,9 @@ export class ComponentCard {
     "block w-full border border-solid transition-all duration-200";
 
   protected readonly variantClasses = {
-    default: "bg-white border-gray-200 shadow-sm shadow-gray-200/30",
+    default: "bg-white border-sand-200 shadow-sm shadow-sand-200/30",
     flat: "bg-container-low border-container",
-    outline: "bg-transparent border-gray-300",
+    outline: "bg-transparent border-sand-300",
   };
 
   protected readonly sizeClasses = {

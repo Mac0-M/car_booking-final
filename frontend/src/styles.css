@@ -9,19 +9,19 @@
 
   --color-white: #fffef8;
 
-  /* Neutral Surface & Gray Palette — Cream/Stone Eggshell Theme */
-  --color-gray-50: #fffef8;       /* Lowest Container / Card Background (brightest) */
-  --color-gray-100: #f7f4e6;      /* Surface / Page Background (warm cream) */
-  --color-gray-150: #efeada;      /* Container background */
-  --color-gray-200: #e4ddc8;      /* Container High / Active Borders */
-  --color-gray-300: #d5cdb2;      /* Outline Variant */
-  --color-gray-400: #726751;      /* Outline */
-  --color-gray-500: #615743;      /* On Surface Variant */
-  --color-gray-600: #514939;      /* Inverse Surface */
-  --color-gray-700: #3e382c;      /* Dark Gray — On Surface secondary text */
-  --color-gray-800: #2b271f;      /* Dark Gray — heading text */
-  --color-gray-900: #1b1914;      /* Near Black — primary text */
-  --color-gray-950: #0f0e0b;      /* Scrim / Shadow */
+  /* Neutral Surface & Sand Palette — Cream/Stone Eggshell Theme */
+  --color-sand-50: #fffef8;       /* Lowest Container / Card Background (brightest) */
+  --color-sand-100: #f7f4e6;      /* Surface / Page Background (warm cream) */
+  --color-sand-150: #efeada;      /* Container background */
+  --color-sand-200: #e4ddc8;      /* Container High / Active Borders */
+  --color-sand-300: #d5cdb2;      /* Outline Variant */
+  --color-sand-400: #726751;      /* Outline */
+  --color-sand-500: #615743;      /* On Surface Variant */
+  --color-sand-600: #514939;      /* Inverse Surface */
+  --color-sand-700: #3e382c;      /* Dark Sand — On Surface secondary text */
+  --color-sand-800: #2b271f;      /* Dark Sand — heading text */
+  --color-sand-900: #1b1914;      /* Near Black — primary text */
+  --color-sand-950: #0f0e0b;      /* Scrim / Shadow */
 
   /* Premium blue palette (Slate Blue - 30% Secondary) */
   --color-blue-50: #f0f4f8;
@@ -182,7 +182,7 @@ html, body {
 
 /* Card hover effects targeting the inner div of component-card to avoid double borders & double shadows */
 component-card.cursor-pointer:hover > div {
-  @apply !border-gray-300 !shadow-md;
+  @apply !border-sand-300 !shadow-md;
 }
 
 
@@ -200,7 +200,7 @@ component-card.cursor-pointer:hover > div {
 @media (max-width: 1023px) {
   /* Center the "See More" popup modal on mobile screens */
   .toastui-calendar-see-more-container {
-    @apply !fixed !top-1/2 !left-1/2 !-translate-x-1/2 !-translate-y-1/2 !z-[9999] !w-[90%] !max-w-[320px] !h-auto !max-h-[400px] !bg-white !rounded-2xl !border !border-gray-200 !shadow-xl !overflow-hidden;
+    @apply !fixed !top-1/2 !left-1/2 !-translate-x-1/2 !-translate-y-1/2 !z-[9999] !w-[90%] !max-w-[320px] !h-auto !max-h-[400px] !bg-white !rounded-2xl !border !border-sand-200 !shadow-xl !overflow-hidden;
   }
 
   /* Inner container padding and layout */
@@ -217,15 +217,15 @@ component-card.cursor-pointer:hover > div {
 
   /* Header spacing and layout */
   .toastui-calendar-see-more-header {
-    @apply !mb-3 !pb-2 !border-b !border-gray-100;
+    @apply !mb-3 !pb-2 !border-b !border-sand-100;
   }
 
   .toastui-calendar-more-title-date {
-    @apply !text-xl !font-bold !text-gray-900;
+    @apply !text-xl !font-bold !text-sand-900;
   }
 
   .toastui-calendar-more-title-day {
-    @apply !ml-1.5 !text-sm !font-medium !text-gray-400;
+    @apply !ml-1.5 !text-sm !font-medium !text-sand-400;
   }
 
   /* List container scrollability */
@@ -364,7 +364,7 @@ component-card.cursor-pointer:hover > div {
 }
 
 .animate-fade-zoom-in {
-  animation: fade-zoom-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fade-zoom-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Custom Global theme overrides to match Eggshell Theme */
