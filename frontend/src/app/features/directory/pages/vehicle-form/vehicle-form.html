@@ -263,7 +263,7 @@
 
     <!-- Form Actions -->
     <div
-      class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-sand-100"
+      class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pt-4 border-t border-sand-100"
     >
       <div>
         @if (isEditMode) {
@@ -273,7 +273,7 @@
           variant="danger-outline"
           size="md"
           [disabled]="isLoading()"
-          class="w-full sm:w-auto"
+          class="w-full md:w-auto"
         >
           <span class="material-icons text-sm mr-1 leading-none"
             >delete_outline</span
@@ -283,11 +283,9 @@
         }
       </div>
       <div
-        class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-end w-full sm:w-auto"
+        [class]="isDialog ? 'flex-1 w-full md:max-w-[calc(50%-8px)] md:ml-auto' : 'flex-1 w-full md:max-w-[calc(50%-12px)] md:ml-auto'"
       >
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full sm:w-auto sm:min-w-[320px]"
-        >
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
           <component-button
             type="button"
             (click)="closeForm()"

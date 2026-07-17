@@ -12,7 +12,7 @@ export class LanguageService {
     // Nav & Sidebar
     Bookings: { th: "การจอง", en: "Bookings" },
     Management: { th: "การจัดการ", en: "Manage" },
-    Directory: { th: "รายชื่ออื่น", en: "Directory" },
+    Directory: { th: "รายชื่อ", en: "Directory" },
     "View Profile": { th: "ดูโปรไฟล์", en: "View Profile" },
     Logout: { th: "ออกจากระบบ", en: "Logout" },
     "Clear Filters": { th: "ล้างตัวกรอง", en: "Clear Filters" },

@@ -28,18 +28,18 @@
       <a
         routerLink="/bookings"
         [ngClass]="isRouteActive('/bookings') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
-        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center min-w-[120px]"
+        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center gap-1.5 min-w-[120px]"
       >
-        <span class="material-icons text-xl px-1">list_alt</span>
-        <translate-fixed key="Bookings" />
+        <span class="material-icons text-xl">list_alt</span>
+        <translate-fixed key="Bookings" align="center" />
       </a>
       <a
         routerLink="/directory"
         [ngClass]="isRouteActive('/directory') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
-        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center min-w-[120px]"
+        class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center gap-1.5 min-w-[120px]"
       >
-        <span class="material-icons text-xl px-1">folder_shared</span>
-        <translate-fixed [key]="isAdmin ? 'Management' : 'Directory'" />
+        <span class="material-icons text-xl">folder_shared</span>
+        <translate-fixed [key]="isAdmin ? 'Management' : 'Directory'" align="center" />
       </a>
     </nav>
 
