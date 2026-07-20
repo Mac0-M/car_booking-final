@@ -1,0 +1,78 @@
+<!-- Mobile Filter Trigger Button -->
+@if (showTrigger) {
+<component-button
+  (click)="openMobileFilters()"
+  [variant]="activeFiltersCount > 0 ? 'submit' : 'secondary'"
+  size="xs"
+  class="w-auto"
+>
+  <span class="material-icons text-base" [class.mr-1]="triggerText">filter_list</span>
+  @if (triggerText) {
+  <span><translate-fixed [key]="triggerText" /></span>
+  }
+  @if (activeFiltersCount > 0) {
+  <span
+    class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
+  >
+    {{ activeFiltersCount }}
+  </span>
+  }
+</component-button>
+}
+
+<!-- Mobile Filters CDK Dialog Template -->
+<ng-template #dialogTemplate>
+  <div
+    class="relative w-full bg-white flex flex-col h-auto max-h-[80dvh] rounded-t-3xl overflow-hidden"
+  >
+    <!-- Drag Indicator / Accent bar at top of bottom-sheet -->
+    <div class="flex justify-center py-2 shrink-0">
+      <div class="w-10 h-1 bg-sand-300 rounded-full"></div>
+    </div>
+
+    <!-- Header -->
+    <div
+      class="px-4 pb-2 border-b border-sand-100 flex items-center justify-between shrink-0"
+    >
+      <h3 class="text-sm font-bold text-sand-900 flex items-center gap-1.5">
+        <span class="material-icons text-base text-sand-500">search</span>
+        <span><translate-fixed [key]="titleKey" /></span>
+      </h3>
+      <component-button
+        (click)="closeMobileFilters()"
+        variant="plain"
+        size="xs"
+        class="w-auto"
+      >
+        <span class="material-icons text-base">close</span>
+      </component-button>
+    </div>
+
+    <!-- Content (Scrollable) -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-3.5">
+      <ng-content></ng-content>
+    </div>
+
+    <!-- Footer / Actions -->
+    <div
+      class="px-4 py-3 border-t border-sand-100 bg-sand-50/50 flex items-center justify-between gap-2.5 shrink-0"
+    >
+      <component-button
+        (click)="clearAllFilters()"
+        variant="cancel"
+        size="sm"
+        class="flex-1"
+      >
+        <translate-fixed key="Clear Filters" align="center" />
+      </component-button>
+      <component-button
+        (click)="applyFilters()"
+        variant="submit"
+        size="sm"
+        class="flex-1"
+      >
+        <translate-fixed key="Apply" align="center" />
+      </component-button>
+    </div>
+  </div>
+</ng-template>

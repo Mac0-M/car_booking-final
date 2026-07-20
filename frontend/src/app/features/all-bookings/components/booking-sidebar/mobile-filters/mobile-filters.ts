@@ -3,10 +3,7 @@ import {
   Input,
   Output,
   EventEmitter,
-  signal,
   ViewChild,
-  TemplateRef,
-  inject,
   OnDestroy,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -18,7 +15,7 @@ import {
 import { User } from "../../../../../core/models/user.model";
 import { AllSharedUi } from "../../../../../shared/shared";
 import { FilterSidebar } from "../filter-sidebar/filter-sidebar";
-import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
+import { ComponentMobileFilters } from "../../../../../shared/components/mobile-filters/mobile-filters";
 
 @Component({
   selector: "app-mobile-filters",
@@ -28,14 +25,11 @@ import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
     FormsModule,
     ...AllSharedUi,
     FilterSidebar,
-    DialogModule,
   ],
   templateUrl: "./mobile-filters.html",
 })
 export class MobileFilters implements OnDestroy {
-  private readonly dialog = inject(Dialog);
-  @ViewChild("dialogTemplate") dialogTemplate!: TemplateRef<any>;
-  private dialogRef: DialogRef<any> | null = null;
+  @ViewChild(ComponentMobileFilters) sharedFilters?: ComponentMobileFilters;
 
   getVehicleColor(vehicle: Vehicle): { dotColor: string; ringClass: string } {
     const type = vehicle.vehicleTypeId || "Sedan";
@@ -152,6 +146,12 @@ export class MobileFilters implements OnDestroy {
   }
 
   openMobileFilters(): void {
+    if (this.sharedFilters) {
+      this.sharedFilters.openMobileFilters();
+    }
+  }
+
+  onOpenFilters(): void {
     this.localSelectedDate = this.selectedDate;
     this.localSearchQuery = this.searchQuery;
     this.localSelectedUserId = this.selectedUserId;
@@ -160,37 +160,11 @@ export class MobileFilters implements OnDestroy {
     this.localSelectedStatusFilter = this.selectedStatusFilter;
     this.localSelectedVehicleTypeFilter = [...this.selectedVehicleTypeFilter];
     this.localSelectedVehiclePlates = [...this.selectedVehiclePlates];
-
-    if (this.dialogRef || !this.dialogTemplate) return;
-    this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      width: "100vw",
-      maxWidth: "100vw",
-      maxHeight: "80dvh",
-      backdropClass: [
-        "bg-sand-900/60",
-        "backdrop-blur-sm",
-        "animate-backdrop-fade",
-      ],
-      panelClass: [
-        "w-full",
-        "max-w-full",
-        "max-h-[80dvh]",
-        "flex",
-        "flex-col",
-        "shadow-xl",
-        "mobile-filter-dialog-pane",
-        "animate-slide-up",
-      ],
-    });
-
-    this.dialogRef.closed.subscribe(() => {
-      this.dialogRef = null;
-    });
   }
 
   closeMobileFilters(): void {
-    if (this.dialogRef) {
-      this.dialogRef.close();
+    if (this.sharedFilters) {
+      this.sharedFilters.closeMobileFilters();
     }
   }
 
@@ -223,7 +197,6 @@ export class MobileFilters implements OnDestroy {
     );
     this.selectedVehiclePlatesChange.emit(this.localSelectedVehiclePlates);
     this.filterChange.emit();
-    this.closeMobileFilters();
   }
 
   clearAllFilters(): void {
@@ -237,5 +210,6 @@ export class MobileFilters implements OnDestroy {
     this.localSelectedVehiclePlates = [];
 
     this.resetFilters.emit();
+    this.closeMobileFilters();
   }
 }

@@ -3,27 +3,23 @@ import {
   Input,
   Output,
   EventEmitter,
-  inject,
   ViewChild,
-  TemplateRef,
   OnDestroy,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { AllSharedUi } from "../../../../shared/shared";
 import { VEHICLE_TYPES } from "../../../../core/models/vehicle.model";
-import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
+import { ComponentMobileFilters } from "../../../../shared/components/mobile-filters/mobile-filters";
 
 @Component({
   selector: "app-directory-mobile-filters",
   standalone: true,
-  imports: [CommonModule, FormsModule, ...AllSharedUi, DialogModule],
+  imports: [CommonModule, FormsModule, ...AllSharedUi],
   templateUrl: "./directory-mobile-filters.html",
 })
 export class DirectoryMobileFiltersComponent implements OnDestroy {
-  private readonly dialog = inject(Dialog);
-  @ViewChild("dialogTemplate") dialogTemplate!: TemplateRef<any>;
-  private dialogRef: DialogRef<any> | null = null;
+  @ViewChild(ComponentMobileFilters) sharedFilters?: ComponentMobileFilters;
 
   @Input() searchQuery = "";
   @Input() selectedTypes: string[] = [];
@@ -56,41 +52,21 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
   }
 
   openMobileFilters(): void {
+    if (this.sharedFilters) {
+      this.sharedFilters.openMobileFilters();
+    }
+  }
+
+  onOpenFilters(): void {
     this.localSearchQuery = this.searchQuery;
     this.localSelectedTypes = [...(this.selectedTypes || [])];
     this.localSelectedStatus = this.selectedStatus;
     this.localSelectedReFuel = this.selectedReFuel;
-
-    if (this.dialogRef || !this.dialogTemplate) return;
-    this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      width: "100vw",
-      maxWidth: "100vw",
-      maxHeight: "80dvh",
-      backdropClass: [
-        "bg-sand-900/60",
-        "backdrop-blur-sm",
-        "animate-backdrop-fade",
-      ],
-      panelClass: [
-        "w-full",
-        "max-w-full",
-        "max-h-[80dvh]",
-        "flex",
-        "flex-col",
-        "shadow-xl",
-        "mobile-filter-dialog-pane",
-        "animate-slide-up",
-      ],
-    });
-
-    this.dialogRef.closed.subscribe(() => {
-      this.dialogRef = null;
-    });
   }
 
   closeMobileFilters(): void {
-    if (this.dialogRef) {
-      this.dialogRef.close();
+    if (this.sharedFilters) {
+      this.sharedFilters.closeMobileFilters();
     }
   }
 
@@ -99,7 +75,6 @@ export class DirectoryMobileFiltersComponent implements OnDestroy {
     this.selectedTypesChange.emit(this.localSelectedTypes);
     this.selectedStatusChange.emit(this.localSelectedStatus);
     this.selectedReFuelChange.emit(this.localSelectedReFuel);
-    this.closeMobileFilters();
   }
 
   clearAllFilters(): void {

@@ -8,6 +8,7 @@ import { ComponentProcess } from "./components/process/process";
 import { ComponentFilterPill } from "./components/filter-pill/filter-pill";
 import { TranslateFixed } from "./components/translate-fixed/translate-fixed";
 import { ComponentGridCard } from "./components/grid-card/grid-card";
+import { ComponentMobileFilters } from "./components/mobile-filters/mobile-filters";
 
 import { ThaiDatePipe } from "./pipes/thai-date.pipe";
 import { ThaiTimePipe } from "./pipes/thai-time.pipe";
@@ -28,6 +29,7 @@ export const AllComponentUi = [
   ComponentFilterPill,
   TranslateFixed,
   ComponentGridCard,
+  ComponentMobileFilters,
 ];
 
 export const AllPipes = [

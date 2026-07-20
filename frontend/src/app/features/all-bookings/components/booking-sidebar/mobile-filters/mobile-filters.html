@@ -1,140 +1,77 @@
-<!-- Mobile Filter Trigger Button -->
-@if (isMobileHeader) {
-<component-button
-  (click)="openMobileFilters()"
-  [variant]="activeFiltersCount > 0 ? 'submit' : 'secondary'"
-  size="xs"
-  class="w-auto"
+<component-mobile-filters
+  [activeFiltersCount]="activeFiltersCount"
+  [showTrigger]="isMobileHeader"
+  (open)="onOpenFilters()"
+  (apply)="applyFilters()"
+  (clear)="clearAllFilters()"
 >
-  <span class="material-icons text-base">filter_list</span>
-  @if (activeFiltersCount > 0) {
-  <span
-    class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
-  >
-    {{ activeFiltersCount }}
-  </span>
-  }
-</component-button>
-}
-
-<!-- Mobile Filters CDK Dialog Template -->
-<ng-template #dialogTemplate>
-  <div
-    class="relative w-full bg-white flex flex-col h-auto max-h-[80dvh] rounded-t-3xl overflow-hidden"
-  >
-    <!-- Drag Indicator / Accent bar at top of bottom-sheet -->
-    <div class="flex justify-center py-2 shrink-0">
-      <div class="w-10 h-1 bg-sand-300 rounded-full"></div>
-    </div>
-
-    <!-- Header -->
-    <div
-      class="px-4 pb-2 border-b border-sand-100 flex items-center justify-between shrink-0"
-    >
-      <h3 class="text-sm font-bold text-sand-900 flex items-center gap-1.5">
-        <span class="material-icons text-base text-sand-500">search</span>
-        <span><translate-fixed key="Search & Filters / ค้นหาและกรอง"/></span>
-      </h3>
-      <component-button
-        (click)="closeMobileFilters()"
-        variant="plain"
-        size="xs"
-        class="w-auto"
+  <!-- Content (Scrollable) -->
+  <div class="space-y-3.5">
+    <!-- Quick Filters (Car Types) -->
+    @if (showLegend) {
+    <div class="space-y-1.5">
+      <label
+        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+        ><translate-fixed key="Vehicle Type / ประเภทรถ"/></label
       >
-        <span class="material-icons text-base">close</span>
-      </component-button>
-    </div>
-
-    <!-- Content (Scrollable) -->
-    <div class="flex-1 overflow-y-auto p-4 space-y-3.5">
-      <!-- Quick Filters (Car Types) -->
-      @if (showLegend) {
-      <div class="space-y-1.5">
-        <label
-          class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
-          ><translate-fixed key="Vehicle Type / ประเภทรถ"/></label
-        >
-        <div class="flex flex-wrap items-center gap-2">
-          @for (type of vehicleTypes; track type.value) {
-          <button
-            component-filter-pill
-            [label]="type.label | translate"
-            [active]="localSelectedVehicleTypeFilter.includes(type.value)"
-            [dotColor]="type.dotColor"
-            [ringClass]="type.ringClass"
-            size="md"
-            (click)="toggleLocalVehicleType(type.value)"
-          ></button>
-          }
-        </div>
+      <div class="flex flex-wrap items-center gap-2">
+        @for (type of vehicleTypes; track type.value) {
+        <button
+          component-filter-pill
+          [label]="type.label | translate"
+          [active]="localSelectedVehicleTypeFilter.includes(type.value)"
+          [dotColor]="type.dotColor"
+          [ringClass]="type.ringClass"
+          size="md"
+          (click)="toggleLocalVehicleType(type.value)"
+        ></button>
+        }
       </div>
-
-      <!-- License Plate Pills -->
-      @if (localSelectedVehicleTypeFilter.length > 0 &&
-      localFilteredVehiclesForPills.length > 0) {
-      <div
-        class="space-y-1.5 pt-1.5 animate-in fade-in slide-in-from-top-1 duration-150"
-      >
-        <label
-          class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
-          ><translate-fixed key="License Plate / ทะเบียนรถ"/></label
-        >
-        <div class="flex flex-wrap items-center gap-2">
-          @for (vehicle of localFilteredVehiclesForPills; track vehicle.id) {
-          <button
-            component-filter-pill
-            [label]="vehicle.plateNumber + ' (' + vehicle.model + ')'"
-            [active]="localSelectedVehiclePlates.includes(vehicle.id)"
-            [dotColor]="getVehicleColor(vehicle).dotColor"
-            [ringClass]="getVehicleColor(vehicle).ringClass"
-            size="md"
-            (click)="toggleLocalVehiclePlate(vehicle.id)"
-          ></button>
-          }
-        </div>
-      </div>
-      } }
-
-      <app-filter-sidebar
-        [selectedDate]="localSelectedDate"
-        [searchQuery]="localSearchQuery"
-        [selectedUserId]="localSelectedUserId"
-        [startDate]="localStartDate"
-        [endDate]="localEndDate"
-        [selectedStatusFilter]="localSelectedStatusFilter"
-        [showStatusFilter]="activeTab === 'history'"
-        [vehicles]="vehicles"
-        [users]="users"
-        (selectedDateChange)="localSelectedDate = $event"
-        (searchQueryChange)="localSearchQuery = $event"
-        (selectedUserIdChange)="localSelectedUserId = $event"
-        (startDateChange)="localStartDate = $event"
-        (endDateChange)="localEndDate = $event"
-        (selectedStatusFilterChange)="localSelectedStatusFilter = $event"
-        (reset)="localSearchQuery = ''; localSelectedUserId = ''; localStartDate = ''; localEndDate = ''; localSelectedStatusFilter = ''; localSelectedVehicleTypeFilter = []; localSelectedVehiclePlates = []; localSelectedDate = ''"
-      />
     </div>
 
-    <!-- Footer / Actions -->
+    <!-- License Plate Pills -->
+    @if (localSelectedVehicleTypeFilter.length > 0 &&
+    localFilteredVehiclesForPills.length > 0) {
     <div
-      class="px-4 py-3 border-t border-sand-100 bg-sand-50/50 flex items-center justify-between gap-2.5 shrink-0"
+      class="space-y-1.5 pt-1.5 animate-in fade-in slide-in-from-top-1 duration-150"
     >
-      <component-button
-        (click)="clearAllFilters()"
-        variant="cancel"
-        size="sm"
-        class="flex-1"
+      <label
+        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+        ><translate-fixed key="License Plate / ทะเบียนรถ"/></label
       >
-        <translate-fixed key="Clear Filters" align="center"/>
-      </component-button>
-      <component-button
-        (click)="applyFilters()"
-        variant="submit"
-        size="sm"
-        class="flex-1"
-      >
-        <translate-fixed key="Apply" align="center"/>
-      </component-button>
+      <div class="flex flex-wrap items-center gap-2">
+        @for (vehicle of localFilteredVehiclesForPills; track vehicle.id) {
+        <button
+          component-filter-pill
+          [label]="vehicle.plateNumber + ' (' + vehicle.model + ')'"
+          [active]="localSelectedVehiclePlates.includes(vehicle.id)"
+          [dotColor]="getVehicleColor(vehicle).dotColor"
+          [ringClass]="getVehicleColor(vehicle).ringClass"
+          size="md"
+          (click)="toggleLocalVehiclePlate(vehicle.id)"
+        ></button>
+        }
+      </div>
     </div>
+    } }
+
+    <app-filter-sidebar
+      [selectedDate]="localSelectedDate"
+      [searchQuery]="localSearchQuery"
+      [selectedUserId]="localSelectedUserId"
+      [startDate]="localStartDate"
+      [endDate]="localEndDate"
+      [selectedStatusFilter]="localSelectedStatusFilter"
+      [showStatusFilter]="activeTab === 'history'"
+      [vehicles]="vehicles"
+      [users]="users"
+      (selectedDateChange)="localSelectedDate = $event"
+      (searchQueryChange)="localSearchQuery = $event"
+      (selectedUserIdChange)="localSelectedUserId = $event"
+      (startDateChange)="localStartDate = $event"
+      (endDateChange)="localEndDate = $event"
+      (selectedStatusFilterChange)="localSelectedStatusFilter = $event"
+      (reset)="localSearchQuery = ''; localSelectedUserId = ''; localStartDate = ''; localEndDate = ''; localSelectedStatusFilter = ''; localSelectedVehicleTypeFilter = []; localSelectedVehiclePlates = []; localSelectedDate = ''"
+    />
   </div>
-</ng-template>
+</component-mobile-filters>
