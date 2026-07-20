@@ -212,10 +212,10 @@ export class BookingList implements OnInit, OnDestroy {
       const typeB = b.vehicleTypeId || "Sedan";
       const idxA = typeOrder.indexOf(typeA);
       const idxB = typeOrder.indexOf(typeB);
-      
+
       const actualIdxA = idxA !== -1 ? idxA : typeOrder.length;
       const actualIdxB = idxB !== -1 ? idxB : typeOrder.length;
-      
+
       if (actualIdxA !== actualIdxB) {
         return actualIdxA - actualIdxB;
       }
@@ -278,8 +278,6 @@ export class BookingList implements OnInit, OnDestroy {
     this.loadBookings();
   }
 
-
-
   ngOnDestroy(): void {
     this.headerService.reset();
   }
@@ -337,8 +335,6 @@ export class BookingList implements OnInit, OnDestroy {
       document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     }, 50);
   }
-
-
 
   getBookingEffectiveStatus(
     b: Booking,
@@ -430,8 +426,12 @@ export class BookingList implements OnInit, OnDestroy {
     const quickMonthVal = this.selectedDate();
 
     if (customStartStr || customEndStr) {
-      const customStart = customStartStr ? new Date(customStartStr.replace(" ", "T")).getTime() : null;
-      const customEnd = customEndStr ? new Date(customEndStr.replace(" ", "T")).getTime() : null;
+      const customStart = customStartStr
+        ? new Date(customStartStr.replace(" ", "T")).getTime()
+        : null;
+      const customEnd = customEndStr
+        ? new Date(customEndStr.replace(" ", "T")).getTime()
+        : null;
 
       result = result.filter((b) => {
         if (!b.depart || !b.return) return false;
@@ -455,14 +455,21 @@ export class BookingList implements OnInit, OnDestroy {
 
         return true;
       });
-
     } else if (quickMonthVal) {
       const date = new Date(quickMonthVal);
       if (!isNaN(date.getTime())) {
         const year = date.getFullYear();
         const month = date.getMonth();
         const filterStart = new Date(year, month, 1, 0, 0, 0).getTime();
-        const filterEnd = new Date(year, month + 1, 0, 23, 59, 59, 999).getTime();
+        const filterEnd = new Date(
+          year,
+          month + 1,
+          0,
+          23,
+          59,
+          59,
+          999,
+        ).getTime();
 
         result = result.filter((b) => {
           if (!b.depart || !b.return) return false;
@@ -473,13 +480,13 @@ export class BookingList implements OnInit, OnDestroy {
       }
     }
 
-
-
     // Filter by activeTab:
     const active = this.activeTab() === "active";
     result = result.filter((b) => {
       const effStatus = this.getBookingEffectiveStatus(b);
-      return active ? effStatus === "CONFIRMED" : (effStatus === "COMPLETED" || effStatus === "CANCELLED");
+      return active
+        ? effStatus === "CONFIRMED"
+        : effStatus === "COMPLETED" || effStatus === "CANCELLED";
     });
 
     // Filter by Search Query
@@ -604,8 +611,12 @@ export class BookingList implements OnInit, OnDestroy {
 
   onEditBooking(booking: Booking | null): void {
     if (!booking) return;
-    if (this.getBookingEffectiveStatus(booking) !== 'CONFIRMED') {
-      alert(this.langService.translate('Only upcoming and ongoing bookings can be edited.'));
+    if (this.getBookingEffectiveStatus(booking) !== "CONFIRMED") {
+      alert(
+        this.langService.translate(
+          "Only upcoming and ongoing bookings can be edited.",
+        ),
+      );
       return;
     }
     this.closeDetail();

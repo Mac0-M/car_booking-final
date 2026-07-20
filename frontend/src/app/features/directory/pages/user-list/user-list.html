@@ -47,18 +47,30 @@
           <tr
             class="bg-sand-50 border-b border-container text-xs font-bold text-sand-500 uppercase tracking-wider"
           >
-            <th class="px-6 py-4 w-[22%]"><translate-fixed key="User / ผู้ใช้งาน" align="start"/></th>
-            <th class="px-6 py-4 w-[22%]"><translate-fixed key="Email / อีเมล" align="start"/></th>
-            <th class="px-6 py-4 w-[18%]">
-              <translate-fixed key="Mobile Phone / เบอร์โทรศัพท์" align="start"/>
+            <th class="px-6 py-4 w-[22%]">
+              <translate-fixed key="User / ผู้ใช้งาน" align="start" />
             </th>
-            <th class="px-6 py-4 w-[12%]"><translate-fixed key="Role / บทบาท" align="start"/></th>
+            <th class="px-6 py-4 w-[22%]">
+              <translate-fixed key="Email / อีเมล" align="start" />
+            </th>
+            <th class="px-6 py-4 w-[18%]">
+              <translate-fixed
+                key="Mobile Phone / เบอร์โทรศัพท์"
+                align="start"
+              />
+            </th>
+            <th class="px-6 py-4 w-[12%]">
+              <translate-fixed key="Role / บทบาท" align="start" />
+            </th>
             <th class="px-6 py-4 w-[14%] text-center">
-              <translate-fixed key="Bookings Count / จำนวนครั้งที่จอง" align="center"/>
+              <translate-fixed
+                key="Bookings Count / จำนวนครั้งที่จอง"
+                align="center"
+              />
             </th>
             @if (isAdmin) {
             <th class="px-6 py-4 w-[12%] text-right">
-              <translate-fixed key="Action / ดำเนินการ" align="end"/>
+              <translate-fixed key="Action / ดำเนินการ" align="end" />
             </th>
             }
           </tr>
@@ -84,8 +96,8 @@
               <div>
                 <div class="font-bold text-sand-800">{{ user.userName }}</div>
                 <div class="text-xs text-sand-400">
-                  <translate-fixed key="Registered on"/> {{ user.createAt | appDate
-                  }}
+                  <translate-fixed key="Registered on" /> {{ user.createAt |
+                  appDate }}
                 </div>
               </div>
             </td>
@@ -167,7 +179,8 @@
           <div>
             <h3 class="font-bold text-sand-800">{{ user.userName }}</h3>
             <p class="text-xs text-sand-400">
-              <translate-fixed key="Registered on"/> {{ user.createAt | appDate }}
+              <translate-fixed key="Registered on" /> {{ user.createAt | appDate
+              }}
             </p>
           </div>
         </div>
@@ -177,7 +190,7 @@
         >
           <div>
             <div class="font-semibold text-sand-400">
-              <translate-fixed key="Email / อีเมล"/>
+              <translate-fixed key="Email / อีเมล" />
             </div>
             <div class="font-medium text-sand-700 mt-0.5 break-all">
               {{ user.email }}
@@ -185,7 +198,7 @@
           </div>
           <div>
             <div class="font-semibold text-sand-400">
-              <translate-fixed key="Mobile Phone / เบอร์โทรศัพท์"/>
+              <translate-fixed key="Mobile Phone / เบอร์โทรศัพท์" />
             </div>
             <div class="font-medium font-mono text-sand-700 mt-0.5">
               {{ user.phone || 'N/A' }}
@@ -193,15 +206,15 @@
           </div>
           <div>
             <div class="font-semibold text-sand-400">
-              <translate-fixed key="Bookings Count / จำนวนครั้งที่จอง"/>
+              <translate-fixed key="Bookings Count / จำนวนครั้งที่จอง" />
             </div>
             <div class="font-bold text-sand-800 mt-0.5">
-              {{ user.totalBooked }} <translate-fixed key="times"/>
+              {{ user.totalBooked }} <translate-fixed key="times" />
             </div>
           </div>
           <div>
             <div class="font-semibold text-sand-400">
-              <translate-fixed key="Role / บทบาท"/>
+              <translate-fixed key="Role / บทบาท" />
             </div>
             <div class="mt-1">
               @if (user.role === 'Super_Admin') {
@@ -230,7 +243,7 @@
             class="w-auto"
           >
             <span class="material-icons text-sm mr-1">delete_outline</span>
-            <translate-fixed key="Delete User"/>
+            <translate-fixed key="Delete User" />
           </component-button>
         </div>
         }

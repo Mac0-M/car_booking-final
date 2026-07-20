@@ -1,0 +1,37 @@
+<component-card
+  variant="default"
+  rounded="xl"
+  class="group overflow-hidden flex flex-col justify-between transition-all duration-200 w-full max-w-[380px] mx-auto"
+  [class.cursor-pointer]="cursorPointer"
+  [class.hover:shadow-md]="cursorPointer"
+  [class.hover:rounded-2xl]="cursorPointer"
+  [class.hover:border-sand-300]="cursorPointer"
+>
+  <div>
+    <!-- Vehicle Image Section -->
+    <div
+      class="relative w-full h-40 rounded-lg overflow-hidden bg-linear-to-br from-sand-100 to-sand-200 flex items-center justify-center border border-sand-100"
+    >
+      @if (imageUrl) {
+      <img
+        [src]="imageUrl"
+        [alt]="modelName"
+        class="w-full h-full object-contain"
+      />
+      } @else {
+      <span class="material-icons text-5xl text-sand-300">directions_car</span>
+      }
+
+      <!-- Status Badge overlay -->
+      <div class="absolute top-3 right-3">
+        <component-badge [variant]="badgeVariant" [size]="badgeSize">
+          <translate-fixed [key]="badgeLabelKey" />
+        </component-badge>
+      </div>
+    </div>
+
+    <ng-content select="[card-body]"></ng-content>
+  </div>
+
+  <ng-content select="[card-footer]"></ng-content>
+</component-card>

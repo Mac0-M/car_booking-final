@@ -132,24 +132,25 @@ export class VehicleListComponent implements OnInit {
     this.vehicleService.findAll(filters).subscribe({
       next: (res) => {
         const selectedTypes = this.selectedTypes();
-        const filtered = selectedTypes.length > 0
-          ? res.filter((v) => {
-              const type = v.vehicleTypeId || "Sedan";
-              if (selectedTypes.includes("Sedan")) {
-                if (
-                  type === "Sedan" ||
-                  !type ||
-                  (type !== "Pickup" &&
-                    type !== "Van" &&
-                    type !== "SUV" &&
-                    type !== "Other")
-                ) {
-                  return true;
+        const filtered =
+          selectedTypes.length > 0
+            ? res.filter((v) => {
+                const type = v.vehicleTypeId || "Sedan";
+                if (selectedTypes.includes("Sedan")) {
+                  if (
+                    type === "Sedan" ||
+                    !type ||
+                    (type !== "Pickup" &&
+                      type !== "Van" &&
+                      type !== "SUV" &&
+                      type !== "Other")
+                  ) {
+                    return true;
+                  }
                 }
-              }
-              return selectedTypes.includes(type);
-            })
-          : res;
+                return selectedTypes.includes(type);
+              })
+            : res;
 
         const typeOrder = ["Sedan", "Pickup", "Van", "SUV", "Other"];
         const sorted = filtered.sort((a, b) => {
@@ -157,10 +158,10 @@ export class VehicleListComponent implements OnInit {
           const typeB = b.vehicleTypeId || "Sedan";
           const idxA = typeOrder.indexOf(typeA);
           const idxB = typeOrder.indexOf(typeB);
-          
+
           const actualIdxA = idxA !== -1 ? idxA : typeOrder.length;
           const actualIdxB = idxB !== -1 ? idxB : typeOrder.length;
-          
+
           if (actualIdxA !== actualIdxB) {
             return actualIdxA - actualIdxB;
           }

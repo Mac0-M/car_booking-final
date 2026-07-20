@@ -7,6 +7,7 @@ import { ComponentLoading } from "./components/loading/loading";
 import { ComponentProcess } from "./components/process/process";
 import { ComponentFilterPill } from "./components/filter-pill/filter-pill";
 import { TranslateFixed } from "./components/translate-fixed/translate-fixed";
+import { ComponentGridCard } from "./components/grid-card/grid-card";
 
 import { ThaiDatePipe } from "./pipes/thai-date.pipe";
 import { ThaiTimePipe } from "./pipes/thai-time.pipe";
@@ -25,7 +26,8 @@ export const AllComponentUi = [
   ComponentLoading,
   ComponentProcess,
   ComponentFilterPill,
-  TranslateFixed
+  TranslateFixed,
+  ComponentGridCard,
 ];
 
 export const AllPipes = [
@@ -35,10 +37,7 @@ export const AllPipes = [
   EngDatePipe,
   EngTimePipe,
   AppDatePipe,
-  AppTimePipe
+  AppTimePipe,
 ];
 
-export const AllSharedUi = [
-  ...AllComponentUi,
-  ...AllPipes
-];
+export const AllSharedUi = [...AllComponentUi, ...AllPipes];

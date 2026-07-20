@@ -1,17 +1,27 @@
-import { Component, OnInit, inject, signal, computed, ViewChild, HostListener, effect, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { AllSharedUi } from '../../../../shared/shared';
-import { AuthService } from '../../../../core/services/auth.service';
-import { HeaderService } from '../../../../core/services/header.service';
-import { VehicleListComponent } from '../vehicle-list/vehicle-list';
-import { UserListComponent } from '../user-list/user-list';
-import { DirectoryLeftSidebarComponent } from '../../components/directory-left-sidebar/directory-left-sidebar';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ViewChild,
+  HostListener,
+  effect,
+  OnDestroy,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { AllSharedUi } from "../../../../shared/shared";
+import { AuthService } from "../../../../core/services/auth.service";
+import { HeaderService } from "../../../../core/services/header.service";
+import { VehicleListComponent } from "../vehicle-list/vehicle-list";
+import { UserListComponent } from "../user-list/user-list";
+import { DirectoryLeftSidebarComponent } from "../../components/directory-left-sidebar/directory-left-sidebar";
 
 @Component({
-  selector: 'app-directory',
+  selector: "app-directory",
   standalone: true,
   imports: [
     CommonModule,
@@ -20,46 +30,57 @@ import { DirectoryLeftSidebarComponent } from '../../components/directory-left-s
     VehicleListComponent,
     UserListComponent,
     DirectoryLeftSidebarComponent,
-    ...AllSharedUi
+    ...AllSharedUi,
   ],
-  templateUrl: './directory.html',
+  templateUrl: "./directory.html",
 })
 export class DirectoryComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   readonly router = inject(Router);
   private readonly headerService = inject(HeaderService);
 
-  @ViewChild('userList') userList!: UserListComponent;
-  @ViewChild('vehicleList') vehicleList!: VehicleListComponent;
-  @ViewChild(DirectoryLeftSidebarComponent) leftSidebar?: DirectoryLeftSidebarComponent;
+  @ViewChild("userList") userList!: UserListComponent;
+  @ViewChild("vehicleList") vehicleList!: VehicleListComponent;
+  @ViewChild(DirectoryLeftSidebarComponent)
+  leftSidebar?: DirectoryLeftSidebarComponent;
 
-  readonly activeTab = signal<'vehicles' | 'users'>('vehicles');
+  readonly activeTab = signal<"vehicles" | "users">("vehicles");
   readonly leftDrawerOpened = signal(true);
   readonly isMobile = signal(false);
 
   // Vehicle filters state
-  readonly searchQuery = signal('');
+  readonly searchQuery = signal("");
   readonly selectedTypes = signal<string[]>([]);
-  readonly selectedStatus = signal('');
-  readonly selectedReFuel = signal('');
+  readonly selectedStatus = signal("");
+  readonly selectedReFuel = signal("");
 
   constructor() {
     // Load cached filters FIRST
-    const cached = localStorage.getItem('directory_filters');
+    const cached = localStorage.getItem("directory_filters");
     if (cached) {
       try {
         const filters = JSON.parse(cached);
-        if (filters.searchQuery !== undefined) this.searchQuery.set(filters.searchQuery);
-        if (filters.selectedTypes !== undefined) this.selectedTypes.set(filters.selectedTypes);
+        if (filters.searchQuery !== undefined)
+          this.searchQuery.set(filters.searchQuery);
+        if (filters.selectedTypes !== undefined)
+          this.selectedTypes.set(filters.selectedTypes);
         // Fallback for older single string key if selectedTypes is missing
-        if (filters.selectedTypes === undefined && filters.selectedType !== undefined) {
-          this.selectedTypes.set(filters.selectedType ? [filters.selectedType] : []);
+        if (
+          filters.selectedTypes === undefined &&
+          filters.selectedType !== undefined
+        ) {
+          this.selectedTypes.set(
+            filters.selectedType ? [filters.selectedType] : [],
+          );
         }
-        if (filters.selectedStatus !== undefined) this.selectedStatus.set(filters.selectedStatus);
-        if (filters.selectedReFuel !== undefined) this.selectedReFuel.set(filters.selectedReFuel);
-        if (filters.activeTab !== undefined) this.activeTab.set(filters.activeTab);
+        if (filters.selectedStatus !== undefined)
+          this.selectedStatus.set(filters.selectedStatus);
+        if (filters.selectedReFuel !== undefined)
+          this.selectedReFuel.set(filters.selectedReFuel);
+        if (filters.activeTab !== undefined)
+          this.activeTab.set(filters.activeTab);
       } catch (e) {
-        console.error('Error parsing cached directory filters:', e);
+        console.error("Error parsing cached directory filters:", e);
       }
     }
 
@@ -70,32 +91,35 @@ export class DirectoryComponent implements OnInit, OnDestroy {
         selectedTypes: this.selectedTypes(),
         selectedStatus: this.selectedStatus(),
         selectedReFuel: this.selectedReFuel(),
-        activeTab: this.activeTab()
+        activeTab: this.activeTab(),
       };
-      localStorage.setItem('directory_filters', JSON.stringify(filters));
+      localStorage.setItem("directory_filters", JSON.stringify(filters));
     });
 
     // Sync with HeaderService for mobile filter button
-    effect(() => {
-      const mobile = this.isMobile();
-      const tab = this.activeTab();
-      const count = this.activeFiltersCount();
+    effect(
+      () => {
+        const mobile = this.isMobile();
+        const tab = this.activeTab();
+        const count = this.activeFiltersCount();
 
-      if (mobile && tab === 'vehicles') {
-        this.headerService.isMobileFilterVisible.set(true);
-        this.headerService.mobileFilterAction.set(() => {
-          if (this.leftSidebar?.mobileFilters) {
-            this.leftSidebar.mobileFilters.openMobileFilters();
-          }
-        });
-        this.headerService.clearFilterAction.set(() => {
-          this.resetFilters();
-        });
-        this.headerService.activeFiltersCount.set(count);
-      } else {
-        this.headerService.reset();
-      }
-    }, { allowSignalWrites: true });
+        if (mobile && tab === "vehicles") {
+          this.headerService.isMobileFilterVisible.set(true);
+          this.headerService.mobileFilterAction.set(() => {
+            if (this.leftSidebar?.mobileFilters) {
+              this.leftSidebar.mobileFilters.openMobileFilters();
+            }
+          });
+          this.headerService.clearFilterAction.set(() => {
+            this.resetFilters();
+          });
+          this.headerService.activeFiltersCount.set(count);
+        } else {
+          this.headerService.reset();
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   readonly activeFiltersCount = computed(() => {
@@ -108,20 +132,20 @@ export class DirectoryComponent implements OnInit, OnDestroy {
   });
 
   readonly currentUserRole = computed(() => {
-    return this.authService.currentUser()?.role || 'User';
+    return this.authService.currentUser()?.role || "User";
   });
 
   readonly isAdmin = computed(() => {
     const role = this.currentUserRole();
-    return role === 'Admin' || role === 'Super_Admin';
+    return role === "Admin" || role === "Super_Admin";
   });
 
   readonly isSuperAdmin = computed(() => {
-    return this.currentUserRole() === 'Super_Admin';
+    return this.currentUserRole() === "Super_Admin";
   });
 
   readonly pageTitle = computed(() => {
-    return this.isAdmin() ? 'Management' : 'Directory';
+    return this.isAdmin() ? "Management" : "Directory";
   });
 
   ngOnInit(): void {
@@ -132,7 +156,7 @@ export class DirectoryComponent implements OnInit, OnDestroy {
     this.headerService.reset();
   }
 
-  @HostListener('window:resize', [])
+  @HostListener("window:resize", [])
   onResize(): void {
     this.checkScreenSize();
   }
@@ -140,14 +164,14 @@ export class DirectoryComponent implements OnInit, OnDestroy {
   private checkScreenSize(): void {
     const isMobileSize = window.innerWidth < 1024;
     this.isMobile.set(isMobileSize);
-    
+
     // Automatically close drawer on mobile, open on desktop
     this.leftDrawerOpened.set(!isMobileSize);
   }
 
-  setActiveTab(tab: 'vehicles' | 'users'): void {
+  setActiveTab(tab: "vehicles" | "users"): void {
     if (tab === this.activeTab()) {
-      const nextTab = this.activeTab() === 'vehicles' ? 'users' : 'vehicles';
+      const nextTab = this.activeTab() === "vehicles" ? "users" : "vehicles";
       this.activeTab.set(nextTab);
     } else {
       this.activeTab.set(tab);
@@ -158,10 +182,10 @@ export class DirectoryComponent implements OnInit, OnDestroy {
   }
 
   resetFilters(): void {
-    this.searchQuery.set('');
+    this.searchQuery.set("");
     this.selectedTypes.set([]);
-    this.selectedStatus.set('');
-    this.selectedReFuel.set('');
+    this.selectedStatus.set("");
+    this.selectedReFuel.set("");
   }
 
   openAddVehicleModal(): void {
