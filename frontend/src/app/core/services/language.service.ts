@@ -104,6 +104,18 @@ export class LanguageService {
       th: "กรุณากรอกระยะทางที่มีค่ามากกว่าหรือเท่ากับ 0",
       en: "Please enter a distance value greater than or equal to 0.",
     },
+    "Please enter a valid whole number greater than or equal to 0.": {
+      th: "กรุณากรอกระยะทางที่เป็นจำนวนเต็มและมีค่ามากกว่าหรือเท่ากับ 0",
+      en: "Please enter a valid whole number greater than or equal to 0.",
+    },
+    "Please enter a valid whole number for capacity.": {
+      th: "กรุณากรอกจำนวนที่นั่งเป็นจำนวนเต็มและมีค่ามากกว่า 0",
+      en: "Please enter a valid whole number for capacity.",
+    },
+    "Please enter a valid whole number for mileage.": {
+      th: "กรุณากรอกไมล์สะสมเป็นจำนวนเต็มและมีค่ามากกว่าหรือเท่ากับ 0",
+      en: "Please enter a valid whole number for mileage.",
+    },
     "Requested vehicle not found.": {
       th: "ไม่พบข้อมูลรถยนต์ที่ระบุ",
       en: "Requested vehicle not found.",

@@ -109,7 +109,7 @@
     @for (vehicle of vehicles(); track vehicle.id) {
     <component-card
       variant="default"
-      class="group overflow-hidden flex flex-col justify-between cursor-pointer w-full max-w-[380px] mx-auto"
+      class="group overflow-hidden flex flex-col justify-between w-full max-w-[380px] mx-auto"
     >
       <div>
         <!-- Vehicle Image Section -->
@@ -132,12 +132,12 @@
           <div class="absolute top-3 right-3">
             @if (vehicle.status === 'available') {
             <component-badge variant="available" size="sm"
-              ><translate-fixed key="Available"/></component-badge
-            >
+              ><translate-fixed key="Available"
+            /></component-badge>
             } @else {
             <component-badge variant="unavailable" size="sm"
-              ><translate-fixed key="Unavailable"/></component-badge
-            >
+              ><translate-fixed key="Unavailable"
+            /></component-badge>
             }
           </div>
         </div>
@@ -164,16 +164,17 @@
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-sand-400">people</span>
               <span
-                >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"/></span
-              >
+                >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"
+              /></span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-sand-400"
                 >local_gas_station</span
               >
               <span
-                ><translate-fixed [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"/></span
-              >
+                ><translate-fixed
+                  [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"
+              /></span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-sand-400">speed</span>
@@ -184,8 +185,9 @@
                 >calendar_today</span
               >
               <span
-                ><translate-fixed key="Booked"/> {{ vehicle.totalBookBy || 0 }} <translate-fixed key="times"/></span
-              >
+                ><translate-fixed key="Booked" /> {{ vehicle.totalBookBy || 0 }}
+                <translate-fixed key="times"
+              /></span>
             </div>
           </div>
         </div>

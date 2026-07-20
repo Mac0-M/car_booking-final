@@ -1,0 +1,139 @@
+<div class="relative w-full h-full flex flex-col bg-white">
+  <!-- Header -->
+  <div
+    class="px-4 sm:px-6 py-3 sm:py-4 border-b border-sand-100 flex items-center justify-between bg-white shrink-0"
+  >
+    <div class="flex items-center gap-2">
+      <span class="material-icons text-primary text-2xl">person_add</span>
+      <h2 class="text-xl font-bold text-sand-900">
+        <translate-fixed
+          [key]="isSuperAdmin ? 'Register New Admin' : 'Register New User'"
+        />
+      </h2>
+    </div>
+    <component-button
+      variant="plain"
+      size="xs"
+      class="w-auto -mr-3"
+      (click)="closeAddModal()"
+    >
+      <span class="material-icons">close</span>
+    </component-button>
+  </div>
+
+  <!-- Form Wrapper -->
+  <form
+    (submit)="createUserSubmit(); $event.preventDefault()"
+    class="flex-1 flex flex-col min-h-0 bg-white"
+  >
+    <!-- Scrollable Fields Container -->
+    <div class="p-4 overflow-y-auto flex-1 bg-white space-y-4">
+      <!-- Full Name -->
+      <div class="space-y-1">
+        <label
+          for="new_name"
+          class="text-xs font-bold text-sand-500 uppercase tracking-wider block"
+          ><translate-fixed key="Full Name / ชื่อ สกุล"
+        /></label>
+        <component-input-ui
+          type="text"
+          id="new_name"
+          name="newUserName"
+          [placeholder]="'e.g. John Doe' | translate"
+          [(ngModel)]="newUserName"
+          (ngModelChange)="nameError = ''"
+          [error]="nameError"
+          required
+        ></component-input-ui>
+      </div>
+
+      <!-- Email -->
+      <div class="space-y-1">
+        <label
+          for="new_email"
+          class="text-xs font-bold text-sand-500 uppercase tracking-wider block"
+          ><translate-fixed key="Email Address / อีเมล"
+        /></label>
+        <component-input-ui
+          type="email"
+          id="new_email"
+          name="newUserEmail"
+          [placeholder]="'e.g. john@company.com' | translate"
+          [(ngModel)]="newUserEmail"
+          (ngModelChange)="emailError = ''"
+          [error]="emailError"
+          required
+        ></component-input-ui>
+      </div>
+
+      <!-- Password -->
+      <div class="space-y-1">
+        <label
+          for="new_password"
+          class="text-xs font-bold text-sand-500 uppercase tracking-wider block"
+          ><translate-fixed key="Password / รหัสผ่าน"
+        /></label>
+        <component-input-ui
+          type="password"
+          id="new_password"
+          name="newUserPassword"
+          [placeholder]="'Minimum 6 characters' | translate"
+          [(ngModel)]="newUserPassword"
+          (ngModelChange)="passwordError = ''"
+          [error]="passwordError"
+          required
+        ></component-input-ui>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="space-y-1">
+        <label
+          for="new_phone"
+          class="text-xs font-bold text-sand-500 uppercase tracking-wider block"
+          ><translate-fixed key="Mobile Phone / เบอร์"
+        /></label>
+        <component-input-ui
+          type="tel"
+          id="new_phone"
+          name="newUserPhone"
+          [placeholder]="'e.g. 0812345678' | translate"
+          [(ngModel)]="newUserPhone"
+          (ngModelChange)="phoneError = ''"
+          [error]="phoneError"
+          required
+        ></component-input-ui>
+      </div>
+    </div>
+
+    <!-- Action Buttons Footer -->
+    <div
+      class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 p-4 border-t border-sand-100"
+    >
+      <component-button
+        type="button"
+        (click)="closeAddModal()"
+        variant="danger-outline"
+        size="md"
+        class="w-full md:w-auto"
+      >
+        <translate-fixed key="Cancel" align="center" />
+      </component-button>
+      <component-button
+        type="submit"
+        variant="submit"
+        size="md"
+        class="w-full md:w-auto"
+        [disabled]="isSaving()"
+      >
+        @if (isSaving()) {
+        <span class="flex items-center gap-1.5">
+          <span
+            class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+          ></span>
+          <translate-fixed key="Creating..." align="center" />
+        </span>
+        } @else { <translate-fixed key="Create Account" align="center" /> }
+      </component-button>
+    </div>
+  </form>
+</div>

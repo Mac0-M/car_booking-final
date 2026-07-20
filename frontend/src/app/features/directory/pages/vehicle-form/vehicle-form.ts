@@ -14,6 +14,11 @@ import { LanguageService } from '../../../../core/services/language.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ...AllSharedUi],
   templateUrl: './vehicle-form.html',
+  styles: [`
+    :host ::ng-deep component-button.h-10 button {
+      height: 40px;
+    }
+  `],
   host: {
     class: 'block w-full h-full'
   }
@@ -103,12 +108,29 @@ export class VehicleFormComponent implements OnInit {
     }
   }
 
+  onKeyPress(event: KeyboardEvent): void {
+    if (['-', '.', 'e', '+'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
   get isFormValid(): boolean {
-    return !!this.vehicle_name.trim() && !!this.type && this.capacity > 0 && this.total_mile >= 0;
+    const isCapacityValid = this.capacity > 0 && Number.isInteger(Number(this.capacity));
+    const isMileValid = this.total_mile >= 0 && Number.isInteger(Number(this.total_mile));
+    return !!this.vehicle_name.trim() && !!this.type && isCapacityValid && isMileValid;
   }
 
   onSubmit(): void {
     if (!this.isFormValid || this.isLoading()) return;
+
+    if (!Number.isInteger(Number(this.capacity)) || Number(this.capacity) <= 0) {
+      alert(this.langService.translate("Please enter a valid whole number for capacity."));
+      return;
+    }
+    if (!Number.isInteger(Number(this.total_mile)) || Number(this.total_mile) < 0) {
+      alert(this.langService.translate("Please enter a valid whole number for mileage."));
+      return;
+    }
 
     this.isLoading.set(true);
     const dto = {

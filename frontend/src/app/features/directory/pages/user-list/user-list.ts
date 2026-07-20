@@ -4,8 +4,6 @@ import {
   inject,
   signal,
   computed,
-  ViewChild,
-  TemplateRef,
   Input,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -15,8 +13,9 @@ import { AuthService } from "../../../../core/services/auth.service";
 import { User } from "../../../../core/models/user.model";
 import { AllSharedUi } from "../../../../shared/shared";
 import { environment } from "../../../../../environments/environment";
-import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
+import { DialogModule, Dialog } from "@angular/cdk/dialog";
 import { LanguageService } from "../../../../core/services/language.service";
+import { UserFormComponent } from "../user-form/user-form";
 
 @Component({
   selector: "app-user-list",
@@ -32,26 +31,8 @@ export class UserListComponent implements OnInit {
   private readonly dialog = inject(Dialog);
   private readonly langService = inject(LanguageService);
 
-  @ViewChild("addDialogTemplate") addDialogTemplate!: TemplateRef<any>;
-  private dialogRef: DialogRef<any> | null = null;
-
   readonly users = signal<User[]>([]);
   readonly isLoading = signal(false);
-
-  // Add User Modal State
-  readonly isSaving = signal(false);
-
-  // Form Fields
-  newUserName = "";
-  newUserEmail = "";
-  newUserPassword = "";
-  newUserPhone = "";
-
-  // Validation Errors
-  nameError = "";
-  emailError = "";
-  passwordError = "";
-  phoneError = "";
 
   get currentUserRole(): string {
     return this.authService.currentUser()?.role || "User";
@@ -134,16 +115,7 @@ export class UserListComponent implements OnInit {
   }
 
   openAddModal(): void {
-    this.newUserName = "";
-    this.newUserEmail = "";
-    this.newUserPassword = "";
-    this.newUserPhone = "";
-    this.nameError = "";
-    this.emailError = "";
-    this.passwordError = "";
-    this.phoneError = "";
-
-    this.dialogRef = this.dialog.open(this.addDialogTemplate, {
+    const dialogRef = this.dialog.open<User | undefined>(UserFormComponent, {
       width: "448px",
       maxWidth: "95vw",
       backdropClass: [
@@ -161,96 +133,10 @@ export class UserListComponent implements OnInit {
       ],
     });
 
-    this.dialogRef.closed.subscribe(() => {
-      this.dialogRef = null;
-    });
-  }
-
-  closeAddModal(): void {
-    if (this.dialogRef) {
-      this.dialogRef.close();
-    }
-  }
-
-  private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
-  /** Validate form — same rules as login page */
-  validateAddForm(): boolean {
-    let isValid = true;
-
-    // Name
-    if (!this.newUserName.trim()) {
-      this.nameError = "Name is required";
-      isValid = false;
-    } else {
-      this.nameError = "";
-    }
-
-    // Email — same as login
-    if (!this.newUserEmail.trim()) {
-      this.emailError = "Email is required";
-      isValid = false;
-    } else if (!this.isValidEmail(this.newUserEmail.trim())) {
-      this.emailError = "Please enter a valid email address";
-      isValid = false;
-    } else {
-      this.emailError = "";
-    }
-
-    // Password — same as login (min 6 chars)
-    if (!this.newUserPassword.trim()) {
-      this.passwordError = "Password is required";
-      isValid = false;
-    } else if (this.newUserPassword.trim().length < 6) {
-      this.passwordError = "Password must be at least 6 characters long";
-      isValid = false;
-    } else {
-      this.passwordError = "";
-    }
-
-    // Phone
-    if (!this.newUserPhone.trim()) {
-      this.phoneError = "Phone number is required";
-      isValid = false;
-    } else if (this.newUserPhone.trim().length !== 10) {
-      this.phoneError = "Phone number must be 10 digits";
-      isValid = false;
-    } else {
-      this.phoneError = "";
-    }
-
-    return isValid;
-  }
-
-  createUserSubmit(): void {
-    if (!this.validateAddForm() || this.isSaving()) return;
-
-    this.isSaving.set(true);
-    const payload = {
-      user_name: this.newUserName.trim(),
-      email: this.newUserEmail.trim(),
-      password: this.newUserPassword.trim(),
-      phone: this.newUserPhone.trim(),
-    };
-
-    this.userService.create(payload).subscribe({
-      next: (createdUser) => {
-        this.isSaving.set(false);
-        this.closeAddModal();
+    dialogRef.closed.subscribe((createdUser) => {
+      if (createdUser) {
         this.users.update((current) => [createdUser, ...current]);
-        alert(this.langService.translate("User registered successfully."));
-      },
-      error: (err) => {
-        this.isSaving.set(false);
-        alert(
-          this.langService.translate(
-            err.error?.message || "An error occurred while creating the user.",
-          ),
-        );
-      },
+      }
     });
   }
 

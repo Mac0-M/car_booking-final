@@ -21,7 +21,7 @@
   </div>
 
   <!-- Scrollable Body -->
-  <div class="p-4 sm:p-5 overflow-y-auto flex-1 bg-white">
+  <div class="p-5 pt-1 overflow-y-auto flex-1 bg-white">
     <ng-container [ngTemplateOutlet]="formTemplate"></ng-container>
   </div>
 </div>
@@ -192,6 +192,8 @@
           [(ngModel)]="capacity"
           required
           min="1"
+          step="1"
+          (keypress)="onKeyPress($event)"
           [placeholder]="'e.g. 4' | translate"
           class="w-full px-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
         />
@@ -214,6 +216,8 @@
           [(ngModel)]="total_mile"
           required
           min="0"
+          step="1"
+          (keypress)="onKeyPress($event)"
           [placeholder]="'e.g. 1500' | translate"
           class="w-full px-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
         />
@@ -273,12 +277,12 @@
           variant="danger-outline"
           size="md"
           [disabled]="isLoading()"
-          class="w-full md:w-auto"
+          class="w-full md:w-auto h-10"
         >
           <span class="material-icons text-sm mr-1 leading-none"
             >delete_outline</span
           >
-          <translate-fixed key="Delete Vehicle" align="center" />
+          {{ 'Delete Vehicle' | translate }}
         </component-button>
         }
       </div>
@@ -291,7 +295,7 @@
             (click)="closeForm()"
             variant="danger-outline"
             size="md"
-            class="w-full"
+            class="w-full h-10"
           >
             <translate-fixed key="Cancel" align="center" />
           </component-button>
@@ -300,7 +304,7 @@
             variant="submit"
             size="md"
             [disabled]="!isFormValid || isLoading()"
-            class="w-full"
+            class="w-full h-10"
           >
             @if (isLoading()) {
             <span class="flex items-center gap-2 justify-center">
