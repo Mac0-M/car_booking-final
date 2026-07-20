@@ -4,11 +4,13 @@
   (close)="close.emit()"
   (reset)="reset.emit()"
 >
-  <div class="space-y-4 p-4 select-none">
+  <div class="space-y-4 select-none">
     <!-- Quick Filters (Car Types) -->
     <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider">
-        <translate-fixed key="Quick Filters / ตัวกรองด่วน"/>
+      <label
+        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+      >
+        <translate-fixed key="Quick Filters / ตัวกรองด่วน" />
       </label>
       <div class="flex flex-wrap items-center gap-1.5 shrink-0">
         @for (type of vehicleTypes; track type.value) {
@@ -19,7 +21,10 @@
           [ngClass]="selectedTypes.includes(type.value) ? type.ringClass : ''"
           class="flex items-center gap-1 px-1.5 py-0.5 rounded-full border border-sand-200 bg-white text-xs font-semibold text-sand-700 cursor-pointer select-none transition-all active:scale-95 duration-100"
         >
-          <span class="w-1.5 h-1.5 rounded-full" [ngClass]="type.dotColor"></span>
+          <span
+            class="w-1.5 h-1.5 rounded-full"
+            [ngClass]="type.dotColor"
+          ></span>
           <translate-fixed [key]="type.label" />
         </button>
         }
@@ -28,11 +33,16 @@
 
     <!-- Search Bar -->
     <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider">
-        <translate-fixed key="Search / ค้นหา"/>
+      <label
+        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+      >
+        <translate-fixed key="Search / ค้นหา" />
       </label>
       <div class="relative w-full">
-        <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-sand-400 text-lg">search</span>
+        <span
+          class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-sand-400 text-lg"
+          >search</span
+        >
         <input
           type="text"
           [value]="searchQuery"
@@ -45,17 +55,17 @@
 
     <!-- Status Filter -->
     <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider">
-        <translate-fixed key="Status / สถานะ"/>
+      <label
+        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+      >
+        <translate-fixed key="Status / สถานะ" />
       </label>
       <select
         [value]="selectedStatus"
         (change)="selectedStatusChange.emit($any($event.target).value)"
         class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
       >
-        <option value="">
-          {{ 'All Status / สถานะทั้งหมด' | translate }}
-        </option>
+        <option value="">{{ 'All Status / สถานะทั้งหมด' | translate }}</option>
         <option value="available">
           {{ 'Available / พร้อมใช้งาน' | translate }}
         </option>
@@ -67,8 +77,10 @@
 
     <!-- Refuel Filter -->
     <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider">
-        <translate-fixed key="Fuel Status / สถานะน้ำมัน"/>
+      <label
+        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+      >
+        <translate-fixed key="Fuel Status / สถานะน้ำมัน" />
       </label>
       <select
         [value]="selectedReFuel"
