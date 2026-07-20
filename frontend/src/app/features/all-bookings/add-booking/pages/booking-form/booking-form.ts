@@ -122,13 +122,25 @@ export class BookingFormComponent implements OnInit {
     this.booked_for = storeBookedFor || storeBookedBy || currentUserId;
   }
 
+  get isReturnInPast(): boolean {
+    if (!this.returnTime) return false;
+    const endMs = new Date(this.returnTime).getTime();
+    const nowMs = Date.now();
+    return endMs < nowMs - 5 * 60 * 1000;
+  }
+
+  get isReturnInvalid(): boolean {
+    if (!this.depart || !this.returnTime) return false;
+    const startMs = new Date(this.depart).getTime();
+    const endMs = new Date(this.returnTime).getTime();
+    return endMs <= startMs;
+  }
+
   get isFormValid(): boolean {
     if (!this.depart || !this.returnTime) {
       return false;
     }
-    const startMs = new Date(this.depart).getTime();
-    const endMs = new Date(this.returnTime).getTime();
-    return endMs > startMs;
+    return !this.isReturnInPast && !this.isReturnInvalid;
   }
 
   onSubmit(): void {

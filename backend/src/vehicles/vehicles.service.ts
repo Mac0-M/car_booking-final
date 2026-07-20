@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Vehicle } from './vehicles.entity';
@@ -42,6 +42,18 @@ export class VehiclesService {
 
   async findAvailable(dto: VehicleFilterDto): Promise<Vehicle[]> {
     const { depart, return: returnTime, excludeBookingId } = dto;
+
+    const now = new Date();
+    const departDate = new Date(depart.replace(' ', 'T'));
+    const returnDate = new Date(returnTime.replace(' ', 'T'));
+
+    if (returnDate <= departDate) {
+      throw new BadRequestException('Return time must be after departure time.');
+    }
+
+    if (!excludeBookingId && returnDate < new Date(now.getTime() - 5 * 60 * 1000)) {
+      throw new BadRequestException('Return time cannot be in the past.');
+    }
 
     const qb = this.vehicleRepo.createQueryBuilder('v');
 

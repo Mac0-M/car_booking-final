@@ -71,6 +71,18 @@
                 class="w-full pl-10 pr-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-white"
               />
             </div>
+
+            @if (isReturnInPast) {
+              <div class="col-span-1 sm:col-span-2 text-xs text-red-500 mt-1 flex items-center gap-1 order-5">
+                <span class="material-icons text-xs align-middle">error</span>
+                <span>{{ 'Return time cannot be in the past.' | translate }}</span>
+              </div>
+            } @else if (isReturnInvalid) {
+              <div class="col-span-1 sm:col-span-2 text-xs text-red-500 mt-1 flex items-center gap-1 order-5">
+                <span class="material-icons text-xs align-middle">error</span>
+                <span>{{ 'Return time must be after departure time.' | translate }}</span>
+              </div>
+            }
           </div>
 
           <!-- Destination -->

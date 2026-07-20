@@ -411,6 +411,18 @@ export class LanguageService {
         th: "เกิดข้อผิดพลาดในการตรวจสอบยานพาหนะที่ว่าง กรุณาลองใหม่อีกครั้ง",
         en: "An error occurred while checking vehicle availability. Please try again.",
       },
+    "Cannot book vehicles in the past.": {
+      th: "ไม่สามารถจองยานพาหนะย้อนหลังในอดีตได้",
+      en: "Cannot book vehicles in the past.",
+    },
+    "Return time cannot be in the past.": {
+      th: "เวลาเดินทางกลับต้องไม่เป็นอดีต",
+      en: "Return time cannot be in the past.",
+    },
+    "Return time must be after departure time.": {
+      th: "วันเวลาเดินทางกลับต้องอยู่หลังวันเวลาออกเดินทาง",
+      en: "Return time must be after departure time.",
+    },
     Today: { th: "วันนี้", en: "Today" },
     Apply: { th: "ตกลง", en: "Apply" },
     Booking: { th: "กรอกข้อมูล", en: "Booking" },

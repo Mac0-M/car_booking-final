@@ -106,13 +106,33 @@ export class BookingEditDialogComponent implements OnInit {
     });
   }
 
+  get isReturnInPast(): boolean {
+    if (!this.returnTime) return false;
+    const endMs = new Date(this.returnTime).getTime();
+    const nowMs = Date.now();
+
+    // Check if it differs from initial booking return time
+    const initialReturnStr = this.booking.return ? this.booking.return.substring(0, 16).replace(" ", "T") : "";
+    const currentReturnStr = this.returnTime.replace(" ", "T");
+    if (currentReturnStr === initialReturnStr) {
+      return false;
+    }
+
+    return endMs < nowMs - 5 * 60 * 1000;
+  }
+
+  get isReturnInvalid(): boolean {
+    if (!this.depart || !this.returnTime) return false;
+    const startMs = new Date(this.depart).getTime();
+    const endMs = new Date(this.returnTime).getTime();
+    return endMs <= startMs;
+  }
+
   get isFormValid(): boolean {
     if (!this.depart || !this.returnTime || !this.vehicle_id || !this.booked_for) {
       return false;
     }
-    const startMs = new Date(this.depart).getTime();
-    const endMs = new Date(this.returnTime).getTime();
-    return endMs > startMs;
+    return !this.isReturnInPast && !this.isReturnInvalid;
   }
 
   onSubmit(): void {

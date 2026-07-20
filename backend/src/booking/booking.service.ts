@@ -95,6 +95,17 @@ export class BookingService {
   }
 
   async create(userId: number, dto: CreateBookingDto): Promise<Booking> {
+    const now = new Date();
+    const departTime = new Date(dto.depart.replace(' ', 'T'));
+    const returnTime = new Date(dto.return.replace(' ', 'T'));
+
+    if (returnTime < new Date(now.getTime() - 5 * 60 * 1000)) {
+      throw new BadRequestException('Return time cannot be in the past.');
+    }
+    if (returnTime <= departTime) {
+      throw new BadRequestException('Return time must be after departure time.');
+    }
+
     // 1. Check vehicle existence and status
     const vehicle = await this.vehicleRepo.findOne({ where: { vehicle_id: dto.vehicle_id } });
     if (!vehicle) {
@@ -237,6 +248,22 @@ export class BookingService {
       throw new BadRequestException('Only upcoming and ongoing bookings can be edited.');
     }
 
+    const targetDepart = dto.depart !== undefined ? dto.depart : booking.depart;
+    const targetReturn = dto.return !== undefined ? dto.return : booking.return;
+
+    const targetDepartDate = new Date(targetDepart.replace(' ', 'T'));
+    const targetReturnDate = new Date(targetReturn.replace(' ', 'T'));
+
+    if (targetReturnDate <= targetDepartDate) {
+      throw new BadRequestException('Return time must be after departure time.');
+    }
+
+    if (dto.return !== undefined && dto.return !== booking.return) {
+      if (targetReturnDate < new Date(now.getTime() - 5 * 60 * 1000)) {
+        throw new BadRequestException('Return time cannot be in the past.');
+      }
+    }
+
     // 3. Vehicle existence and status checks (if vehicle is changed)
     const targetVehicleId = dto.vehicle_id !== undefined ? dto.vehicle_id : booking.vehicle_id;
     if (dto.vehicle_id !== undefined && dto.vehicle_id !== booking.vehicle_id) {
@@ -270,9 +297,6 @@ export class BookingService {
     }
 
     // 5. Prevent Overlapping Bookings (Double Booking Validation)
-    const targetDepart = dto.depart !== undefined ? dto.depart : booking.depart;
-    const targetReturn = dto.return !== undefined ? dto.return : booking.return;
-
     const overlapping = await this.bookingRepo.createQueryBuilder('b')
       .where('b.vehicle_id = :vehicleId', { vehicleId: targetVehicleId })
       .andWhere('b.status = :activeStatus', { activeStatus: 'booked' })
