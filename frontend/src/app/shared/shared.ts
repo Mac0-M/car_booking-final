@@ -10,6 +10,9 @@ import { TranslateFixed } from "./components/translate-fixed/translate-fixed";
 import { ComponentGridCard } from "./components/grid-card/grid-card";
 import { ComponentMobileFilters } from "./components/mobile-filters/mobile-filters";
 import { ComponentTabSwitcher } from "./components/tab-switcher/tab-switcher";
+import { ComponentViewSwitcher } from "./components/view-switcher/view-switcher";
+import { ComponentViews } from "./components/views/views";
+import { ComponentFilterSidebar } from "./components/filter-sidebar/filter-sidebar";
 
 import { ThaiDatePipe } from "./pipes/thai-date.pipe";
 import { ThaiTimePipe } from "./pipes/thai-time.pipe";
@@ -32,6 +35,9 @@ export const AllComponentUi = [
   ComponentGridCard,
   ComponentMobileFilters,
   ComponentTabSwitcher,
+  ComponentViewSwitcher,
+  ComponentViews,
+  ComponentFilterSidebar,
 ];
 
 export const AllPipes = [

@@ -25,6 +25,8 @@ import { UserFormComponent } from "../user-form/user-form";
 })
 export class UserListComponent implements OnInit {
   @Input() hideHeader = false;
+  @Input() viewMode: "grid" | "list" = "list"; // default to list view for users
+  @Input() isMobile = false;
 
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);

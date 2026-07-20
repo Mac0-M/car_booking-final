@@ -1,53 +1,41 @@
-@if (viewMode === 'calendar') {
-<div
-  class="flex-1 min-h-0 w-full flex flex-col p-3 md:p-6 overflow-hidden animate-in fade-in duration-200"
+<component-views
+  [viewMode]="viewMode"
+  [hasItems]="bookings.length > 0"
+  [isMobile]="isMobile"
 >
-  <app-booking-calendar
-    class="w-full flex flex-col h-full flex-1 min-h-0"
-    [calendarId]="isMobile ? 'mobile-month-calendar' : 'month-calendar'"
-    defaultView="month"
-    height="100%"
-    minHeight="0"
-    [showLegend]="false"
-    [bookings]="bookings"
-    [showOldBookings]="showOldBookings"
-    [showQuickFilters]="true"
-    [selectedVehicleTypeFilter]="selectedVehicleTypeFilter"
-    [currentDate]="currentDate"
-    (toggleVehicleType)="toggleVehicleType.emit($event)"
-    (bookingClick)="bookingClick.emit($event)"
-    (dateSelect)="dateSelect.emit($event)"
-    (clickMore)="clickMore.emit($event)"
-  />
-</div>
-} @else if (viewMode === 'grid') {
-<div class="flex-1 overflow-y-auto px-3 py-2 md:p-6">
-  @if (bookings.length > 0) {
-  <div
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5 animate-in fade-in duration-200"
-  >
+  <!-- Calendar View -->
+  <ng-container calendar-view>
+    <app-booking-calendar
+      class="w-full flex flex-col h-full flex-1 min-h-0"
+      [calendarId]="isMobile ? 'mobile-month-calendar' : 'month-calendar'"
+      defaultView="month"
+      height="100%"
+      minHeight="0"
+      [showLegend]="false"
+      [bookings]="bookings"
+      [showOldBookings]="showOldBookings"
+      [showQuickFilters]="true"
+      [selectedVehicleTypeFilter]="selectedVehicleTypeFilter"
+      [currentDate]="currentDate"
+      (toggleVehicleType)="toggleVehicleType.emit($event)"
+      (bookingClick)="bookingClick.emit($event)"
+      (dateSelect)="dateSelect.emit($event)"
+      (clickMore)="clickMore.emit($event)"
+    />
+  </ng-container>
+
+  <!-- Grid Items -->
+  <ng-container grid-item>
     @for (booking of bookings; track booking.id) {
     <app-booking-card
       [booking]="booking"
       (click)="bookingClick.emit(booking)"
     />
     }
-  </div>
-  } @else {
-  <component-empty-state
-    [title]="'No bookings found' | translate"
-    [description]="'There are currently no vehicle bookings matching the selected filters.' | translate"
-    icon="search"
-    variant="card"
-  />
-  }
-</div>
-} @else if (viewMode === 'list' && !isMobile) {
-<div class="flex-1 overflow-y-auto px-3 py-2 md:p-6">
-  @if (bookings.length > 0) {
-  <div
-    class="bg-white rounded-2xl border border-sand-100 shadow-sm overflow-hidden animate-in fade-in duration-200"
-  >
+  </ng-container>
+
+  <!-- List View -->
+  <div list-view class="bg-white rounded-2xl border border-sand-100 shadow-sm overflow-hidden animate-in fade-in duration-200">
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead>
@@ -122,13 +110,13 @@
       </table>
     </div>
   </div>
-  } @else {
+
+  <!-- Empty View -->
   <component-empty-state
+    empty-view
     [title]="'No bookings found' | translate"
     [description]="'There are currently no vehicle bookings matching the selected filters.' | translate"
     icon="search"
     variant="card"
   />
-  }
-</div>
-}
+</component-views>

@@ -1,194 +1,158 @@
-<div class="h-full flex flex-col bg-white">
-  @if (showHeader) {
-  <!-- Drawer Header -->
-  <div
-    class="px-4 py-2.5 border-b border-sand-100 flex items-center justify-between shrink-0 select-none bg-white"
-  >
-    <div class="flex items-center gap-2">
-      <h3 class="text-sm text-sand-700 font-bold">
-        <translate-fixed key="Search & Filters / ค้นหาและกรอง"/>
-      </h3>
+<component-filter-sidebar
+  [showHeader]="showHeader"
+  (close)="close.emit()"
+  (reset)="reset.emit()"
+>
+  <!-- Quick Filters (Car Types) -->
+  @if (showQuickFilters) {
+  <div class="space-y-2 border-b border-sand-100 pb-3 mb-1 shrink-0">
+    <div class="flex flex-wrap items-center gap-2">
+      @for (type of vehicleTypes; track type.value) {
+      <button
+        component-filter-pill
+        [label]="type.label | translate"
+        [active]="selectedVehicleTypeFilter.includes(type.value)"
+        [dotColor]="type.dotColor"
+        [ringClass]="type.ringClass"
+        size="sm"
+        (click)="toggleVehicleType.emit(type.value)"
+      ></button>
+      }
     </div>
-    <component-button
-      (click)="close.emit()"
-      variant="plain"
-      size="xs"
-      class="w-auto -mr-3"
-    >
-      <span class="material-icons">close</span>
-    </component-button>
-  </div>
-  }
 
-  <!-- Sidebar layout (Vertical view) -->
-  <div
-    class="p-0 lg:p-4 flex flex-col gap-2 lg:gap-3 flex-1 min-h-0 select-none bg-white"
-  >
-    <!-- Quick Filters (Car Types) -->
-    @if (showQuickFilters) {
-    <div class="space-y-2 border-b border-sand-100 pb-3 mb-1 shrink-0">
-      <div class="flex flex-wrap items-center gap-2">
-        @for (type of vehicleTypes; track type.value) {
+    <!-- License Plate Pills -->
+    @if (selectedVehicleTypeFilter.length > 0 &&
+    filteredVehiclesForPills.length > 0) {
+    <div
+      class="space-y-1 pt-1 animate-in fade-in slide-in-from-top-1 duration-150"
+    >
+      <label
+        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+        ><translate-fixed key="License Plate / ทะเบียนรถ"/></label
+      >
+      <div class="flex flex-col items-start gap-1.5">
+        @for (vehicle of filteredVehiclesForPills; track vehicle.id) {
         <button
           component-filter-pill
-          [label]="type.label | translate"
-          [active]="selectedVehicleTypeFilter.includes(type.value)"
-          [dotColor]="type.dotColor"
-          [ringClass]="type.ringClass"
+          [label]="vehicle.plateNumber + ' (' + vehicle.model + ')'"
+          [active]="selectedVehiclePlates.includes(vehicle.id)"
+          [dotColor]="getVehicleColor(vehicle).dotColor"
+          [ringClass]="getVehicleColor(vehicle).ringClass"
           size="sm"
-          (click)="toggleVehicleType.emit(type.value)"
+          (click)="toggleVehiclePlate.emit(vehicle.id)"
         ></button>
         }
       </div>
-
-      <!-- License Plate Pills -->
-      @if (selectedVehicleTypeFilter.length > 0 &&
-      filteredVehiclesForPills.length > 0) {
-      <div
-        class="space-y-1 pt-1 animate-in fade-in slide-in-from-top-1 duration-150"
-      >
-        <label
-          class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
-          ><translate-fixed key="License Plate / ทะเบียนรถ"/></label
-        >
-        <div class="flex flex-col items-start gap-1.5">
-          @for (vehicle of filteredVehiclesForPills; track vehicle.id) {
-          <button
-            component-filter-pill
-            [label]="vehicle.plateNumber + ' (' + vehicle.model + ')'"
-            [active]="selectedVehiclePlates.includes(vehicle.id)"
-            [dotColor]="getVehicleColor(vehicle).dotColor"
-            [ringClass]="getVehicleColor(vehicle).ringClass"
-            size="sm"
-            (click)="toggleVehiclePlate.emit(vehicle.id)"
-          ></button>
-          }
-        </div>
-      </div>
-      }
     </div>
     }
+  </div>
+  }
 
-    <!-- Search Bar -->
-    <div class="space-y-1">
-      @if (showHeader) {
-      <label
-        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
-        ><translate-fixed key="Search / ค้นหา"/></label
-      >
-      }
-      <div class="relative w-full">
-        <span
-          class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-sand-400 text-lg"
-          >search</span
-        >
-        <input
-          type="text"
-          [value]="searchQuery"
-          (input)="searchQueryChange.emit($any($event.target).value)"
-          [placeholder]="placeholder | translate"
-          class="w-full pl-10 pr-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-sand-400 transition-colors bg-sand-50/50 font-sans"
-        />
-      </div>
-    </div>
-
-    <!-- User Filter -->
-    <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block"
-        ><translate-fixed key="User / ผู้ใช้งาน"/></label
-      >
-      <select
-        [ngModel]="selectedUserId"
-        (ngModelChange)="selectedUserIdChange.emit($event)"
-        class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
-      >
-        <option value="">
-          {{ 'All Users / ผู้ใช้งานทั้งหมด' | translate }}
-        </option>
-        @for (user of users; track user.userId) {
-        <option [value]="user.userId">{{ user.userName }}</option>
-        }
-      </select>
-    </div>
-
-    <!-- Month Quick Filter -->
-    <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block"
-        ><translate-fixed key="Month / เดือน"/></label
-      >
-      <input
-        type="month"
-        [value]="currentMonthValue"
-        (change)="onMonthFilterChange($event)"
-        class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans cursor-pointer"
-      />
-    </div>
-
-    <!-- Start Date Picker (datetime-local) -->
-    <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block"
-        ><translate-fixed key="From Date/Time / ตั้งแต่วันเวลา"/></label
-      >
-      <input
-        type="datetime-local"
-        [value]="startDate"
-        (input)="startDateChange.emit($any($event.target).value)"
-        class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
-      />
-    </div>
-
-    <!-- End Date Picker (datetime-local) -->
-    <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block"
-        ><translate-fixed key="To Date/Time / ถึงวันเวลา"/></label
-      >
-      <input
-        type="datetime-local"
-        [value]="endDate"
-        (input)="endDateChange.emit($any($event.target).value)"
-        class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
-      />
-    </div>
-
-    <!-- Optional Status Filter -->
-    @if (showStatusFilter) {
-    <div class="space-y-1">
-      <label class="text-[10px] font-bold text-sand-400 block"
-        ><translate-fixed key="Booking Status / สถานะการจอง"/></label
-      >
-      <select
-        [ngModel]="selectedStatusFilter"
-        (ngModelChange)="selectedStatusFilterChange.emit($event)"
-        class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
-      >
-        <option value="">
-          {{ 'All Statuses / สถานะทั้งหมด' | translate }}
-        </option>
-        <option value="CONFIRMED">
-          {{ 'CONFIRMED / ยืนยันแล้ว (กำลังมาถึง)' | translate }}
-        </option>
-        <option value="COMPLETED">
-          {{ 'COMPLETED / เสร็จสิ้น' | translate }}
-        </option>
-        <option value="CANCELLED">
-          {{ 'CANCELLED / ยกเลิกแล้ว' | translate }}
-        </option>
-      </select>
-    </div>
-    }
-
-    <!-- Action Buttons -->
-    <div
-      class="hidden lg:flex items-center justify-end gap-2 pt-2 border-t border-sand-100"
+  <!-- Search Bar -->
+  <div class="space-y-1">
+    @if (showHeader) {
+    <label
+      class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+      ><translate-fixed key="Search / ค้นหา"/></label
     >
-      <component-button
-        (click)="reset.emit()"
-        variant="cancel"
-        size="xs"
-        class="w-auto font-sans"
+    }
+    <div class="relative w-full">
+      <span
+        class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-sand-400 text-lg"
+        >search</span
       >
-        <translate-fixed key="Clear Filters" align="center"/>
-      </component-button>
+      <input
+        type="text"
+        [value]="searchQuery"
+        (input)="searchQueryChange.emit($any($event.target).value)"
+        [placeholder]="placeholder | translate"
+        class="w-full pl-10 pr-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-sand-400 transition-colors bg-sand-50/50 font-sans"
+      />
     </div>
   </div>
-</div>
+
+  <!-- User Filter -->
+  <div class="space-y-1">
+    <label class="text-[10px] font-bold text-sand-400 block"
+      ><translate-fixed key="User / ผู้ใช้งาน"/></label
+    >
+    <select
+      [ngModel]="selectedUserId"
+      (ngModelChange)="selectedUserIdChange.emit($event)"
+      class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
+    >
+      <option value="">
+        {{ 'All Users / ผู้ใช้งานทั้งหมด' | translate }}
+      </option>
+      @for (user of users; track user.userId) {
+      <option [value]="user.userId">{{ user.userName }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Month Quick Filter -->
+  <div class="space-y-1">
+    <label class="text-[10px] font-bold text-sand-400 block"
+      ><translate-fixed key="Month / เดือน"/></label
+    >
+    <input
+      type="month"
+      [value]="currentMonthValue"
+      (change)="onMonthFilterChange($event)"
+      class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans cursor-pointer"
+    />
+  </div>
+
+  <!-- Start Date Picker (datetime-local) -->
+  <div class="space-y-1">
+    <label class="text-[10px] font-bold text-sand-400 block"
+      ><translate-fixed key="From Date/Time / ตั้งแต่วันเวลา"/></label
+    >
+    <input
+      type="datetime-local"
+      [value]="startDate"
+      (input)="startDateChange.emit($any($event.target).value)"
+      class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
+    />
+  </div>
+
+  <!-- End Date Picker (datetime-local) -->
+  <div class="space-y-1">
+    <label class="text-[10px] font-bold text-sand-400 block"
+      ><translate-fixed key="To Date/Time / ถึงวันเวลา"/></label
+    >
+    <input
+      type="datetime-local"
+      [value]="endDate"
+      (input)="endDateChange.emit($any($event.target).value)"
+      class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
+    />
+  </div>
+
+  <!-- Optional Status Filter -->
+  @if (showStatusFilter) {
+  <div class="space-y-1">
+    <label class="text-[10px] font-bold text-sand-400 block"
+      ><translate-fixed key="Booking Status / สถานะการจอง"/></label
+    >
+    <select
+      [ngModel]="selectedStatusFilter"
+      (ngModelChange)="selectedStatusFilterChange.emit($event)"
+      class="w-full px-2.5 py-1.5 border border-sand-200 rounded-lg text-xs bg-sand-50/50 focus:outline-none focus:border-sand-400 font-sans"
+    >
+      <option value="">
+        {{ 'All Statuses / สถานะทั้งหมด' | translate }}
+      </option>
+      <option value="CONFIRMED">
+        {{ 'CONFIRMED / ยืนยันแล้ว (กำลังมาถึง)' | translate }}
+      </option>
+      <option value="COMPLETED">
+        {{ 'COMPLETED / เสร็จสิ้น' | translate }}
+      </option>
+      <option value="CANCELLED">
+        {{ 'CANCELLED / ยกเลิกแล้ว' | translate }}
+      </option>
+    </select>
+  </div>
+  }
+</component-filter-sidebar>

@@ -1,0 +1,28 @@
+@if (viewMode === 'calendar') {
+<div
+  class="flex-1 min-h-0 w-full flex flex-col p-3 md:p-6 overflow-hidden animate-in fade-in duration-200"
+>
+  <ng-content select="[calendar-view]"></ng-content>
+</div>
+} @else if (viewMode === 'grid') {
+<div class="flex-1 overflow-y-auto px-3 py-2 md:p-6">
+  @if (hasItems) {
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5 animate-in fade-in duration-200"
+    [ngClass]="gridClass"
+  >
+    <ng-content select="[grid-item]"></ng-content>
+  </div>
+  } @else {
+  <ng-content select="[empty-view]"></ng-content>
+  }
+</div>
+} @else if (viewMode === 'list' && !isMobile) {
+<div class="flex-1 overflow-y-auto px-3 py-2 md:p-6">
+  @if (hasItems) {
+  <ng-content select="[list-view]"></ng-content>
+  } @else {
+  <ng-content select="[empty-view]"></ng-content>
+  }
+</div>
+}

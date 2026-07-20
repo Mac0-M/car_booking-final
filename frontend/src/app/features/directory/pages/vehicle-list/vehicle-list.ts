@@ -19,6 +19,8 @@ import { VehicleFormComponent } from "../vehicle-form/vehicle-form";
 export class VehicleListComponent implements OnInit {
   @Input() hideHeader = false;
   @Input() hideFilters = false;
+  @Input() viewMode: "grid" | "list" = "grid";
+  @Input() isMobile = false;
 
   @Input() set searchQueryInput(val: string) {
     this.searchQuery.set(val);

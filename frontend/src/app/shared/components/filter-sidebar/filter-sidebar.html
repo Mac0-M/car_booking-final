@@ -1,0 +1,41 @@
+@if (showHeader) {
+<!-- Drawer Header -->
+<div
+  class="px-4 py-2.5 border-b border-sand-100 flex items-center justify-between shrink-0 select-none bg-white"
+>
+  <div class="flex items-center gap-2">
+    <h3 class="text-sm text-sand-700 font-bold">
+      <translate-fixed [key]="titleKey"/>
+    </h3>
+  </div>
+  <component-button
+    (click)="close.emit()"
+    variant="plain"
+    size="xs"
+    class="w-auto -mr-3"
+  >
+    <span class="material-icons">close</span>
+  </component-button>
+</div>
+}
+
+<!-- Sidebar layout (Vertical view) -->
+<div
+  class="p-0 lg:p-4 flex flex-col gap-2 lg:gap-3 flex-1 min-h-0 select-none bg-white overflow-y-auto"
+>
+  <ng-content></ng-content>
+  
+  <!-- Action Buttons -->
+  <div
+    class="hidden lg:flex items-center justify-end gap-2 pt-2 border-t border-sand-100"
+  >
+    <component-button
+      (click)="reset.emit()"
+      variant="cancel"
+      size="xs"
+      class="w-auto font-sans"
+    >
+      <translate-fixed key="Clear Filters" align="center"/>
+    </component-button>
+  </div>
+</div>

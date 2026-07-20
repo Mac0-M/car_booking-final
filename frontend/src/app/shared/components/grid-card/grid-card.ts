@@ -22,4 +22,5 @@ export class ComponentGridCard {
   @Input() badgeLabelKey = "";
   @Input() badgeSize: "xs" | "sm" | "base" = "sm";
   @Input() cursorPointer = false;
+  @Input() fallbackIcon = "directions_car";
 }

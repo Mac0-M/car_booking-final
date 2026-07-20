@@ -86,11 +86,11 @@
           ></div>
 
           <!-- View Mode Switcher Component -->
-          <app-booking-view-switcher
+          <component-view-switcher
             [viewMode]="viewMode()"
             [isMobile]="isMobile()"
             (viewModeChange)="setViewMode($event)"
-          ></app-booking-view-switcher>
+          ></component-view-switcher>
         </div>
 
         <!-- Right Side: Filter + Add Button -->

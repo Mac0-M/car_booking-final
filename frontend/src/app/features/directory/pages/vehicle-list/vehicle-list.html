@@ -104,97 +104,162 @@
   <div class="py-12 flex justify-center items-center">
     <component-loading size="base"></component-loading>
   </div>
-  } @else { @if (vehicles().length > 0) {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    @for (vehicle of vehicles(); track vehicle.id) {
-    <component-grid-card
-      [imageUrl]="getVehicleImgUrl(vehicle)"
-      [modelName]="vehicle.model"
-      [badgeVariant]="vehicle.status === 'available' ? 'available' : 'unavailable'"
-      [badgeLabelKey]="vehicle.status === 'available' ? 'Available' : 'Unavailable'"
-      badgeSize="sm"
-      [cursorPointer]="false"
-    >
-      <div card-body class="p-1 pt-4 space-y-3">
-        <div>
-          <h3 class="text-lg font-bold text-sand-800 line-clamp-1">
-            {{ vehicle.model }}
-          </h3>
-          <div class="flex items-center gap-2 mt-1">
-            <span
-              class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-sand-100 text-sand-600 border border-sand-150"
-            >
-              {{ vehicle.vehicleTypeId }}
-            </span>
+  } @else { @if (vehicles().length > 0 || true) {
+  <component-views
+    [viewMode]="viewMode"
+    [hasItems]="vehicles().length > 0"
+    [isMobile]="isMobile"
+    gridClass="lg:grid-cols-3 gap-6"
+  >
+    <!-- Grid Mode -->
+    <ng-container grid-item>
+      @for (vehicle of vehicles(); track vehicle.id) {
+      <component-grid-card
+        [imageUrl]="getVehicleImgUrl(vehicle)"
+        [modelName]="vehicle.model"
+        [badgeVariant]="vehicle.status === 'available' ? 'available' : 'unavailable'"
+        [badgeLabelKey]="vehicle.status === 'available' ? 'Available' : 'Unavailable'"
+        badgeSize="sm"
+        [cursorPointer]="false"
+      >
+        <div card-body class="p-1 pt-4 space-y-3">
+          <div>
+            <h3 class="text-lg font-bold text-sand-800 line-clamp-1">
+              {{ vehicle.model }}
+            </h3>
+            <div class="flex items-center gap-2 mt-1">
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-sand-100 text-sand-600 border border-sand-150"
+              >
+                {{ vehicle.vehicleTypeId }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Info Grid -->
+          <div
+            class="grid grid-cols-2 gap-3 pt-2 text-xs text-sand-500 border-t border-sand-50"
+          >
+            <div class="flex items-center gap-1.5">
+              <span class="material-icons text-base text-sand-400">people</span>
+              <span
+                >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"
+              /></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-icons text-base text-sand-400"
+                >local_gas_station</span
+              >
+              <span
+                ><translate-fixed
+                  [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"
+              /></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-icons text-base text-sand-400">speed</span>
+              <span>{{ vehicle.totalMile | number }} km</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-icons text-base text-sand-400"
+                >calendar_today</span
+              >
+              <span
+                ><translate-fixed key="Booked" /> {{ vehicle.totalBookBy || 0 }}
+                <translate-fixed key="times"
+              /></span>
+            </div>
           </div>
         </div>
 
-        <!-- Info Grid -->
+        @if (isAdmin) {
         <div
-          class="grid grid-cols-2 gap-3 pt-2 text-xs text-sand-500 border-t border-sand-50"
+          card-footer
+          class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-sand-100"
         >
-          <div class="flex items-center gap-1.5">
-            <span class="material-icons text-base text-sand-400">people</span>
-            <span
-              >{{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"
-            /></span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span class="material-icons text-base text-sand-400"
-              >local_gas_station</span
-            >
-            <span
-              ><translate-fixed
-                [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"
-            /></span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span class="material-icons text-base text-sand-400">speed</span>
-            <span>{{ vehicle.totalMile | number }} km</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span class="material-icons text-base text-sand-400"
-              >calendar_today</span
-            >
-            <span
-              ><translate-fixed key="Booked" /> {{ vehicle.totalBookBy || 0 }}
-              <translate-fixed key="times"
-            /></span>
-          </div>
+          <component-button
+            (click)="openEditModal(vehicle.id)"
+            variant="secondary"
+            size="sm"
+            class="w-auto"
+          >
+            <span class="material-icons text-sm mr-1">edit</span>
+            <translate-fixed key="Edit Vehicle" align="center" />
+          </component-button>
         </div>
-      </div>
-
-      @if (isAdmin) {
-      <div
-        card-footer
-        class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-sand-100"
-      >
-        <component-button
-          (click)="openEditModal(vehicle.id)"
-          variant="secondary"
-          size="sm"
-          class="w-auto"
-        >
-          <span class="material-icons text-sm mr-1">edit</span>
-          <translate-fixed key="Edit Vehicle" align="center" />
-        </component-button>
-      </div>
+        }
+      </component-grid-card>
       }
-    </component-grid-card>
-    }
-  </div>
-  } @else {
-  <!-- Empty State -->
-  <div class="py-8 flex flex-col items-center">
-    <div class="w-full">
-      <component-empty-state
-        [title]="'No vehicles found' | translate"
-        [description]="'There are currently no vehicles matching the selected filters.' | translate"
-        icon="search"
-        variant="card"
-      >
-      </component-empty-state>
+    </ng-container>
+
+    <!-- List Mode -->
+    <div list-view class="bg-white rounded-2xl border border-sand-100 shadow-sm overflow-hidden animate-in fade-in duration-200">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#fafbfc] border-b border-container text-xs font-bold text-sand-500 uppercase tracking-wider">
+              <th class="px-6 py-4 w-[25%]"><translate-fixed key="Vehicle / ยานพาหนะ" align="start"/></th>
+              <th class="px-6 py-4 w-[15%]"><translate-fixed key="Type / ประเภท" align="start"/></th>
+              <th class="px-6 py-4 w-[15%]"><translate-fixed key="Capacity / ความจุ" align="start"/></th>
+              <th class="px-6 py-4 w-[15%]"><translate-fixed key="Fuel Status / สถานะน้ำมัน" align="start"/></th>
+              <th class="px-6 py-4 w-[15%]"><translate-fixed key="Mileage / เลขไมล์" align="start"/></th>
+              <th class="px-6 py-4 w-[15%]"><translate-fixed key="Status / สถานะ" align="start"/></th>
+              @if (isAdmin) {
+              <th class="px-6 py-4 w-[10%] text-right"><translate-fixed key="Action / ดำเนินการ" align="end"/></th>
+              }
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-sand-100 text-sm text-sand-700">
+            @for (vehicle of vehicles(); track vehicle.id) {
+            <tr class="hover:bg-sand-50 transition-colors">
+              <td class="px-6 py-4 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-linear-to-br from-sand-100 to-sand-200 flex items-center justify-center border border-sand-100 shrink-0">
+                  @if (getVehicleImgUrl(vehicle); as url) {
+                  <img [src]="url" [alt]="vehicle.model" class="w-full h-full object-contain" />
+                  } @else {
+                  <span class="material-icons text-xl text-sand-400">directions_car</span>
+                  }
+                </div>
+                <div class="font-bold text-sand-800">{{ vehicle.model }}</div>
+              </td>
+              <td class="px-6 py-4 font-semibold text-sand-600">
+                {{ vehicle.vehicleTypeId }}
+              </td>
+              <td class="px-6 py-4 text-sand-600">
+                {{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง"/>
+              </td>
+              <td class="px-6 py-4 text-sand-600">
+                <translate-fixed [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"/>
+              </td>
+              <td class="px-6 py-4 font-mono text-sand-600">
+                {{ vehicle.totalMile | number }} km
+              </td>
+              <td class="px-6 py-4">
+                <component-badge [variant]="vehicle.status === 'available' ? 'available' : 'unavailable'" size="xs">
+                  <translate-fixed [key]="vehicle.status === 'available' ? 'Available' : 'Unavailable'"/>
+                </component-badge>
+              </td>
+              @if (isAdmin) {
+              <td class="px-6 py-4 text-right">
+                <component-button (click)="openEditModal(vehicle.id)" variant="secondary" size="xs" class="w-auto">
+                  <span class="material-icons text-sm">edit</span>
+                </component-button>
+              </td>
+              }
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+
+    <!-- Empty View -->
+    <component-empty-state
+      empty-view
+      [title]="'No vehicles found' | translate"
+      [description]="'There are currently no vehicles matching the selected filters.' | translate"
+      icon="search"
+      variant="card"
+    />
+  </component-views>
   } }
 </div>

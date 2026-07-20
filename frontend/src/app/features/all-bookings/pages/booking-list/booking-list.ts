@@ -28,8 +28,6 @@ import { MobileFilters } from "../../components/booking-sidebar/mobile-filters/m
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { DailyBookingsSidebar } from "../../components/booking-sidebar/daily-bookings-sidebar/daily-bookings-sidebar";
 import { LanguageService } from "../../../../core/services/language.service";
-import { BookingViewSwitcher } from "../../components/booking-view-switcher/booking-view-switcher";
-
 @Component({
   selector: "app-booking-list",
   standalone: true,
@@ -43,7 +41,6 @@ import { BookingViewSwitcher } from "../../components/booking-view-switcher/book
     MobileFilters,
     MatSidenavModule,
     DailyBookingsSidebar,
-    BookingViewSwitcher,
   ],
   templateUrl: "./booking-list.html",
 })

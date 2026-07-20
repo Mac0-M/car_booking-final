@@ -3,7 +3,7 @@
 <button
   (click)="toggle()"
   class="flex items-center justify-center w-10 h-10 bg-primary-container hover:bg-primary-fixed-dim p-0.5 rounded-xl shrink-0 select-none border-0 cursor-pointer transition-all active:scale-95"
-  [title]="viewMode === 'calendar' ? ('Switch to Grid View' | translate) : ('Switch to Calendar View' | translate)"
+  [title]="viewMode === 'calendar' ? ('Switch to Grid View' | translate) : (viewMode === 'grid' ? ('Switch to List View' | translate) : ('Switch to Calendar View' | translate))"
 >
   <div
     class="flex items-center justify-center w-full h-full bg-primary shadow-sm rounded-lg text-white"
@@ -12,9 +12,13 @@
     <span class="material-icons text-base animate-fade-zoom-in"
       >calendar_today</span
     >
+    } @else if (viewMode === 'grid') {
+    <span class="material-icons text-base animate-fade-zoom-in"
+      >grid_view</span
+    >
     } @else {
-    <i class="material-icons text-base animate-fade-zoom-in not-italic"
-      >grid_view</i
+    <span class="material-icons text-base animate-fade-zoom-in"
+      >format_list_bulleted</span
     >
     }
   </div>
@@ -22,17 +26,20 @@
 } @else {
 <!-- View Mode Switcher (Desktop only) -->
 <div
-  class="relative grid grid-cols-3 w-80 bg-primary-container p-0.5 rounded-xl shrink-0 select-none"
+  class="relative grid bg-primary-container p-0.5 rounded-xl shrink-0 select-none transition-all duration-300"
+  [class.grid-cols-3]="modes.length === 3"
+  [class.grid-cols-2]="modes.length === 2"
+  [class.w-80]="modes.length === 3"
+  [class.w-56]="modes.length === 2"
 >
   <!-- Sliding Background Indicator -->
   <div
     class="absolute top-0.5 bottom-0.5 left-0.5 bg-primary rounded-lg transition-transform duration-200 ease-out"
-    style="width: calc(33.33% - 2px)"
-    [style.transform]="
-      viewMode === 'calendar' ? 'translateX(0)' : (viewMode === 'grid' ? 'translateX(calc(100% + 2px))' : 'translateX(calc(200% + 4px))')
-    "
+    [style.width]="modes.length === 3 ? 'calc(33.33% - 2px)' : 'calc(50% - 2px)'"
+    [style.transform]="getSlidingTransform()"
   ></div>
 
+  @if (modes.includes('calendar')) {
   <button
     (click)="setViewMode('calendar')"
     [class.text-white]="viewMode === 'calendar'"
@@ -42,7 +49,9 @@
     <span class="material-icons text-sm sm:text-base">calendar_today</span>
     <translate-fixed key="Calendar" align="center" />
   </button>
+  }
 
+  @if (modes.includes('grid')) {
   <button
     (click)="setViewMode('grid')"
     [class.text-white]="viewMode === 'grid'"
@@ -52,7 +61,9 @@
     <span class="material-icons text-sm sm:text-base">grid_view</span>
     <translate-fixed key="Grid" align="center" />
   </button>
+  }
 
+  @if (modes.includes('list')) {
   <button
     (click)="setViewMode('list')"
     [class.text-white]="viewMode === 'list'"
@@ -62,5 +73,6 @@
     <span class="material-icons text-base">format_list_bulleted</span>
     <translate-fixed key="List" align="center" />
   </button>
+  }
 </div>
 }

@@ -5,25 +5,52 @@
 >
   <!-- Top Area: Switchers & Filters Trigger -->
   <div class="w-full bg-white border-b border-sand-200 shrink-0">
-    <app-directory-left-sidebar
-      class="w-full block"
-      [activeTab]="activeTab()"
-      [isMobile]="isMobile()"
-      [isAdmin]="isAdmin()"
-      [isSuperAdmin]="isSuperAdmin()"
-      [isMobileHeader]="true"
-      [searchQuery]="searchQuery()"
-      [selectedTypes]="selectedTypes()"
-      [selectedStatus]="selectedStatus()"
-      [selectedReFuel]="selectedReFuel()"
-      [activeFiltersCount]="activeFiltersCount()"
-      (activeTabChange)="setActiveTab($event)"
-      (searchQueryChange)="searchQuery.set($event)"
-      (selectedTypesChange)="selectedTypes.set($event)"
-      (selectedStatusChange)="selectedStatus.set($event)"
-      (selectedReFuelChange)="selectedReFuel.set($event)"
-      (resetFilters)="resetFilters()"
-    ></app-directory-left-sidebar>
+    <div class="w-full h-full flex flex-col pb-3">
+      <!-- Tabs Switcher -->
+      <div class="px-3 pt-3 flex items-center justify-between shrink-0 w-full">
+        <div class="flex items-center gap-2">
+          <component-tab-switcher
+            [activeTab]="activeTab()"
+            tab1Value="vehicles"
+            tab1Label="Vehicles"
+            tab1Icon="directions_car"
+            tab2Value="users"
+            tab2Label="Users"
+            tab2Icon="people_outline"
+            (activeTabChange)="setActiveTab($event)"
+          ></component-tab-switcher>
+
+          <!-- Vertical Divider -->
+          <div class="h-8 w-[1px] bg-sand-300 mx-1 self-center shrink-0"></div>
+
+          <component-view-switcher
+            [viewMode]="viewMode()"
+            [isMobile]="isMobile()"
+            [modes]="['grid', 'list']"
+            (viewModeChange)="viewMode.set($any($event))"
+          ></component-view-switcher>
+        </div>
+      </div>
+
+      <!-- Mobile View Header controls (always initialized on mobile to enable header trigger) -->
+      @if (isMobile() && activeTab() === 'vehicles') {
+      <div class="hidden shrink-0">
+        <app-directory-mobile-filters
+          [showTrigger]="false"
+          [searchQuery]="searchQuery()"
+          [selectedTypes]="selectedTypes()"
+          [selectedStatus]="selectedStatus()"
+          [selectedReFuel]="selectedReFuel()"
+          [activeFiltersCount]="activeFiltersCount()"
+          (searchQueryChange)="searchQuery.set($event)"
+          (selectedTypesChange)="selectedTypes.set($event)"
+          (selectedStatusChange)="selectedStatus.set($event)"
+          (selectedReFuelChange)="selectedReFuel.set($event)"
+          (resetFilters)="resetFilters()"
+        ></app-directory-mobile-filters>
+      </div>
+      }
+    </div>
   </div>
 
   <!-- Middle Area: Dynamic Lists -->
@@ -37,9 +64,16 @@
       [selectedTypesInput]="selectedTypes()"
       [selectedStatusInput]="selectedStatus()"
       [selectedReFuelInput]="selectedReFuel()"
+      [viewMode]="viewMode()"
+      [isMobile]="isMobile()"
     ></app-vehicle-list>
     } @if (activeTab() === 'users') {
-    <app-user-list #userList [hideHeader]="true"></app-user-list>
+    <app-user-list
+      #userList
+      [hideHeader]="true"
+      [viewMode]="viewMode()"
+      [isMobile]="isMobile()"
+    ></app-user-list>
     }
   </div>
 
@@ -61,7 +95,7 @@
       (click)="openAddUserModal()"
       variant="submit"
       size="lg"
-      class="w-full"
+      class="w-full btn-purple-theme"
     >
       <span class="material-icons text-sm pr-2">person_add</span>
       {{ (isSuperAdmin() ? 'Register New Admin' : 'Register New User') |
@@ -77,43 +111,135 @@
   [hasBackdrop]="isMobile()"
   class="h-[calc(100dvh-4rem)] w-full bg-container-low overflow-hidden!"
 >
-  <!-- Left Sidebar Drawer -->
+  <!-- Right Filter Drawer (overlay on top of content) -->
   <mat-drawer
-    #leftDrawer
-    [mode]="isMobile() ? 'over' : 'side'"
-    [opened]="leftDrawerOpened()"
-    (closedStart)="leftDrawerOpened.set(false)"
-    class="w-72 min-w-[20rem] max-w-[20rem] border-r border-sand-200 bg-white shadow-sm flex flex-col"
+    #filterDrawer
+    position="end"
+    mode="over"
+    [opened]="filterDrawerOpened() && !isMobile()"
+    (closedStart)="filterDrawerOpened.set(false)"
+    class="w-72 border-l border-sand-200 bg-white shadow-sm flex flex-col h-full z-30 animate-in slide-in-from-right duration-200"
   >
-    <app-directory-left-sidebar
-      class="w-full h-full flex flex-col"
-      [activeTab]="activeTab()"
-      [isMobile]="isMobile()"
-      [isAdmin]="isAdmin()"
-      [isSuperAdmin]="isSuperAdmin()"
-      [isMobileHeader]="false"
+    <app-directory-filter-sidebar
+      [showHeader]="true"
+      titleKey="Search & Filters / ค้นหาและกรอง"
       [searchQuery]="searchQuery()"
       [selectedTypes]="selectedTypes()"
       [selectedStatus]="selectedStatus()"
       [selectedReFuel]="selectedReFuel()"
-      (activeTabChange)="setActiveTab($event)"
       (searchQueryChange)="searchQuery.set($event)"
       (selectedTypesChange)="selectedTypes.set($event)"
       (selectedStatusChange)="selectedStatus.set($event)"
       (selectedReFuelChange)="selectedReFuel.set($event)"
-      (resetFilters)="resetFilters()"
-      (addVehicle)="openAddVehicleModal()"
-      (addUser)="openAddUserModal()"
-    ></app-directory-left-sidebar>
+      (close)="filterDrawerOpened.set(false)"
+      (reset)="resetFilters()"
+    ></app-directory-filter-sidebar>
   </mat-drawer>
 
   <!-- Center Content Area -->
   <mat-drawer-content
-    [class.z-20!]="!isMobile()"
     class="h-full flex! flex-col! bg-container-low relative overflow-hidden!"
   >
+    <!-- Top Header Bar -->
+    <div
+      class="w-full bg-white border-b border-sand-200 shrink-0 px-3 md:px-6 py-3"
+    >
+      <div class="flex items-center justify-between gap-2 md:gap-4">
+        <!-- Left Side: Tabs Switcher + View Switcher -->
+        <div class="flex items-center gap-2 md:gap-2 min-w-0">
+          <!-- Tab Switcher -->
+          <component-tab-switcher
+            [activeTab]="activeTab()"
+            tab1Value="vehicles"
+            tab1Label="Vehicles"
+            tab1Icon="directions_car"
+            tab2Value="users"
+            tab2Label="Users"
+            tab2Icon="people_outline"
+            (activeTabChange)="setActiveTab($event)"
+          ></component-tab-switcher>
+
+          <!-- Vertical Divider -->
+          <div
+            class="h-8 w-[1px] bg-sand-300 mx-1.5 md:mx-2 self-center shrink-0"
+          ></div>
+
+          <!-- View Mode Switcher Component -->
+          <component-view-switcher
+            [viewMode]="viewMode()"
+            [isMobile]="isMobile()"
+            [modes]="['grid', 'list']"
+            (viewModeChange)="viewMode.set($any($event))"
+          ></component-view-switcher>
+        </div>
+
+        <!-- Right Side: Filter + Add Button -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Clear Filters Button -->
+          @if (!isMobile() && activeFiltersCount() > 0 && activeTab() ===
+          'vehicles') {
+          <button
+            (click)="resetFilters()"
+            class="flex items-center justify-center w-9 h-9 rounded-full border border-red-200 bg-white text-red-600 hover:bg-red-50 active:scale-95 transition-all cursor-pointer shrink-0"
+            [title]="'Clear Filters' | translate"
+          >
+            <span class="material-icons text-base">close</span>
+          </button>
+          }
+
+          <!-- Filter Button (only for vehicles) -->
+          @if (!isMobile() && activeTab() === 'vehicles') {
+          <button
+            (click)="filterDrawerOpened.set(!filterDrawerOpened())"
+            [class.bg-primary]="filterDrawerOpened() || activeFiltersCount() > 0"
+            [class.text-white]="filterDrawerOpened() || activeFiltersCount() > 0"
+            [class.border-primary]="filterDrawerOpened() || activeFiltersCount() > 0"
+            [class.bg-primary-container]="!filterDrawerOpened() && activeFiltersCount() === 0"
+            [class.text-primary]="!filterDrawerOpened() && activeFiltersCount() === 0"
+            [class.border-primary-fixed-dim/30]="!filterDrawerOpened() && activeFiltersCount() === 0"
+            class="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0 min-w-[90px] h-9"
+          >
+            <span class="material-icons text-sm">filter_list</span>
+            <translate-fixed key="Filters" align="center" />
+            @if (activeFiltersCount() > 0) {
+            <span
+              class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
+            >
+              {{ activeFiltersCount() }}
+            </span>
+            }
+          </button>
+          }
+
+          <!-- Add / Register Button -->
+          @if (isAdmin()) { @if (activeTab() === 'vehicles') {
+          <button
+            (click)="openAddVehicleModal()"
+            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
+            [title]="'Add New Vehicle' | translate"
+          >
+            <span class="material-icons text-sm">add</span>
+            <translate-fixed key="Add New Vehicle" align="center" />
+          </button>
+          } @else if (activeTab() === 'users') {
+          <button
+            (click)="openAddUserModal()"
+            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
+            [title]="(isSuperAdmin() ? 'Register New Admin' : 'Register New User') | translate"
+          >
+            <span class="material-icons text-sm pr-1">person_add</span>
+            <translate-fixed
+              [key]="isSuperAdmin() ? 'Register New Admin' : 'Register New User'"
+              align="center"
+            />
+          </button>
+          } }
+        </div>
+      </div>
+    </div>
+
     <!-- Main Dynamic Views Section -->
-    <div class="flex-1 min-h-0 w-full overflow-y-auto p-4 md:p-6">
+    <div class="flex-1 min-h-0 w-full overflow-y-auto">
       @if (activeTab() === 'vehicles') {
       <app-vehicle-list
         #vehicleList
@@ -123,9 +249,16 @@
         [selectedTypesInput]="selectedTypes()"
         [selectedStatusInput]="selectedStatus()"
         [selectedReFuelInput]="selectedReFuel()"
+        [viewMode]="viewMode()"
+        [isMobile]="isMobile()"
       ></app-vehicle-list>
       } @if (activeTab() === 'users') {
-      <app-user-list #userList [hideHeader]="true"></app-user-list>
+      <app-user-list
+        #userList
+        [hideHeader]="true"
+        [viewMode]="viewMode()"
+        [isMobile]="isMobile()"
+      ></app-user-list>
       }
     </div>
   </mat-drawer-content>

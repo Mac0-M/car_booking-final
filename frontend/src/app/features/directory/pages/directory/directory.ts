@@ -18,7 +18,8 @@ import { AuthService } from "../../../../core/services/auth.service";
 import { HeaderService } from "../../../../core/services/header.service";
 import { VehicleListComponent } from "../vehicle-list/vehicle-list";
 import { UserListComponent } from "../user-list/user-list";
-import { DirectoryLeftSidebarComponent } from "../../components/directory-left-sidebar/directory-left-sidebar";
+import { DirectoryMobileFiltersComponent } from "../../components/directory-mobile-filters/directory-mobile-filters";
+import { DirectoryFilterSidebarComponent } from "../../components/directory-filter-sidebar/directory-filter-sidebar";
 
 @Component({
   selector: "app-directory",
@@ -29,7 +30,8 @@ import { DirectoryLeftSidebarComponent } from "../../components/directory-left-s
     MatSidenavModule,
     VehicleListComponent,
     UserListComponent,
-    DirectoryLeftSidebarComponent,
+    DirectoryMobileFiltersComponent,
+    DirectoryFilterSidebarComponent,
     ...AllSharedUi,
   ],
   templateUrl: "./directory.html",
@@ -41,12 +43,14 @@ export class DirectoryComponent implements OnInit, OnDestroy {
 
   @ViewChild("userList") userList!: UserListComponent;
   @ViewChild("vehicleList") vehicleList!: VehicleListComponent;
-  @ViewChild(DirectoryLeftSidebarComponent)
-  leftSidebar?: DirectoryLeftSidebarComponent;
+  @ViewChild(DirectoryMobileFiltersComponent)
+  mobileFilters?: DirectoryMobileFiltersComponent;
 
   readonly activeTab = signal<"vehicles" | "users">("vehicles");
   readonly leftDrawerOpened = signal(true);
   readonly isMobile = signal(false);
+  readonly viewMode = signal<"grid" | "list">("grid");
+  readonly filterDrawerOpened = signal(false);
 
   // Vehicle filters state
   readonly searchQuery = signal("");
@@ -79,6 +83,8 @@ export class DirectoryComponent implements OnInit, OnDestroy {
           this.selectedReFuel.set(filters.selectedReFuel);
         if (filters.activeTab !== undefined)
           this.activeTab.set(filters.activeTab);
+        if (filters.viewMode !== undefined)
+          this.viewMode.set(filters.viewMode);
       } catch (e) {
         console.error("Error parsing cached directory filters:", e);
       }
@@ -92,6 +98,7 @@ export class DirectoryComponent implements OnInit, OnDestroy {
         selectedStatus: this.selectedStatus(),
         selectedReFuel: this.selectedReFuel(),
         activeTab: this.activeTab(),
+        viewMode: this.viewMode(),
       };
       localStorage.setItem("directory_filters", JSON.stringify(filters));
     });
@@ -106,8 +113,8 @@ export class DirectoryComponent implements OnInit, OnDestroy {
         if (mobile && tab === "vehicles") {
           this.headerService.isMobileFilterVisible.set(true);
           this.headerService.mobileFilterAction.set(() => {
-            if (this.leftSidebar?.mobileFilters) {
-              this.leftSidebar.mobileFilters.openMobileFilters();
+            if (this.mobileFilters) {
+              this.mobileFilters.openMobileFilters();
             }
           });
           this.headerService.clearFilterAction.set(() => {
@@ -167,6 +174,10 @@ export class DirectoryComponent implements OnInit, OnDestroy {
 
     // Automatically close drawer on mobile, open on desktop
     this.leftDrawerOpened.set(!isMobileSize);
+
+    if (isMobileSize && this.viewMode() === "list") {
+      this.viewMode.set("grid");
+    }
   }
 
   setActiveTab(tab: "vehicles" | "users"): void {
