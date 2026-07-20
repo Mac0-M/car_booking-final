@@ -69,10 +69,16 @@
         <!-- Left Side: Tabs Switcher + View Switcher -->
         <div class="flex items-center gap-2 md:gap-2 min-w-0">
           <!-- Tab Switcher (Active / History) -->
-          <app-booking-tab-switcher
+          <component-tab-switcher
             [activeTab]="activeTab()"
+            tab1Value="active"
+            tab1Label="Active"
+            tab1Icon="bookmark_border"
+            tab2Value="history"
+            tab2Label="History"
+            tab2Icon="history"
             (activeTabChange)="setActiveTab($event)"
-          ></app-booking-tab-switcher>
+          ></component-tab-switcher>
 
           <!-- Vertical Divider -->
           <div

@@ -4,25 +4,29 @@
   <button
     (click)="toggleActiveTab()"
     class="relative z-10 flex-1 flex items-center justify-center text-[11px] md:text-xs font-bold text-primary transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
-    [title]="activeTab === 'active' ? ('Switch to History' | translate) : ('Switch to Active Bookings' | translate)"
+    [title]="activeTab === tab1Value ? ('Switch to ' + tab2Label | translate) : ('Switch to ' + tab1Label | translate)"
   >
-    @if (activeTab === 'active') {
+    @if (activeTab === tab1Value) {
     <span
       class="flex items-center justify-center gap-1 md:gap-1.5 animate-slide-in-left w-full"
     >
+      @if (tab1Icon) {
       <span class="material-icons text-primary text-xs md:text-sm"
-        >bookmark_border</span
+        >{{ tab1Icon }}</span
       >
-      <translate-fixed key="Active"/>
+      }
+      <translate-fixed [key]="tab1Label"/>
     </span>
     } @else {
     <div
       class="flex items-center justify-center gap-1 md:gap-1.5 animate-slide-in-right w-full"
     >
+      @if (tab2Icon) {
       <span class="material-icons text-primary text-xs md:text-sm"
-        >history</span
+        >{{ tab2Icon }}</span
       >
-      <translate-fixed key="History"/>
+      }
+      <translate-fixed [key]="tab2Label"/>
     </div>
     }
   </button>

@@ -29,7 +29,6 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { DailyBookingsSidebar } from "../../components/booking-sidebar/daily-bookings-sidebar/daily-bookings-sidebar";
 import { LanguageService } from "../../../../core/services/language.service";
 import { BookingViewSwitcher } from "../../components/booking-view-switcher/booking-view-switcher";
-import { BookingTabSwitcher } from "../../components/booking-tab-switcher/booking-tab-switcher";
 
 @Component({
   selector: "app-booking-list",
@@ -45,7 +44,6 @@ import { BookingTabSwitcher } from "../../components/booking-tab-switcher/bookin
     MatSidenavModule,
     DailyBookingsSidebar,
     BookingViewSwitcher,
-    BookingTabSwitcher,
   ],
   templateUrl: "./booking-list.html",
 })

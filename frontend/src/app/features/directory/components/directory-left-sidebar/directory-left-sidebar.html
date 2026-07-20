@@ -1,45 +1,18 @@
 <div class="w-full h-full flex flex-col">
   <!-- Tabs Switcher -->
   <div
-    [class]="isMobile ? 'px-0 pt-3 flex items-center shrink-0 w-full' : 'px-4 pt-4 pb-2 flex items-center shrink-0'"
+    [class]="isMobile ? 'px-3 pt-3 flex items-center shrink-0 w-auto' : 'px-4 pt-4 pb-2 flex items-center shrink-0'"
   >
-    <div
-      [class.border-b]="!isMobile"
-      [class.border-sand-200]="!isMobile"
-      class="relative flex bg-transparent select-none shrink-0 w-full pb-2.5"
-    >
-      <!-- Sliding Underline Indicator -->
-      <div
-        class="absolute bottom-0 h-0.5 bg-primary transition-all duration-200 ease-out w-[50%]"
-        [style.transform]="
-          activeTab === 'vehicles'
-            ? 'translateX(0)'
-            : 'translateX(100%)'
-        "
-      ></div>
-
-      <button
-        (click)="activeTabChange.emit('vehicles')"
-        [class.text-primary]="activeTab === 'vehicles'"
-        [class.text-sand-500]="activeTab !== 'vehicles'"
-        [class.hover:text-sand-900]="activeTab !== 'vehicles'"
-        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent"
-      >
-        <span class="material-icons text-sm">directions_car</span>
-        <translate-fixed key="Vehicles" align="center" />
-      </button>
-
-      <button
-        (click)="activeTabChange.emit('users')"
-        [class.text-primary]="activeTab === 'users'"
-        [class.text-sand-500]="activeTab !== 'users'"
-        [class.hover:text-sand-900]="activeTab !== 'users'"
-        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent"
-      >
-        <span class="material-icons text-sm">people_outline</span>
-        <translate-fixed key="Users" align="center" />
-      </button>
-    </div>
+    <component-tab-switcher
+      [activeTab]="activeTab"
+      tab1Value="vehicles"
+      tab1Label="Vehicles"
+      tab1Icon="directions_car"
+      tab2Value="users"
+      tab2Label="Users"
+      tab2Icon="people_outline"
+      (activeTabChange)="activeTabChange.emit($event)"
+    ></component-tab-switcher>
   </div>
 
   <!-- Mobile View Header controls (always initialized on mobile to enable header trigger) -->
