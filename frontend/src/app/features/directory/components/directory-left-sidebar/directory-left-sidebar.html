@@ -1,6 +1,5 @@
 <div class="w-full h-full flex flex-col">
   <!-- Tabs Switcher -->
-  @if (isAdmin) {
   <div
     [class]="isMobile ? 'px-0 pt-3 flex items-center shrink-0 w-full' : 'px-4 pt-4 pb-2 flex items-center shrink-0'"
   >
@@ -42,7 +41,6 @@
       </button>
     </div>
   </div>
-  }
 
   <!-- Mobile View Header controls (always initialized on mobile to enable header trigger) -->
   @if (isMobile && activeTab === 'vehicles') {

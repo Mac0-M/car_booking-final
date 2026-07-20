@@ -126,9 +126,6 @@ export class DirectoryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkScreenSize();
-    if (!this.isAdmin()) {
-      this.activeTab.set('vehicles');
-    }
   }
 
   ngOnDestroy(): void {

@@ -28,7 +28,8 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   private _bookings: Booking[] = [];
   private _currentDate: Date | string = "";
 
-  @Input() calendarId = "calendar-container-" + Math.random().toString(36).substring(2, 9);
+  @Input() calendarId =
+    "calendar-container-" + Math.random().toString(36).substring(2, 9);
   @Input() defaultView: "month" | "week" | "day" = "month";
   @Input() showViewSwitcher = true;
   @Input() showControls = true;
@@ -115,21 +116,18 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
   prev(): void {
     if (this.calendarInstance) {
       this.calendarInstance.prev();
-      this.dateSelect.emit(parseTuiDate(this.calendarInstance.getDate()));
     }
   }
 
   next(): void {
     if (this.calendarInstance) {
       this.calendarInstance.next();
-      this.dateSelect.emit(parseTuiDate(this.calendarInstance.getDate()));
     }
   }
 
   today(): void {
     if (this.calendarInstance) {
       this.calendarInstance.today();
-      this.dateSelect.emit(parseTuiDate(this.calendarInstance.getDate()));
     }
   }
 
@@ -138,7 +136,11 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     if (input.value && this.calendarInstance) {
       const parts = input.value.split("-");
       if (parts.length >= 2) {
-        const selectedDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, 1);
+        const selectedDate = new Date(
+          parseInt(parts[0], 10),
+          parseInt(parts[1], 10) - 1,
+          1,
+        );
         this.calendarInstance.setDate(selectedDate);
         this.dateSelect.emit(selectedDate);
       }
@@ -200,7 +202,9 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
         if (!this.calendarInstance) return;
 
         const target = event.target as HTMLElement;
-        const exceedBtn = target.closest(".custom-exceed-btn") || target.closest(".toastui-calendar-month-grid-header-exceed");
+        const exceedBtn =
+          target.closest(".custom-exceed-btn") ||
+          target.closest(".toastui-calendar-month-grid-header-exceed");
         const cell = target.closest(".toastui-calendar-daygrid-cell");
 
         if (exceedBtn) {
@@ -213,7 +217,11 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
-        if (window.innerWidth >= 1024 || target.closest(".toastui-calendar-weekday-event") || target.closest(".toastui-calendar-event-item")) {
+        if (
+          window.innerWidth >= 1024 ||
+          target.closest(".toastui-calendar-weekday-event") ||
+          target.closest(".toastui-calendar-event-item")
+        ) {
           return;
         }
 
@@ -258,8 +266,9 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
     const events = this.bookings.map((b) => {
       const isOld = this.isOldBooking(b);
       const type = b.vehicle?.vehicleTypeId || "Sedan";
-      
-      let { color, borderColor, icon } = VEHICLE_STYLES[type] || VEHICLE_STYLES["Sedan"];
+
+      let { color, borderColor, icon } =
+        VEHICLE_STYLES[type] || VEHICLE_STYLES["Sedan"];
 
       if (isOld) {
         color = "#726751";

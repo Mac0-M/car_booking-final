@@ -22,18 +22,9 @@ export class ComponentBadge {
   @Input() variant: "available" | "booked" | "unavailable" | "pending" =
     "available";
   @Input() size: "xs" | "sm" | "base" = "sm";
-  @Input() round:
-    | "none"
-    | "sm"
-    | "md"
-    | "lg"
-    | "xl"
-    | "2xl"
-    | "3xl"
-    | "full" = "3xl";
 
   protected readonly baseClasses =
-    "inline-flex items-center justify-center font-medium transition-all duration-200 border-2 border-solid text-center";
+    "inline-flex items-center rounded-3xl justify-center font-medium transition-all duration-200 border-2 border-solid text-center";
 
   protected readonly variantClasses = {
     available: "bg-green-200 text-green-800 border-green-300",
