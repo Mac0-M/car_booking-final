@@ -623,10 +623,6 @@ export class BookingList implements OnInit, OnDestroy {
     dialogRef.closed.subscribe((result) => {
       if (result === true) {
         this.loadBookings();
-        const updatedBooking = this.bookingService
-          .bookings()
-          .find((b) => String(b.id) === String(booking.id));
-        this.openDetail(updatedBooking || booking);
       } else {
         this.openDetail(booking);
       }

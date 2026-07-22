@@ -11,7 +11,6 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { AllSharedUi } from "../../../../shared/shared";
 import { AuthService } from "../../../../core/services/auth.service";
@@ -38,7 +37,6 @@ import { DirectoryFilterSidebarComponent } from "../../components/directory-filt
 })
 export class DirectoryComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
-  readonly router = inject(Router);
   private readonly headerService = inject(HeaderService);
 
   @ViewChild("userList") userList!: UserListComponent;
@@ -47,7 +45,6 @@ export class DirectoryComponent implements OnInit, OnDestroy {
   mobileFilters?: DirectoryMobileFiltersComponent;
 
   readonly activeTab = signal<"vehicles" | "users">("vehicles");
-  readonly leftDrawerOpened = signal(true);
   readonly isMobile = signal(false);
   readonly viewMode = signal<"grid" | "list">("grid");
   readonly filterDrawerOpened = signal(false);
@@ -151,10 +148,6 @@ export class DirectoryComponent implements OnInit, OnDestroy {
     return this.currentUserRole() === "Super_Admin";
   });
 
-  readonly pageTitle = computed(() => {
-    return this.isAdmin() ? "Management" : "Directory";
-  });
-
   ngOnInit(): void {
     this.checkScreenSize();
   }
@@ -171,13 +164,6 @@ export class DirectoryComponent implements OnInit, OnDestroy {
   private checkScreenSize(): void {
     const isMobileSize = window.innerWidth < 1024;
     this.isMobile.set(isMobileSize);
-
-    // Automatically close drawer on mobile, open on desktop
-    this.leftDrawerOpened.set(!isMobileSize);
-
-    if (isMobileSize && this.viewMode() === "list") {
-      this.viewMode.set("grid");
-    }
   }
 
   setActiveTab(tab: "vehicles" | "users"): void {
@@ -186,9 +172,6 @@ export class DirectoryComponent implements OnInit, OnDestroy {
       this.activeTab.set(nextTab);
     } else {
       this.activeTab.set(tab);
-    }
-    if (this.isMobile()) {
-      this.leftDrawerOpened.set(false);
     }
   }
 

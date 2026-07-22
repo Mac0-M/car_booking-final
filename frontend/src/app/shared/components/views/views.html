@@ -17,7 +17,7 @@
   <ng-content select="[empty-view]"></ng-content>
   }
 </div>
-} @else if (viewMode === 'list' && !isMobile) {
+} @else if (viewMode === 'list') {
 <div class="flex-1 overflow-y-auto px-3 py-2 md:p-6">
   @if (hasItems) {
   <ng-content select="[list-view]"></ng-content>

@@ -1,96 +1,8 @@
-@if (isMobile()) {
-<!-- Mobile layout: Controls & Add Action on top header, Lists in middle -->
-<div
-  class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-container-low overflow-hidden"
->
-  <!-- Top Header Bar -->
-  <div class="w-full bg-white border-b border-sand-200 shrink-0 px-3 py-3">
-    <div class="flex items-center justify-between gap-2 h-9">
-      <!-- Left Side: Switchers -->
-      <div class="flex items-center gap-1.5 min-w-0">
-        <component-tab-switcher
-          [activeTab]="activeTab()"
-          tab1Value="vehicles"
-          tab1Label="Vehicles"
-          tab1Icon="directions_car"
-          tab2Value="users"
-          tab2Label="Users"
-          tab2Icon="people_outline"
-          (activeTabChange)="setActiveTab($event)"
-        ></component-tab-switcher>
-
-        <!-- Vertical Divider -->
-        <div class="h-6 w-[1px] bg-sand-300 mx-1 self-center shrink-0"></div>
-
-        <component-view-switcher
-          [viewMode]="viewMode()"
-          [isMobile]="isMobile()"
-          [modes]="['grid', 'list']"
-          (viewModeChange)="viewMode.set($any($event))"
-        ></component-view-switcher>
-      </div>
-
-      <!-- Right Side: Mobile Filters & Add Button -->
-      <div class="flex items-center gap-4 shrink-0">
-        @if (isAdmin()) { @if (activeTab() === 'vehicles') {
-        <button
-          (click)="openAddVehicleModal()"
-          class="btn-purple-theme flex items-center gap-1 px-6 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px]"
-          [title]="'Add Vehicle' | translate"
-        >
-          <span class="material-icons text-sm sm:text-base">add</span>
-          <translate-fixed key="Add Vehicle" align="center" />
-        </button>
-        } @else if (activeTab() === 'users') {
-        <button
-          (click)="openAddUserModal()"
-          class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px]"
-          [title]="(isSuperAdmin() ? 'Add Admin' : 'Add User') | translate"
-        >
-          <span class="material-icons text-sm sm:text-base pr-1"
-            >person_add</span
-          >
-          <translate-fixed
-            [key]="isSuperAdmin() ? 'Add Admin' : 'Add User'"
-            align="center"
-          />
-        </button>
-        } }
-      </div>
-    </div>
-  </div>
-
-  <!-- Middle Area: Dynamic Lists -->
-  <div class="flex-1 min-h-0 w-full overflow-y-auto p-4">
-    @if (activeTab() === 'vehicles') {
-    <app-vehicle-list
-      #vehicleList
-      [hideHeader]="true"
-      [hideFilters]="true"
-      [searchQueryInput]="searchQuery()"
-      [selectedTypesInput]="selectedTypes()"
-      [selectedStatusInput]="selectedStatus()"
-      [selectedReFuelInput]="selectedReFuel()"
-      [viewMode]="viewMode()"
-      [isMobile]="isMobile()"
-    ></app-vehicle-list>
-    } @if (activeTab() === 'users') {
-    <app-user-list
-      #userList
-      [hideHeader]="true"
-      [viewMode]="viewMode()"
-      [isMobile]="isMobile()"
-    ></app-user-list>
-    }
-  </div>
-</div>
-} @else {
-<!-- Desktop Layout -->
 <mat-drawer-container
   [hasBackdrop]="true"
   class="booking-drawer-container h-[calc(100dvh-4rem)] w-full bg-container-low overflow-hidden!"
 >
-  <!-- Right Filter Drawer (overlay on top of content) -->
+  <!-- Right Filter Drawer (Desktop overlay) -->
   <mat-drawer
     #filterDrawer
     position="end"
@@ -125,7 +37,7 @@
     >
       <div class="flex items-center justify-between gap-2 md:gap-4 h-9">
         <!-- Left Side: Tabs Switcher + View Switcher -->
-        <div class="flex items-center gap-2 md:gap-2 min-w-0">
+        <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
           <!-- Tab Switcher -->
           <component-tab-switcher
             [activeTab]="activeTab()"
@@ -140,7 +52,7 @@
 
           <!-- Vertical Divider -->
           <div
-            class="h-6 w-[1px] bg-sand-300 mx-1.5 md:mx-2 self-center shrink-0"
+            class="h-6 w-[1px] bg-sand-300 mx-1 md:mx-2 self-center shrink-0"
           ></div>
 
           <!-- View Mode Switcher Component -->
@@ -153,48 +65,48 @@
         </div>
 
         <!-- Right Side: Filter + Add Button -->
-        <div class="flex items-center gap-4 shrink-0">
-          <!-- Clear Filters Button -->
-          @if (!isMobile() && activeFiltersCount() > 0 && activeTab() ===
-          'vehicles') {
-          <button
-            (click)="resetFilters()"
-            class="flex items-center justify-center w-9 h-9 rounded-full border border-red-200 bg-white text-red-600 hover:bg-red-50 active:scale-95 transition-all cursor-pointer shrink-0"
-            [title]="'Clear Filters' | translate"
-          >
-            <span class="material-icons text-base">close</span>
-          </button>
-          }
-
-          <!-- Filter Button (only for vehicles) -->
+        <div class="flex items-center gap-2 md:gap-4 shrink-0">
+          <!-- Filter Controls (Desktop, only for vehicles) -->
           @if (!isMobile() && activeTab() === 'vehicles') {
-          <button
-            (click)="filterDrawerOpened.set(!filterDrawerOpened())"
-            [class.bg-primary]="filterDrawerOpened() || activeFiltersCount() > 0"
-            [class.text-white]="filterDrawerOpened() || activeFiltersCount() > 0"
-            [class.border-primary]="filterDrawerOpened() || activeFiltersCount() > 0"
-            [class.bg-primary-container]="!filterDrawerOpened() && activeFiltersCount() === 0"
-            [class.text-primary]="!filterDrawerOpened() && activeFiltersCount() === 0"
-            [class.border-primary-fixed-dim/30]="!filterDrawerOpened() && activeFiltersCount() === 0"
-            class="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0 min-w-[90px] h-9"
-          >
-            <span class="material-icons text-sm">filter_list</span>
-            <translate-fixed key="Filters" align="center" />
+            <!-- Clear Filters Button -->
             @if (activeFiltersCount() > 0) {
-            <span
-              class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
+            <button
+              (click)="resetFilters()"
+              class="flex items-center justify-center w-9 h-9 rounded-full border border-red-200 bg-white text-red-600 hover:bg-red-50 active:scale-95 transition-all cursor-pointer shrink-0"
+              [title]="'Clear Filters' | translate"
             >
-              {{ activeFiltersCount() }}
-            </span>
+              <span class="material-icons text-base">close</span>
+            </button>
             }
-          </button>
+
+            <!-- Filter Drawer Toggle Button -->
+            <button
+              (click)="filterDrawerOpened.set(!filterDrawerOpened())"
+              [class.bg-primary]="filterDrawerOpened() || activeFiltersCount() > 0"
+              [class.text-white]="filterDrawerOpened() || activeFiltersCount() > 0"
+              [class.border-primary]="filterDrawerOpened() || activeFiltersCount() > 0"
+              [class.bg-primary-container]="!filterDrawerOpened() && activeFiltersCount() === 0"
+              [class.text-primary]="!filterDrawerOpened() && activeFiltersCount() === 0"
+              [class.border-primary-fixed-dim/30]="!filterDrawerOpened() && activeFiltersCount() === 0"
+              class="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0 min-w-[90px] h-9"
+            >
+              <span class="material-icons text-sm">filter_list</span>
+              <translate-fixed key="Filters" align="center" />
+              @if (activeFiltersCount() > 0) {
+              <span
+                class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
+              >
+                {{ activeFiltersCount() }}
+              </span>
+              }
+            </button>
           }
 
           <!-- Add / Register Button -->
           @if (isAdmin()) { @if (activeTab() === 'vehicles') {
           <button
             (click)="openAddVehicleModal()"
-            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
+            class="btn-purple-theme flex items-center justify-center gap-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] w-[140px] h-9"
             [title]="'Add Vehicle' | translate"
           >
             <span class="material-icons text-sm sm:text-base">add</span>
@@ -203,12 +115,10 @@
           } @else if (activeTab() === 'users') {
           <button
             (click)="openAddUserModal()"
-            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
+            class="btn-purple-theme flex items-center justify-center gap-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] w-[140px] h-9"
             [title]="(isSuperAdmin() ? 'Add Admin' : 'Add User') | translate"
           >
-            <span class="material-icons text-sm sm:text-base pr-2"
-              >person_add</span
-            >
+            <span class="material-icons text-sm sm:text-base">person_add</span>
             <translate-fixed
               [key]="isSuperAdmin() ? 'Add Admin' : 'Add User'"
               align="center"
@@ -244,4 +154,18 @@
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
-}
+
+<!-- Mobile Filters Modal Popup -->
+<app-directory-mobile-filters
+  [searchQuery]="searchQuery()"
+  [selectedTypes]="selectedTypes()"
+  [selectedStatus]="selectedStatus()"
+  [selectedReFuel]="selectedReFuel()"
+  [activeFiltersCount]="activeFiltersCount()"
+  [showTrigger]="false"
+  (searchQueryChange)="searchQuery.set($event)"
+  (selectedTypesChange)="selectedTypes.set($event)"
+  (selectedStatusChange)="selectedStatus.set($event)"
+  (selectedReFuelChange)="selectedReFuel.set($event)"
+  (resetFilters)="resetFilters()"
+></app-directory-mobile-filters>

@@ -19,17 +19,14 @@
     </div>
 
     @if (isAdmin) {
-    <component-button
-      variant="submit"
-      size="sm"
-      class="sm:w-auto btn-purple-theme"
+    <button
       (click)="openAddModal()"
+      class="btn-purple-theme flex items-center justify-center gap-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] w-[140px] h-9"
+      [title]="'Add Vehicle' | translate"
     >
-      <span class="flex items-center gap-2 text-sm font-semibold">
-        <span class="material-icons text-base">add</span>
-        <translate-fixed key="Add Vehicle" align="center" />
-      </span>
-    </component-button>
+      <span class="material-icons text-sm sm:text-base">add</span>
+      <translate-fixed key="Add Vehicle" align="center" />
+    </button>
     }
   </div>
   }
@@ -157,14 +154,17 @@
             </div>
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-sand-400">speed</span>
-              <span>{{ vehicle.totalMile | number }} <translate-fixed key="km" /></span>
+              <span
+                >{{ vehicle.totalMile | number }} <translate-fixed key="km"
+              /></span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-sand-400"
                 >calendar_today</span
               >
               <span class="whitespace-nowrap"
-                >{{ 'Booked' | translate }} {{ vehicle.totalBookBy || 0 }} {{ 'times' | translate }}</span
+                >{{ 'Booked' | translate }} {{ vehicle.totalBookBy || 0 }} {{
+                'times' | translate }}</span
               >
             </div>
           </div>
@@ -181,7 +181,9 @@
             size="xs"
             class="w-auto max-w-full"
           >
-            <span class="material-icons text-xs sm:text-sm mr-1 shrink-0">edit</span>
+            <span class="material-icons text-xs sm:text-sm mr-1 shrink-0"
+              >edit</span
+            >
             <span class="whitespace-nowrap truncate">
               <translate-fixed key="Edit Vehicle" align="center" />
             </span>
@@ -197,7 +199,8 @@
       list-view
       class="bg-white rounded-2xl border border-sand-100 shadow-sm overflow-hidden animate-in fade-in duration-200"
     >
-      <div class="overflow-x-auto">
+      <!-- Desktop Table View -->
+      <div class="hidden md:block overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr
@@ -277,6 +280,73 @@
             }
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="md:hidden divide-y divide-sand-100">
+        @for (vehicle of vehicles(); track vehicle.id) {
+        <component-mobile-card
+          [showImage]="false"
+          [title]="vehicle.model"
+          [subtitle]="vehicle.vehicleTypeId"
+          [badgeVariant]="vehicle.status === 'available' ? 'available' : 'unavailable'"
+          [badgeLabelKey]="vehicle.status === 'available' ? 'Available' : 'Unavailable'"
+        >
+          <div
+            card-body
+            class="grid grid-cols-2 gap-3 text-xs text-sand-500 bg-sand-50/60 p-3 rounded-xl border border-sand-100/60"
+          >
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Capacity / ความจุ" />
+              </div>
+              <div class="font-medium text-sand-700 mt-0.5">
+                {{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง" />
+              </div>
+            </div>
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Fuel Status / สถานะน้ำมัน" />
+              </div>
+              <div class="font-medium text-sand-700 mt-0.5">
+                <translate-fixed
+                  [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"
+                />
+              </div>
+            </div>
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Mileage / เลขไมล์" />
+              </div>
+              <div class="font-medium font-mono text-sand-700 mt-0.5">
+                {{ vehicle.totalMile | number }} <translate-fixed key="km" />
+              </div>
+            </div>
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Bookings Count / จำนวนครั้งที่จอง" />
+              </div>
+              <div class="font-bold text-sand-800 mt-0.5">
+                {{ vehicle.totalBookBy || 0 }} <translate-fixed key="times" />
+              </div>
+            </div>
+          </div>
+
+          @if (isAdmin) {
+          <div card-footer class="flex justify-end pt-1">
+            <component-button
+              (click)="openEditModal(vehicle.id)"
+              variant="secondary"
+              size="xs"
+              class="w-auto"
+            >
+              <span class="material-icons text-sm mr-1">edit</span>
+              <translate-fixed key="Edit Vehicle" />
+            </component-button>
+          </div>
+          }
+        </component-mobile-card>
+        }
       </div>
     </div>
 

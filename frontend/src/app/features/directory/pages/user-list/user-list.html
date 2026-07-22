@@ -21,12 +21,17 @@
 
     @if (isAdmin) {
     <div class="flex items-center gap-4 shrink-0">
-      <component-button variant="submit" size="sm" (click)="openAddModal()">
-        <span class="flex items-center gap-2 text-sm font-semibold">
-          <span class="material-icons text-base">person_add</span>
-          {{ isSuperAdmin ? 'Add New Admin' : 'Add New User' }}
-        </span>
-      </component-button>
+      <button
+        (click)="openAddModal()"
+        class="btn-purple-theme flex items-center justify-center gap-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] w-[140px] h-9"
+        [title]="(isSuperAdmin ? 'Add New Admin' : 'Add New User') | translate"
+      >
+        <span class="material-icons text-sm sm:text-base">person_add</span>
+        <translate-fixed
+          [key]="isSuperAdmin ? 'Add New Admin' : 'Add New User'"
+          align="center"
+        />
+      </button>
     </div>
     }
   </div>
@@ -54,7 +59,10 @@
         imageFit="cover"
         badgeSize="xs"
       >
-        <div card-body class="p-1 pt-4 space-y-3 flex-1 flex flex-col justify-between">
+        <div
+          card-body
+          class="p-1 pt-4 space-y-3 flex-1 flex flex-col justify-between"
+        >
           <div>
             <h3 class="text-lg font-bold text-sand-800 line-clamp-1">
               {{ user.userName }}
@@ -70,11 +78,15 @@
             class="grid grid-cols-1 gap-2 pt-2 text-xs text-sand-500 border-t border-sand-50"
           >
             <div class="flex items-center gap-1.5 min-w-0">
-              <span class="material-icons text-base text-sand-400 shrink-0">email</span>
+              <span class="material-icons text-base text-sand-400 shrink-0"
+                >email</span
+              >
               <span class="truncate">{{ user.email }}</span>
             </div>
             <div class="flex items-center gap-1.5 min-w-0">
-              <span class="material-icons text-base text-sand-400 shrink-0">phone</span>
+              <span class="material-icons text-base text-sand-400 shrink-0"
+                >phone</span
+              >
               <span class="truncate">{{ user.phone || 'N/A' }}</span>
             </div>
             <div class="flex items-center justify-between gap-1.5 h-9">
@@ -108,7 +120,8 @@
       list-view
       class="bg-white rounded-2xl border border-sand-100 shadow-sm overflow-hidden animate-in fade-in duration-200"
     >
-      <div class="overflow-x-auto">
+      <!-- Desktop Table View -->
+      <div class="hidden md:block overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr
@@ -144,7 +157,7 @@
           </thead>
           <tbody class="divide-y divide-sand-100 text-sm text-sand-700">
             @for (user of users(); track user.userId) {
-            <tr class="transition-colors">
+            <tr class="transition-colors hover:bg-sand-50/50">
               <td class="px-6 py-4 flex items-center gap-3">
                 <div
                   class="w-10 h-10 rounded-full overflow-hidden bg-linear-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white font-bold shrink-0 border border-sand-100"
@@ -212,6 +225,83 @@
             }
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="md:hidden divide-y divide-sand-100">
+        @for (user of users(); track user.userId) {
+        <component-mobile-card
+          [imageUrl]="getProfileImgUrl(user)"
+          [title]="user.userName"
+          [subtitle]="('Registered on' | translate) + ' ' + (user.createAt | appDate)"
+          fallbackIcon="person"
+          imageShape="circle"
+        >
+          <div
+            card-body
+            class="grid grid-cols-2 gap-3 text-xs text-sand-500 bg-sand-50/60 p-3 rounded-xl border border-sand-100/60"
+          >
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Email / อีเมล" />
+              </div>
+              <div class="font-medium text-sand-700 mt-0.5 break-all">
+                {{ user.email }}
+              </div>
+            </div>
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Mobile Phone / เบอร์โทรศัพท์" />
+              </div>
+              <div class="font-medium font-mono text-sand-700 mt-0.5">
+                {{ user.phone || 'N/A' }}
+              </div>
+            </div>
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Bookings Count / จำนวนครั้งที่จอง" />
+              </div>
+              <div class="font-bold text-sand-800 mt-0.5">
+                {{ user.totalBooked }} <translate-fixed key="times" />
+              </div>
+            </div>
+            <div>
+              <div class="font-semibold text-sand-400">
+                <translate-fixed key="Role / บทบาท" />
+              </div>
+              <div class="mt-1">
+                @if (user.role === 'Super_Admin') {
+                <component-badge variant="booked" size="xs"
+                  >Super Admin</component-badge
+                >
+                } @else if (user.role === 'Admin') {
+                <component-badge variant="pending" size="xs"
+                  >Admin</component-badge
+                >
+                } @else {
+                <component-badge variant="available" size="xs"
+                  >User</component-badge
+                >
+                }
+              </div>
+            </div>
+          </div>
+
+          @if (canDelete(user)) {
+          <div card-footer class="flex justify-end pt-1">
+            <component-button
+              (click)="deleteUser(user.userId)"
+              variant="danger-outline"
+              size="xs"
+              class="w-auto"
+            >
+              <span class="material-icons text-sm mr-1">delete_outline</span>
+              <translate-fixed key="Delete User" />
+            </component-button>
+          </div>
+          }
+        </component-mobile-card>
+        }
       </div>
     </div>
 

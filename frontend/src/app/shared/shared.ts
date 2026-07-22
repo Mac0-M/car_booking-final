@@ -13,6 +13,7 @@ import { ComponentTabSwitcher } from "./components/tab-switcher/tab-switcher";
 import { ComponentViewSwitcher } from "./components/view-switcher/view-switcher";
 import { ComponentViews } from "./components/views/views";
 import { ComponentFilterSidebar } from "./components/filter-sidebar/filter-sidebar";
+import { ComponentMobileCard } from "./components/mobile-card/mobile-card";
 
 import { ThaiDatePipe } from "./pipes/thai-date.pipe";
 import { ThaiTimePipe } from "./pipes/thai-time.pipe";
@@ -38,6 +39,7 @@ export const AllComponentUi = [
   ComponentViewSwitcher,
   ComponentViews,
   ComponentFilterSidebar,
+  ComponentMobileCard,
 ];
 
 export const AllPipes = [

@@ -1,0 +1,54 @@
+<div class="flex items-center justify-between gap-3">
+  <div class="flex items-center gap-3 min-w-0">
+    <!-- Image / Avatar -->
+    @if (showImage) {
+    <div
+      class="w-12 h-12 overflow-hidden bg-linear-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white font-bold shrink-0 border border-sand-100"
+      [class.rounded-full]="imageShape === 'circle'"
+      [class.rounded-xl]="imageShape === 'square'"
+    >
+      @if (imageUrl) {
+      <img
+        [src]="imageUrl"
+        [alt]="title"
+        class="w-full h-full"
+        [class.object-contain]="imageFit === 'contain'"
+        [class.object-cover]="imageFit === 'cover'"
+        [class.object-fill]="imageFit === 'fill'"
+      />
+      } @else if (imageShape === 'circle' && title) {
+      <span>{{ (title[0] || 'U') | uppercase }}</span>
+      } @else {
+      <span class="material-icons text-2xl text-white">{{ fallbackIcon }}</span>
+      }
+    </div>
+    }
+
+    <!-- Title & Subtitle -->
+    <div class="min-w-0 flex-1">
+      <h3 class="font-bold text-sand-800 text-sm sm:text-base truncate">
+        {{ title }}
+      </h3>
+      @if (subtitle) {
+      <p class="text-xs text-sand-400 truncate mt-0.5">
+        {{ subtitle }}
+      </p>
+      }
+    </div>
+  </div>
+
+  <!-- Badge / Header Extra -->
+  @if (badgeVariant && badgeLabelKey) {
+  <div class="shrink-0">
+    <component-badge [variant]="badgeVariant" [size]="badgeSize">
+      <translate-fixed [key]="badgeLabelKey" />
+    </component-badge>
+  </div>
+  }
+</div>
+
+<!-- Card Body Slot -->
+<ng-content select="[card-body]"></ng-content>
+
+<!-- Card Footer Slot -->
+<ng-content select="[card-footer]"></ng-content>

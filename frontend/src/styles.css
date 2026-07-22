@@ -406,7 +406,9 @@ component-card.cursor-pointer:hover > div {
 .mat-mdc-snack-bar-container .mdc-snackbar__label {
   font-size: 0.875rem !important;
   font-weight: 500 !important;
-  padding-left: 4px !important;
+  text-align: center !important;
+  flex-grow: 1 !important;
+  padding-left: 32px !important;
 }
 
 /* SnackBar Close Button Styling & Spacing */
