@@ -17,6 +17,7 @@ import { AuthService } from "../../../../core/services/auth.service";
 import { DialogModule, Dialog, DialogRef } from "@angular/cdk/dialog";
 import { BookingDetailsComponent } from "../booking-details/booking-details";
 import { LanguageService } from "../../../../core/services/language.service";
+import { ToastService } from "../../../../core/services/toast.service";
 
 @Component({
   selector: "app-booking-detail-modal",
@@ -33,6 +34,7 @@ export class BookingDetailModal implements OnChanges {
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(Dialog);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   @ViewChild("dialogTemplate") dialogTemplate!: TemplateRef<any>;
   private dialogRef: DialogRef<any> | null = null;
@@ -104,7 +106,7 @@ export class BookingDetailModal implements OnChanges {
     }
     const val = Number(rawVal);
     if (isNaN(val) || val < 0 || !Number.isInteger(val)) {
-      alert(
+      this.toast.warning(
         this.langService.translate(
           "Please enter a valid whole number greater than or equal to 0."
         )

@@ -6,13 +6,10 @@
 >
   <div class="space-y-4 select-none">
     <!-- Quick Filters (Car Types) -->
-    <div class="space-y-1">
-      <label
-        class="text-[10px] font-bold text-sand-400 block uppercase tracking-wider"
+    <div class="space-y-1 border-b border-sand-100 pb-3 mb-1 shrink-0">
+      <div
+        class="flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-x-auto no-scrollbar p-1 shrink-0"
       >
-        <translate-fixed key="Quick Filters / ตัวกรองด่วน" />
-      </label>
-      <div class="flex flex-wrap items-center gap-1.5 shrink-0">
         @for (type of vehicleTypes; track type.value) {
         <button
           (click)="toggleVehicleType(type.value)"
@@ -48,7 +45,7 @@
           [value]="searchQuery"
           (input)="searchQueryChange.emit($any($event.target).value)"
           [placeholder]="'Search...' | translate"
-          class="w-full pl-10 pr-4 py-2 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-sand-400 transition-colors bg-sand-50/50 font-sans"
+          class="w-full pl-10 pr-4 py-2.5 border border-sand-200 rounded-xl text-sm focus:outline-none focus:border-sand-400 transition-colors bg-sand-50/50 font-sans"
         />
       </div>
     </div>

@@ -7,6 +7,7 @@ import { User } from '../../../../core/models/user.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { environment } from '../../../../../environments/environment';
 import { LanguageService } from '../../../../core/services/language.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-profile-edit',
@@ -19,6 +20,7 @@ export class ProfileEditComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly location = inject(Location);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   readonly isLoading = signal(false);
   readonly isEditing = signal(false); // Controls view-only vs edit mode
@@ -30,6 +32,11 @@ export class ProfileEditComponent implements OnInit {
   email = '';
   role = 'User';
   newPassword = '';
+
+  // Initial Form Values Tracking (for dirty checking)
+  private initialUserName = '';
+  private initialPhone = '';
+  private initialEmail = '';
 
   // Avatar Image Upload
   selectedFile: File | null = null;
@@ -66,6 +73,10 @@ export class ProfileEditComponent implements OnInit {
     this.phone = user.phone || '';
     this.email = user.email || '';
     this.role = user.role || 'User';
+
+    this.initialUserName = this.user_name;
+    this.initialPhone = this.phone;
+    this.initialEmail = this.email;
     
     const profileImg = user.profileImg || user.profile_image || user.profile_img;
     if (profileImg) {
@@ -92,6 +103,15 @@ export class ProfileEditComponent implements OnInit {
     }
   }
 
+  get isFormDirty(): boolean {
+    if (this.selectedFile !== null) return true;
+    if (this.newPassword.trim() !== '') return true;
+    if (this.user_name.trim() !== this.initialUserName.trim()) return true;
+    if (this.phone.trim() !== this.initialPhone.trim()) return true;
+    if (this.email.trim() !== this.initialEmail.trim()) return true;
+    return false;
+  }
+
   get isFormValid(): boolean {
     const isBasicValid = !!this.user_name.trim() && !!this.email.trim();
     if (this.newPassword.trim() && this.newPassword.trim().length < 6) {
@@ -102,6 +122,15 @@ export class ProfileEditComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.isEditing() || !this.isFormValid || !this.userId || this.isLoading()) return;
+
+    if (this.isFormDirty) {
+      const confirmMsg = this.langService.translate(
+        'Are you sure you want to save changes? / คุณต้องการบันทึกการเปลี่ยนแปลงโปรไฟล์ใช่หรือไม่?'
+      );
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+    }
 
     this.isLoading.set(true);
     const updateData: any = {
@@ -124,7 +153,7 @@ export class ProfileEditComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(this.langService.translate(err.error?.message || 'An error occurred while saving profile data.'));
+        this.toast.error(this.langService.translate(err.error?.message || 'An error occurred while saving profile data.'));
       }
     });
   }
@@ -140,7 +169,7 @@ export class ProfileEditComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(this.langService.translate(err.error?.message || 'Profile saved successfully, but avatar image upload failed.'));
+        this.toast.warning(this.langService.translate(err.error?.message || 'Profile saved successfully, but avatar image upload failed.'));
         this.refreshSession();
       }
     });
@@ -155,7 +184,7 @@ export class ProfileEditComponent implements OnInit {
         this.selectedFile = null;
         this.imagePreviewUrl = null;
         this.newPassword = '';
-        alert(this.langService.translate('Profile saved successfully.'));
+        this.toast.warning(this.langService.translate('Profile saved successfully.'));
       },
       error: (err) => {
         this.isLoading.set(false);
@@ -165,10 +194,25 @@ export class ProfileEditComponent implements OnInit {
   }
 
   startEdit(): void {
+    this.initialUserName = this.user_name;
+    this.initialPhone = this.phone;
+    this.initialEmail = this.email;
+    this.newPassword = '';
+    this.selectedFile = null;
+    this.imagePreviewUrl = null;
     this.isEditing.set(true);
   }
 
   cancelEdit(): void {
+    if (this.isFormDirty) {
+      const confirmMsg = this.langService.translate(
+        'You have unsaved changes. Are you sure you want to cancel? / คุณมีการแก้ไขข้อมูลที่ยังไม่ได้บันทึก ต้องการยกเลิกใช่หรือไม่?'
+      );
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+    }
+
     // Revert inputs to current session data
     const user = this.authService.currentUser();
     if (user) {
@@ -181,6 +225,14 @@ export class ProfileEditComponent implements OnInit {
   }
 
   goBack(): void {
+    if (this.isEditing() && this.isFormDirty) {
+      const confirmMsg = this.langService.translate(
+        'You have unsaved changes. Are you sure you want to leave? / คุณมีการแก้ไขข้อมูลที่ยังไม่ได้บันทึก ต้องการออกจากหน้านี้ใช่หรือไม่?'
+      );
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+    }
     this.location.back();
   }
 }

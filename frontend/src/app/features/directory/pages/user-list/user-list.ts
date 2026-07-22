@@ -15,6 +15,7 @@ import { AllSharedUi } from "../../../../shared/shared";
 import { environment } from "../../../../../environments/environment";
 import { DialogModule, Dialog } from "@angular/cdk/dialog";
 import { LanguageService } from "../../../../core/services/language.service";
+import { ToastService } from "../../../../core/services/toast.service";
 import { UserFormComponent } from "../user-form/user-form";
 
 @Component({
@@ -32,6 +33,7 @@ export class UserListComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(Dialog);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   readonly users = signal<User[]>([]);
   readonly isLoading = signal(false);
@@ -85,7 +87,7 @@ export class UserListComponent implements OnInit {
   deleteUser(userId: number): void {
     const user = this.users().find((u) => u.userId === userId);
     if (!user || !this.canDelete(user)) {
-      alert(
+      this.toast.warning(
         this.langService.translate(
           "You do not have permission to delete this user.",
         ),
@@ -100,12 +102,13 @@ export class UserListComponent implements OnInit {
     if (confirm(confirmMsg)) {
       this.userService.delete(userId).subscribe({
         next: () => {
+          this.toast.error(this.langService.translate('User deleted successfully.'));
           this.users.update((current) =>
             current.filter((u) => u.userId !== userId),
           );
         },
         error: (err) => {
-          alert(
+          this.toast.error(
             this.langService.translate(
               err.error?.message ||
                 "An error occurred while deleting the user.",

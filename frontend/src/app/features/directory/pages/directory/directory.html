@@ -1,55 +1,62 @@
 @if (isMobile()) {
-<!-- Mobile layout: Controls on top, Lists in middle, Add Action at bottom -->
+<!-- Mobile layout: Controls & Add Action on top header, Lists in middle -->
 <div
   class="h-[calc(100dvh-4rem)] w-full flex flex-col bg-container-low overflow-hidden"
 >
-  <!-- Top Area: Switchers & Filters Trigger -->
-  <div class="w-full bg-white border-b border-sand-200 shrink-0">
-    <div class="w-full h-full flex flex-col pb-3">
-      <!-- Tabs Switcher -->
-      <div class="px-3 pt-3 flex items-center justify-between shrink-0 w-full">
-        <div class="flex items-center gap-2">
-          <component-tab-switcher
-            [activeTab]="activeTab()"
-            tab1Value="vehicles"
-            tab1Label="Vehicles"
-            tab1Icon="directions_car"
-            tab2Value="users"
-            tab2Label="Users"
-            tab2Icon="people_outline"
-            (activeTabChange)="setActiveTab($event)"
-          ></component-tab-switcher>
+  <!-- Top Header Bar -->
+  <div class="w-full bg-white border-b border-sand-200 shrink-0 px-3 py-3">
+    <div class="flex items-center justify-between gap-2 h-9">
+      <!-- Left Side: Switchers -->
+      <div class="flex items-center gap-1.5 min-w-0">
+        <component-tab-switcher
+          [activeTab]="activeTab()"
+          tab1Value="vehicles"
+          tab1Label="Vehicles"
+          tab1Icon="directions_car"
+          tab2Value="users"
+          tab2Label="Users"
+          tab2Icon="people_outline"
+          (activeTabChange)="setActiveTab($event)"
+        ></component-tab-switcher>
 
-          <!-- Vertical Divider -->
-          <div class="h-8 w-[1px] bg-sand-300 mx-1 self-center shrink-0"></div>
+        <!-- Vertical Divider -->
+        <div class="h-6 w-[1px] bg-sand-300 mx-1 self-center shrink-0"></div>
 
-          <component-view-switcher
-            [viewMode]="viewMode()"
-            [isMobile]="isMobile()"
-            [modes]="['grid', 'list']"
-            (viewModeChange)="viewMode.set($any($event))"
-          ></component-view-switcher>
-        </div>
+        <component-view-switcher
+          [viewMode]="viewMode()"
+          [isMobile]="isMobile()"
+          [modes]="['grid', 'list']"
+          (viewModeChange)="viewMode.set($any($event))"
+        ></component-view-switcher>
       </div>
 
-      <!-- Mobile View Header controls (always initialized on mobile to enable header trigger) -->
-      @if (isMobile() && activeTab() === 'vehicles') {
-      <div class="hidden shrink-0">
-        <app-directory-mobile-filters
-          [showTrigger]="false"
-          [searchQuery]="searchQuery()"
-          [selectedTypes]="selectedTypes()"
-          [selectedStatus]="selectedStatus()"
-          [selectedReFuel]="selectedReFuel()"
-          [activeFiltersCount]="activeFiltersCount()"
-          (searchQueryChange)="searchQuery.set($event)"
-          (selectedTypesChange)="selectedTypes.set($event)"
-          (selectedStatusChange)="selectedStatus.set($event)"
-          (selectedReFuelChange)="selectedReFuel.set($event)"
-          (resetFilters)="resetFilters()"
-        ></app-directory-mobile-filters>
+      <!-- Right Side: Mobile Filters & Add Button -->
+      <div class="flex items-center gap-4 shrink-0">
+        @if (isAdmin()) { @if (activeTab() === 'vehicles') {
+        <button
+          (click)="openAddVehicleModal()"
+          class="btn-purple-theme flex items-center gap-1 px-6 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px]"
+          [title]="'Add Vehicle' | translate"
+        >
+          <span class="material-icons text-sm sm:text-base">add</span>
+          <translate-fixed key="Add Vehicle" align="center" />
+        </button>
+        } @else if (activeTab() === 'users') {
+        <button
+          (click)="openAddUserModal()"
+          class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px]"
+          [title]="(isSuperAdmin() ? 'Add Admin' : 'Add User') | translate"
+        >
+          <span class="material-icons text-sm sm:text-base pr-1"
+            >person_add</span
+          >
+          <translate-fixed
+            [key]="isSuperAdmin() ? 'Add Admin' : 'Add User'"
+            align="center"
+          />
+        </button>
+        } }
       </div>
-      }
     </div>
   </div>
 
@@ -76,40 +83,12 @@
     ></app-user-list>
     }
   </div>
-
-  <!-- Bottom Area: Sticky Add Button (Admins only) -->
-  @if (isAdmin()) {
-  <div class="p-4 border-t border-sand-200 bg-white shrink-0">
-    @if (activeTab() === 'vehicles') {
-    <component-button
-      (click)="openAddVehicleModal()"
-      variant="submit"
-      size="lg"
-      class="w-full btn-purple-theme"
-    >
-      <span class="material-icons text-sm">add</span>
-      <translate-fixed key="Add New Vehicle" align="center" />
-    </component-button>
-    } @else if (activeTab() === 'users') {
-    <component-button
-      (click)="openAddUserModal()"
-      variant="submit"
-      size="lg"
-      class="w-full btn-purple-theme"
-    >
-      <span class="material-icons text-sm pr-2">person_add</span>
-      {{ (isSuperAdmin() ? 'Register New Admin' : 'Register New User') |
-      translate }}
-    </component-button>
-    }
-  </div>
-  }
 </div>
 } @else {
 <!-- Desktop Layout -->
 <mat-drawer-container
-  [hasBackdrop]="isMobile()"
-  class="h-[calc(100dvh-4rem)] w-full bg-container-low overflow-hidden!"
+  [hasBackdrop]="true"
+  class="booking-drawer-container h-[calc(100dvh-4rem)] w-full bg-container-low overflow-hidden!"
 >
   <!-- Right Filter Drawer (overlay on top of content) -->
   <mat-drawer
@@ -118,7 +97,7 @@
     mode="over"
     [opened]="filterDrawerOpened() && !isMobile()"
     (closedStart)="filterDrawerOpened.set(false)"
-    class="w-72 border-l border-sand-200 bg-white shadow-sm flex flex-col h-full z-30 animate-in slide-in-from-right duration-200"
+    class="w-80 border-l border-sand-200 bg-white shadow-sm flex flex-col h-full z-30 animate-in slide-in-from-right duration-200"
   >
     <app-directory-filter-sidebar
       [showHeader]="true"
@@ -144,7 +123,7 @@
     <div
       class="w-full bg-white border-b border-sand-200 shrink-0 px-3 md:px-6 py-3"
     >
-      <div class="flex items-center justify-between gap-2 md:gap-4">
+      <div class="flex items-center justify-between gap-2 md:gap-4 h-9">
         <!-- Left Side: Tabs Switcher + View Switcher -->
         <div class="flex items-center gap-2 md:gap-2 min-w-0">
           <!-- Tab Switcher -->
@@ -161,7 +140,7 @@
 
           <!-- Vertical Divider -->
           <div
-            class="h-8 w-[1px] bg-sand-300 mx-1.5 md:mx-2 self-center shrink-0"
+            class="h-6 w-[1px] bg-sand-300 mx-1.5 md:mx-2 self-center shrink-0"
           ></div>
 
           <!-- View Mode Switcher Component -->
@@ -174,7 +153,7 @@
         </div>
 
         <!-- Right Side: Filter + Add Button -->
-        <div class="flex items-center gap-2 shrink-0">
+        <div class="flex items-center gap-4 shrink-0">
           <!-- Clear Filters Button -->
           @if (!isMobile() && activeFiltersCount() > 0 && activeTab() ===
           'vehicles') {
@@ -215,21 +194,23 @@
           @if (isAdmin()) { @if (activeTab() === 'vehicles') {
           <button
             (click)="openAddVehicleModal()"
-            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
-            [title]="'Add New Vehicle' | translate"
+            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
+            [title]="'Add Vehicle' | translate"
           >
-            <span class="material-icons text-sm">add</span>
-            <translate-fixed key="Add New Vehicle" align="center" />
+            <span class="material-icons text-sm sm:text-base">add</span>
+            <translate-fixed key="Add Vehicle" align="center" />
           </button>
           } @else if (activeTab() === 'users') {
           <button
             (click)="openAddUserModal()"
-            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
-            [title]="(isSuperAdmin() ? 'Register New Admin' : 'Register New User') | translate"
+            class="btn-purple-theme flex items-center gap-1 px-4 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 min-w-[120px] h-9"
+            [title]="(isSuperAdmin() ? 'Add Admin' : 'Add User') | translate"
           >
-            <span class="material-icons text-sm pr-1">person_add</span>
+            <span class="material-icons text-sm sm:text-base pr-2"
+              >person_add</span
+            >
             <translate-fixed
-              [key]="isSuperAdmin() ? 'Register New Admin' : 'Register New User'"
+              [key]="isSuperAdmin() ? 'Add Admin' : 'Add User'"
               align="center"
             />
           </button>

@@ -8,6 +8,7 @@ import { Vehicle } from '../../../../core/models/vehicle.model';
 import { AllSharedUi } from '../../../../shared/shared';
 import { environment } from '../../../../../environments/environment';
 import { LanguageService } from '../../../../core/services/language.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -30,6 +31,7 @@ export class VehicleFormComponent implements OnInit {
   readonly dialogRef = inject(DialogRef, { optional: true });
   private readonly dialogData = inject(DIALOG_DATA, { optional: true }) as { id?: string } | null;
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   get isDialog(): boolean {
     return !!this.dialogRef;
@@ -93,7 +95,7 @@ export class VehicleFormComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert(this.langService.translate('Requested vehicle not found.'));
+        this.toast.error(this.langService.translate('Requested vehicle not found.'));
         this.closeForm();
       }
     });
@@ -124,11 +126,11 @@ export class VehicleFormComponent implements OnInit {
     if (!this.isFormValid || this.isLoading()) return;
 
     if (!Number.isInteger(Number(this.capacity)) || Number(this.capacity) <= 0) {
-      alert(this.langService.translate("Please enter a valid whole number for capacity."));
+      this.toast.warning(this.langService.translate("Please enter a valid whole number for capacity."));
       return;
     }
     if (!Number.isInteger(Number(this.total_mile)) || Number(this.total_mile) < 0) {
-      alert(this.langService.translate("Please enter a valid whole number for mileage."));
+      this.toast.warning(this.langService.translate("Please enter a valid whole number for mileage."));
       return;
     }
 
@@ -154,7 +156,7 @@ export class VehicleFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(this.langService.translate(err.error?.message || 'An error occurred while saving the vehicle data.'));
+          this.toast.error(this.langService.translate(err.error?.message || 'An error occurred while saving the vehicle data.'));
         }
       });
     } else {
@@ -169,7 +171,7 @@ export class VehicleFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(this.langService.translate(err.error?.message || 'An error occurred while registering the new vehicle.'));
+          this.toast.error(this.langService.translate(err.error?.message || 'An error occurred while registering the new vehicle.'));
         }
       });
     }
@@ -182,11 +184,16 @@ export class VehicleFormComponent implements OnInit {
       this.vehicleService.delete(this.vehicleId).subscribe({
         next: () => {
           this.isLoading.set(false);
-          this.onActionSuccess();
+          this.toast.error(this.langService.translate('Vehicle deleted successfully.'));
+          if (this.dialogRef) {
+            this.dialogRef.close(true);
+          } else {
+            this.router.navigate(['/vehicles']);
+          }
         },
         error: (err) => {
           this.isLoading.set(false);
-          alert(this.langService.translate(err.error?.message || 'An error occurred while deleting the vehicle.'));
+          this.toast.error(this.langService.translate(err.error?.message || 'An error occurred while deleting the vehicle.'));
         }
       });
     }
@@ -201,6 +208,12 @@ export class VehicleFormComponent implements OnInit {
   }
 
   private onActionSuccess(): void {
+    const msg = this.isEditMode ? 'Vehicle updated successfully.' : 'Vehicle added successfully.';
+    if (this.isEditMode) {
+      this.toast.warning(this.langService.translate(msg));
+    } else {
+      this.toast.success(this.langService.translate(msg));
+    }
     if (this.dialogRef) {
       this.dialogRef.close(true);
     } else {
@@ -218,7 +231,7 @@ export class VehicleFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        alert(this.langService.translate(err.error?.message || 'Vehicle details saved successfully, but image upload failed.'));
+        this.toast.warning(this.langService.translate(err.error?.message || 'Vehicle details saved successfully, but image upload failed.'));
         this.onActionSuccess();
       }
     });

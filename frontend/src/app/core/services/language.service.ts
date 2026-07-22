@@ -28,6 +28,7 @@ export class LanguageService {
     List: { th: "รายการ", en: "List" },
     Filters: { th: "ตัวกรอง", en: "Filters" },
     "Add Booking": { th: "จองรถยนต์", en: "Add Booking" },
+    km: { th: "กม.", en: "km" },
 
     // Daily Sidebar
     "Daily Bookings for": {
@@ -187,13 +188,13 @@ export class LanguageService {
       th: "ไม่มีผู้ใช้งานลงทะเบียนอยู่ในระบบในขณะนี้",
       en: "There are currently no registered users in the system.",
     },
-    "Register New Admin": {
-      th: "ลงทะเบียนผู้ดูแลระบบใหม่",
-      en: "Register New Admin",
+    "Add Admin": {
+      th: "เพิ่มผู้ดูแล",
+      en: "Add Admin",
     },
-    "Register New User": {
-      th: "ลงทะเบียนผู้ใช้งานใหม่",
-      en: "Register New User",
+    "Add User": {
+      th: "เพิ่มผู้ใช้",
+      en: "Add User",
     },
     times: { th: "ครั้ง", en: "times" },
     "Delete User": { th: "ลบผู้ใช้งาน", en: "Delete User" },
@@ -212,7 +213,7 @@ export class LanguageService {
     "All Vehicle Types": { th: "ประเภทรถยนต์ทั้งหมด", en: "All Vehicle Types" },
     "All Status": { th: "สถานะทั้งหมด", en: "All Status" },
     "All Fuel Statuses": { th: "สถานะน้ำมันทั้งหมด", en: "All Fuel Statuses" },
-    "Edit Vehicle": { th: "แก้ไขข้อมูลรถ", en: "Edit Vehicle" },
+    "Edit Vehicle": { th: "แก้ไขข้อมูล", en: "Edit Vehicle" },
     "No vehicles found": { th: "ไม่พบรถยนต์", en: "No vehicles found" },
     "There are currently no vehicles matching the selected filters.": {
       th: "ไม่พบรถยนต์ตามตัวกรองที่เลือกในขณะนี้",
@@ -357,7 +358,7 @@ export class LanguageService {
       th: "ไม่มีตัวกรองสำหรับรายชื่อผู้ใช้งาน",
       en: "No filters available for Users List",
     },
-    "Add New Vehicle": { th: "เพิ่มรถยนต์ใหม่", en: "Add New Vehicle" },
+    "Add Vehicle": { th: "เพิ่มรถยนต์", en: "Add Vehicle" },
     Search: { th: "ค้นหา", en: "Search" },
     "Fuel Status": { th: "สถานะน้ำมัน", en: "Fuel Status" },
     "Book New Vehicle": { th: "จองยานพาหนะใหม่", en: "Book New Vehicle" },

@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { Dialog } from "@angular/cdk/dialog";
+import { Dialog, DialogRef } from "@angular/cdk/dialog";
 import { BookingDialogComponent } from "./booking-dialog";
 import { BookingEditDialogComponent } from "../components/booking-edit-dialog/booking-edit-dialog";
 import { Booking } from "../../../core/models/booking.model";
@@ -10,7 +10,7 @@ import { Booking } from "../../../core/models/booking.model";
 export class BookingDialogService {
   private readonly dialog = inject(Dialog);
 
-  open(bookingToEdit?: Booking): void {
+  open(bookingToEdit?: Booking): DialogRef<any, any> {
     const component = bookingToEdit ? BookingEditDialogComponent : BookingDialogComponent;
     const config: any = {
       width: "672px",
@@ -35,6 +35,6 @@ export class BookingDialogService {
       config.data = bookingToEdit;
     }
 
-    this.dialog.open(component as any, config);
+    return this.dialog.open(component as any, config);
   }
 }

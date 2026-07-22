@@ -9,7 +9,7 @@ import { ComponentButton } from "../button/button";
   imports: [CommonModule, TranslateFixed, ComponentButton],
   templateUrl: "./filter-sidebar.html",
   host: {
-    class: "h-full flex flex-col bg-white",
+    class: "h-full flex flex-col bg-white w-88 max-w-full",
   },
 })
 export class ComponentFilterSidebar {

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AllSharedUi } from '../../../../shared/shared';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../core/services/toast.service';
 import { environment } from '../../../../../environments/environment';
 
 /**
@@ -19,6 +20,7 @@ import { environment } from '../../../../../environments/environment';
 export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
   email = '';
   password = '';
@@ -68,7 +70,7 @@ export class LoginComponent {
         this.router.navigate(['/bookings']);
       },
       error: (err) => {
-        alert(err.error?.message || 'Invalid email or password');
+        this.toast.error(err.error?.message || 'Invalid email or password');
       }
     });
   }

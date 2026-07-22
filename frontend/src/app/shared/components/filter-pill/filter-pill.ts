@@ -26,7 +26,7 @@ export class ComponentFilterPill {
 
   get hostClasses(): string {
     const base =
-      "inline-flex items-center gap-1.5 rounded-full border border-sand-200 bg-white text-xs font-semibold text-sand-700 cursor-pointer select-none transition-all active:scale-95 duration-100";
+      "inline-flex items-center gap-1 rounded-full border border-sand-200 bg-white text-xs font-semibold text-sand-700 cursor-pointer select-none transition-all active:scale-95 duration-100 shrink-0";
     const padding = this.size === "sm" ? "px-2 py-1" : "px-2.5 py-1.5";
     const activeRing = this.active ? this.ringClass : "";
     return `${base} ${padding} ${activeRing}`;

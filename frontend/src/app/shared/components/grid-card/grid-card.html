@@ -1,7 +1,7 @@
 <component-card
   variant="default"
   rounded="xl"
-  class="group overflow-hidden flex flex-col justify-between transition-all duration-200 w-full max-w-[380px] mx-auto"
+  class="group overflow-hidden flex flex-col justify-between transition-all duration-200 w-full max-w-[380px] mx-auto h-full"
   [class.cursor-pointer]="cursorPointer"
   [class.hover:shadow-md]="cursorPointer"
   [class.hover:rounded-2xl]="cursorPointer"
@@ -16,10 +16,15 @@
       <img
         [src]="imageUrl"
         [alt]="modelName"
-        class="w-full h-full object-contain"
+        class="w-full h-full"
+        [class.object-contain]="imageFit === 'contain'"
+        [class.object-cover]="imageFit === 'cover'"
+        [class.object-fill]="imageFit === 'fill'"
       />
       } @else {
-      <span class="material-icons text-5xl text-sand-300">{{ fallbackIcon }}</span>
+      <span class="material-icons text-5xl text-sand-300"
+        >{{ fallbackIcon }}</span
+      >
       }
 
       <!-- Status Badge overlay -->

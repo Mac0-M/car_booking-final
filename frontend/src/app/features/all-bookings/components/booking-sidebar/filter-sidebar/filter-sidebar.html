@@ -6,7 +6,7 @@
   <!-- Quick Filters (Car Types) -->
   @if (showQuickFilters) {
   <div class="space-y-2 border-b border-sand-100 pb-3 mb-1 shrink-0">
-    <div class="flex flex-wrap items-center gap-2">
+    <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-x-auto no-scrollbar p-1">
       @for (type of vehicleTypes; track type.value) {
       <button
         component-filter-pill

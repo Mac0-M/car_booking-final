@@ -240,15 +240,15 @@ component-card.cursor-pointer:hover > div {
   }
 
   /* Force CDK dialogs to be fullscreen on mobile, except bottom-sheets and desktop-style modals */
-  .cdk-overlay-pane:not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) {
+  .cdk-overlay-pane:has(.cdk-dialog-container):not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) {
     @apply !w-[100vw] !max-w-[100vw] !h-[100dvh] !max-h-[100dvh] !m-0 !p-0 !top-0 !left-0 !rounded-none;
   }
 
-  .cdk-overlay-pane:not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) .cdk-dialog-container {
+  .cdk-overlay-pane:has(.cdk-dialog-container):not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) .cdk-dialog-container {
     @apply !rounded-none !max-w-[100vw] !max-h-[100dvh] !w-full !h-full !p-0 !m-0;
   }
 
-  .cdk-overlay-pane:not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) .cdk-dialog-container > * {
+  .cdk-overlay-pane:has(.cdk-dialog-container):not(.mobile-filter-dialog-pane):not(.desktop-modal-pane) .cdk-dialog-container > * {
     @apply !w-full !h-full;
   }
 
@@ -316,8 +316,9 @@ component-card.cursor-pointer:hover > div {
 
 }
 
-/* Make backdrop transparent for booking page so it does not dim other areas but still allows close-on-click-outside */
-.booking-drawer-container .mat-drawer-backdrop.mat-drawer-shown {
+/* Make backdrop transparent for drawer containers so it does not dim other areas but still allows close-on-click-outside */
+.booking-drawer-container .mat-drawer-backdrop.mat-drawer-shown,
+.mat-drawer-container .mat-drawer-backdrop.mat-drawer-shown {
   background-color: transparent !important;
 }
 
@@ -365,6 +366,134 @@ component-card.cursor-pointer:hover > div {
 
 .animate-fade-zoom-in {
   animation: fade-zoom-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* === MatSnackBar Toast Styles (ตรงกลางล่าง) === */
+
+/* Ensure CDK Overlay Wrapper aligns SnackBar to bottom-center on all devices */
+.cdk-global-overlay-wrapper:has(.mat-mdc-snack-bar-container) {
+  align-items: flex-end !important;
+  justify-content: center !important;
+  padding-bottom: 16px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  box-sizing: border-box !important;
+}
+
+.mat-mdc-snack-bar-handset-pane,
+.mat-mdc-snack-bar-handset-pane .mat-mdc-snack-bar-container {
+  width: auto !important;
+  max-width: calc(100vw - 32px) !important;
+}
+
+/* SnackBar Container — จัดกลาง มี margin รอบๆ */
+.mat-mdc-snack-bar-container {
+  margin: 0 !important;
+  max-width: calc(100vw - 32px) !important;
+  width: auto !important;
+}
+
+/* Base toast style */
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  padding: 2px 8px !important;
+  min-width: 260px !important;
+  max-width: calc(100vw - 32px) !important;
+  box-sizing: border-box !important;
+}
+
+.mat-mdc-snack-bar-container .mdc-snackbar__label {
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  padding-left: 4px !important;
+}
+
+/* SnackBar Close Button Styling & Spacing */
+.mat-mdc-snack-bar-actions {
+  margin-left: 16px !important;
+  margin-right: 4px !important;
+}
+
+.mat-mdc-snack-bar-action {
+  min-width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+}
+
+.mat-mdc-snack-bar-action .mdc-button {
+  min-width: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.mat-mdc-snack-bar-action .mdc-button:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.mat-mdc-snack-bar-action .mat-mdc-button-touch-target {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.mat-mdc-snack-bar-action .mdc-button__label {
+  font-size: 1rem !important;
+  font-weight: bold !important;
+  line-height: 1 !important;
+}
+
+/* Success (สีเขียว) */
+.toast-success .mdc-snackbar__surface {
+  background-color: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+.toast-success .mdc-snackbar__label {
+  color: #065f46 !important;
+}
+.toast-success .mat-mdc-snack-bar-action {
+  color: #059669 !important;
+}
+
+/* Error (สีแดง) */
+.toast-error .mdc-snackbar__surface {
+  background-color: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+}
+.toast-error .mdc-snackbar__label {
+  color: #991b1b !important;
+}
+.toast-error .mat-mdc-snack-bar-action {
+  color: #dc2626 !important;
+}
+
+/* Warning (สีเหลือง) */
+.toast-warning .mdc-snackbar__surface {
+  background-color: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+}
+.toast-warning .mdc-snackbar__label {
+  color: #92400e !important;
+}
+.toast-warning .mat-mdc-snack-bar-action {
+  color: #d97706 !important;
+}
+
+/* Info (สีฟ้า) */
+.toast-info .mdc-snackbar__surface {
+  background-color: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+}
+.toast-info .mdc-snackbar__label {
+  color: #1e40af !important;
+}
+.toast-info .mat-mdc-snack-bar-action {
+  color: #2563eb !important;
 }
 
 /* Custom Global theme overrides to match Eggshell Theme */
@@ -427,4 +556,23 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* Profile avatar edit icon badge sizing for mobile & desktop */
+.profile-edit-avatar-badge {
+  width: 24px !important;
+  height: 24px !important;
+}
+.profile-edit-avatar-badge .material-icons {
+  font-size: 13px !important;
+}
+
+@media (min-width: 1024px) {
+  .profile-edit-avatar-badge {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .profile-edit-avatar-badge .material-icons {
+    font-size: 16px !important;
+  }
 }

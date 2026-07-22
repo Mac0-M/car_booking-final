@@ -65,8 +65,7 @@ export class TranslateFixed implements OnInit, OnChanges {
   }
 
   private resolveTexts(): void {
-    if (this.key && (!this.thText || !this.enText)) {
-      // Resolve both languages directly without switching global state
+    if (this.key) {
       this.thText = this.langService.translate(this.key, "th");
       this.enText = this.langService.translate(this.key, "en");
     }

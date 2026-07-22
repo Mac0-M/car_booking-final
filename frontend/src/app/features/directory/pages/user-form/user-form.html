@@ -6,9 +6,7 @@
     <div class="flex items-center gap-2">
       <span class="material-icons text-primary text-2xl">person_add</span>
       <h2 class="text-xl font-bold text-sand-900">
-        <translate-fixed
-          [key]="isSuperAdmin ? 'Register New Admin' : 'Register New User'"
-        />
+        <translate-fixed [key]="isSuperAdmin ? 'Add Admin' : 'Add User'" />
       </h2>
     </div>
     <component-button

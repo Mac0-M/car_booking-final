@@ -9,6 +9,7 @@ import { BookingService } from '../../../../../core/services/booking.service';
 import { AvailabilityService } from '../../../../../core/services/availability.service';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { LanguageService } from '../../../../../core/services/language.service';
+import { ToastService } from '../../../../../core/services/toast.service';
 
 /**
  * BookingConfirmComponent:
@@ -34,6 +35,7 @@ export class BookingConfirmComponent {
   private readonly availabilityService = inject(AvailabilityService);
   private readonly authService = inject(AuthService);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
 
   readonly isSubmitting = signal(false);
@@ -114,6 +116,7 @@ export class BookingConfirmComponent {
       next: (res: any) => {
         this.isSubmitting.set(false);
         this.isConfirmed.set(true);
+        this.toast.success(this.langService.translate('Booking created successfully.'));
         const savedBooking = res.data || res;
         this.bookingId.set(savedBooking.book_id || savedBooking.id);
         this.confirmed.emit(savedBooking.book_id || savedBooking.id);
@@ -121,7 +124,7 @@ export class BookingConfirmComponent {
       error: (err: any) => {
         this.isSubmitting.set(false);
         if (err.status === 409) {
-          alert(this.langService.translate('This vehicle is already booked. Please select another vehicle.'));
+          this.toast.warning(this.langService.translate('This vehicle is already booked. Please select another vehicle.'));
           
           this.availabilityService.search(
             this.store.depart(),
@@ -145,7 +148,7 @@ export class BookingConfirmComponent {
             }
           });
         } else {
-          alert(this.langService.translate(err.error?.message || 'An error occurred while booking the vehicle. Please try again.'));
+          this.toast.error(this.langService.translate(err.error?.message || 'An error occurred while booking the vehicle. Please try again.'));
         }
       }
     });

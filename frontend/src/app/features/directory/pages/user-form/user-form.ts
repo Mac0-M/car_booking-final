@@ -6,6 +6,7 @@ import { UserService } from "../../../../core/services/user.service";
 import { AuthService } from "../../../../core/services/auth.service";
 import { LanguageService } from "../../../../core/services/language.service";
 import { AllSharedUi } from "../../../../shared/shared";
+import { ToastService } from "../../../../core/services/toast.service";
 
 @Component({
   selector: "app-user-form",
@@ -21,6 +22,7 @@ export class UserFormComponent {
   private readonly authService = inject(AuthService);
   private readonly dialogRef = inject(DialogRef);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   readonly isSaving = signal(false);
 
@@ -115,12 +117,12 @@ export class UserFormComponent {
     this.userService.create(payload).subscribe({
       next: (createdUser) => {
         this.isSaving.set(false);
-        alert(this.langService.translate("User registered successfully."));
+        this.toast.success(this.langService.translate("User registered successfully."));
         this.dialogRef.close(createdUser);
       },
       error: (err) => {
         this.isSaving.set(false);
-        alert(
+        this.toast.error(
           this.langService.translate(
             err.error?.message || "An error occurred while creating the user.",
           ),

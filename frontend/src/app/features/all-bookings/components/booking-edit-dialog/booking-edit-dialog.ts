@@ -11,6 +11,7 @@ import { AvailabilityService } from "../../../../core/services/availability.serv
 import { BookingService } from "../../../../core/services/booking.service";
 import { AuthService } from "../../../../core/services/auth.service";
 import { LanguageService } from "../../../../core/services/language.service";
+import { ToastService } from "../../../../core/services/toast.service";
 
 @Component({
   selector: "app-booking-edit-dialog",
@@ -29,6 +30,7 @@ export class BookingEditDialogComponent implements OnInit {
   private readonly bookingService = inject(BookingService);
   private readonly authService = inject(AuthService);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   readonly booking = this.bookingData;
 
@@ -151,12 +153,12 @@ export class BookingEditDialogComponent implements OnInit {
 
     this.bookingService.updateBooking(this.booking.id, payload).subscribe({
       next: () => {
-        this.isSaving.set(false);
-        this.dialogRef.close();
+        this.toast.warning(this.langService.translate('Booking updated successfully.'));
+        this.dialogRef.close(true);
       },
       error: (err) => {
         this.isSaving.set(false);
-        alert(
+        this.toast.error(
           this.langService.translate(
             err.error?.message || "An error occurred while updating the booking. Please try again."
           )
@@ -166,6 +168,6 @@ export class BookingEditDialogComponent implements OnInit {
   }
 
   onClose(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }

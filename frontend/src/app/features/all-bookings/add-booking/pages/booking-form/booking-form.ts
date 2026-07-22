@@ -15,6 +15,7 @@ import { AllSharedUi } from "../../../../../shared/shared";
 import { BookingStore } from "../../state/booking.store";
 import { AvailabilityService } from "../../../../../core/services/availability.service";
 import { LanguageService } from "../../../../../core/services/language.service";
+import { ToastService } from "../../../../../core/services/toast.service";
 import { AuthService } from "../../../../../core/services/auth.service";
 import { UserService } from "../../../../../core/services/user.service";
 import { User } from "../../../../../core/models/user.model";
@@ -35,6 +36,7 @@ export class BookingFormComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   // Form Fields
   depart = "";
@@ -180,7 +182,7 @@ export class BookingFormComponent implements OnInit {
               "An error occurred while checking vehicle availability. Please try again."
           )
         );
-        alert(this.errorMessage());
+        this.toast.error(this.errorMessage());
       },
     });
   }
@@ -206,7 +208,7 @@ export class BookingFormComponent implements OnInit {
         });
       },
       error: (err: any) => {
-        alert(
+        this.toast.error(
           err.error?.message || "An error occurred while saving phone number.",
         );
       },

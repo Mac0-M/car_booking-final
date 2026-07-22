@@ -8,9 +8,13 @@
         class="text-xl md:text-2xl font-black text-sand-800 flex items-center gap-2"
       >
         <span class="material-icons text-sand-800 font-bold"
-          >person_outline</span
+          >{{ isEditing() ? 'edit' : 'person_outline' }}</span
         >
-        <translate-fixed [key]="isEditing() ? 'Edit Profile / แก้ไขโปรไฟล์' : 'My Profile / โปรไฟล์ของฉัน'"/>
+        @if (isEditing()) {
+        <translate-fixed key="Edit Profile / แก้ไขโปรไฟล์" />
+        } @else {
+        <translate-fixed key="My Profile / โปรไฟล์ของฉัน" />
+        }
       </h1>
     </div>
 
@@ -23,32 +27,44 @@
         <div
           class="flex flex-col items-center justify-center space-y-2 md:space-y-3 pb-1 md:pb-2"
         >
-          <div
-            [class.pointer-events-none]="!isEditing()"
-            class="relative w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-white shadow-md overflow-hidden group cursor-pointer bg-linear-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white text-2xl md:text-3xl font-bold"
-          >
-            @if (isEditing()) {
-            <input
-              type="file"
-              accept="image/*"
-              (change)="onFileSelected($event)"
-              class="absolute inset-0 opacity-0 cursor-pointer z-10"
-            />
-            } @if (imagePreviewUrl || existingImgUrl) {
-            <img
-              [src]="imagePreviewUrl || existingImgUrl"
-              alt="Profile"
-              class="w-full h-full object-cover"
-            />
-            } @else {
-            <span>{{ (user_name[0] || 'U') | uppercase }}</span>
-            } @if (isEditing()) {
+          <div class="relative inline-block group">
             <div
-              class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-20 pointer-events-none"
+              [class.pointer-events-none]="!isEditing()"
+              class="relative w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-white shadow-md overflow-hidden bg-linear-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white text-2xl md:text-3xl font-bold cursor-pointer"
             >
-              <span class="material-icons text-white text-sm md:text-base"
-                >photo_camera</span
+              @if (isEditing()) {
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                class="absolute inset-0 opacity-0 cursor-pointer z-10"
+                title="Change Profile Photo"
+              />
+              } @if (imagePreviewUrl || existingImgUrl) {
+              <img
+                [src]="imagePreviewUrl || existingImgUrl"
+                alt="Profile"
+                class="w-full h-full object-cover"
+              />
+              } @else {
+              <span>{{ (user_name[0] || 'U') | uppercase }}</span>
+              } @if (isEditing()) {
+              <div
+                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-20 pointer-events-none"
               >
+                <span class="material-icons text-white text-sm md:text-base"
+                  >photo_camera</span
+                >
+              </div>
+              }
+            </div>
+
+            <!-- Edit Icon Badge Overlay at bottom-right corner when in Edit mode -->
+            @if (isEditing()) {
+            <div
+              class="profile-edit-avatar-badge absolute bottom-0 right-0 bg-white text-sand-600 border-2 border-sand-400 shadow-md rounded-full flex items-center justify-center pointer-events-none z-30 transition-transform"
+            >
+              <span class="material-icons">edit</span>
             </div>
             }
           </div>
@@ -59,8 +75,8 @@
           <label
             for="user_name"
             class="text-xs md:text-sm font-bold text-sand-700 block"
-            ><translate-fixed key="Full Name / ชื่อ-นามสกุล"/></label
-          >
+            ><translate-fixed key="Full Name / ชื่อ-นามสกุล"
+          /></label>
           <input
             type="text"
             id="user_name"
@@ -78,8 +94,8 @@
           <label
             for="email"
             class="text-xs md:text-sm font-bold text-sand-700 block"
-            ><translate-fixed key="Email Address / อีเมล"/></label
-          >
+            ><translate-fixed key="Email Address / อีเมล"
+          /></label>
           <input
             type="email"
             id="email"
@@ -97,8 +113,8 @@
           <label
             for="phone"
             class="text-xs md:text-sm font-bold text-sand-700 block"
-            ><translate-fixed key="Mobile Phone Number / เบอร์โทรศัพท์มือถือ"/></label
-          >
+            ><translate-fixed key="Mobile Phone Number / เบอร์โทรศัพท์มือถือ"
+          /></label>
           <input
             type="tel"
             id="phone"
@@ -115,8 +131,8 @@
           <label
             for="password"
             class="text-xs md:text-sm font-bold text-sand-700 block"
-            ><translate-fixed key="Password / รหัสผ่าน"/></label
-          >
+            ><translate-fixed key="Password / รหัสผ่าน"
+          /></label>
           <input
             type="password"
             id="password"
@@ -140,7 +156,7 @@
             (click)="goBack()"
             class="w-full sm:w-30"
           >
-            <translate-fixed key="Back" align="center"/>
+            <translate-fixed key="Back" align="center" />
           </component-button>
           <component-button
             type="button"
@@ -149,7 +165,7 @@
             (click)="startEdit()"
             class="w-full sm:w-30"
           >
-            <translate-fixed key="Edit Profile" align="center"/>
+            <translate-fixed key="Edit Profile" align="center" />
           </component-button>
           } @else {
           <component-button
@@ -159,7 +175,7 @@
             (click)="cancelEdit()"
             class="w-full sm:w-30"
           >
-            <translate-fixed key="Cancel" align="center"/>
+            <translate-fixed key="Cancel" align="center" />
           </component-button>
           <component-button
             type="submit"
@@ -173,9 +189,9 @@
               <span
                 class="w-3.5 h-3.5 md:w-4 md:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
               ></span>
-              <translate-fixed key="Saving..." align="center"/>
+              <translate-fixed key="Saving..." align="center" />
             </span>
-            } @else { <translate-fixed key="Save Profile" align="center"/> }
+            } @else { <translate-fixed key="Save Profile" align="center" /> }
           </component-button>
           }
         </div>

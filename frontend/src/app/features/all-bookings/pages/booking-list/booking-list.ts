@@ -28,6 +28,7 @@ import { MobileFilters } from "../../components/booking-sidebar/mobile-filters/m
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { DailyBookingsSidebar } from "../../components/booking-sidebar/daily-bookings-sidebar/daily-bookings-sidebar";
 import { LanguageService } from "../../../../core/services/language.service";
+import { ToastService } from "../../../../core/services/toast.service";
 @Component({
   selector: "app-booking-list",
   standalone: true,
@@ -52,6 +53,7 @@ export class BookingList implements OnInit, OnDestroy {
   private readonly bookingDialogService = inject(BookingDialogService);
   private readonly headerService = inject(HeaderService);
   private readonly langService = inject(LanguageService);
+  private readonly toast = inject(ToastService);
 
   @ViewChild(MobileFilters) mobileFiltersComponent?: MobileFilters;
 
@@ -572,11 +574,12 @@ export class BookingList implements OnInit, OnDestroy {
     if (isConfirmed) {
       this.bookingService.cancelBooking(id).subscribe({
         next: () => {
+          this.toast.error(this.langService.translate('Booking cancelled successfully.'));
           this.closeDetail();
           this.loadBookings();
         },
         error: (err: any) => {
-          alert(
+          this.toast.error(
             this.langService.translate(
               err.error?.message ||
                 "An error occurred while cancelling the booking. Please try again.",
@@ -590,11 +593,12 @@ export class BookingList implements OnInit, OnDestroy {
   onCompleteBooking(id: string, mileDistance: number): void {
     this.bookingService.completeBooking(id, mileDistance).subscribe({
       next: () => {
+        this.toast.success(this.langService.translate('Booking completed successfully.'));
         this.closeDetail();
         this.loadBookings();
       },
       error: (err: any) => {
-        alert(
+        this.toast.error(
           this.langService.translate(
             err.error?.message ||
               "An error occurred while completing the booking. Please try again.",
@@ -607,15 +611,26 @@ export class BookingList implements OnInit, OnDestroy {
   onEditBooking(booking: Booking | null): void {
     if (!booking) return;
     if (this.getBookingEffectiveStatus(booking) !== "CONFIRMED") {
-      alert(
+      this.toast.warning(
         this.langService.translate(
           "Only upcoming and ongoing bookings can be edited.",
         ),
       );
       return;
     }
-    this.closeDetail();
-    this.bookingDialogService.open(booking);
+    this.isModalOpen.set(false);
+    const dialogRef = this.bookingDialogService.open(booking);
+    dialogRef.closed.subscribe((result) => {
+      if (result === true) {
+        this.loadBookings();
+        const updatedBooking = this.bookingService
+          .bookings()
+          .find((b) => String(b.id) === String(booking.id));
+        this.openDetail(updatedBooking || booking);
+      } else {
+        this.openDetail(booking);
+      }
+    });
   }
 
   onDailyDrawerOpened(): void {

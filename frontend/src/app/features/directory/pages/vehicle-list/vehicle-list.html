@@ -27,7 +27,7 @@
     >
       <span class="flex items-center gap-2 text-sm font-semibold">
         <span class="material-icons text-base">add</span>
-        <translate-fixed key="Add New Vehicle" align="center" />
+        <translate-fixed key="Add Vehicle" align="center" />
       </span>
     </component-button>
     }
@@ -119,7 +119,7 @@
         [modelName]="vehicle.model"
         [badgeVariant]="vehicle.status === 'available' ? 'available' : 'unavailable'"
         [badgeLabelKey]="vehicle.status === 'available' ? 'Available' : 'Unavailable'"
-        badgeSize="sm"
+        badgeSize="xs"
         [cursorPointer]="false"
       >
         <div card-body class="p-1 pt-4 space-y-3">
@@ -157,16 +157,15 @@
             </div>
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-sand-400">speed</span>
-              <span>{{ vehicle.totalMile | number }} km</span>
+              <span>{{ vehicle.totalMile | number }} <translate-fixed key="km" /></span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="material-icons text-base text-sand-400"
                 >calendar_today</span
               >
-              <span
-                ><translate-fixed key="Booked" /> {{ vehicle.totalBookBy || 0 }}
-                <translate-fixed key="times"
-              /></span>
+              <span class="whitespace-nowrap"
+                >{{ 'Booked' | translate }} {{ vehicle.totalBookBy || 0 }} {{ 'times' | translate }}</span
+              >
             </div>
           </div>
         </div>
@@ -174,16 +173,18 @@
         @if (isAdmin) {
         <div
           card-footer
-          class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-sand-100"
+          class="flex items-center justify-end pt-4 mt-4 border-t border-sand-100"
         >
           <component-button
             (click)="openEditModal(vehicle.id)"
             variant="secondary"
-            size="sm"
-            class="w-auto"
+            size="xs"
+            class="w-auto max-w-full"
           >
-            <span class="material-icons text-sm mr-1">edit</span>
-            <translate-fixed key="Edit Vehicle" align="center" />
+            <span class="material-icons text-xs sm:text-sm mr-1 shrink-0">edit</span>
+            <span class="whitespace-nowrap truncate">
+              <translate-fixed key="Edit Vehicle" align="center" />
+            </span>
           </component-button>
         </div>
         }
@@ -233,24 +234,24 @@
           <tbody class="divide-y divide-sand-100 text-sm text-sand-700">
             @for (vehicle of vehicles(); track vehicle.id) {
             <tr class="hover:bg-sand-50 transition-colors">
-              <td class="px-6 py-4 flex items-center gap-3">  
+              <td class="px-6 py-4 align-middle">
                 <div class="font-bold text-sand-800">{{ vehicle.model }}</div>
               </td>
-              <td class="px-6 py-4 font-semibold text-sand-600">
+              <td class="px-6 py-4 align-middle font-semibold text-sand-600">
                 {{ vehicle.vehicleTypeId }}
               </td>
-              <td class="px-6 py-4 text-sand-600">
+              <td class="px-6 py-4 align-middle text-sand-600">
                 {{ vehicle.capacity }} <translate-fixed key="seats / ที่นั่ง" />
               </td>
-              <td class="px-6 py-4 text-sand-600">
+              <td class="px-6 py-4 align-middle text-sand-600">
                 <translate-fixed
                   [key]="vehicle.reFuel ? 'Refueled / เติมแล้ว' : 'Needs Refuel / ต้องเติม'"
                 />
               </td>
-              <td class="px-6 py-4 font-mono text-sand-600">
-                {{ vehicle.totalMile | number }} km
+              <td class="px-6 py-4 align-middle font-mono text-sand-600">
+                {{ vehicle.totalMile | number }} <translate-fixed key="km" />
               </td>
-              <td class="px-6 py-4">
+              <td class="px-6 py-4 align-middle">
                 <component-badge
                   [variant]="vehicle.status === 'available' ? 'available' : 'unavailable'"
                   size="xs"
@@ -261,7 +262,7 @@
                 </component-badge>
               </td>
               @if (isAdmin) {
-              <td class="px-6 py-4 text-right">
+              <td class="px-6 py-4 align-middle text-right">
                 <component-button
                   (click)="openEditModal(vehicle.id)"
                   variant="secondary"
