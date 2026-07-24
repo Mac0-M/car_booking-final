@@ -20,10 +20,10 @@
     </div>
 
     @if (isAdmin) {
-    <div class="flex items-center gap-4 shrink-0">
+    <div class="flex items-center gap-1.5 md:gap-4 shrink-0">
       <button
         (click)="openAddModal()"
-        class="btn-purple-theme flex items-center justify-center gap-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] w-[140px] h-9"
+        class="btn-purple-theme flex items-center justify-center gap-1.5 max-md:gap-1 px-3 max-md:px-2 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] md:w-[140px] max-md:w-auto h-9"
         [title]="(isSuperAdmin ? 'Add New Admin' : 'Add New User') | translate"
       >
         <span class="material-icons text-sm sm:text-base">person_add</span>
@@ -41,7 +41,7 @@
   >
     <component-loading size="base"></component-loading>
   </div>
-  } @else { @if (users().length > 0 || true) {
+  } @else {
   <component-views
     [viewMode]="viewMode"
     [hasItems]="users().length > 0"
@@ -309,13 +309,14 @@
     </div>
 
     <!-- Empty View -->
-    <component-empty-state
-      empty-view
-      [title]="'No users found' | translate"
-      [description]="'There are currently no registered users in the system.' | translate"
-      icon="search"
-      variant="card"
-    />
+    <ng-template #emptyView>
+      <component-empty-state
+        [title]="'No users found' | translate"
+        [description]="'There are currently no registered users in the system.' | translate"
+        icon="search"
+        variant="card"
+      />
+    </ng-template>
   </component-views>
-  } }
+  }
 </div>

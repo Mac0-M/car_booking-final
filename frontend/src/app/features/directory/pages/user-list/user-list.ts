@@ -102,7 +102,9 @@ export class UserListComponent implements OnInit {
     if (confirm(confirmMsg)) {
       this.userService.delete(userId).subscribe({
         next: () => {
-          this.toast.error(this.langService.translate('User deleted successfully.'));
+          this.toast.error(
+            this.langService.translate("User deleted successfully."),
+          );
           this.users.update((current) =>
             current.filter((u) => u.userId !== userId),
           );

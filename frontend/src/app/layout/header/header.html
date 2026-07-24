@@ -39,7 +39,10 @@
         class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center gap-1.5 min-w-[120px]"
       >
         <span class="material-icons text-xl">folder_shared</span>
-        <translate-fixed [key]="isAdmin ? 'Management' : 'Directory'" align="center" />
+        <translate-fixed
+          [key]="isAdmin ? 'Management' : 'Directory'"
+          align="center"
+        />
       </a>
     </nav>
 
@@ -146,19 +149,25 @@
         [class.text-primary]="headerService.activeFiltersCount() === 0"
         [class.hover:bg-primary-fixed-dim]="headerService.activeFiltersCount() === 0"
         [class.border-primary-fixed-dim/30]="headerService.activeFiltersCount() === 0"
-        class="relative flex md:hidden items-center justify-center gap-1.5 px-3 h-10 sm:h-11 rounded-xl border transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs text-xs font-bold font-sans min-w-[80px]"
+        class="flex md:hidden items-center justify-center px-4 min-w-[48px] h-10 sm:h-11 rounded-xl border transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs text-xs font-bold font-sans"
         aria-label="Toggle Filters"
       >
-        <span class="material-icons text-base">filter_list</span>
-        <translate-fixed key="Filter" align="center" />
-        @if (headerService.activeFiltersCount() > 0) {
-        <span
-          class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-0.5"
-        >
-          {{ headerService.activeFiltersCount() }}
+        <span class="relative inline-flex items-center justify-center">
+          <span class="material-icons text-base">tune</span>
+          @if (headerService.activeFiltersCount() > 0) {
+          <span
+            class="absolute -top-1.5 -right-2.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full shadow-xs pointer-events-none"
+          >
+            {{ headerService.activeFiltersCount() }}
+          </span>
+          }
         </span>
-        }
       </button>
+
+      <!-- Vertical Divider (mobile only) -->
+      <div
+        class="h-10 w-[1px] bg-sand-300 ml-2 md:hidden self-center shrink-0"
+      ></div>
       }
 
       <!-- Menu Button (mobile only) -->
@@ -272,7 +281,10 @@
         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
       >
         <span class="material-icons text-xl">folder_shared</span>
-        <translate-fixed [key]="isAdmin ? 'Management' : 'Directory'" align="start" />
+        <translate-fixed
+          [key]="isAdmin ? 'Management' : 'Directory'"
+          align="start"
+        />
       </a>
     </nav>
   </div>

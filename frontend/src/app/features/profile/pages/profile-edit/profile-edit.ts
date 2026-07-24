@@ -184,7 +184,7 @@ export class ProfileEditComponent implements OnInit {
         this.selectedFile = null;
         this.imagePreviewUrl = null;
         this.newPassword = '';
-        this.toast.warning(this.langService.translate('Profile saved successfully.'));
+        this.toast.success(this.langService.translate('Profile saved successfully.'));
       },
       error: (err) => {
         this.isLoading.set(false);

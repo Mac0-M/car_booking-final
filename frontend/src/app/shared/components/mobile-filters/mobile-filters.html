@@ -6,16 +6,23 @@
   size="xs"
   class="w-auto"
 >
-  <span class="material-icons text-base" [class.mr-1]="triggerText">filter_list</span>
-  @if (triggerText) {
-  <span><translate-fixed [key]="triggerText" /></span>
-  }
-  @if (activeFiltersCount > 0) {
   <span
-    class="flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full ml-1 shrink-0"
+    class="relative inline-flex items-center justify-center"
+    [class.mx-1]="activeFiltersCount > 0"
   >
-    {{ activeFiltersCount }}
+    <span class="material-icons text-base" [class.mr-1]="triggerText"
+      >tune</span
+    >
+    @if (activeFiltersCount > 0) {
+    <span
+      class="absolute -top-1.5 -right-2.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full shadow-xs pointer-events-none"
+    >
+      {{ activeFiltersCount }}
+    </span>
+    }
   </span>
+  @if (triggerText) {
+  <span class="ml-1"><translate-fixed [key]="triggerText" /></span>
   }
 </component-button>
 }

@@ -112,11 +112,12 @@
   </div>
 
   <!-- Empty View -->
-  <component-empty-state
-    empty-view
-    [title]="'No bookings found' | translate"
-    [description]="'There are currently no vehicle bookings matching the selected filters.' | translate"
-    icon="search"
-    variant="card"
-  />
+  <ng-template #emptyView>
+    <component-empty-state
+      [title]="'No bookings found' | translate"
+      [description]="'There are currently no vehicle bookings matching the selected filters.' | translate"
+      icon="search"
+      variant="card"
+    />
+  </ng-template>
 </component-views>

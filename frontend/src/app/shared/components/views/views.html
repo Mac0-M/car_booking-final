@@ -14,7 +14,7 @@
     <ng-content select="[grid-item]"></ng-content>
   </div>
   } @else {
-  <ng-content select="[empty-view]"></ng-content>
+  <ng-container *ngTemplateOutlet="emptyViewTpl"></ng-container>
   }
 </div>
 } @else if (viewMode === 'list') {
@@ -22,7 +22,7 @@
   @if (hasItems) {
   <ng-content select="[list-view]"></ng-content>
   } @else {
-  <ng-content select="[empty-view]"></ng-content>
+  <ng-container *ngTemplateOutlet="emptyViewTpl"></ng-container>
   }
 </div>
 }

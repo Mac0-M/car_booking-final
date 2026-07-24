@@ -562,11 +562,11 @@ input[type="number"] {
 
 /* Profile avatar edit icon badge sizing for mobile & desktop */
 .profile-edit-avatar-badge {
-  width: 24px !important;
-  height: 24px !important;
+  width: 32px !important;
+  height: 32px !important;
 }
 .profile-edit-avatar-badge .material-icons {
-  font-size: 13px !important;
+  font-size: 18px !important;
 }
 
 @media (min-width: 1024px) {
@@ -575,6 +575,6 @@ input[type="number"] {
     height: 36px !important;
   }
   .profile-edit-avatar-badge .material-icons {
-    font-size: 16px !important;
+    font-size: 20px !important;
   }
 }

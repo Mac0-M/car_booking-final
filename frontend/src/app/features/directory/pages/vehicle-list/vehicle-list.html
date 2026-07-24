@@ -21,7 +21,7 @@
     @if (isAdmin) {
     <button
       (click)="openAddModal()"
-      class="btn-purple-theme flex items-center justify-center gap-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] w-[140px] h-9"
+      class="btn-purple-theme flex items-center justify-center gap-1.5 max-md:gap-1 px-3 max-md:px-2 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] md:w-[140px] max-md:w-auto h-9"
       [title]="'Add Vehicle' | translate"
     >
       <span class="material-icons text-sm sm:text-base">add</span>
@@ -101,7 +101,7 @@
   <div class="py-12 flex justify-center items-center">
     <component-loading size="base"></component-loading>
   </div>
-  } @else { @if (vehicles().length > 0 || true) {
+  } @else {
   <component-views
     [viewMode]="viewMode"
     [hasItems]="vehicles().length > 0"
@@ -354,13 +354,14 @@
     </div>
 
     <!-- Empty View -->
-    <component-empty-state
-      empty-view
-      [title]="'No vehicles found' | translate"
-      [description]="'There are currently no vehicles matching the selected filters.' | translate"
-      icon="search"
-      variant="card"
-    />
+    <ng-template #emptyView>
+      <component-empty-state
+        [title]="'No vehicles found' | translate"
+        [description]="'There are currently no vehicles matching the selected filters.' | translate"
+        icon="search"
+        variant="card"
+      />
+    </ng-template>
   </component-views>
-  } }
+  }
 </div>

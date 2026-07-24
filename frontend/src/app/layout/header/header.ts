@@ -1,17 +1,17 @@
-import { Component, inject, signal, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
-import { AllSharedUi } from '../../shared/shared';
-import { AuthService } from '../../core/services/auth.service';
-import { HeaderService } from '../../core/services/header.service';
-import { LanguageService } from '../../core/services/language.service';
-import { environment } from '../../../environments/environment';
+import { Component, inject, signal, HostListener } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Router, RouterLink, NavigationEnd } from "@angular/router";
+import { AllSharedUi } from "../../shared/shared";
+import { AuthService } from "../../core/services/auth.service";
+import { HeaderService } from "../../core/services/header.service";
+import { LanguageService } from "../../core/services/language.service";
+import { environment } from "../../../environments/environment";
 
 @Component({
-  selector: 'app-header',
+  selector: "app-header",
   standalone: true,
   imports: [CommonModule, RouterLink, ...AllSharedUi],
-  templateUrl: './header.html',
+  templateUrl: "./header.html",
 })
 export class HeaderComponent {
   private readonly authService = inject(AuthService);
@@ -19,7 +19,7 @@ export class HeaderComponent {
   public readonly headerService = inject(HeaderService);
   public readonly langService = inject(LanguageService);
 
-  currentUrl = signal<string>('');
+  currentUrl = signal<string>("");
   isMobileMenuOpen = signal<boolean>(false);
   isProfileDropdownOpen = signal<boolean>(false);
 
@@ -31,7 +31,7 @@ export class HeaderComponent {
     return this.langService.currentLang();
   }
 
-  @HostListener('window:click')
+  @HostListener("window:click")
   closeDropdowns(): void {
     this.isProfileDropdownOpen.set(false);
   }
@@ -63,24 +63,26 @@ export class HeaderComponent {
   }
 
   get userName(): string {
-    return this.authService.currentUser()?.name || 'Guest';
+    return this.authService.currentUser()?.name || "Guest";
   }
 
   get profileImage(): string {
     const user = this.authService.currentUser();
     if (!user || !user.profile_image) {
-      return '';
+      return "";
     }
-    if (user.profile_image.startsWith('http')) {
+    if (user.profile_image.startsWith("http")) {
       return user.profile_image;
     }
-    const baseUrl = environment.apiUrl.replace('/api/v1', '');
-    const imgPath = user.profile_image.startsWith('/') ? user.profile_image : `/${user.profile_image}`;
+    const baseUrl = environment.apiUrl.replace("/api/v1", "");
+    const imgPath = user.profile_image.startsWith("/")
+      ? user.profile_image
+      : `/${user.profile_image}`;
     return `${baseUrl}${imgPath}`;
   }
 
   get logoLink(): string {
-    return this.authService.hasValidToken() ? '/bookings' : '/auth/login';
+    return this.authService.hasValidToken() ? "/bookings" : "/auth/login";
   }
 
   get isLoggedIn(): boolean {
@@ -89,22 +91,24 @@ export class HeaderComponent {
 
   get isAdmin(): boolean {
     const role = this.authService.currentUser()?.role;
-    return role === 'Admin' || role === 'Super_Admin';
+    return role === "Admin" || role === "Super_Admin";
   }
 
   isAuthPage(): boolean {
-    return this.currentUrl().includes('/auth/');
+    return this.currentUrl().includes("/auth/");
   }
 
   isRouteActive(path: string): boolean {
-    const url = this.currentUrl().split('?')[0].split('#')[0];
+    const url = this.currentUrl().split("?")[0].split("#")[0];
     const active = url === path;
-    console.log(`[isRouteActive] path: ${path}, url: ${url}, active: ${active}`);
+    console.log(
+      `[isRouteActive] path: ${path}, url: ${url}, active: ${active}`,
+    );
     return active;
   }
 
   onLogout(): void {
     this.authService.logout();
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(["/auth/login"]);
   }
 }

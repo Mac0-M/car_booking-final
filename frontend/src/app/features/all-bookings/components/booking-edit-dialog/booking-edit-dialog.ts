@@ -153,7 +153,7 @@ export class BookingEditDialogComponent implements OnInit {
 
     this.bookingService.updateBooking(this.booking.id, payload).subscribe({
       next: () => {
-        this.toast.warning(this.langService.translate('Booking updated successfully.'));
+        this.toast.success(this.langService.translate('Booking updated successfully.'));
         this.dialogRef.close(true);
       },
       error: (err) => {

@@ -574,7 +574,9 @@ export class BookingList implements OnInit, OnDestroy {
     if (isConfirmed) {
       this.bookingService.cancelBooking(id).subscribe({
         next: () => {
-          this.toast.error(this.langService.translate('Booking cancelled successfully.'));
+          this.toast.error(
+            this.langService.translate("Booking cancelled successfully."),
+          );
           this.closeDetail();
           this.loadBookings();
         },
@@ -593,7 +595,9 @@ export class BookingList implements OnInit, OnDestroy {
   onCompleteBooking(id: string, mileDistance: number): void {
     this.bookingService.completeBooking(id, mileDistance).subscribe({
       next: () => {
-        this.toast.success(this.langService.translate('Booking completed successfully.'));
+        this.toast.success(
+          this.langService.translate("Booking completed successfully."),
+        );
         this.closeDetail();
         this.loadBookings();
       },

@@ -94,7 +94,7 @@
         </div>
 
         <!-- Right Side: Filter + Add Button -->
-        <div class="flex items-center gap-4 shrink-0">
+        <div class="flex items-center gap-1.5 md:gap-4 shrink-0">
           <!-- Clear Filters Button -->
           @if (!isMobile() && activeFiltersCount() > 0) {
           <button
@@ -118,7 +118,7 @@
             [class.border-primary-fixed-dim/30]="!leftDrawerOpened() && activeFiltersCount() === 0"
             class="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 shrink-0 min-w-[90px] h-9"
           >
-            <span class="material-icons text-sm">filter_list</span>
+            <span class="material-icons text-sm">tune</span>
             <translate-fixed key="Filters" align="center" />
             @if (activeFiltersCount() > 0) {
             <span
@@ -158,7 +158,7 @@
           <!-- Add Booking Button -->
           <button
             (click)="openBooking()"
-            class="btn-purple-theme flex items-center justify-center gap-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 shrink-0 lg:w-[120px] w-[140px] h-9"
+            class="btn-purple-theme flex items-center justify-center gap-1.5 max-md:gap-1 px-3 max-md:px-2 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border border-primary bg-primary text-white shadow-sm active:scale-95 lg:w-[120px] md:w-[140px] md:shrink-0 max-md:w-auto h-9"
             title="Add new booking"
           >
             <span class="material-icons text-sm sm:text-base">add</span>

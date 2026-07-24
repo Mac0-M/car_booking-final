@@ -439,6 +439,22 @@ export class LanguageService {
     Today: { th: "วันนี้", en: "Today" },
     Apply: { th: "ตกลง", en: "Apply" },
     Booking: { th: "กรอกข้อมูล", en: "Booking" },
+    "Booking cancelled successfully.": {
+      th: "ยกเลิกการจองสำเร็จแล้ว",
+      en: "Booking cancelled successfully.",
+    },
+    "Booking completed successfully.": {
+      th: "เสร็จสิ้นการจองสำเร็จแล้ว",
+      en: "Booking completed successfully.",
+    },
+    "Booking updated successfully.": {
+      th: "อัปเดตการจองสำเร็จแล้ว",
+      en: "Booking updated successfully.",
+    },
+    "Booking created successfully.": {
+      th: "สร้างการจองสำเร็จแล้ว",
+      en: "Booking created successfully.",
+    },
     "Choose Car": { th: "เลือกรถ", en: "Choose Car" },
     Confirm: { th: "ยืนยัน", en: "Confirm" },
     "Booking Summary": { th: "สรุปรายการจอง", en: "Booking Summary" },
@@ -457,6 +473,22 @@ export class LanguageService {
         th: "ขออภัย ไม่มีรถยนต์ว่างในช่วงเวลาที่คุณเลือก กรุณาลองเปลี่ยนวันหรือเวลาอื่น",
         en: "Sorry, no vehicles are available for your selected time slot. Please try a different date or time.",
       },
+    "Vehicle deleted successfully.": {
+      th: "ลบรถยนต์สำเร็จแล้ว",
+      en: "Vehicle deleted successfully.",
+    },
+    "Vehicle updated successfully.": {
+      th: "อัปเดตข้อมูลรถยนต์สำเร็จแล้ว",
+      en: "Vehicle updated successfully.",
+    },
+    "Vehicle added successfully.": {
+      th: "เพิ่มรถยนต์สำเร็จแล้ว",
+      en: "Vehicle added successfully.",
+    },
+    "User deleted successfully.": {
+      th: "ลบผู้ใช้งานสำเร็จแล้ว",
+      en: "User deleted successfully.",
+    },
   };
 
   public setLanguage(lang: "th" | "en"): void {

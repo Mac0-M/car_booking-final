@@ -30,7 +30,7 @@ import { LanguageService } from "../../../core/services/language.service";
       .translate-fixed-wrapper {
         display: inline-grid;
         align-items: center;
-        justify-items: start;
+        justify-items: center;
       }
       .translate-fixed-text {
         grid-area: 1 / 1;
@@ -52,7 +52,7 @@ export class TranslateFixed implements OnInit, OnChanges {
   @Input() key = "";
   @Input() thText = "";
   @Input() enText = "";
-  @Input() align: "start" | "center" | "end" = "start";
+  @Input() align: "start" | "center" | "end" = "center";
 
   public readonly langService = inject(LanguageService);
 
