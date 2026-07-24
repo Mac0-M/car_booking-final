@@ -24,6 +24,7 @@ export class ComponentButton {
     | "danger-text" = "submit";
   @Input() size: "xs" | "sm" | "md" | "lg" | "xxl" = "xxl";
   @Input() disabled: boolean = false;
+  @Input() title: string = "";
   @Input() round: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full" =
     "xl";
 

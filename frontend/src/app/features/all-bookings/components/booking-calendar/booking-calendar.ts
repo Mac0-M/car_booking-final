@@ -186,7 +186,8 @@ export class BookingCalendar implements OnInit, AfterViewInit, OnDestroy {
             return `<span class="flex items-center gap-1 overflow-hidden text-ellipsis py-0.5 px-1"><span class="material-icons text-xs shrink-0">${icon}</span> <span class="truncate font-sans font-medium text-xs">${event.title}</span></span>`;
           },
           monthGridHeaderExceed: (hiddenSchedules: number) => {
-            return `<span class="custom-exceed-btn font-bold text-xs" style="display: block; width: 100%; height: 100%; cursor: pointer;">+${hiddenSchedules}</span>`;
+            const title = this.langService.translate("View More Bookings");
+            return `<span class="custom-exceed-btn font-bold text-xs" title="${title}" style="display: block; width: 100%; height: 100%; cursor: pointer;">+${hiddenSchedules}</span>`;
           },
         },
       });

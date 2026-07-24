@@ -44,6 +44,7 @@
     (click)="setViewMode('calendar')"
     [class.text-white]="viewMode === 'calendar'"
     [class.text-primary]="viewMode !== 'calendar'"
+    [title]="'Switch to Calendar View' | translate"
     class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-sm sm:text-base">calendar_today</span>
@@ -56,6 +57,7 @@
     (click)="setViewMode('grid')"
     [class.text-white]="viewMode === 'grid'"
     [class.text-primary]="viewMode !== 'grid'"
+    [title]="'Switch to Grid View' | translate"
     class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-sm sm:text-base">grid_view</span>
@@ -68,6 +70,7 @@
     (click)="setViewMode('list')"
     [class.text-white]="viewMode === 'list'"
     [class.text-primary]="viewMode !== 'list'"
+    [title]="'Switch to List View' | translate"
     class="relative z-10 flex items-center justify-center gap-1.5 px-0.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
   >
     <span class="material-icons text-base">format_list_bulleted</span>

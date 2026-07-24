@@ -4,7 +4,7 @@
   <button
     (click)="toggleActiveTab()"
     class="relative z-10 flex-1 flex items-center justify-center text-[11px] md:text-xs font-bold text-primary transition-colors cursor-pointer select-none border-0 bg-transparent w-full"
-    [title]="activeTab === tab1Value ? ('Switch to ' + tab2Label | translate) : ('Switch to ' + tab1Label | translate)"
+    [title]="(('Switch to ' + (activeTab === tab1Value ? tab2Label : tab1Label)) | translate)"
   >
     @if (activeTab === tab1Value) {
     <span

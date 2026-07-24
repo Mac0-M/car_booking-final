@@ -26,6 +26,36 @@ export class LanguageService {
     Calendar: { th: "ปฏิทิน", en: "Calendar" },
     Grid: { th: "การ์ด", en: "Grid" },
     List: { th: "รายการ", en: "List" },
+    "Switch to Calendar View": {
+      th: "สลับไปยังมุมมองปฏิทิน",
+      en: "Switch to Calendar View",
+    },
+    "Switch to Grid View": {
+      th: "สลับไปยังมุมมองการ์ด",
+      en: "Switch to Grid View",
+    },
+    "Switch to List View": {
+      th: "สลับไปยังมุมมองรายการ",
+      en: "Switch to List View",
+    },
+    "Switch to Users": {
+      th: "สลับไปยังผู้ใช้งาน",
+      en: "Switch to Users",
+    },
+    "Switch to Vehicles": {
+      th: "สลับไปยังยานพาหนะ",
+      en: "Switch to Vehicles",
+    },
+    "Switch to Active": {
+      th: "สลับไปยังปัจจุบัน",
+      en: "Switch to Active",
+    },
+    Previous: { th: "ย้อนกลับ", en: "Previous" },
+    Next: { th: "ถัดไป", en: "Next" },
+    "Select Month": { th: "เลือกเดือน", en: "Select Month" },
+    "Choose Month": { th: "เลือกเดือน", en: "Choose Month" },
+    "Edit Booking": { th: "แก้ไขการจอง", en: "Edit Booking" },
+    "View More Bookings": { th: "ดูรายการจองเพิ่มเติม", en: "View More Bookings" },
     Filters: { th: "ตัวกรอง", en: "Filters" },
     "Add Booking": { th: "จองรถยนต์", en: "Add Booking" },
     km: { th: "กม.", en: "km" },

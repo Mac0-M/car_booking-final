@@ -28,6 +28,7 @@
       <a
         routerLink="/bookings"
         [ngClass]="isRouteActive('/bookings') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
+        [title]="'Bookings' | translate"
         class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center gap-1.5 min-w-[120px]"
       >
         <span class="material-icons text-xl">list_alt</span>
@@ -36,6 +37,7 @@
       <a
         routerLink="/directory"
         [ngClass]="isRouteActive('/directory') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
+        [title]="(isAdmin ? 'Management' : 'Directory') | translate"
         class="px-4.5 py-2.5 rounded-xl text-base font-bold transition-all duration-200 text-decoration-none flex justify-center items-center gap-1.5 min-w-[120px]"
       >
         <span class="material-icons text-xl">folder_shared</span>
@@ -131,7 +133,7 @@
       <button
         (click)="headerService.clearFilterAction()?.()"
         class="flex md:hidden items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-red-200 bg-white text-red-600 hover:bg-red-100 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in zoom-in duration-200"
-        title="Clear Filters"
+        [title]="'Clear Filters' | translate"
       >
         <span class="material-icons text-xl">close</span>
       </button>
@@ -149,6 +151,7 @@
         [class.text-primary]="headerService.activeFiltersCount() === 0"
         [class.hover:bg-primary-fixed-dim]="headerService.activeFiltersCount() === 0"
         [class.border-primary-fixed-dim/30]="headerService.activeFiltersCount() === 0"
+        [title]="'Filter' | translate"
         class="flex md:hidden items-center justify-center px-4 min-w-[48px] h-10 sm:h-11 rounded-xl border transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs text-xs font-bold font-sans"
         aria-label="Toggle Filters"
       >
@@ -258,6 +261,7 @@
           (click)="closeMobileMenu()"
           variant="plain"
           size="sm"
+          [title]="'Close Menu' | translate"
           class="w-auto -mr-2"
         >
           <span class="material-icons text-2xl">close</span>
@@ -270,6 +274,7 @@
       <a
         routerLink="/bookings"
         [ngClass]="isRouteActive('/bookings') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
+        [title]="'Bookings' | translate"
         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none min-w-[160px]"
       >
         <span class="material-icons text-xl">list_alt</span>
@@ -278,6 +283,7 @@
       <a
         routerLink="/directory"
         [ngClass]="isRouteActive('/directory') ? 'bg-primary text-white shadow-md' : 'text-primary hover:text-on-primary-container hover:bg-primary-container'"
+        [title]="(isAdmin ? 'Management' : 'Directory') | translate"
         class="flex items-center gap-3 px-4.5 py-3 rounded-xl text-base font-bold transition-all text-decoration-none"
       >
         <span class="material-icons text-xl">folder_shared</span>
